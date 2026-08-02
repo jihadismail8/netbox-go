@@ -1,0 +1,271 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service extrasExporttemplate {
+  // Create a new extrasExporttemplate
+  rpc Create(CreateExtrasExporttemplateRequest) returns (CreateExtrasExporttemplateReply) {
+    option (google.api.http) = {
+      post: "/api/extras/exporttemplates"
+      body: "*"
+    };
+  }
+
+  // Delete a extrasExporttemplate by id
+  rpc DeleteByID(DeleteExtrasExporttemplateByIDRequest) returns (DeleteExtrasExporttemplateByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/extras/exporttemplates/{id}"
+    };
+  }
+
+  // Update a extrasExporttemplate by id
+  rpc UpdateByID(UpdateExtrasExporttemplateByIDRequest) returns (UpdateExtrasExporttemplateByIDReply) {
+    option (google.api.http) = {
+      put: "/api/extras/exporttemplates/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a extrasExporttemplate by id
+  rpc GetByID(GetExtrasExporttemplateByIDRequest) returns (GetExtrasExporttemplateByIDReply) {
+    option (google.api.http) = {
+      get: "/api/extras/exporttemplates/{id}"
+    };
+  }
+
+  // Get a paginated list of extrasExporttemplate by custom conditions
+  rpc List(ListExtrasExporttemplateRequest) returns (ListExtrasExporttemplateReply) {
+    option (google.api.http) = {
+      post: "/api/extras/exporttemplates/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete extrasExporttemplate by ids
+  rpc DeleteByIDs(DeleteExtrasExporttemplateByIDsRequest) returns (DeleteExtrasExporttemplateByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/extras/exporttemplates/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a extrasExporttemplate by custom condition
+  rpc GetByCondition(GetExtrasExporttemplateByConditionRequest) returns (GetExtrasExporttemplateByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/extras/exporttemplates/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get extrasExporttemplate by ids
+  rpc ListByIDs(ListExtrasExporttemplateByIDsRequest) returns (ListExtrasExporttemplateByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/extras/exporttemplates/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of extrasExporttemplate by last id
+  rpc ListByLastID(ListExtrasExporttemplateByLastIDRequest) returns (ListExtrasExporttemplateByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/extras/exporttemplates"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/extrasExporttemplate/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getExtrasExporttemplate?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateExtrasExporttemplateRequest {
+	string name = 1; 
+	string description = 2; 
+	string templateCode = 3; 
+	string mimeType = 4; 
+	string fileExtension = 5; 
+	bool asAttachment = 6; 
+	string created = 7; 
+	string lastUpdated = 8; 
+	int64 dataFileID = 9; 
+	string dataPath = 10; 
+	int64 dataSourceID = 11; 
+	bool autoSyncEnabled = 12; 
+	string dataSynced = 13; 
+	string fileName = 14; 
+	string environmentParams = 15; 
+}
+
+message CreateExtrasExporttemplateReply {
+  uint64 id = 1;
+}
+
+message DeleteExtrasExporttemplateByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteExtrasExporttemplateByIDReply {
+
+}
+
+message UpdateExtrasExporttemplateByIDRequest {
+	uint64 id = 1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	string name = 2; 
+	string description = 3; 
+	string templateCode = 4; 
+	string mimeType = 5; 
+	string fileExtension = 6; 
+	bool asAttachment = 7; 
+	string created = 8; 
+	string lastUpdated = 9; 
+	int64 dataFileID = 10; 
+	string dataPath = 11; 
+	int64 dataSourceID = 12; 
+	bool autoSyncEnabled = 13; 
+	string dataSynced = 14; 
+	string fileName = 15; 
+	string environmentParams = 16; 
+}
+
+message UpdateExtrasExporttemplateByIDReply {
+
+}
+
+message ExtrasExporttemplate {
+	uint64 id = 1; 
+	string name = 2; 
+	string description = 3; 
+	string templateCode = 4; 
+	string mimeType = 5; 
+	string fileExtension = 6; 
+	bool asAttachment = 7; 
+	string created = 8; 
+	string lastUpdated = 9; 
+	int64 dataFileID = 10; 
+	string dataPath = 11; 
+	int64 dataSourceID = 12; 
+	bool autoSyncEnabled = 13; 
+	string dataSynced = 14; 
+	string fileName = 15; 
+	string environmentParams = 16; 
+}
+
+message GetExtrasExporttemplateByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetExtrasExporttemplateByIDReply {
+  ExtrasExporttemplate extrasExporttemplate = 1;
+}
+
+message ListExtrasExporttemplateRequest {
+  api.types.Params params = 1;
+}
+
+message ListExtrasExporttemplateReply {
+  int64 total = 1;
+  repeated ExtrasExporttemplate extrasExporttemplates = 2;
+}
+
+message DeleteExtrasExporttemplateByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteExtrasExporttemplateByIDsReply {
+
+}
+
+message GetExtrasExporttemplateByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetExtrasExporttemplateByConditionReply {
+  ExtrasExporttemplate extrasExporttemplate = 1;
+}
+
+message ListExtrasExporttemplateByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListExtrasExporttemplateByIDsReply {
+  repeated ExtrasExporttemplate extrasExporttemplates = 1;
+}
+
+message ListExtrasExporttemplateByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListExtrasExporttemplateByLastIDReply {
+  repeated ExtrasExporttemplate extrasExporttemplates = 1;
+}
+
+

@@ -1,0 +1,233 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user details by id",
+      description: "Gets detailed information of a coreObjecttype specified by the given id in the path.",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service coreObjecttype {
+  // Create a new coreObjecttype
+  rpc Create(CreateCoreObjecttypeRequest) returns (CreateCoreObjecttypeReply) {
+    option (google.api.http) = {
+      post: "/api/core/objecttypes"
+      body: "*"
+    };
+  }
+
+  // Delete a coreObjecttype by contenttypePtrID
+  rpc DeleteByContenttypePtrID(DeleteCoreObjecttypeByContenttypePtrIDRequest) returns (DeleteCoreObjecttypeByContenttypePtrIDReply) {
+    option (google.api.http) = {
+      delete: "/api/v1/coreObjecttype/{contenttypePtrID}"
+    };
+  }
+
+  // Update a coreObjecttype by contenttypePtrID
+  rpc UpdateByContenttypePtrID(UpdateCoreObjecttypeByContenttypePtrIDRequest) returns (UpdateCoreObjecttypeByContenttypePtrIDReply) {
+    option (google.api.http) = {
+      put: "/api/v1/coreObjecttype/{contenttypePtrID}"
+      body: "*"
+    };
+  }
+
+  // Get a coreObjecttype by contenttypePtrID
+  rpc GetByContenttypePtrID(GetCoreObjecttypeByContenttypePtrIDRequest) returns (GetCoreObjecttypeByContenttypePtrIDReply) {
+    option (google.api.http) = {
+      get: "/api/v1/coreObjecttype/{contenttypePtrID}"
+    };
+  }
+
+  // Get a paginated list of coreObjecttype by custom conditions
+  rpc List(ListCoreObjecttypeRequest) returns (ListCoreObjecttypeReply) {
+    option (google.api.http) = {
+      post: "/api/core/objecttypes/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete coreObjecttype by contenttypePtrID
+  rpc DeleteByContenttypePtrIDs(DeleteCoreObjecttypeByContenttypePtrIDsRequest) returns (DeleteCoreObjecttypeByContenttypePtrIDsReply) {
+    option (google.api.http) = {
+      post: "/api/core/objecttypes/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a coreObjecttype by custom conditions
+  rpc GetByCondition(GetCoreObjecttypeByConditionRequest) returns (GetCoreObjecttypeByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/core/objecttypes/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get coreObjecttype by contenttypePtrID
+  rpc ListByContenttypePtrIDs(ListCoreObjecttypeByContenttypePtrIDsRequest) returns (ListCoreObjecttypeByContenttypePtrIDsReply) {
+    option (google.api.http) = {
+      post: "/api/core/objecttypes/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of coreObjecttype by last contenttypePtrID
+  rpc ListByLastContenttypePtrID(ListCoreObjecttypeByLastContenttypePtrIDRequest) returns (ListCoreObjecttypeByLastContenttypePtrIDReply) {
+    option (google.api.http) = {
+      get: "/api/core/objecttypes"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/coreObjecttype/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getCoreObjecttype?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateCoreObjecttypeRequest {
+	int32 contenttypePtrID = 1; 
+	bool public = 2; 
+	string features = 3; 
+}
+
+message CreateCoreObjecttypeReply {
+  int32 contenttypePtrID = 1;
+}
+
+message DeleteCoreObjecttypeByContenttypePtrIDRequest {
+  int32 contenttypePtrID = 1 [(validate.rules).int32.gt = 0, (tagger.tags) = "uri:\"contenttypePtrID\""];
+}
+
+message DeleteCoreObjecttypeByContenttypePtrIDReply {
+
+}
+
+message UpdateCoreObjecttypeByContenttypePtrIDRequest {
+	int32 contenttypePtrID = 1 [(validate.rules).int32.gt = 0, (tagger.tags) = "uri:\"contenttypePtrID\""]; 
+	bool public = 2; 
+	string features = 3; 
+}
+
+message UpdateCoreObjecttypeByContenttypePtrIDReply {
+
+}
+
+message CoreObjecttype {
+	int32 contenttypePtrID = 1; 
+	bool public = 2; 
+	string features = 3; 
+}
+
+message GetCoreObjecttypeByContenttypePtrIDRequest {
+  int32 contenttypePtrID = 1 [(validate.rules).int32.gt = 0, (tagger.tags) = "uri:\"contenttypePtrID\""];
+}
+
+message GetCoreObjecttypeByContenttypePtrIDReply {
+  CoreObjecttype coreObjecttype = 1;
+}
+
+message ListCoreObjecttypeRequest {
+  api.types.Params params = 1;
+}
+
+message ListCoreObjecttypeReply {
+  int64 total = 1;
+  repeated CoreObjecttype coreObjecttypes = 2;
+}
+
+message DeleteCoreObjecttypeByContenttypePtrIDsRequest {
+  repeated int32 contenttypePtrIDs = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteCoreObjecttypeByContenttypePtrIDsReply {
+
+}
+
+message GetCoreObjecttypeByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetCoreObjecttypeByConditionReply {
+  CoreObjecttype coreObjecttype = 1;
+}
+
+message ListCoreObjecttypeByContenttypePtrIDsRequest {
+  repeated int32 contenttypePtrIDs = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListCoreObjecttypeByContenttypePtrIDsReply {
+  repeated CoreObjecttype coreObjecttypes = 1;
+}
+
+message ListCoreObjecttypeByLastContenttypePtrIDRequest {
+  int32 lastContenttypePtrID = 1 [(tagger.tags) = "form:\"lastContenttypePtrID\""];
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -contenttype_ptr_id, the - sign indicates descending order.
+}
+
+message ListCoreObjecttypeByLastContenttypePtrIDReply {
+  repeated CoreObjecttype coreObjecttypes = 1;
+}
+
+

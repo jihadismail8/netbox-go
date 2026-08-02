@@ -1,0 +1,280 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service wirelessWirelesslink {
+  // Create a new wirelessWirelesslink
+  rpc Create(CreateWirelessWirelesslinkRequest) returns (CreateWirelessWirelesslinkReply) {
+    option (google.api.http) = {
+      post: "/api/wireless/wirelesslinks"
+      body: "*"
+    };
+  }
+
+  // Delete a wirelessWirelesslink by id
+  rpc DeleteByID(DeleteWirelessWirelesslinkByIDRequest) returns (DeleteWirelessWirelesslinkByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/wireless/wirelesslinks/{id}"
+    };
+  }
+
+  // Update a wirelessWirelesslink by id
+  rpc UpdateByID(UpdateWirelessWirelesslinkByIDRequest) returns (UpdateWirelessWirelesslinkByIDReply) {
+    option (google.api.http) = {
+      put: "/api/wireless/wirelesslinks/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a wirelessWirelesslink by id
+  rpc GetByID(GetWirelessWirelesslinkByIDRequest) returns (GetWirelessWirelesslinkByIDReply) {
+    option (google.api.http) = {
+      get: "/api/wireless/wirelesslinks/{id}"
+    };
+  }
+
+  // Get a paginated list of wirelessWirelesslink by custom conditions
+  rpc List(ListWirelessWirelesslinkRequest) returns (ListWirelessWirelesslinkReply) {
+    option (google.api.http) = {
+      post: "/api/wireless/wirelesslinks/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete wirelessWirelesslink by ids
+  rpc DeleteByIDs(DeleteWirelessWirelesslinkByIDsRequest) returns (DeleteWirelessWirelesslinkByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/wireless/wirelesslinks/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a wirelessWirelesslink by custom condition
+  rpc GetByCondition(GetWirelessWirelesslinkByConditionRequest) returns (GetWirelessWirelesslinkByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/wireless/wirelesslinks/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get wirelessWirelesslink by ids
+  rpc ListByIDs(ListWirelessWirelesslinkByIDsRequest) returns (ListWirelessWirelesslinkByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/wireless/wirelesslinks/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of wirelessWirelesslink by last id
+  rpc ListByLastID(ListWirelessWirelesslinkByLastIDRequest) returns (ListWirelessWirelesslinkByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/wireless/wirelesslinks"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/wirelessWirelesslink/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getWirelessWirelesslink?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateWirelessWirelesslinkRequest {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	string ssid = 4; 
+	string status = 5; 
+	string description = 6; 
+	string authCipher = 7; 
+	string authPsk = 8; 
+	string authType = 9; 
+	int64 xInterfaceADeviceID = 10; 
+	int64 xInterfaceBDeviceID = 11; 
+	int64 interfaceAID = 12; 
+	int64 interfaceBID = 13; 
+	int64 tenantID = 14; 
+	string comments = 15; 
+	string xAbsDistance = 16; 
+	string distance = 17; 
+	string distanceUnit = 18; 
+}
+
+message CreateWirelessWirelesslinkReply {
+  uint64 id = 1;
+}
+
+message DeleteWirelessWirelesslinkByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteWirelessWirelesslinkByIDReply {
+
+}
+
+message UpdateWirelessWirelesslinkByIDRequest {
+	uint64 id = 1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	string created = 2; 
+	string lastUpdated = 3; 
+	string customFieldData = 4; 
+	string ssid = 5; 
+	string status = 6; 
+	string description = 7; 
+	string authCipher = 8; 
+	string authPsk = 9; 
+	string authType = 10; 
+	int64 xInterfaceADeviceID = 11; 
+	int64 xInterfaceBDeviceID = 12; 
+	int64 interfaceAID = 13; 
+	int64 interfaceBID = 14; 
+	int64 tenantID = 15; 
+	string comments = 16; 
+	string xAbsDistance = 17; 
+	string distance = 18; 
+	string distanceUnit = 19; 
+}
+
+message UpdateWirelessWirelesslinkByIDReply {
+
+}
+
+message WirelessWirelesslink {
+	uint64 id = 1; 
+	string created = 2; 
+	string lastUpdated = 3; 
+	string customFieldData = 4; 
+	string ssid = 5; 
+	string status = 6; 
+	string description = 7; 
+	string authCipher = 8; 
+	string authPsk = 9; 
+	string authType = 10; 
+	int64 xInterfaceADeviceID = 11; 
+	int64 xInterfaceBDeviceID = 12; 
+	int64 interfaceAID = 13; 
+	int64 interfaceBID = 14; 
+	int64 tenantID = 15; 
+	string comments = 16; 
+	string xAbsDistance = 17; 
+	string distance = 18; 
+	string distanceUnit = 19; 
+}
+
+message GetWirelessWirelesslinkByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetWirelessWirelesslinkByIDReply {
+  WirelessWirelesslink wirelessWirelesslink = 1;
+}
+
+message ListWirelessWirelesslinkRequest {
+  api.types.Params params = 1;
+}
+
+message ListWirelessWirelesslinkReply {
+  int64 total = 1;
+  repeated WirelessWirelesslink wirelessWirelesslinks = 2;
+}
+
+message DeleteWirelessWirelesslinkByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteWirelessWirelesslinkByIDsReply {
+
+}
+
+message GetWirelessWirelesslinkByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetWirelessWirelesslinkByConditionReply {
+  WirelessWirelesslink wirelessWirelesslink = 1;
+}
+
+message ListWirelessWirelesslinkByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListWirelessWirelesslinkByIDsReply {
+  repeated WirelessWirelesslink wirelessWirelesslinks = 1;
+}
+
+message ListWirelessWirelesslinkByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListWirelessWirelesslinkByLastIDReply {
+  repeated WirelessWirelesslink wirelessWirelesslinks = 1;
+}
+
+

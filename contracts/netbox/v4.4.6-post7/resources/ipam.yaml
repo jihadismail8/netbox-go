@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "module": "ipam",
+  "service": "netbox.ipam.v1.IPAMService",
+  "shared_operations": ["list", "get", "create", "replace", "update", "delete"],
+  "shared_list_fields": ["id", "q", "limit", "offset", "ordering"],
+  "shared_permissions": ["view", "add", "change", "delete", "object_visibility"],
+  "resources": [
+    {
+      "name": "VRF",
+      "rest_path": "/api/ipam/vrfs/",
+      "grpc_prefix": "VRF",
+      "writable_fields": ["name", "rd", "enforce_unique", "description", "comments"],
+      "response_only_fields": ["id", "url", "display", "created", "last_updated", "ipaddress_count", "prefix_count"],
+      "filters": ["name", "rd", "enforce_unique"],
+      "ordering": ["id", "name", "rd", "created", "last_updated"],
+      "relationships": [],
+      "delete_behavior": "protect_when_prefix_or_ipaddress_references"
+    },
+    {
+      "name": "Prefix",
+      "rest_path": "/api/ipam/prefixes/",
+      "grpc_prefix": "Prefix",
+      "writable_fields": ["prefix", "vrf", "status", "is_pool", "mark_utilized", "description", "comments"],
+      "response_only_fields": ["id", "url", "display", "created", "last_updated", "family", "children", "_depth"],
+      "choice_fields": {"family": {"value_type": "integer", "nullable": false}, "status": {"value_type": "string", "nullable": false}},
+      "filters": ["vrf_id", "vrf_rd", "prefix", "family", "status", "within", "within_include", "contains"],
+      "ordering": ["id", "vrf", "prefix", "status", "created", "last_updated"],
+      "relationships": ["vrf"],
+      "delete_behavior": "delete",
+      "network_semantics": "reject_host_bits_and_store_canonical_network"
+    },
+    {
+      "name": "IPAddress",
+      "rest_path": "/api/ipam/ip-addresses/",
+      "grpc_prefix": "IPAddress",
+      "writable_fields": ["address", "vrf", "status", "role", "dns_name", "description", "comments", "assigned_object_type", "assigned_object_id"],
+      "response_only_fields": ["id", "url", "display", "created", "last_updated", "family", "assigned_object"],
+      "choice_fields": {"family": {"value_type": "integer", "nullable": false}, "status": {"value_type": "string", "nullable": false}, "role": {"value_type": "string", "nullable": true}},
+      "filters": ["vrf_id", "vrf_rd", "address", "family", "parent", "status", "assigned", "interface_id", "device_id"],
+      "ordering": ["id", "vrf", "address", "status", "dns_name", "created", "last_updated"],
+      "relationships": ["vrf", "assigned_interface"],
+      "delete_behavior": "delete",
+      "network_semantics": "preserve_host_and_mask",
+      "grpc_actions": ["AssignIPAddress", "UnassignIPAddress"]
+    }
+  ]
+}

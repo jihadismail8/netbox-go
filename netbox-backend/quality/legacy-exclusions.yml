@@ -1,0 +1,39 @@
+version: 1
+owner: backend-rewrite
+removal_milestone: phase-10-legacy-retirement
+exclusions:
+  - scope: unit-runtime
+    package: netbox-go/internal/service
+    include_test: TestRegisterAllService
+    excluded_files: internal/service/*_client_test.go
+    classification: generated-live-server-integration
+    reason: >-
+      Sponge generated these clients to dial a separately running gRPC server.
+      They do not own that server or valid fixtures, so they are not unit tests.
+      The default gate compiles them but never presents them as behavioral
+      coverage.
+  - scope: lint
+    paths:
+      - api/netbox_go/v1
+      - api/types
+      - internal/cache
+      - internal/dao
+      - internal/ecode
+      - internal/handler
+      - internal/model
+      - internal/routers
+      - internal/service
+    classification: transitional-sponge-scaffolding
+    reason: >-
+      These directories are frozen generated or generator-shaped legacy
+      scaffolding. Replacement layer-first packages are linted with no legacy
+      exemption. Each excluded directory is deleted when its capability moves
+      to the shared implementation.
+  - scope: lint-rule
+    rule: staticcheck/QF1008
+    symbol: internal/contenttype/resolver.go:dialectIgnoreInsert
+    classification: transitional-gorm-boundary
+    reason: >-
+      The qualified db.Dialector selector documents the GORM dialect boundary
+      more clearly than eliding the embedded field. The resolver is retired
+      when Phase 3 introduces the PostgreSQL adapter.

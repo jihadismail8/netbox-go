@@ -1,0 +1,55 @@
+name: repository-gate
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+          submodules: true
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: .go-version
+          cache-dependency-path: netbox-backend/go.sum
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: npm
+          cache-dependency-path: netbox-frontend/package-lock.json
+
+      - name: Pin npm
+        run: npm install --global npm@11.16.0
+
+      - name: Install protobuf compiler
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes protobuf-compiler
+          test "$(protoc --version)" = "libprotoc 3.21.12"
+
+      - name: Install pinned Go tooling
+        env:
+          GOBIN: ${{ github.workspace }}/.tools/bin
+        run: |
+          mkdir -p "$GOBIN"
+          go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.12.2
+          go install github.com/bufbuild/buf/cmd/buf@v1.71.0
+          go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.10
+          go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.5.1
+
+      - name: Run repository gate
+        run: make check

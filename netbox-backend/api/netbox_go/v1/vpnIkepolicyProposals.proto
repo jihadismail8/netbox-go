@@ -1,0 +1,232 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service vpnIkepolicyProposals {
+  // Create a new vpnIkepolicyProposals
+  rpc Create(CreateVpnIkepolicyProposalsRequest) returns (CreateVpnIkepolicyProposalsReply) {
+    option (google.api.http) = {
+      post: "/api/vpn/vpnIkepolicyProposals"
+      body: "*"
+    };
+  }
+
+  // Delete a vpnIkepolicyProposals by id
+  rpc DeleteByID(DeleteVpnIkepolicyProposalsByIDRequest) returns (DeleteVpnIkepolicyProposalsByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/vpn/vpnIkepolicyProposals/{id}"
+    };
+  }
+
+  // Update a vpnIkepolicyProposals by id
+  rpc UpdateByID(UpdateVpnIkepolicyProposalsByIDRequest) returns (UpdateVpnIkepolicyProposalsByIDReply) {
+    option (google.api.http) = {
+      put: "/api/vpn/vpnIkepolicyProposals/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a vpnIkepolicyProposals by id
+  rpc GetByID(GetVpnIkepolicyProposalsByIDRequest) returns (GetVpnIkepolicyProposalsByIDReply) {
+    option (google.api.http) = {
+      get: "/api/vpn/vpnIkepolicyProposals/{id}"
+    };
+  }
+
+  // Get a paginated list of vpnIkepolicyProposals by custom conditions
+  rpc List(ListVpnIkepolicyProposalsRequest) returns (ListVpnIkepolicyProposalsReply) {
+    option (google.api.http) = {
+      post: "/api/vpn/vpnIkepolicyProposals/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete vpnIkepolicyProposals by ids
+  rpc DeleteByIDs(DeleteVpnIkepolicyProposalsByIDsRequest) returns (DeleteVpnIkepolicyProposalsByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/vpn/vpnIkepolicyProposals/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a vpnIkepolicyProposals by custom condition
+  rpc GetByCondition(GetVpnIkepolicyProposalsByConditionRequest) returns (GetVpnIkepolicyProposalsByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/vpn/vpnIkepolicyProposals/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get vpnIkepolicyProposals by ids
+  rpc ListByIDs(ListVpnIkepolicyProposalsByIDsRequest) returns (ListVpnIkepolicyProposalsByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/vpn/vpnIkepolicyProposals/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of vpnIkepolicyProposals by last id
+  rpc ListByLastID(ListVpnIkepolicyProposalsByLastIDRequest) returns (ListVpnIkepolicyProposalsByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/vpn/vpnIkepolicyProposals"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/vpnIkepolicyProposals/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getVpnIkepolicyProposals?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateVpnIkepolicyProposalsRequest {
+	int64 ikepolicyID = 1; 
+	int64 ikeproposalID = 2; 
+}
+
+message CreateVpnIkepolicyProposalsReply {
+  uint64 id = 1;
+}
+
+message DeleteVpnIkepolicyProposalsByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteVpnIkepolicyProposalsByIDReply {
+
+}
+
+message UpdateVpnIkepolicyProposalsByIDRequest {
+	uint64 id = 1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	int64 ikepolicyID = 2; 
+	int64 ikeproposalID = 3; 
+}
+
+message UpdateVpnIkepolicyProposalsByIDReply {
+
+}
+
+message VpnIkepolicyProposals {
+	uint64 id = 1; 
+	int64 ikepolicyID = 2; 
+	int64 ikeproposalID = 3; 
+}
+
+message GetVpnIkepolicyProposalsByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetVpnIkepolicyProposalsByIDReply {
+  VpnIkepolicyProposals vpnIkepolicyProposals = 1;
+}
+
+message ListVpnIkepolicyProposalsRequest {
+  api.types.Params params = 1;
+}
+
+message ListVpnIkepolicyProposalsReply {
+  int64 total = 1;
+  repeated VpnIkepolicyProposals vpnIkepolicyProposalss = 2;
+}
+
+message DeleteVpnIkepolicyProposalsByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteVpnIkepolicyProposalsByIDsReply {
+
+}
+
+message GetVpnIkepolicyProposalsByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetVpnIkepolicyProposalsByConditionReply {
+  VpnIkepolicyProposals vpnIkepolicyProposals = 1;
+}
+
+message ListVpnIkepolicyProposalsByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListVpnIkepolicyProposalsByIDsReply {
+  repeated VpnIkepolicyProposals vpnIkepolicyProposalss = 1;
+}
+
+message ListVpnIkepolicyProposalsByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListVpnIkepolicyProposalsByLastIDReply {
+  repeated VpnIkepolicyProposals vpnIkepolicyProposalss = 1;
+}
+
+

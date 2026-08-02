@@ -1,0 +1,303 @@
+syntax = "proto3";
+
+package netbox.dcim.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+import "netbox/types/v1/pagination.proto";
+
+option go_package = "netbox-go/gen/go/netbox/dcim/v1;dcimv1";
+
+message Site {
+  int64 id = 1;
+  string url = 2;
+  string display = 3;
+  string name = 4;
+  string slug = 5;
+  string status = 6;
+  string facility = 7;
+  string description = 8;
+  string comments = 9;
+  google.protobuf.Timestamp created = 10;
+  google.protobuf.Timestamp last_updated = 11;
+  uint64 device_count = 12;
+  uint64 prefix_count = 13;
+  uint64 rack_count = 14;
+}
+
+message SiteInput {
+  optional string name = 1;
+  optional string slug = 2;
+  optional string status = 3;
+  optional string facility = 4;
+  optional string description = 5;
+  optional string comments = 6;
+}
+
+message Manufacturer {
+  int64 id = 1;
+  string url = 2;
+  string display = 3;
+  string name = 4;
+  string slug = 5;
+  string description = 6;
+  google.protobuf.Timestamp created = 7;
+  google.protobuf.Timestamp last_updated = 8;
+  uint64 devicetype_count = 9;
+}
+
+message ManufacturerInput {
+  optional string name = 1;
+  optional string slug = 2;
+  optional string description = 3;
+}
+
+message RackRole {
+  int64 id = 1;
+  string url = 2;
+  string display = 3;
+  string name = 4;
+  string slug = 5;
+  string color = 6;
+  string description = 7;
+  google.protobuf.Timestamp created = 8;
+  google.protobuf.Timestamp last_updated = 9;
+  uint64 rack_count = 10;
+}
+
+message RackRoleInput {
+  optional string name = 1;
+  optional string slug = 2;
+  optional string color = 3;
+  optional string description = 4;
+}
+
+message RackType {
+  int64 id = 1;
+  string url = 2;
+  string display = 3;
+  netbox.types.v1.ObjectReference manufacturer = 4;
+  string model = 5;
+  string slug = 6;
+  string form_factor = 7;
+  uint32 width = 8;
+  uint32 u_height = 9;
+  uint32 starting_unit = 10;
+  bool desc_units = 11;
+  string description = 12;
+  string comments = 13;
+  google.protobuf.Timestamp created = 14;
+  google.protobuf.Timestamp last_updated = 15;
+}
+
+message RackTypeInput {
+  optional int64 manufacturer = 1;
+  optional string model = 2;
+  optional string slug = 3;
+  optional string form_factor = 4;
+  optional uint32 width = 5;
+  optional uint32 u_height = 6;
+  optional uint32 starting_unit = 7;
+  optional bool desc_units = 8;
+  optional string description = 9;
+  optional string comments = 10;
+}
+
+message Rack {
+  int64 id = 1;
+  string url = 2;
+  string display = 3;
+  netbox.types.v1.ObjectReference site = 4;
+  string name = 5;
+  string facility_id = 6;
+  google.protobuf.Int64Value rack_type_id = 7;
+  google.protobuf.Int64Value role_id = 8;
+  string status = 9;
+  string serial = 10;
+  string asset_tag = 11;
+  string form_factor = 12;
+  uint32 width = 13;
+  uint32 u_height = 14;
+  uint32 starting_unit = 15;
+  bool desc_units = 16;
+  string airflow = 17;
+  string description = 18;
+  string comments = 19;
+  google.protobuf.Timestamp created = 20;
+  google.protobuf.Timestamp last_updated = 21;
+  uint64 device_count = 22;
+}
+
+message RackInput {
+  optional int64 site = 1;
+  optional string name = 2;
+  optional string facility_id = 3;
+  google.protobuf.Int64Value rack_type = 4;
+  optional string status = 5;
+  google.protobuf.Int64Value role = 6;
+  optional string serial = 7;
+  optional string asset_tag = 8;
+  optional string form_factor = 9;
+  optional uint32 width = 10;
+  optional uint32 u_height = 11;
+  optional uint32 starting_unit = 12;
+  optional bool desc_units = 13;
+  optional string airflow = 14;
+  optional string description = 15;
+  optional string comments = 16;
+}
+
+message DeviceRole {
+  int64 id = 1;
+  string url = 2;
+  string display = 3;
+  google.protobuf.Int64Value parent_id = 4;
+  string name = 5;
+  string slug = 6;
+  string color = 7;
+  bool vm_role = 8;
+  string description = 9;
+  string comments = 10;
+  google.protobuf.Timestamp created = 11;
+  google.protobuf.Timestamp last_updated = 12;
+  uint64 device_count = 13;
+  uint32 depth = 14;
+}
+
+message DeviceRoleInput {
+  google.protobuf.Int64Value parent = 1;
+  optional string name = 2;
+  optional string slug = 3;
+  optional string color = 4;
+  optional bool vm_role = 5;
+  optional string description = 6;
+  optional string comments = 7;
+}
+
+message DeviceType {
+  int64 id = 1;
+  string url = 2;
+  string display = 3;
+  netbox.types.v1.ObjectReference manufacturer = 4;
+  string model = 5;
+  string slug = 6;
+  string part_number = 7;
+  string u_height = 8;
+  bool exclude_from_utilization = 9;
+  bool is_full_depth = 10;
+  string airflow = 11;
+  string description = 12;
+  string comments = 13;
+  google.protobuf.Timestamp created = 14;
+  google.protobuf.Timestamp last_updated = 15;
+  uint64 device_count = 16;
+  uint64 interface_template_count = 17;
+}
+
+message DeviceTypeInput {
+  optional int64 manufacturer = 1;
+  optional string model = 2;
+  optional string slug = 3;
+  optional string part_number = 4;
+  optional string u_height = 5;
+  optional bool exclude_from_utilization = 6;
+  optional bool is_full_depth = 7;
+  optional string airflow = 8;
+  optional string description = 9;
+  optional string comments = 10;
+}
+
+message InterfaceTemplate {
+  int64 id = 1;
+  string url = 2;
+  string display = 3;
+  netbox.types.v1.ObjectReference device_type = 4;
+  string name = 5;
+  string label = 6;
+  string type = 7;
+  bool enabled = 8;
+  bool mgmt_only = 9;
+  string description = 10;
+  google.protobuf.Timestamp created = 11;
+  google.protobuf.Timestamp last_updated = 12;
+}
+
+message InterfaceTemplateInput {
+  optional int64 device_type = 1;
+  optional string name = 2;
+  optional string label = 3;
+  optional string type = 4;
+  optional bool enabled = 5;
+  optional bool mgmt_only = 6;
+  optional string description = 7;
+}
+
+message Device {
+  int64 id = 1;
+  string url = 2;
+  string display = 3;
+  netbox.types.v1.ObjectReference device_type = 4;
+  netbox.types.v1.ObjectReference role = 5;
+  string name = 6;
+  netbox.types.v1.ObjectReference site = 7;
+  google.protobuf.Int64Value rack_id = 8;
+  string position = 9;
+  string face = 10;
+  string status = 11;
+  string serial = 12;
+  string asset_tag = 13;
+  string airflow = 14;
+  string description = 15;
+  string comments = 16;
+  google.protobuf.Timestamp created = 17;
+  google.protobuf.Timestamp last_updated = 18;
+  uint64 interface_count = 19;
+}
+
+message DeviceInput {
+  optional int64 device_type = 1;
+  optional int64 role = 2;
+  google.protobuf.StringValue name = 3;
+  optional int64 site = 4;
+  google.protobuf.Int64Value rack = 5;
+  google.protobuf.StringValue position = 6;
+  google.protobuf.StringValue face = 7;
+  optional string status = 8;
+  optional string serial = 9;
+  google.protobuf.StringValue asset_tag = 10;
+  optional string airflow = 11;
+  optional string description = 12;
+  optional string comments = 13;
+}
+
+message Interface {
+  int64 id = 1;
+  string url = 2;
+  string display = 3;
+  netbox.types.v1.ObjectReference device = 4;
+  string name = 5;
+  string label = 6;
+  string type = 7;
+  bool enabled = 8;
+  bool mgmt_only = 9;
+  google.protobuf.Int32Value mtu = 10;
+  google.protobuf.Int64Value speed = 11;
+  google.protobuf.StringValue duplex = 12;
+  string description = 13;
+  google.protobuf.Timestamp created = 14;
+  google.protobuf.Timestamp last_updated = 15;
+  uint64 count_ipaddresses = 16;
+}
+
+message InterfaceInput {
+  optional int64 device = 1;
+  optional string name = 2;
+  optional string label = 3;
+  optional string type = 4;
+  optional bool enabled = 5;
+  optional bool mgmt_only = 6;
+  google.protobuf.Int32Value mtu = 7;
+  google.protobuf.Int64Value speed = 8;
+  google.protobuf.StringValue duplex = 9;
+  optional string description = 10;
+}

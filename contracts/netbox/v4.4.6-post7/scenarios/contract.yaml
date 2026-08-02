@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "scenarios": [
+    {
+      "id": "contract.surface-manifest",
+      "given": ["validated profile and generated public-interface manifests"],
+      "when": ["compare REST, gRPC, Vue, and profile capability keys"],
+      "then": ["no undeclared route, RPC, field, filter, or UI capability", "every mismatch has an explicit classification and owner"]
+    },
+    {
+      "id": "contract.oracle-pin",
+      "given": ["differential harness startup"],
+      "when": ["oracle SHA or committed configuration differs"],
+      "then": ["harness refuses to run before recording compatibility evidence"]
+    },
+    {
+      "id": "contract.transport-errors",
+      "given": ["shared application errors"],
+      "when": ["map validation, unauthenticated, forbidden, not-found, conflict, and internal failures"],
+      "then": ["REST and gRPC use their documented status shapes", "stable reason and field details match", "internal causes are not exposed"]
+    }
+  ]
+}

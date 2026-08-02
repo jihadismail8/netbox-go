@@ -1,0 +1,2559 @@
+{
+  "schema_version": 1,
+  "compatibility_baseline": "v4.4.6-post7",
+  "source": "checked-in oracle netbox/netbox/*/api/{urls,views}.py at fbb948d30e79ce657fac62994a22aca72c1770a9",
+  "generated": true,
+  "entries": [
+    {
+      "id": "baseline:rest-action:core:background-tasks:delete",
+      "kind": "action",
+      "module": "core",
+      "path": "/api/core/background-tasks/{id}/delete/",
+      "methods": [
+        "POST"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "core-future-profile",
+      "oracle_view": "BackgroundTaskViewSet.delete"
+    },
+    {
+      "id": "baseline:rest-action:core:background-tasks:enqueue",
+      "kind": "action",
+      "module": "core",
+      "path": "/api/core/background-tasks/{id}/enqueue/",
+      "methods": [
+        "POST"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "core-future-profile",
+      "oracle_view": "BackgroundTaskViewSet.enqueue"
+    },
+    {
+      "id": "baseline:rest-action:core:background-tasks:requeue",
+      "kind": "action",
+      "module": "core",
+      "path": "/api/core/background-tasks/{id}/requeue/",
+      "methods": [
+        "POST"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "core-future-profile",
+      "oracle_view": "BackgroundTaskViewSet.requeue"
+    },
+    {
+      "id": "baseline:rest-action:core:background-tasks:stop",
+      "kind": "action",
+      "module": "core",
+      "path": "/api/core/background-tasks/{id}/stop/",
+      "methods": [
+        "POST"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "core-future-profile",
+      "oracle_view": "BackgroundTaskViewSet.stop"
+    },
+    {
+      "id": "baseline:rest-action:core:data-sources:sync",
+      "kind": "action",
+      "module": "core",
+      "path": "/api/core/data-sources/{id}/sync/",
+      "methods": [
+        "POST"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "core-future-profile",
+      "oracle_view": "DataSourceViewSet.sync"
+    },
+    {
+      "id": "baseline:rest-action:dcim:console-ports:trace",
+      "kind": "action",
+      "module": "dcim",
+      "path": "/api/dcim/console-ports/{id}/trace/",
+      "methods": [
+        "GET"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "PathEndpointMixin.trace"
+    },
+    {
+      "id": "baseline:rest-action:dcim:console-server-ports:trace",
+      "kind": "action",
+      "module": "dcim",
+      "path": "/api/dcim/console-server-ports/{id}/trace/",
+      "methods": [
+        "GET"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "PathEndpointMixin.trace"
+    },
+    {
+      "id": "baseline:rest-action:dcim:front-ports:paths",
+      "kind": "action",
+      "module": "dcim",
+      "path": "/api/dcim/front-ports/{id}/paths/",
+      "methods": [
+        "GET"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "PassThroughPortMixin.paths"
+    },
+    {
+      "id": "baseline:rest-action:dcim:interfaces:trace",
+      "kind": "action",
+      "module": "dcim",
+      "path": "/api/dcim/interfaces/{id}/trace/",
+      "methods": [
+        "GET"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "PathEndpointMixin.trace"
+    },
+    {
+      "id": "baseline:rest-action:dcim:power-feeds:trace",
+      "kind": "action",
+      "module": "dcim",
+      "path": "/api/dcim/power-feeds/{id}/trace/",
+      "methods": [
+        "GET"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "PathEndpointMixin.trace"
+    },
+    {
+      "id": "baseline:rest-action:dcim:power-outlets:trace",
+      "kind": "action",
+      "module": "dcim",
+      "path": "/api/dcim/power-outlets/{id}/trace/",
+      "methods": [
+        "GET"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "PathEndpointMixin.trace"
+    },
+    {
+      "id": "baseline:rest-action:dcim:power-ports:trace",
+      "kind": "action",
+      "module": "dcim",
+      "path": "/api/dcim/power-ports/{id}/trace/",
+      "methods": [
+        "GET"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "PathEndpointMixin.trace"
+    },
+    {
+      "id": "baseline:rest-action:dcim:racks:elevation",
+      "kind": "action",
+      "module": "dcim",
+      "path": "/api/dcim/racks/{id}/elevation/",
+      "methods": [
+        "GET"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "RackViewSet.elevation"
+    },
+    {
+      "id": "baseline:rest-action:dcim:rear-ports:paths",
+      "kind": "action",
+      "module": "dcim",
+      "path": "/api/dcim/rear-ports/{id}/paths/",
+      "methods": [
+        "GET"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "PassThroughPortMixin.paths"
+    },
+    {
+      "id": "baseline:rest-action:extras:config-templates:render",
+      "kind": "action",
+      "module": "extras",
+      "path": "/api/extras/config-templates/{id}/render/",
+      "methods": [
+        "POST"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "oracle_view": "ConfigTemplateViewSet.render"
+    },
+    {
+      "id": "baseline:rest-action:extras:custom-field-choice-sets:choices",
+      "kind": "action",
+      "module": "extras",
+      "path": "/api/extras/custom-field-choice-sets/{id}/choices/",
+      "methods": [
+        "GET"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "oracle_view": "CustomFieldChoiceSetViewSet.choices"
+    },
+    {
+      "id": "baseline:rest-explicit:extras:dashboard-",
+      "kind": "action",
+      "module": "extras",
+      "path": "/api/extras/dashboard/",
+      "methods": [
+        "GET",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "oracle_view": "DashboardView"
+    },
+    {
+      "id": "baseline:rest-explicit:ipam:asn-ranges-int-pk-available-asns-",
+      "kind": "action",
+      "module": "ipam",
+      "path": "/api/ipam/asn-ranges/{id}/available-asns/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "oracle_view": "AvailableASNsView"
+    },
+    {
+      "id": "baseline:rest-explicit:ipam:ip-ranges-int-pk-available-ips-",
+      "kind": "action",
+      "module": "ipam",
+      "path": "/api/ipam/ip-ranges/{id}/available-ips/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "oracle_view": "IPRangeAvailableIPAddressesView"
+    },
+    {
+      "id": "baseline:rest-explicit:ipam:prefixes-int-pk-available-ips-",
+      "kind": "action",
+      "module": "ipam",
+      "path": "/api/ipam/prefixes/{id}/available-ips/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "oracle_view": "PrefixAvailableIPAddressesView"
+    },
+    {
+      "id": "baseline:rest-explicit:ipam:prefixes-int-pk-available-prefixes-",
+      "kind": "action",
+      "module": "ipam",
+      "path": "/api/ipam/prefixes/{id}/available-prefixes/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "oracle_view": "AvailablePrefixesView"
+    },
+    {
+      "id": "baseline:rest-explicit:ipam:vlan-groups-int-pk-available-vlans-",
+      "kind": "action",
+      "module": "ipam",
+      "path": "/api/ipam/vlan-groups/{id}/available-vlans/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "oracle_view": "AvailableVLANsView"
+    },
+    {
+      "id": "baseline:rest-explicit:users:tokens-provision-",
+      "kind": "action",
+      "module": "users",
+      "path": "/api/users/tokens/provision/",
+      "methods": [
+        "POST"
+      ],
+      "classification": "out_of_scope",
+      "tier": "T0",
+      "owner": "architecture",
+      "oracle_view": "TokenProvisionView"
+    },
+    {
+      "id": "baseline:rest:circuits:circuit-group-assignments",
+      "kind": "resource",
+      "module": "circuits",
+      "path": "/api/circuits/circuit-group-assignments/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "circuits-future-profile",
+      "oracle_view": "CircuitGroupAssignmentViewSet"
+    },
+    {
+      "id": "baseline:rest:circuits:circuit-groups",
+      "kind": "resource",
+      "module": "circuits",
+      "path": "/api/circuits/circuit-groups/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "circuits-future-profile",
+      "oracle_view": "CircuitGroupViewSet"
+    },
+    {
+      "id": "baseline:rest:circuits:circuit-terminations",
+      "kind": "resource",
+      "module": "circuits",
+      "path": "/api/circuits/circuit-terminations/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "circuits-future-profile",
+      "oracle_view": "CircuitTerminationViewSet"
+    },
+    {
+      "id": "baseline:rest:circuits:circuit-types",
+      "kind": "resource",
+      "module": "circuits",
+      "path": "/api/circuits/circuit-types/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "circuits-future-profile",
+      "oracle_view": "CircuitTypeViewSet"
+    },
+    {
+      "id": "baseline:rest:circuits:circuits",
+      "kind": "resource",
+      "module": "circuits",
+      "path": "/api/circuits/circuits/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "circuits-future-profile",
+      "oracle_view": "CircuitViewSet"
+    },
+    {
+      "id": "baseline:rest:circuits:provider-accounts",
+      "kind": "resource",
+      "module": "circuits",
+      "path": "/api/circuits/provider-accounts/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "circuits-future-profile",
+      "oracle_view": "ProviderAccountViewSet"
+    },
+    {
+      "id": "baseline:rest:circuits:provider-networks",
+      "kind": "resource",
+      "module": "circuits",
+      "path": "/api/circuits/provider-networks/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "circuits-future-profile",
+      "oracle_view": "ProviderNetworkViewSet"
+    },
+    {
+      "id": "baseline:rest:circuits:providers",
+      "kind": "resource",
+      "module": "circuits",
+      "path": "/api/circuits/providers/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "circuits-future-profile",
+      "oracle_view": "ProviderViewSet"
+    },
+    {
+      "id": "baseline:rest:circuits:virtual-circuit-terminations",
+      "kind": "resource",
+      "module": "circuits",
+      "path": "/api/circuits/virtual-circuit-terminations/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "circuits-future-profile",
+      "oracle_view": "VirtualCircuitTerminationViewSet"
+    },
+    {
+      "id": "baseline:rest:circuits:virtual-circuit-types",
+      "kind": "resource",
+      "module": "circuits",
+      "path": "/api/circuits/virtual-circuit-types/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "circuits-future-profile",
+      "oracle_view": "VirtualCircuitTypeViewSet"
+    },
+    {
+      "id": "baseline:rest:circuits:virtual-circuits",
+      "kind": "resource",
+      "module": "circuits",
+      "path": "/api/circuits/virtual-circuits/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "circuits-future-profile",
+      "oracle_view": "VirtualCircuitViewSet"
+    },
+    {
+      "id": "baseline:rest:core:background-queues",
+      "kind": "resource",
+      "module": "core",
+      "path": "/api/core/background-queues/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "core-future-profile",
+      "oracle_view": "BackgroundQueueViewSet"
+    },
+    {
+      "id": "baseline:rest:core:background-tasks",
+      "kind": "resource",
+      "module": "core",
+      "path": "/api/core/background-tasks/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "core-future-profile",
+      "oracle_view": "BackgroundTaskViewSet"
+    },
+    {
+      "id": "baseline:rest:core:background-workers",
+      "kind": "resource",
+      "module": "core",
+      "path": "/api/core/background-workers/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "core-future-profile",
+      "oracle_view": "BackgroundWorkerViewSet"
+    },
+    {
+      "id": "baseline:rest:core:data-files",
+      "kind": "resource",
+      "module": "core",
+      "path": "/api/core/data-files/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "core-future-profile",
+      "oracle_view": "DataFileViewSet"
+    },
+    {
+      "id": "baseline:rest:core:data-sources",
+      "kind": "resource",
+      "module": "core",
+      "path": "/api/core/data-sources/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "core-future-profile",
+      "oracle_view": "DataSourceViewSet"
+    },
+    {
+      "id": "baseline:rest:core:jobs",
+      "kind": "resource",
+      "module": "core",
+      "path": "/api/core/jobs/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "core-future-profile",
+      "oracle_view": "JobViewSet"
+    },
+    {
+      "id": "baseline:rest:core:object-changes",
+      "kind": "resource",
+      "module": "core",
+      "path": "/api/core/object-changes/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "core-future-profile",
+      "oracle_view": "ObjectChangeViewSet"
+    },
+    {
+      "id": "baseline:rest:core:object-types",
+      "kind": "resource",
+      "module": "core",
+      "path": "/api/core/object-types/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "core-future-profile",
+      "oracle_view": "ObjectTypeViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:cable-terminations",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/cable-terminations/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "CableTerminationViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:cables",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/cables/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "CableViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:connected-device",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/connected-device/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "ConnectedDeviceViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:console-port-templates",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/console-port-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "ConsolePortTemplateViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:console-ports",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/console-ports/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "ConsolePortViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:console-server-port-templates",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/console-server-port-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "ConsoleServerPortTemplateViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:console-server-ports",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/console-server-ports/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "ConsoleServerPortViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:device-bay-templates",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/device-bay-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "DeviceBayTemplateViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:device-bays",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/device-bays/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "DeviceBayViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:device-roles",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/device-roles/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T0",
+      "owner": "dcim-core-workflow",
+      "oracle_view": "DeviceRoleViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:device-types",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/device-types/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T0",
+      "owner": "dcim-core-workflow",
+      "oracle_view": "DeviceTypeViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:devices",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/devices/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T0",
+      "owner": "dcim-core-workflow",
+      "oracle_view": "DeviceViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:front-port-templates",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/front-port-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "FrontPortTemplateViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:front-ports",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/front-ports/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "FrontPortViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:interface-templates",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/interface-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T0",
+      "owner": "dcim-core-workflow",
+      "oracle_view": "InterfaceTemplateViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:interfaces",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/interfaces/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T0",
+      "owner": "dcim-core-workflow",
+      "oracle_view": "InterfaceViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:inventory-item-roles",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/inventory-item-roles/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "InventoryItemRoleViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:inventory-item-templates",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/inventory-item-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "InventoryItemTemplateViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:inventory-items",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/inventory-items/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "InventoryItemViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:locations",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/locations/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "LocationViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:mac-addresses",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/mac-addresses/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "MACAddressViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:manufacturers",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/manufacturers/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T0",
+      "owner": "dcim-core-workflow",
+      "oracle_view": "ManufacturerViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:module-bay-templates",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/module-bay-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "ModuleBayTemplateViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:module-bays",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/module-bays/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "ModuleBayViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:module-type-profiles",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/module-type-profiles/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "ModuleTypeProfileViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:module-types",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/module-types/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "ModuleTypeViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:modules",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/modules/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "ModuleViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:platforms",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/platforms/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "PlatformViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:power-feeds",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/power-feeds/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "PowerFeedViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:power-outlet-templates",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/power-outlet-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "PowerOutletTemplateViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:power-outlets",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/power-outlets/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "PowerOutletViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:power-panels",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/power-panels/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "PowerPanelViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:power-port-templates",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/power-port-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "PowerPortTemplateViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:power-ports",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/power-ports/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "PowerPortViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:rack-reservations",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/rack-reservations/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "RackReservationViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:rack-roles",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/rack-roles/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T0",
+      "owner": "dcim-core-workflow",
+      "oracle_view": "RackRoleViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:rack-types",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/rack-types/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T0",
+      "owner": "dcim-core-workflow",
+      "oracle_view": "RackTypeViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:racks",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/racks/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T0",
+      "owner": "dcim-core-workflow",
+      "oracle_view": "RackViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:rear-port-templates",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/rear-port-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "RearPortTemplateViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:rear-ports",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/rear-ports/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "RearPortViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:regions",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/regions/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "RegionViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:site-groups",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/site-groups/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "SiteGroupViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:sites",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/sites/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T0",
+      "owner": "dcim-core-workflow",
+      "oracle_view": "SiteViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:virtual-chassis",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/virtual-chassis/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "VirtualChassisViewSet"
+    },
+    {
+      "id": "baseline:rest:dcim:virtual-device-contexts",
+      "kind": "resource",
+      "module": "dcim",
+      "path": "/api/dcim/virtual-device-contexts/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "oracle_view": "VirtualDeviceContextViewSet"
+    },
+    {
+      "id": "baseline:rest:extras:bookmarks",
+      "kind": "resource",
+      "module": "extras",
+      "path": "/api/extras/bookmarks/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "oracle_view": "BookmarkViewSet"
+    },
+    {
+      "id": "baseline:rest:extras:config-context-profiles",
+      "kind": "resource",
+      "module": "extras",
+      "path": "/api/extras/config-context-profiles/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "oracle_view": "ConfigContextProfileViewSet"
+    },
+    {
+      "id": "baseline:rest:extras:config-contexts",
+      "kind": "resource",
+      "module": "extras",
+      "path": "/api/extras/config-contexts/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "oracle_view": "ConfigContextViewSet"
+    },
+    {
+      "id": "baseline:rest:extras:config-templates",
+      "kind": "resource",
+      "module": "extras",
+      "path": "/api/extras/config-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "oracle_view": "ConfigTemplateViewSet"
+    },
+    {
+      "id": "baseline:rest:extras:custom-field-choice-sets",
+      "kind": "resource",
+      "module": "extras",
+      "path": "/api/extras/custom-field-choice-sets/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "oracle_view": "CustomFieldChoiceSetViewSet"
+    },
+    {
+      "id": "baseline:rest:extras:custom-fields",
+      "kind": "resource",
+      "module": "extras",
+      "path": "/api/extras/custom-fields/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "oracle_view": "CustomFieldViewSet"
+    },
+    {
+      "id": "baseline:rest:extras:custom-links",
+      "kind": "resource",
+      "module": "extras",
+      "path": "/api/extras/custom-links/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "oracle_view": "CustomLinkViewSet"
+    },
+    {
+      "id": "baseline:rest:extras:event-rules",
+      "kind": "resource",
+      "module": "extras",
+      "path": "/api/extras/event-rules/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "oracle_view": "EventRuleViewSet"
+    },
+    {
+      "id": "baseline:rest:extras:export-templates",
+      "kind": "resource",
+      "module": "extras",
+      "path": "/api/extras/export-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "oracle_view": "ExportTemplateViewSet"
+    },
+    {
+      "id": "baseline:rest:extras:image-attachments",
+      "kind": "resource",
+      "module": "extras",
+      "path": "/api/extras/image-attachments/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "oracle_view": "ImageAttachmentViewSet"
+    },
+    {
+      "id": "baseline:rest:extras:journal-entries",
+      "kind": "resource",
+      "module": "extras",
+      "path": "/api/extras/journal-entries/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "oracle_view": "JournalEntryViewSet"
+    },
+    {
+      "id": "baseline:rest:extras:notification-groups",
+      "kind": "resource",
+      "module": "extras",
+      "path": "/api/extras/notification-groups/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "oracle_view": "NotificationGroupViewSet"
+    },
+    {
+      "id": "baseline:rest:extras:notifications",
+      "kind": "resource",
+      "module": "extras",
+      "path": "/api/extras/notifications/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "oracle_view": "NotificationViewSet"
+    },
+    {
+      "id": "baseline:rest:extras:saved-filters",
+      "kind": "resource",
+      "module": "extras",
+      "path": "/api/extras/saved-filters/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "oracle_view": "SavedFilterViewSet"
+    },
+    {
+      "id": "baseline:rest:extras:scripts",
+      "kind": "resource",
+      "module": "extras",
+      "path": "/api/extras/scripts/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "out_of_scope",
+      "tier": "T0",
+      "owner": "architecture",
+      "oracle_view": "ScriptViewSet"
+    },
+    {
+      "id": "baseline:rest:extras:subscriptions",
+      "kind": "resource",
+      "module": "extras",
+      "path": "/api/extras/subscriptions/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "oracle_view": "SubscriptionViewSet"
+    },
+    {
+      "id": "baseline:rest:extras:table-configs",
+      "kind": "resource",
+      "module": "extras",
+      "path": "/api/extras/table-configs/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "oracle_view": "TableConfigViewSet"
+    },
+    {
+      "id": "baseline:rest:extras:tagged-objects",
+      "kind": "resource",
+      "module": "extras",
+      "path": "/api/extras/tagged-objects/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "oracle_view": "TaggedItemViewSet"
+    },
+    {
+      "id": "baseline:rest:extras:tags",
+      "kind": "resource",
+      "module": "extras",
+      "path": "/api/extras/tags/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "oracle_view": "TagViewSet"
+    },
+    {
+      "id": "baseline:rest:extras:webhooks",
+      "kind": "resource",
+      "module": "extras",
+      "path": "/api/extras/webhooks/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "oracle_view": "WebhookViewSet"
+    },
+    {
+      "id": "baseline:rest:ipam:aggregates",
+      "kind": "resource",
+      "module": "ipam",
+      "path": "/api/ipam/aggregates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "oracle_view": "AggregateViewSet"
+    },
+    {
+      "id": "baseline:rest:ipam:asn-ranges",
+      "kind": "resource",
+      "module": "ipam",
+      "path": "/api/ipam/asn-ranges/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "oracle_view": "ASNRangeViewSet"
+    },
+    {
+      "id": "baseline:rest:ipam:asns",
+      "kind": "resource",
+      "module": "ipam",
+      "path": "/api/ipam/asns/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "oracle_view": "ASNViewSet"
+    },
+    {
+      "id": "baseline:rest:ipam:fhrp-group-assignments",
+      "kind": "resource",
+      "module": "ipam",
+      "path": "/api/ipam/fhrp-group-assignments/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "oracle_view": "FHRPGroupAssignmentViewSet"
+    },
+    {
+      "id": "baseline:rest:ipam:fhrp-groups",
+      "kind": "resource",
+      "module": "ipam",
+      "path": "/api/ipam/fhrp-groups/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "oracle_view": "FHRPGroupViewSet"
+    },
+    {
+      "id": "baseline:rest:ipam:ip-addresses",
+      "kind": "resource",
+      "module": "ipam",
+      "path": "/api/ipam/ip-addresses/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T0",
+      "owner": "ipam-core-workflow",
+      "oracle_view": "IPAddressViewSet"
+    },
+    {
+      "id": "baseline:rest:ipam:ip-ranges",
+      "kind": "resource",
+      "module": "ipam",
+      "path": "/api/ipam/ip-ranges/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "oracle_view": "IPRangeViewSet"
+    },
+    {
+      "id": "baseline:rest:ipam:prefixes",
+      "kind": "resource",
+      "module": "ipam",
+      "path": "/api/ipam/prefixes/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T0",
+      "owner": "ipam-core-workflow",
+      "oracle_view": "PrefixViewSet"
+    },
+    {
+      "id": "baseline:rest:ipam:rirs",
+      "kind": "resource",
+      "module": "ipam",
+      "path": "/api/ipam/rirs/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "oracle_view": "RIRViewSet"
+    },
+    {
+      "id": "baseline:rest:ipam:roles",
+      "kind": "resource",
+      "module": "ipam",
+      "path": "/api/ipam/roles/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "oracle_view": "RoleViewSet"
+    },
+    {
+      "id": "baseline:rest:ipam:route-targets",
+      "kind": "resource",
+      "module": "ipam",
+      "path": "/api/ipam/route-targets/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "oracle_view": "RouteTargetViewSet"
+    },
+    {
+      "id": "baseline:rest:ipam:service-templates",
+      "kind": "resource",
+      "module": "ipam",
+      "path": "/api/ipam/service-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "oracle_view": "ServiceTemplateViewSet"
+    },
+    {
+      "id": "baseline:rest:ipam:services",
+      "kind": "resource",
+      "module": "ipam",
+      "path": "/api/ipam/services/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "oracle_view": "ServiceViewSet"
+    },
+    {
+      "id": "baseline:rest:ipam:vlan-groups",
+      "kind": "resource",
+      "module": "ipam",
+      "path": "/api/ipam/vlan-groups/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "oracle_view": "VLANGroupViewSet"
+    },
+    {
+      "id": "baseline:rest:ipam:vlan-translation-policies",
+      "kind": "resource",
+      "module": "ipam",
+      "path": "/api/ipam/vlan-translation-policies/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "oracle_view": "VLANTranslationPolicyViewSet"
+    },
+    {
+      "id": "baseline:rest:ipam:vlan-translation-rules",
+      "kind": "resource",
+      "module": "ipam",
+      "path": "/api/ipam/vlan-translation-rules/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "oracle_view": "VLANTranslationRuleViewSet"
+    },
+    {
+      "id": "baseline:rest:ipam:vlans",
+      "kind": "resource",
+      "module": "ipam",
+      "path": "/api/ipam/vlans/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "oracle_view": "VLANViewSet"
+    },
+    {
+      "id": "baseline:rest:ipam:vrfs",
+      "kind": "resource",
+      "module": "ipam",
+      "path": "/api/ipam/vrfs/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T0",
+      "owner": "ipam-core-workflow",
+      "oracle_view": "VRFViewSet"
+    },
+    {
+      "id": "baseline:rest:tenancy:contact-assignments",
+      "kind": "resource",
+      "module": "tenancy",
+      "path": "/api/tenancy/contact-assignments/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "tenancy-future-profile",
+      "oracle_view": "ContactAssignmentViewSet"
+    },
+    {
+      "id": "baseline:rest:tenancy:contact-groups",
+      "kind": "resource",
+      "module": "tenancy",
+      "path": "/api/tenancy/contact-groups/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "tenancy-future-profile",
+      "oracle_view": "ContactGroupViewSet"
+    },
+    {
+      "id": "baseline:rest:tenancy:contact-roles",
+      "kind": "resource",
+      "module": "tenancy",
+      "path": "/api/tenancy/contact-roles/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "tenancy-future-profile",
+      "oracle_view": "ContactRoleViewSet"
+    },
+    {
+      "id": "baseline:rest:tenancy:contacts",
+      "kind": "resource",
+      "module": "tenancy",
+      "path": "/api/tenancy/contacts/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "tenancy-future-profile",
+      "oracle_view": "ContactViewSet"
+    },
+    {
+      "id": "baseline:rest:tenancy:tenant-groups",
+      "kind": "resource",
+      "module": "tenancy",
+      "path": "/api/tenancy/tenant-groups/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "tenancy-future-profile",
+      "oracle_view": "TenantGroupViewSet"
+    },
+    {
+      "id": "baseline:rest:tenancy:tenants",
+      "kind": "resource",
+      "module": "tenancy",
+      "path": "/api/tenancy/tenants/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "tenancy-future-profile",
+      "oracle_view": "TenantViewSet"
+    },
+    {
+      "id": "baseline:rest:users:config",
+      "kind": "resource",
+      "module": "users",
+      "path": "/api/users/config/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "users-future-profile",
+      "oracle_view": "UserConfigViewSet"
+    },
+    {
+      "id": "baseline:rest:users:groups",
+      "kind": "resource",
+      "module": "users",
+      "path": "/api/users/groups/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "users-future-profile",
+      "oracle_view": "GroupViewSet"
+    },
+    {
+      "id": "baseline:rest:users:permissions",
+      "kind": "resource",
+      "module": "users",
+      "path": "/api/users/permissions/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "users-future-profile",
+      "oracle_view": "ObjectPermissionViewSet"
+    },
+    {
+      "id": "baseline:rest:users:tokens",
+      "kind": "resource",
+      "module": "users",
+      "path": "/api/users/tokens/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "users-future-profile",
+      "oracle_view": "TokenViewSet"
+    },
+    {
+      "id": "baseline:rest:users:users",
+      "kind": "resource",
+      "module": "users",
+      "path": "/api/users/users/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "users-future-profile",
+      "oracle_view": "UserViewSet"
+    },
+    {
+      "id": "baseline:rest:virtualization:cluster-groups",
+      "kind": "resource",
+      "module": "virtualization",
+      "path": "/api/virtualization/cluster-groups/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "virtualization-future-profile",
+      "oracle_view": "ClusterGroupViewSet"
+    },
+    {
+      "id": "baseline:rest:virtualization:cluster-types",
+      "kind": "resource",
+      "module": "virtualization",
+      "path": "/api/virtualization/cluster-types/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "virtualization-future-profile",
+      "oracle_view": "ClusterTypeViewSet"
+    },
+    {
+      "id": "baseline:rest:virtualization:clusters",
+      "kind": "resource",
+      "module": "virtualization",
+      "path": "/api/virtualization/clusters/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "virtualization-future-profile",
+      "oracle_view": "ClusterViewSet"
+    },
+    {
+      "id": "baseline:rest:virtualization:interfaces",
+      "kind": "resource",
+      "module": "virtualization",
+      "path": "/api/virtualization/interfaces/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "virtualization-future-profile",
+      "oracle_view": "VMInterfaceViewSet"
+    },
+    {
+      "id": "baseline:rest:virtualization:virtual-disks",
+      "kind": "resource",
+      "module": "virtualization",
+      "path": "/api/virtualization/virtual-disks/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "virtualization-future-profile",
+      "oracle_view": "VirtualDiskViewSet"
+    },
+    {
+      "id": "baseline:rest:virtualization:virtual-machines",
+      "kind": "resource",
+      "module": "virtualization",
+      "path": "/api/virtualization/virtual-machines/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "virtualization-future-profile",
+      "oracle_view": "VirtualMachineViewSet"
+    },
+    {
+      "id": "baseline:rest:vpn:ike-policies",
+      "kind": "resource",
+      "module": "vpn",
+      "path": "/api/vpn/ike-policies/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "vpn-future-profile",
+      "oracle_view": "IKEPolicyViewSet"
+    },
+    {
+      "id": "baseline:rest:vpn:ike-proposals",
+      "kind": "resource",
+      "module": "vpn",
+      "path": "/api/vpn/ike-proposals/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "vpn-future-profile",
+      "oracle_view": "IKEProposalViewSet"
+    },
+    {
+      "id": "baseline:rest:vpn:ipsec-policies",
+      "kind": "resource",
+      "module": "vpn",
+      "path": "/api/vpn/ipsec-policies/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "vpn-future-profile",
+      "oracle_view": "IPSecPolicyViewSet"
+    },
+    {
+      "id": "baseline:rest:vpn:ipsec-profiles",
+      "kind": "resource",
+      "module": "vpn",
+      "path": "/api/vpn/ipsec-profiles/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "vpn-future-profile",
+      "oracle_view": "IPSecProfileViewSet"
+    },
+    {
+      "id": "baseline:rest:vpn:ipsec-proposals",
+      "kind": "resource",
+      "module": "vpn",
+      "path": "/api/vpn/ipsec-proposals/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "vpn-future-profile",
+      "oracle_view": "IPSecProposalViewSet"
+    },
+    {
+      "id": "baseline:rest:vpn:l2vpn-terminations",
+      "kind": "resource",
+      "module": "vpn",
+      "path": "/api/vpn/l2vpn-terminations/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "vpn-future-profile",
+      "oracle_view": "L2VPNTerminationViewSet"
+    },
+    {
+      "id": "baseline:rest:vpn:l2vpns",
+      "kind": "resource",
+      "module": "vpn",
+      "path": "/api/vpn/l2vpns/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "vpn-future-profile",
+      "oracle_view": "L2VPNViewSet"
+    },
+    {
+      "id": "baseline:rest:vpn:tunnel-groups",
+      "kind": "resource",
+      "module": "vpn",
+      "path": "/api/vpn/tunnel-groups/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "vpn-future-profile",
+      "oracle_view": "TunnelGroupViewSet"
+    },
+    {
+      "id": "baseline:rest:vpn:tunnel-terminations",
+      "kind": "resource",
+      "module": "vpn",
+      "path": "/api/vpn/tunnel-terminations/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "vpn-future-profile",
+      "oracle_view": "TunnelTerminationViewSet"
+    },
+    {
+      "id": "baseline:rest:vpn:tunnels",
+      "kind": "resource",
+      "module": "vpn",
+      "path": "/api/vpn/tunnels/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "vpn-future-profile",
+      "oracle_view": "TunnelViewSet"
+    },
+    {
+      "id": "baseline:rest:wireless:wireless-lan-groups",
+      "kind": "resource",
+      "module": "wireless",
+      "path": "/api/wireless/wireless-lan-groups/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "wireless-future-profile",
+      "oracle_view": "WirelessLANGroupViewSet"
+    },
+    {
+      "id": "baseline:rest:wireless:wireless-lans",
+      "kind": "resource",
+      "module": "wireless",
+      "path": "/api/wireless/wireless-lans/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "wireless-future-profile",
+      "oracle_view": "WirelessLANViewSet"
+    },
+    {
+      "id": "baseline:rest:wireless:wireless-links",
+      "kind": "resource",
+      "module": "wireless",
+      "path": "/api/wireless/wireless-links/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "wireless-future-profile",
+      "oracle_view": "WirelessLinkViewSet"
+    }
+  ]
+}

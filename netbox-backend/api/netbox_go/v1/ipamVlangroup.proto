@@ -1,0 +1,259 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service ipamVlangroup {
+  // Create a new ipamVlangroup
+  rpc Create(CreateIpamVlangroupRequest) returns (CreateIpamVlangroupReply) {
+    option (google.api.http) = {
+      post: "/api/ipam/vlangroups"
+      body: "*"
+    };
+  }
+
+  // Delete a ipamVlangroup by id
+  rpc DeleteByID(DeleteIpamVlangroupByIDRequest) returns (DeleteIpamVlangroupByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/ipam/vlangroups/{id}"
+    };
+  }
+
+  // Update a ipamVlangroup by id
+  rpc UpdateByID(UpdateIpamVlangroupByIDRequest) returns (UpdateIpamVlangroupByIDReply) {
+    option (google.api.http) = {
+      put: "/api/ipam/vlangroups/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a ipamVlangroup by id
+  rpc GetByID(GetIpamVlangroupByIDRequest) returns (GetIpamVlangroupByIDReply) {
+    option (google.api.http) = {
+      get: "/api/ipam/vlangroups/{id}"
+    };
+  }
+
+  // Get a paginated list of ipamVlangroup by custom conditions
+  rpc List(ListIpamVlangroupRequest) returns (ListIpamVlangroupReply) {
+    option (google.api.http) = {
+      post: "/api/ipam/vlangroups/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete ipamVlangroup by ids
+  rpc DeleteByIDs(DeleteIpamVlangroupByIDsRequest) returns (DeleteIpamVlangroupByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/ipam/vlangroups/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a ipamVlangroup by custom condition
+  rpc GetByCondition(GetIpamVlangroupByConditionRequest) returns (GetIpamVlangroupByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/ipam/vlangroups/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get ipamVlangroup by ids
+  rpc ListByIDs(ListIpamVlangroupByIDsRequest) returns (ListIpamVlangroupByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/ipam/vlangroups/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of ipamVlangroup by last id
+  rpc ListByLastID(ListIpamVlangroupByLastIDRequest) returns (ListIpamVlangroupByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/ipam/vlangroups"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/ipamVlangroup/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getIpamVlangroup?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateIpamVlangroupRequest {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	string name = 4; 
+	string slug = 5; 
+	int64 scopeID = 6; 
+	string description = 7; 
+	int32 scopeTypeID = 8; 
+	string vidRanges = 9; 
+	int64 xTotalVlanIds = 10; 
+	int64 tenantID = 11; 
+}
+
+message CreateIpamVlangroupReply {
+  uint64 id = 1;
+}
+
+message DeleteIpamVlangroupByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteIpamVlangroupByIDReply {
+
+}
+
+message UpdateIpamVlangroupByIDRequest {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	uint64 id = 4 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	string name = 5; 
+	string slug = 6; 
+	int64 scopeID = 7; 
+	string description = 8; 
+	int32 scopeTypeID = 9; 
+	string vidRanges = 10; 
+	int64 xTotalVlanIds = 11; 
+	int64 tenantID = 12; 
+}
+
+message UpdateIpamVlangroupByIDReply {
+
+}
+
+message IpamVlangroup {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	uint64 id = 4; 
+	string name = 5; 
+	string slug = 6; 
+	int64 scopeID = 7; 
+	string description = 8; 
+	int32 scopeTypeID = 9; 
+	string vidRanges = 10; 
+	int64 xTotalVlanIds = 11; 
+	int64 tenantID = 12; 
+}
+
+message GetIpamVlangroupByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetIpamVlangroupByIDReply {
+  IpamVlangroup ipamVlangroup = 1;
+}
+
+message ListIpamVlangroupRequest {
+  api.types.Params params = 1;
+}
+
+message ListIpamVlangroupReply {
+  int64 total = 1;
+  repeated IpamVlangroup ipamVlangroups = 2;
+}
+
+message DeleteIpamVlangroupByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteIpamVlangroupByIDsReply {
+
+}
+
+message GetIpamVlangroupByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetIpamVlangroupByConditionReply {
+  IpamVlangroup ipamVlangroup = 1;
+}
+
+message ListIpamVlangroupByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListIpamVlangroupByIDsReply {
+  repeated IpamVlangroup ipamVlangroups = 1;
+}
+
+message ListIpamVlangroupByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListIpamVlangroupByLastIDReply {
+  repeated IpamVlangroup ipamVlangroups = 1;
+}
+
+

@@ -1,0 +1,265 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service extrasConfigcontext {
+  // Create a new extrasConfigcontext
+  rpc Create(CreateExtrasConfigcontextRequest) returns (CreateExtrasConfigcontextReply) {
+    option (google.api.http) = {
+      post: "/api/extras/configcontexts"
+      body: "*"
+    };
+  }
+
+  // Delete a extrasConfigcontext by id
+  rpc DeleteByID(DeleteExtrasConfigcontextByIDRequest) returns (DeleteExtrasConfigcontextByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/extras/configcontexts/{id}"
+    };
+  }
+
+  // Update a extrasConfigcontext by id
+  rpc UpdateByID(UpdateExtrasConfigcontextByIDRequest) returns (UpdateExtrasConfigcontextByIDReply) {
+    option (google.api.http) = {
+      put: "/api/extras/configcontexts/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a extrasConfigcontext by id
+  rpc GetByID(GetExtrasConfigcontextByIDRequest) returns (GetExtrasConfigcontextByIDReply) {
+    option (google.api.http) = {
+      get: "/api/extras/configcontexts/{id}"
+    };
+  }
+
+  // Get a paginated list of extrasConfigcontext by custom conditions
+  rpc List(ListExtrasConfigcontextRequest) returns (ListExtrasConfigcontextReply) {
+    option (google.api.http) = {
+      post: "/api/extras/configcontexts/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete extrasConfigcontext by ids
+  rpc DeleteByIDs(DeleteExtrasConfigcontextByIDsRequest) returns (DeleteExtrasConfigcontextByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/extras/configcontexts/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a extrasConfigcontext by custom condition
+  rpc GetByCondition(GetExtrasConfigcontextByConditionRequest) returns (GetExtrasConfigcontextByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/extras/configcontexts/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get extrasConfigcontext by ids
+  rpc ListByIDs(ListExtrasConfigcontextByIDsRequest) returns (ListExtrasConfigcontextByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/extras/configcontexts/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of extrasConfigcontext by last id
+  rpc ListByLastID(ListExtrasConfigcontextByLastIDRequest) returns (ListExtrasConfigcontextByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/extras/configcontexts"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/extrasConfigcontext/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getExtrasConfigcontext?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateExtrasConfigcontextRequest {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string name = 3; 
+	int32 weight = 4; 
+	string description = 5; 
+	bool isActive = 6; 
+	string data = 7; 
+	int64 dataFileID = 8; 
+	string dataPath = 9; 
+	int64 dataSourceID = 10; 
+	bool autoSyncEnabled = 11; 
+	string dataSynced = 12; 
+	int64 profileID = 13; 
+}
+
+message CreateExtrasConfigcontextReply {
+  uint64 id = 1;
+}
+
+message DeleteExtrasConfigcontextByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteExtrasConfigcontextByIDReply {
+
+}
+
+message UpdateExtrasConfigcontextByIDRequest {
+	string created = 1; 
+	string lastUpdated = 2; 
+	uint64 id = 3 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	string name = 4; 
+	int32 weight = 5; 
+	string description = 6; 
+	bool isActive = 7; 
+	string data = 8; 
+	int64 dataFileID = 9; 
+	string dataPath = 10; 
+	int64 dataSourceID = 11; 
+	bool autoSyncEnabled = 12; 
+	string dataSynced = 13; 
+	int64 profileID = 14; 
+}
+
+message UpdateExtrasConfigcontextByIDReply {
+
+}
+
+message ExtrasConfigcontext {
+	string created = 1; 
+	string lastUpdated = 2; 
+	uint64 id = 3; 
+	string name = 4; 
+	int32 weight = 5; 
+	string description = 6; 
+	bool isActive = 7; 
+	string data = 8; 
+	int64 dataFileID = 9; 
+	string dataPath = 10; 
+	int64 dataSourceID = 11; 
+	bool autoSyncEnabled = 12; 
+	string dataSynced = 13; 
+	int64 profileID = 14; 
+}
+
+message GetExtrasConfigcontextByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetExtrasConfigcontextByIDReply {
+  ExtrasConfigcontext extrasConfigcontext = 1;
+}
+
+message ListExtrasConfigcontextRequest {
+  api.types.Params params = 1;
+}
+
+message ListExtrasConfigcontextReply {
+  int64 total = 1;
+  repeated ExtrasConfigcontext extrasConfigcontexts = 2;
+}
+
+message DeleteExtrasConfigcontextByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteExtrasConfigcontextByIDsReply {
+
+}
+
+message GetExtrasConfigcontextByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetExtrasConfigcontextByConditionReply {
+  ExtrasConfigcontext extrasConfigcontext = 1;
+}
+
+message ListExtrasConfigcontextByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListExtrasConfigcontextByIDsReply {
+  repeated ExtrasConfigcontext extrasConfigcontexts = 1;
+}
+
+message ListExtrasConfigcontextByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListExtrasConfigcontextByLastIDReply {
+  repeated ExtrasConfigcontext extrasConfigcontexts = 1;
+}
+
+

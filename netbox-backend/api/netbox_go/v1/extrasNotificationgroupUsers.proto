@@ -1,0 +1,232 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service extrasNotificationgroupUsers {
+  // Create a new extrasNotificationgroupUsers
+  rpc Create(CreateExtrasNotificationgroupUsersRequest) returns (CreateExtrasNotificationgroupUsersReply) {
+    option (google.api.http) = {
+      post: "/api/extras/extrasNotificationgroupUsers"
+      body: "*"
+    };
+  }
+
+  // Delete a extrasNotificationgroupUsers by id
+  rpc DeleteByID(DeleteExtrasNotificationgroupUsersByIDRequest) returns (DeleteExtrasNotificationgroupUsersByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/extras/extrasNotificationgroupUsers/{id}"
+    };
+  }
+
+  // Update a extrasNotificationgroupUsers by id
+  rpc UpdateByID(UpdateExtrasNotificationgroupUsersByIDRequest) returns (UpdateExtrasNotificationgroupUsersByIDReply) {
+    option (google.api.http) = {
+      put: "/api/extras/extrasNotificationgroupUsers/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a extrasNotificationgroupUsers by id
+  rpc GetByID(GetExtrasNotificationgroupUsersByIDRequest) returns (GetExtrasNotificationgroupUsersByIDReply) {
+    option (google.api.http) = {
+      get: "/api/extras/extrasNotificationgroupUsers/{id}"
+    };
+  }
+
+  // Get a paginated list of extrasNotificationgroupUsers by custom conditions
+  rpc List(ListExtrasNotificationgroupUsersRequest) returns (ListExtrasNotificationgroupUsersReply) {
+    option (google.api.http) = {
+      post: "/api/extras/extrasNotificationgroupUsers/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete extrasNotificationgroupUsers by ids
+  rpc DeleteByIDs(DeleteExtrasNotificationgroupUsersByIDsRequest) returns (DeleteExtrasNotificationgroupUsersByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/extras/extrasNotificationgroupUsers/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a extrasNotificationgroupUsers by custom condition
+  rpc GetByCondition(GetExtrasNotificationgroupUsersByConditionRequest) returns (GetExtrasNotificationgroupUsersByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/extras/extrasNotificationgroupUsers/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get extrasNotificationgroupUsers by ids
+  rpc ListByIDs(ListExtrasNotificationgroupUsersByIDsRequest) returns (ListExtrasNotificationgroupUsersByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/extras/extrasNotificationgroupUsers/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of extrasNotificationgroupUsers by last id
+  rpc ListByLastID(ListExtrasNotificationgroupUsersByLastIDRequest) returns (ListExtrasNotificationgroupUsersByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/extras/extrasNotificationgroupUsers"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/extrasNotificationgroupUsers/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getExtrasNotificationgroupUsers?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateExtrasNotificationgroupUsersRequest {
+	int64 notificationgroupID = 1; 
+	int64 userID = 2; 
+}
+
+message CreateExtrasNotificationgroupUsersReply {
+  uint64 id = 1;
+}
+
+message DeleteExtrasNotificationgroupUsersByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteExtrasNotificationgroupUsersByIDReply {
+
+}
+
+message UpdateExtrasNotificationgroupUsersByIDRequest {
+	uint64 id = 1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	int64 notificationgroupID = 2; 
+	int64 userID = 3; 
+}
+
+message UpdateExtrasNotificationgroupUsersByIDReply {
+
+}
+
+message ExtrasNotificationgroupUsers {
+	uint64 id = 1; 
+	int64 notificationgroupID = 2; 
+	int64 userID = 3; 
+}
+
+message GetExtrasNotificationgroupUsersByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetExtrasNotificationgroupUsersByIDReply {
+  ExtrasNotificationgroupUsers extrasNotificationgroupUsers = 1;
+}
+
+message ListExtrasNotificationgroupUsersRequest {
+  api.types.Params params = 1;
+}
+
+message ListExtrasNotificationgroupUsersReply {
+  int64 total = 1;
+  repeated ExtrasNotificationgroupUsers extrasNotificationgroupUserss = 2;
+}
+
+message DeleteExtrasNotificationgroupUsersByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteExtrasNotificationgroupUsersByIDsReply {
+
+}
+
+message GetExtrasNotificationgroupUsersByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetExtrasNotificationgroupUsersByConditionReply {
+  ExtrasNotificationgroupUsers extrasNotificationgroupUsers = 1;
+}
+
+message ListExtrasNotificationgroupUsersByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListExtrasNotificationgroupUsersByIDsReply {
+  repeated ExtrasNotificationgroupUsers extrasNotificationgroupUserss = 1;
+}
+
+message ListExtrasNotificationgroupUsersByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListExtrasNotificationgroupUsersByLastIDReply {
+  repeated ExtrasNotificationgroupUsers extrasNotificationgroupUserss = 1;
+}
+
+

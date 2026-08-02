@@ -1,0 +1,71 @@
+# Container-specific configuration for docker-compose deployments.
+# This overrides the local dev config to point at the postgres container.
+#
+# app settings
+app:
+  name: "netbox_go"
+  env: "prod"
+  version: "v0.0.0"
+  host: "0.0.0.0"
+  enableStat: true
+  enableMetrics: true
+  enableHTTPProfile: false
+  enableLimit: false
+  enableCircuitBreaker: false
+  enableTrace: false
+  tracingSamplingRate: 1.0
+  cacheType: ""
+
+# http server settings
+http:
+  port: 8080
+  timeout: 0
+  tls:
+    enableMode: ""
+    domain: ""
+    email: ""
+    certFile: ""
+    keyFile: ""
+
+# grpc server settings
+grpc:
+  port: 7682
+  httpPort: 7683
+  enableToken: false
+  serverSecure:
+    type: ""
+    caFile: ""
+    certFile: ""
+    keyFile: ""
+
+# grpc client-side settings
+grpcClient: []
+
+# logger settings
+logger:
+  level: "info"
+  format: "json"
+  isSave: false
+
+# database settings — points to the postgres container
+database:
+  driver: "postgresql"
+  postgresql:
+    # Overridden by NETBOX_DATABASE_DSN in docker-compose.yml.
+    dsn: "netbox:netbox-dev-only@postgres:5432/netbox?sslmode=disable"
+    enableLog: false
+    maxIdleConns: 10
+    maxOpenConns: 100
+    connMaxLifetime: 30
+
+# redis settings
+redis:
+  dsn: ""
+  dialTimeout: 10
+  readTimeout: 2
+  writeTimeout: 2
+
+# jaeger settings
+jaeger:
+  agentHost: ""
+  agentPort: 6831

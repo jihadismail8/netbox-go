@@ -1,0 +1,18 @@
+# Build artifacts
+dist/
+coverage/
+node_modules/
+
+# Generated/vendored
+docs/apis.swagger.json
+docs/apis.openapi3.json
+public/
+
+# Lockfiles & env
+package-lock.json
+.env
+.env.*
+
+# Large generated files
+*.min.js
+*.min.css

@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "scenarios": [
+    {
+      "id": "ipam.prefix-and-address-semantics",
+      "given": ["global and VRF namespaces"],
+      "when": ["create Prefixes and IPAddresses with host bits, masks, duplicate hosts, /0, and containment filters"],
+      "then": ["Prefix rejects host bits with the canonical network suggestion", "Prefix stores canonical networks", "IPAddress preserves host and mask", "IPAddress need not have a containing Prefix", "uniqueness and /0 rejection match the oracle"]
+    },
+    {
+      "id": "ipam.assign-interface",
+      "given": ["unassigned IPAddress", "Device Interface"],
+      "when": ["REST PATCH supplies assigned_object_type and assigned_object_id or gRPC AssignIPAddress is called"],
+      "then": ["one shared atomic assignment use case commits", "both transports return the same state", "change record exists"]
+    },
+    {
+      "id": "ipam.assignment-presence-matrix",
+      "given": ["assigned and unassigned IPAddresses"],
+      "when": ["assignment type and ID are omitted, null, or concrete in every supported combination"],
+      "then": ["both null unassigns", "both omitted preserves", "valid partial reassignment preserves the other current value", "invalid pairs are rejected without writes"]
+    },
+    {
+      "id": "ipam.address-edge-rules",
+      "given": ["IPv4 and IPv6 Prefixes"],
+      "when": ["assign network, broadcast, /31, /32, /127, /128, SLAAC, and mixed-case DNS values"],
+      "then": ["ordinary network and broadcast addresses reject", "documented point-to-point exceptions pass", "SLAAC is IPv6 only", "DNS lowercases"]
+    }
+  ]
+}

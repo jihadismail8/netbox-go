@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "id": "netbox-v4.4.6-post7",
+  "product": "NetBox",
+  "git_sha": "fbb948d30e79ce657fac62994a22aca72c1770a9",
+  "git_describe": "v4.4.6-7-gfbb948d30",
+  "rest_prefix": "/api/",
+  "compatibility_interface": "https-rest",
+  "grpc_compatibility": "semantic-parity-extension",
+  "runtime_dependency": false,
+  "profile": "profiles/core-workflow-v1.yaml"
+}

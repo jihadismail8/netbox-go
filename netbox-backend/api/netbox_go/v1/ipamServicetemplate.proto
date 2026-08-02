@@ -1,0 +1,250 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service ipamServicetemplate {
+  // Create a new ipamServicetemplate
+  rpc Create(CreateIpamServicetemplateRequest) returns (CreateIpamServicetemplateReply) {
+    option (google.api.http) = {
+      post: "/api/ipam/servicetemplates"
+      body: "*"
+    };
+  }
+
+  // Delete a ipamServicetemplate by id
+  rpc DeleteByID(DeleteIpamServicetemplateByIDRequest) returns (DeleteIpamServicetemplateByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/ipam/servicetemplates/{id}"
+    };
+  }
+
+  // Update a ipamServicetemplate by id
+  rpc UpdateByID(UpdateIpamServicetemplateByIDRequest) returns (UpdateIpamServicetemplateByIDReply) {
+    option (google.api.http) = {
+      put: "/api/ipam/servicetemplates/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a ipamServicetemplate by id
+  rpc GetByID(GetIpamServicetemplateByIDRequest) returns (GetIpamServicetemplateByIDReply) {
+    option (google.api.http) = {
+      get: "/api/ipam/servicetemplates/{id}"
+    };
+  }
+
+  // Get a paginated list of ipamServicetemplate by custom conditions
+  rpc List(ListIpamServicetemplateRequest) returns (ListIpamServicetemplateReply) {
+    option (google.api.http) = {
+      post: "/api/ipam/servicetemplates/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete ipamServicetemplate by ids
+  rpc DeleteByIDs(DeleteIpamServicetemplateByIDsRequest) returns (DeleteIpamServicetemplateByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/ipam/servicetemplates/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a ipamServicetemplate by custom condition
+  rpc GetByCondition(GetIpamServicetemplateByConditionRequest) returns (GetIpamServicetemplateByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/ipam/servicetemplates/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get ipamServicetemplate by ids
+  rpc ListByIDs(ListIpamServicetemplateByIDsRequest) returns (ListIpamServicetemplateByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/ipam/servicetemplates/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of ipamServicetemplate by last id
+  rpc ListByLastID(ListIpamServicetemplateByLastIDRequest) returns (ListIpamServicetemplateByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/ipam/servicetemplates"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/ipamServicetemplate/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getIpamServicetemplate?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateIpamServicetemplateRequest {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	string protocol = 4; 
+	string ports = 5; 
+	string description = 6; 
+	string name = 7; 
+	string comments = 8; 
+}
+
+message CreateIpamServicetemplateReply {
+  uint64 id = 1;
+}
+
+message DeleteIpamServicetemplateByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteIpamServicetemplateByIDReply {
+
+}
+
+message UpdateIpamServicetemplateByIDRequest {
+	uint64 id = 1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	string created = 2; 
+	string lastUpdated = 3; 
+	string customFieldData = 4; 
+	string protocol = 5; 
+	string ports = 6; 
+	string description = 7; 
+	string name = 8; 
+	string comments = 9; 
+}
+
+message UpdateIpamServicetemplateByIDReply {
+
+}
+
+message IpamServicetemplate {
+	uint64 id = 1; 
+	string created = 2; 
+	string lastUpdated = 3; 
+	string customFieldData = 4; 
+	string protocol = 5; 
+	string ports = 6; 
+	string description = 7; 
+	string name = 8; 
+	string comments = 9; 
+}
+
+message GetIpamServicetemplateByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetIpamServicetemplateByIDReply {
+  IpamServicetemplate ipamServicetemplate = 1;
+}
+
+message ListIpamServicetemplateRequest {
+  api.types.Params params = 1;
+}
+
+message ListIpamServicetemplateReply {
+  int64 total = 1;
+  repeated IpamServicetemplate ipamServicetemplates = 2;
+}
+
+message DeleteIpamServicetemplateByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteIpamServicetemplateByIDsReply {
+
+}
+
+message GetIpamServicetemplateByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetIpamServicetemplateByConditionReply {
+  IpamServicetemplate ipamServicetemplate = 1;
+}
+
+message ListIpamServicetemplateByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListIpamServicetemplateByIDsReply {
+  repeated IpamServicetemplate ipamServicetemplates = 1;
+}
+
+message ListIpamServicetemplateByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListIpamServicetemplateByLastIDReply {
+  repeated IpamServicetemplate ipamServicetemplates = 1;
+}
+
+

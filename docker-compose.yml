@@ -1,0 +1,52 @@
+services:
+  # ─────────────────────────────────────────────────────────────
+  # PostgreSQL database
+  # ─────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: netbox
+      POSTGRES_PASSWORD: "${NETBOX_POSTGRES_PASSWORD:-netbox-dev-only}"
+      POSTGRES_DB: netbox
+    ports:
+      - "${NETBOX_POSTGRES_BIND:-127.0.0.1}:${NETBOX_POSTGRES_PORT:-5435}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U netbox -d netbox"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ─────────────────────────────────────────────────────────────
+  # NetBox Go application (Go backend + Vue.js frontend)
+  # ─────────────────────────────────────────────────────────────
+  netbox-go:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: netbox-go:latest
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NETBOX_DATABASE_DSN: "netbox:${NETBOX_POSTGRES_PASSWORD:-netbox-dev-only}@postgres:5432/netbox?sslmode=disable"
+      # The root Compose file is the disposable development stack. Production
+      # deployments must set NETBOX_APP_ENV=prod and terminate TLS.
+      NETBOX_APP_ENV: "${NETBOX_APP_ENV:-dev}"
+    ports:
+      - "${NETBOX_HTTP_BIND:-127.0.0.1}:${NETBOX_HTTP_PORT:-8080}:8080" # HTTP REST API + Vue.js frontend
+      - "${NETBOX_GRPC_BIND:-127.0.0.1}:${NETBOX_GRPC_PORT:-7682}:7682" # gRPC API
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+volumes:
+  postgres_data:
+    driver: local

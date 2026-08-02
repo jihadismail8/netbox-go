@@ -1,0 +1,238 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service socialAuthCode {
+  // Create a new socialAuthCode
+  rpc Create(CreateSocialAuthCodeRequest) returns (CreateSocialAuthCodeReply) {
+    option (google.api.http) = {
+      post: "/api/users/auth-codes"
+      body: "*"
+    };
+  }
+
+  // Delete a socialAuthCode by id
+  rpc DeleteByID(DeleteSocialAuthCodeByIDRequest) returns (DeleteSocialAuthCodeByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/users/auth-codes/{id}"
+    };
+  }
+
+  // Update a socialAuthCode by id
+  rpc UpdateByID(UpdateSocialAuthCodeByIDRequest) returns (UpdateSocialAuthCodeByIDReply) {
+    option (google.api.http) = {
+      put: "/api/users/auth-codes/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a socialAuthCode by id
+  rpc GetByID(GetSocialAuthCodeByIDRequest) returns (GetSocialAuthCodeByIDReply) {
+    option (google.api.http) = {
+      get: "/api/users/auth-codes/{id}"
+    };
+  }
+
+  // Get a paginated list of socialAuthCode by custom conditions
+  rpc List(ListSocialAuthCodeRequest) returns (ListSocialAuthCodeReply) {
+    option (google.api.http) = {
+      post: "/api/users/auth-codes/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete socialAuthCode by ids
+  rpc DeleteByIDs(DeleteSocialAuthCodeByIDsRequest) returns (DeleteSocialAuthCodeByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/users/auth-codes/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a socialAuthCode by custom condition
+  rpc GetByCondition(GetSocialAuthCodeByConditionRequest) returns (GetSocialAuthCodeByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/users/auth-codes/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get socialAuthCode by ids
+  rpc ListByIDs(ListSocialAuthCodeByIDsRequest) returns (ListSocialAuthCodeByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/users/auth-codes/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of socialAuthCode by last id
+  rpc ListByLastID(ListSocialAuthCodeByLastIDRequest) returns (ListSocialAuthCodeByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/users/auth-codes"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/socialAuthCode/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getSocialAuthCode?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateSocialAuthCodeRequest {
+	string email = 1; 
+	string code = 2; 
+	bool verified = 3; 
+	string timestamp = 4; 
+}
+
+message CreateSocialAuthCodeReply {
+  uint64 id = 1;
+}
+
+message DeleteSocialAuthCodeByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteSocialAuthCodeByIDReply {
+
+}
+
+message UpdateSocialAuthCodeByIDRequest {
+	uint64 id = 1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	string email = 2; 
+	string code = 3; 
+	bool verified = 4; 
+	string timestamp = 5; 
+}
+
+message UpdateSocialAuthCodeByIDReply {
+
+}
+
+message SocialAuthCode {
+	uint64 id = 1; 
+	string email = 2; 
+	string code = 3; 
+	bool verified = 4; 
+	string timestamp = 5; 
+}
+
+message GetSocialAuthCodeByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetSocialAuthCodeByIDReply {
+  SocialAuthCode socialAuthCode = 1;
+}
+
+message ListSocialAuthCodeRequest {
+  api.types.Params params = 1;
+}
+
+message ListSocialAuthCodeReply {
+  int64 total = 1;
+  repeated SocialAuthCode socialAuthCodes = 2;
+}
+
+message DeleteSocialAuthCodeByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteSocialAuthCodeByIDsReply {
+
+}
+
+message GetSocialAuthCodeByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetSocialAuthCodeByConditionReply {
+  SocialAuthCode socialAuthCode = 1;
+}
+
+message ListSocialAuthCodeByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListSocialAuthCodeByIDsReply {
+  repeated SocialAuthCode socialAuthCodes = 1;
+}
+
+message ListSocialAuthCodeByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListSocialAuthCodeByLastIDReply {
+  repeated SocialAuthCode socialAuthCodes = 1;
+}
+
+

@@ -1,0 +1,244 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service virtualizationClustergroup {
+  // Create a new virtualizationClustergroup
+  rpc Create(CreateVirtualizationClustergroupRequest) returns (CreateVirtualizationClustergroupReply) {
+    option (google.api.http) = {
+      post: "/api/virtualization/clustergroups"
+      body: "*"
+    };
+  }
+
+  // Delete a virtualizationClustergroup by id
+  rpc DeleteByID(DeleteVirtualizationClustergroupByIDRequest) returns (DeleteVirtualizationClustergroupByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/virtualization/clustergroups/{id}"
+    };
+  }
+
+  // Update a virtualizationClustergroup by id
+  rpc UpdateByID(UpdateVirtualizationClustergroupByIDRequest) returns (UpdateVirtualizationClustergroupByIDReply) {
+    option (google.api.http) = {
+      put: "/api/virtualization/clustergroups/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a virtualizationClustergroup by id
+  rpc GetByID(GetVirtualizationClustergroupByIDRequest) returns (GetVirtualizationClustergroupByIDReply) {
+    option (google.api.http) = {
+      get: "/api/virtualization/clustergroups/{id}"
+    };
+  }
+
+  // Get a paginated list of virtualizationClustergroup by custom conditions
+  rpc List(ListVirtualizationClustergroupRequest) returns (ListVirtualizationClustergroupReply) {
+    option (google.api.http) = {
+      post: "/api/virtualization/clustergroups/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete virtualizationClustergroup by ids
+  rpc DeleteByIDs(DeleteVirtualizationClustergroupByIDsRequest) returns (DeleteVirtualizationClustergroupByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/virtualization/clustergroups/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a virtualizationClustergroup by custom condition
+  rpc GetByCondition(GetVirtualizationClustergroupByConditionRequest) returns (GetVirtualizationClustergroupByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/virtualization/clustergroups/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get virtualizationClustergroup by ids
+  rpc ListByIDs(ListVirtualizationClustergroupByIDsRequest) returns (ListVirtualizationClustergroupByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/virtualization/clustergroups/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of virtualizationClustergroup by last id
+  rpc ListByLastID(ListVirtualizationClustergroupByLastIDRequest) returns (ListVirtualizationClustergroupByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/virtualization/clustergroups"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/virtualizationClustergroup/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getVirtualizationClustergroup?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateVirtualizationClustergroupRequest {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	string name = 4; 
+	string slug = 5; 
+	string description = 6; 
+}
+
+message CreateVirtualizationClustergroupReply {
+  uint64 id = 1;
+}
+
+message DeleteVirtualizationClustergroupByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteVirtualizationClustergroupByIDReply {
+
+}
+
+message UpdateVirtualizationClustergroupByIDRequest {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	uint64 id = 4 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	string name = 5; 
+	string slug = 6; 
+	string description = 7; 
+}
+
+message UpdateVirtualizationClustergroupByIDReply {
+
+}
+
+message VirtualizationClustergroup {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	uint64 id = 4; 
+	string name = 5; 
+	string slug = 6; 
+	string description = 7; 
+}
+
+message GetVirtualizationClustergroupByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetVirtualizationClustergroupByIDReply {
+  VirtualizationClustergroup virtualizationClustergroup = 1;
+}
+
+message ListVirtualizationClustergroupRequest {
+  api.types.Params params = 1;
+}
+
+message ListVirtualizationClustergroupReply {
+  int64 total = 1;
+  repeated VirtualizationClustergroup virtualizationClustergroups = 2;
+}
+
+message DeleteVirtualizationClustergroupByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteVirtualizationClustergroupByIDsReply {
+
+}
+
+message GetVirtualizationClustergroupByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetVirtualizationClustergroupByConditionReply {
+  VirtualizationClustergroup virtualizationClustergroup = 1;
+}
+
+message ListVirtualizationClustergroupByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListVirtualizationClustergroupByIDsReply {
+  repeated VirtualizationClustergroup virtualizationClustergroups = 1;
+}
+
+message ListVirtualizationClustergroupByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListVirtualizationClustergroupByLastIDReply {
+  repeated VirtualizationClustergroup virtualizationClustergroups = 1;
+}
+
+

@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "scenarios": [
+    {
+      "id": "identity.missing-credential-denied",
+      "given": ["no credential"],
+      "when": ["read any protected profile resource over REST and gRPC"],
+      "then": ["unauthenticated", "no durable write"]
+    },
+    {
+      "id": "identity.session-login-logout",
+      "given": ["active administrator with a valid password"],
+      "when": ["obtain CSRF", "login", "read session", "logout"],
+      "then": ["session identifier rotates", "cookie is HttpOnly and SameSite", "logout revokes the session"]
+    },
+    {
+      "id": "identity.token-lifecycle",
+      "given": ["authenticated principal with token-management permission"],
+      "when": ["create token", "use token in REST and gRPC", "list tokens", "revoke token"],
+      "then": ["secret returned once", "list omits secret", "both transports resolve the same principal", "revoked token is rejected"]
+    },
+    {
+      "id": "identity.permission-matrix",
+      "given": ["principals with view, add, change, delete, and object restrictions"],
+      "when": ["run the same operation through REST and gRPC"],
+      "then": ["allow and deny outcomes match", "list visibility matches", "denied mutations write nothing"]
+    },
+    {
+      "id": "identity.local-administration",
+      "given": ["an empty identity store or an authenticated active superuser at the local CLI"],
+      "when": ["bootstrap the first administrator", "create a non-superuser", "grant one global model permission by username"],
+      "then": ["all passwords are read only from protected stdin", "no credential is emitted in output or SQL logs", "a non-superuser cannot administer permissions", "no anonymous HTTP or RPC provisioning surface exists"]
+    }
+  ]
+}

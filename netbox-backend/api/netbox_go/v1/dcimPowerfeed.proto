@@ -1,0 +1,289 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service dcimPowerfeed {
+  // Create a new dcimPowerfeed
+  rpc Create(CreateDcimPowerfeedRequest) returns (CreateDcimPowerfeedReply) {
+    option (google.api.http) = {
+      post: "/api/dcim/powerfeeds"
+      body: "*"
+    };
+  }
+
+  // Delete a dcimPowerfeed by id
+  rpc DeleteByID(DeleteDcimPowerfeedByIDRequest) returns (DeleteDcimPowerfeedByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/dcim/powerfeeds/{id}"
+    };
+  }
+
+  // Update a dcimPowerfeed by id
+  rpc UpdateByID(UpdateDcimPowerfeedByIDRequest) returns (UpdateDcimPowerfeedByIDReply) {
+    option (google.api.http) = {
+      put: "/api/dcim/powerfeeds/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a dcimPowerfeed by id
+  rpc GetByID(GetDcimPowerfeedByIDRequest) returns (GetDcimPowerfeedByIDReply) {
+    option (google.api.http) = {
+      get: "/api/dcim/powerfeeds/{id}"
+    };
+  }
+
+  // Get a paginated list of dcimPowerfeed by custom conditions
+  rpc List(ListDcimPowerfeedRequest) returns (ListDcimPowerfeedReply) {
+    option (google.api.http) = {
+      post: "/api/dcim/powerfeeds/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete dcimPowerfeed by ids
+  rpc DeleteByIDs(DeleteDcimPowerfeedByIDsRequest) returns (DeleteDcimPowerfeedByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/dcim/powerfeeds/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a dcimPowerfeed by custom condition
+  rpc GetByCondition(GetDcimPowerfeedByConditionRequest) returns (GetDcimPowerfeedByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/dcim/powerfeeds/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get dcimPowerfeed by ids
+  rpc ListByIDs(ListDcimPowerfeedByIDsRequest) returns (ListDcimPowerfeedByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/dcim/powerfeeds/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of dcimPowerfeed by last id
+  rpc ListByLastID(ListDcimPowerfeedByLastIDRequest) returns (ListDcimPowerfeedByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/dcim/powerfeeds"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/dcimPowerfeed/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getDcimPowerfeed?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateDcimPowerfeedRequest {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	bool markConnected = 4; 
+	string name = 5; 
+	string status = 6; 
+	string type = 7; 
+	string supply = 8; 
+	string phase = 9; 
+	int32 voltage = 10; 
+	int32 amperage = 11; 
+	int32 maxUtilization = 12; 
+	int32 availablePower = 13; 
+	string comments = 14; 
+	int64 xPathID = 15; 
+	int64 cableID = 16; 
+	int64 powerPanelID = 17; 
+	int64 rackID = 18; 
+	string cableEnd = 19; 
+	string description = 20; 
+	int64 tenantID = 21; 
+}
+
+message CreateDcimPowerfeedReply {
+  uint64 id = 1;
+}
+
+message DeleteDcimPowerfeedByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteDcimPowerfeedByIDReply {
+
+}
+
+message UpdateDcimPowerfeedByIDRequest {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	uint64 id = 4 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	bool markConnected = 5; 
+	string name = 6; 
+	string status = 7; 
+	string type = 8; 
+	string supply = 9; 
+	string phase = 10; 
+	int32 voltage = 11; 
+	int32 amperage = 12; 
+	int32 maxUtilization = 13; 
+	int32 availablePower = 14; 
+	string comments = 15; 
+	int64 xPathID = 16; 
+	int64 cableID = 17; 
+	int64 powerPanelID = 18; 
+	int64 rackID = 19; 
+	string cableEnd = 20; 
+	string description = 21; 
+	int64 tenantID = 22; 
+}
+
+message UpdateDcimPowerfeedByIDReply {
+
+}
+
+message DcimPowerfeed {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	uint64 id = 4; 
+	bool markConnected = 5; 
+	string name = 6; 
+	string status = 7; 
+	string type = 8; 
+	string supply = 9; 
+	string phase = 10; 
+	int32 voltage = 11; 
+	int32 amperage = 12; 
+	int32 maxUtilization = 13; 
+	int32 availablePower = 14; 
+	string comments = 15; 
+	int64 xPathID = 16; 
+	int64 cableID = 17; 
+	int64 powerPanelID = 18; 
+	int64 rackID = 19; 
+	string cableEnd = 20; 
+	string description = 21; 
+	int64 tenantID = 22; 
+}
+
+message GetDcimPowerfeedByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetDcimPowerfeedByIDReply {
+  DcimPowerfeed dcimPowerfeed = 1;
+}
+
+message ListDcimPowerfeedRequest {
+  api.types.Params params = 1;
+}
+
+message ListDcimPowerfeedReply {
+  int64 total = 1;
+  repeated DcimPowerfeed dcimPowerfeeds = 2;
+}
+
+message DeleteDcimPowerfeedByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteDcimPowerfeedByIDsReply {
+
+}
+
+message GetDcimPowerfeedByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetDcimPowerfeedByConditionReply {
+  DcimPowerfeed dcimPowerfeed = 1;
+}
+
+message ListDcimPowerfeedByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListDcimPowerfeedByIDsReply {
+  repeated DcimPowerfeed dcimPowerfeeds = 1;
+}
+
+message ListDcimPowerfeedByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListDcimPowerfeedByLastIDReply {
+  repeated DcimPowerfeed dcimPowerfeeds = 1;
+}
+
+

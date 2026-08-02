@@ -1,0 +1,2353 @@
+{
+  "schema_version": 1,
+  "compatibility_baseline": "v4.4.6-post7",
+  "source": "frozen direct-GORM registry plus canonical OpenAPI/runtime adapters",
+  "generated": true,
+  "entries": [
+    {
+      "id": "current:rest:extension:identity:delete-api-auth-tokens-id",
+      "kind": "canonical-operation",
+      "module": "identity",
+      "path": "/api/auth/tokens/{id}/",
+      "methods": [
+        "DELETE"
+      ],
+      "classification": "extension",
+      "tier": "not_applicable",
+      "owner": "identity-core-workflow",
+      "runtime_enabled": true,
+      "implementation": "go-owned-identity-adapter",
+      "lifecycle": "pre-publication",
+      "verification": {
+        "contract": "partial",
+        "parity": "partial",
+        "security": "partial"
+      }
+    },
+    {
+      "id": "current:rest:extension:identity:get-api-auth-csrf",
+      "kind": "canonical-operation",
+      "module": "identity",
+      "path": "/api/auth/csrf/",
+      "methods": [
+        "GET"
+      ],
+      "classification": "extension",
+      "tier": "not_applicable",
+      "owner": "identity-core-workflow",
+      "runtime_enabled": true,
+      "implementation": "go-owned-identity-adapter",
+      "lifecycle": "pre-publication",
+      "verification": {
+        "contract": "partial",
+        "parity": "partial",
+        "security": "partial"
+      }
+    },
+    {
+      "id": "current:rest:extension:identity:get-api-auth-session",
+      "kind": "canonical-operation",
+      "module": "identity",
+      "path": "/api/auth/session/",
+      "methods": [
+        "GET"
+      ],
+      "classification": "extension",
+      "tier": "not_applicable",
+      "owner": "identity-core-workflow",
+      "runtime_enabled": true,
+      "implementation": "go-owned-identity-adapter",
+      "lifecycle": "pre-publication",
+      "verification": {
+        "contract": "partial",
+        "parity": "partial",
+        "security": "partial"
+      }
+    },
+    {
+      "id": "current:rest:extension:identity:get-api-auth-tokens",
+      "kind": "canonical-operation",
+      "module": "identity",
+      "path": "/api/auth/tokens/",
+      "methods": [
+        "GET"
+      ],
+      "classification": "extension",
+      "tier": "not_applicable",
+      "owner": "identity-core-workflow",
+      "runtime_enabled": true,
+      "implementation": "go-owned-identity-adapter",
+      "lifecycle": "pre-publication",
+      "verification": {
+        "contract": "partial",
+        "parity": "partial",
+        "security": "partial"
+      }
+    },
+    {
+      "id": "current:rest:extension:identity:post-api-auth-login",
+      "kind": "canonical-operation",
+      "module": "identity",
+      "path": "/api/auth/login/",
+      "methods": [
+        "POST"
+      ],
+      "classification": "extension",
+      "tier": "not_applicable",
+      "owner": "identity-core-workflow",
+      "runtime_enabled": true,
+      "implementation": "go-owned-identity-adapter",
+      "lifecycle": "pre-publication",
+      "verification": {
+        "contract": "partial",
+        "parity": "partial",
+        "security": "partial"
+      }
+    },
+    {
+      "id": "current:rest:extension:identity:post-api-auth-logout",
+      "kind": "canonical-operation",
+      "module": "identity",
+      "path": "/api/auth/logout/",
+      "methods": [
+        "POST"
+      ],
+      "classification": "extension",
+      "tier": "not_applicable",
+      "owner": "identity-core-workflow",
+      "runtime_enabled": true,
+      "implementation": "go-owned-identity-adapter",
+      "lifecycle": "pre-publication",
+      "verification": {
+        "contract": "partial",
+        "parity": "partial",
+        "security": "partial"
+      }
+    },
+    {
+      "id": "current:rest:extension:identity:post-api-auth-password-change",
+      "kind": "canonical-operation",
+      "module": "identity",
+      "path": "/api/auth/password/change/",
+      "methods": [
+        "POST"
+      ],
+      "classification": "extension",
+      "tier": "not_applicable",
+      "owner": "identity-core-workflow",
+      "runtime_enabled": true,
+      "implementation": "go-owned-identity-adapter",
+      "lifecycle": "pre-publication",
+      "verification": {
+        "contract": "partial",
+        "parity": "partial",
+        "security": "partial"
+      }
+    },
+    {
+      "id": "current:rest:extension:identity:post-api-auth-tokens",
+      "kind": "canonical-operation",
+      "module": "identity",
+      "path": "/api/auth/tokens/",
+      "methods": [
+        "POST"
+      ],
+      "classification": "extension",
+      "tier": "not_applicable",
+      "owner": "identity-core-workflow",
+      "runtime_enabled": true,
+      "implementation": "go-owned-identity-adapter",
+      "lifecycle": "pre-publication",
+      "verification": {
+        "contract": "partial",
+        "parity": "partial",
+        "security": "partial"
+      }
+    },
+    {
+      "id": "current:rest:legacy:circuits:circuit-group-assignments",
+      "kind": "legacy-resource",
+      "module": "circuits",
+      "path": "/api/circuits/circuit-group-assignments/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "circuits-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:circuits:circuit-groups",
+      "kind": "legacy-resource",
+      "module": "circuits",
+      "path": "/api/circuits/circuit-groups/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "circuits-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:circuits:circuit-terminations",
+      "kind": "legacy-resource",
+      "module": "circuits",
+      "path": "/api/circuits/circuit-terminations/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "circuits-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:circuits:circuit-types",
+      "kind": "legacy-resource",
+      "module": "circuits",
+      "path": "/api/circuits/circuit-types/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "circuits-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:circuits:circuits",
+      "kind": "legacy-resource",
+      "module": "circuits",
+      "path": "/api/circuits/circuits/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "circuits-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:circuits:provider-accounts",
+      "kind": "legacy-resource",
+      "module": "circuits",
+      "path": "/api/circuits/provider-accounts/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "circuits-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:circuits:provider-networks",
+      "kind": "legacy-resource",
+      "module": "circuits",
+      "path": "/api/circuits/provider-networks/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "circuits-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:circuits:providers",
+      "kind": "legacy-resource",
+      "module": "circuits",
+      "path": "/api/circuits/providers/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "circuits-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:circuits:virtual-circuit-terminations",
+      "kind": "legacy-resource",
+      "module": "circuits",
+      "path": "/api/circuits/virtual-circuit-terminations/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "circuits-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:circuits:virtual-circuits",
+      "kind": "legacy-resource",
+      "module": "circuits",
+      "path": "/api/circuits/virtual-circuits/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "circuits-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:core:data-files",
+      "kind": "legacy-resource",
+      "module": "core",
+      "path": "/api/core/data-files/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "core-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:core:data-sources",
+      "kind": "legacy-resource",
+      "module": "core",
+      "path": "/api/core/data-sources/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "core-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:core:jobs",
+      "kind": "legacy-resource",
+      "module": "core",
+      "path": "/api/core/jobs/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "core-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:core:object-changes",
+      "kind": "legacy-resource",
+      "module": "core",
+      "path": "/api/core/object-changes/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "core-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:cables",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/cables/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:console-port-templates",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/console-port-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:console-ports",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/console-ports/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:console-server-port-templates",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/console-server-port-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:console-server-ports",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/console-server-ports/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:device-bay-templates",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/device-bay-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:device-bays",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/device-bays/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:front-port-templates",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/front-port-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:front-ports",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/front-ports/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:inventory-item-roles",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/inventory-item-roles/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:inventory-item-templates",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/inventory-item-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:inventory-items",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/inventory-items/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:locations",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/locations/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:mac-addresses",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/mac-addresses/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:module-bay-templates",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/module-bay-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:module-bays",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/module-bays/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:module-type-profiles",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/module-type-profiles/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:module-types",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/module-types/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:modules",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/modules/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:platforms",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/platforms/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:power-feeds",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/power-feeds/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:power-outlet-templates",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/power-outlet-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:power-outlets",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/power-outlets/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:power-panels",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/power-panels/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:power-port-templates",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/power-port-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:power-ports",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/power-ports/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:rack-reservations",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/rack-reservations/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:rear-port-templates",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/rear-port-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:rear-ports",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/rear-ports/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:regions",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/regions/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:site-groups",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/site-groups/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:virtual-chassis",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/virtual-chassis/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:dcim:virtual-device-contexts",
+      "kind": "legacy-resource",
+      "module": "dcim",
+      "path": "/api/dcim/virtual-device-contexts/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "dcim-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:extras:bookmarks",
+      "kind": "legacy-resource",
+      "module": "extras",
+      "path": "/api/extras/bookmarks/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:extras:config-context-profiles",
+      "kind": "legacy-resource",
+      "module": "extras",
+      "path": "/api/extras/config-context-profiles/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:extras:config-contexts",
+      "kind": "legacy-resource",
+      "module": "extras",
+      "path": "/api/extras/config-contexts/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:extras:config-templates",
+      "kind": "legacy-resource",
+      "module": "extras",
+      "path": "/api/extras/config-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:extras:custom-field-choice-sets",
+      "kind": "legacy-resource",
+      "module": "extras",
+      "path": "/api/extras/custom-field-choice-sets/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:extras:custom-fields",
+      "kind": "legacy-resource",
+      "module": "extras",
+      "path": "/api/extras/custom-fields/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:extras:custom-links",
+      "kind": "legacy-resource",
+      "module": "extras",
+      "path": "/api/extras/custom-links/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:extras:event-rules",
+      "kind": "legacy-resource",
+      "module": "extras",
+      "path": "/api/extras/event-rules/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:extras:export-templates",
+      "kind": "legacy-resource",
+      "module": "extras",
+      "path": "/api/extras/export-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:extras:image-attachments",
+      "kind": "legacy-resource",
+      "module": "extras",
+      "path": "/api/extras/image-attachments/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:extras:journal-entries",
+      "kind": "legacy-resource",
+      "module": "extras",
+      "path": "/api/extras/journal-entries/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:extras:notification-groups",
+      "kind": "legacy-resource",
+      "module": "extras",
+      "path": "/api/extras/notification-groups/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:extras:notifications",
+      "kind": "legacy-resource",
+      "module": "extras",
+      "path": "/api/extras/notifications/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:extras:saved-filters",
+      "kind": "legacy-resource",
+      "module": "extras",
+      "path": "/api/extras/saved-filters/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:extras:subscriptions",
+      "kind": "legacy-resource",
+      "module": "extras",
+      "path": "/api/extras/subscriptions/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:extras:tags",
+      "kind": "legacy-resource",
+      "module": "extras",
+      "path": "/api/extras/tags/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:extras:webhooks",
+      "kind": "legacy-resource",
+      "module": "extras",
+      "path": "/api/extras/webhooks/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "extras-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:ipam:aggregates",
+      "kind": "legacy-resource",
+      "module": "ipam",
+      "path": "/api/ipam/aggregates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:ipam:asn-ranges",
+      "kind": "legacy-resource",
+      "module": "ipam",
+      "path": "/api/ipam/asn-ranges/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:ipam:asns",
+      "kind": "legacy-resource",
+      "module": "ipam",
+      "path": "/api/ipam/asns/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:ipam:fhrp-groups",
+      "kind": "legacy-resource",
+      "module": "ipam",
+      "path": "/api/ipam/fhrp-groups/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:ipam:ip-ranges",
+      "kind": "legacy-resource",
+      "module": "ipam",
+      "path": "/api/ipam/ip-ranges/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:ipam:rirs",
+      "kind": "legacy-resource",
+      "module": "ipam",
+      "path": "/api/ipam/rirs/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:ipam:roles",
+      "kind": "legacy-resource",
+      "module": "ipam",
+      "path": "/api/ipam/roles/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:ipam:route-targets",
+      "kind": "legacy-resource",
+      "module": "ipam",
+      "path": "/api/ipam/route-targets/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:ipam:service-templates",
+      "kind": "legacy-resource",
+      "module": "ipam",
+      "path": "/api/ipam/service-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:ipam:services",
+      "kind": "legacy-resource",
+      "module": "ipam",
+      "path": "/api/ipam/services/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:ipam:vlan-groups",
+      "kind": "legacy-resource",
+      "module": "ipam",
+      "path": "/api/ipam/vlan-groups/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:ipam:vlan-translation-policies",
+      "kind": "legacy-resource",
+      "module": "ipam",
+      "path": "/api/ipam/vlan-translation-policies/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:ipam:vlan-translation-rules",
+      "kind": "legacy-resource",
+      "module": "ipam",
+      "path": "/api/ipam/vlan-translation-rules/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:ipam:vlans",
+      "kind": "legacy-resource",
+      "module": "ipam",
+      "path": "/api/ipam/vlans/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "ipam-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:tenancy:contact-groups",
+      "kind": "legacy-resource",
+      "module": "tenancy",
+      "path": "/api/tenancy/contact-groups/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "tenancy-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:tenancy:contact-roles",
+      "kind": "legacy-resource",
+      "module": "tenancy",
+      "path": "/api/tenancy/contact-roles/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "tenancy-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:tenancy:contacts",
+      "kind": "legacy-resource",
+      "module": "tenancy",
+      "path": "/api/tenancy/contacts/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "tenancy-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:tenancy:tenant-groups",
+      "kind": "legacy-resource",
+      "module": "tenancy",
+      "path": "/api/tenancy/tenant-groups/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "tenancy-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:tenancy:tenants",
+      "kind": "legacy-resource",
+      "module": "tenancy",
+      "path": "/api/tenancy/tenants/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "tenancy-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:users:groups",
+      "kind": "legacy-resource",
+      "module": "users",
+      "path": "/api/users/groups/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "users-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:users:tokens",
+      "kind": "legacy-resource",
+      "module": "users",
+      "path": "/api/users/tokens/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "users-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:users:users",
+      "kind": "legacy-resource",
+      "module": "users",
+      "path": "/api/users/users/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "users-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:virtualization:cluster-groups",
+      "kind": "legacy-resource",
+      "module": "virtualization",
+      "path": "/api/virtualization/cluster-groups/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "virtualization-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:virtualization:cluster-types",
+      "kind": "legacy-resource",
+      "module": "virtualization",
+      "path": "/api/virtualization/cluster-types/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "virtualization-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:virtualization:clusters",
+      "kind": "legacy-resource",
+      "module": "virtualization",
+      "path": "/api/virtualization/clusters/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "virtualization-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:virtualization:interfaces",
+      "kind": "legacy-resource",
+      "module": "virtualization",
+      "path": "/api/virtualization/interfaces/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "virtualization-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:virtualization:virtual-machines",
+      "kind": "legacy-resource",
+      "module": "virtualization",
+      "path": "/api/virtualization/virtual-machines/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "virtualization-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:vpn:ike-policies",
+      "kind": "legacy-resource",
+      "module": "vpn",
+      "path": "/api/vpn/ike-policies/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "vpn-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:vpn:ike-proposals",
+      "kind": "legacy-resource",
+      "module": "vpn",
+      "path": "/api/vpn/ike-proposals/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "vpn-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:vpn:ipsec-policies",
+      "kind": "legacy-resource",
+      "module": "vpn",
+      "path": "/api/vpn/ipsec-policies/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "vpn-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:vpn:ipsec-profiles",
+      "kind": "legacy-resource",
+      "module": "vpn",
+      "path": "/api/vpn/ipsec-profiles/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "vpn-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:vpn:l2vpn-terminations",
+      "kind": "legacy-resource",
+      "module": "vpn",
+      "path": "/api/vpn/l2vpn-terminations/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "vpn-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:vpn:l2vpns",
+      "kind": "legacy-resource",
+      "module": "vpn",
+      "path": "/api/vpn/l2vpns/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "vpn-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:vpn:tunnel-groups",
+      "kind": "legacy-resource",
+      "module": "vpn",
+      "path": "/api/vpn/tunnel-groups/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "vpn-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:vpn:tunnel-terminations",
+      "kind": "legacy-resource",
+      "module": "vpn",
+      "path": "/api/vpn/tunnel-terminations/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "vpn-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:vpn:tunnels",
+      "kind": "legacy-resource",
+      "module": "vpn",
+      "path": "/api/vpn/tunnels/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "vpn-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:wireless:wireless-lan-groups",
+      "kind": "legacy-resource",
+      "module": "wireless",
+      "path": "/api/wireless/wireless-lan-groups/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "wireless-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:legacy:wireless:wireless-lans",
+      "kind": "legacy-resource",
+      "module": "wireless",
+      "path": "/api/wireless/wireless-lans/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "deferred",
+      "tier": "T0",
+      "owner": "wireless-future-profile",
+      "runtime_enabled": false,
+      "implementation": "frozen-direct-gorm-registry",
+      "lifecycle": "frozen-unpublished"
+    },
+    {
+      "id": "current:rest:v1:dcim:Device",
+      "kind": "canonical-resource",
+      "module": "dcim",
+      "path": "/api/dcim/devices/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T1",
+      "owner": "dcim-core-workflow",
+      "runtime_enabled": true,
+      "implementation": "shared-core-workflow-adapter",
+      "lifecycle": "pre-publication"
+    },
+    {
+      "id": "current:rest:v1:dcim:DeviceRole",
+      "kind": "canonical-resource",
+      "module": "dcim",
+      "path": "/api/dcim/device-roles/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T1",
+      "owner": "dcim-core-workflow",
+      "runtime_enabled": true,
+      "implementation": "shared-core-workflow-adapter",
+      "lifecycle": "pre-publication"
+    },
+    {
+      "id": "current:rest:v1:dcim:DeviceType",
+      "kind": "canonical-resource",
+      "module": "dcim",
+      "path": "/api/dcim/device-types/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T1",
+      "owner": "dcim-core-workflow",
+      "runtime_enabled": true,
+      "implementation": "shared-core-workflow-adapter",
+      "lifecycle": "pre-publication"
+    },
+    {
+      "id": "current:rest:v1:dcim:Interface",
+      "kind": "canonical-resource",
+      "module": "dcim",
+      "path": "/api/dcim/interfaces/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T1",
+      "owner": "dcim-core-workflow",
+      "runtime_enabled": true,
+      "implementation": "shared-core-workflow-adapter",
+      "lifecycle": "pre-publication"
+    },
+    {
+      "id": "current:rest:v1:dcim:InterfaceTemplate",
+      "kind": "canonical-resource",
+      "module": "dcim",
+      "path": "/api/dcim/interface-templates/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T1",
+      "owner": "dcim-core-workflow",
+      "runtime_enabled": true,
+      "implementation": "shared-core-workflow-adapter",
+      "lifecycle": "pre-publication"
+    },
+    {
+      "id": "current:rest:v1:dcim:Manufacturer",
+      "kind": "canonical-resource",
+      "module": "dcim",
+      "path": "/api/dcim/manufacturers/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T1",
+      "owner": "dcim-core-workflow",
+      "runtime_enabled": true,
+      "implementation": "shared-core-workflow-adapter",
+      "lifecycle": "pre-publication"
+    },
+    {
+      "id": "current:rest:v1:dcim:Rack",
+      "kind": "canonical-resource",
+      "module": "dcim",
+      "path": "/api/dcim/racks/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T1",
+      "owner": "dcim-core-workflow",
+      "runtime_enabled": true,
+      "implementation": "shared-core-workflow-adapter",
+      "lifecycle": "pre-publication"
+    },
+    {
+      "id": "current:rest:v1:dcim:RackRole",
+      "kind": "canonical-resource",
+      "module": "dcim",
+      "path": "/api/dcim/rack-roles/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T1",
+      "owner": "dcim-core-workflow",
+      "runtime_enabled": true,
+      "implementation": "shared-core-workflow-adapter",
+      "lifecycle": "pre-publication"
+    },
+    {
+      "id": "current:rest:v1:dcim:RackType",
+      "kind": "canonical-resource",
+      "module": "dcim",
+      "path": "/api/dcim/rack-types/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T1",
+      "owner": "dcim-core-workflow",
+      "runtime_enabled": true,
+      "implementation": "shared-core-workflow-adapter",
+      "lifecycle": "pre-publication"
+    },
+    {
+      "id": "current:rest:v1:dcim:Site",
+      "kind": "canonical-resource",
+      "module": "dcim",
+      "path": "/api/dcim/sites/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T1",
+      "owner": "dcim-core-workflow",
+      "runtime_enabled": true,
+      "implementation": "shared-core-workflow-adapter",
+      "lifecycle": "pre-publication"
+    },
+    {
+      "id": "current:rest:v1:ipam:IPAddress",
+      "kind": "canonical-resource",
+      "module": "ipam",
+      "path": "/api/ipam/ip-addresses/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T1",
+      "owner": "ipam-core-workflow",
+      "runtime_enabled": true,
+      "implementation": "shared-core-workflow-adapter",
+      "lifecycle": "pre-publication"
+    },
+    {
+      "id": "current:rest:v1:ipam:Prefix",
+      "kind": "canonical-resource",
+      "module": "ipam",
+      "path": "/api/ipam/prefixes/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T1",
+      "owner": "ipam-core-workflow",
+      "runtime_enabled": true,
+      "implementation": "shared-core-workflow-adapter",
+      "lifecycle": "pre-publication"
+    },
+    {
+      "id": "current:rest:v1:ipam:VRF",
+      "kind": "canonical-resource",
+      "module": "ipam",
+      "path": "/api/ipam/vrfs/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "classification": "in_profile",
+      "tier": "T1",
+      "owner": "ipam-core-workflow",
+      "runtime_enabled": true,
+      "implementation": "shared-core-workflow-adapter",
+      "lifecycle": "pre-publication"
+    }
+  ]
+}

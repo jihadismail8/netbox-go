@@ -1,32 +1,50 @@
-# If you prefer the allow list template instead of the deny list, see community template:
-# https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
-#
-# Binaries for programs and plugins
+# Repository-local pinned tool binaries and caches.
+/.tools/
+/.agents/
+/.codex/
+
+# Frontend dependencies and generated output.
+/netbox-frontend/node_modules/
+/netbox-frontend/dist/
+/netbox-frontend/coverage/
+
+# Backend build and test output.
+/netbox-backend/netbox_go
+/netbox-backend/cover.out
 *.exe
 *.exe~
 *.dll
 *.so
 *.dylib
-
-# Test binary, built with `go test -c`
 *.test
-
-# Code coverage profiles and other test artifacts
 *.out
 coverage.*
 *.coverprofile
 profile.cov
 
-# Dependency directories (remove the comment below to include it)
-# vendor/
+# Deployment and compatibility run artifacts.
+/tests/deployment/.artifacts/
 
-# Go workspace file
+# Local environment and credential files. Checked-in examples remain allowed.
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Go workspace files are developer-local for this multi-module tree.
 go.work
 go.work.sum
 
-# env file
-.env
+# Python caches created while running the pinned NetBox oracle tooling.
+__pycache__/
+*.py[cod]
+.pytest_cache/
 
-# Editor/IDE
-# .idea/
-# .vscode/
+# Logs, temporary files, and editor/OS metadata.
+*.log
+*.tmp
+*.swp
+*~
+.DS_Store
+/.idea/
+/.vscode/

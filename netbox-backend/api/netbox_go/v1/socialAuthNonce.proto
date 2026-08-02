@@ -1,0 +1,235 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service socialAuthNonce {
+  // Create a new socialAuthNonce
+  rpc Create(CreateSocialAuthNonceRequest) returns (CreateSocialAuthNonceReply) {
+    option (google.api.http) = {
+      post: "/api/users/auth-nonces"
+      body: "*"
+    };
+  }
+
+  // Delete a socialAuthNonce by id
+  rpc DeleteByID(DeleteSocialAuthNonceByIDRequest) returns (DeleteSocialAuthNonceByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/users/auth-nonces/{id}"
+    };
+  }
+
+  // Update a socialAuthNonce by id
+  rpc UpdateByID(UpdateSocialAuthNonceByIDRequest) returns (UpdateSocialAuthNonceByIDReply) {
+    option (google.api.http) = {
+      put: "/api/users/auth-nonces/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a socialAuthNonce by id
+  rpc GetByID(GetSocialAuthNonceByIDRequest) returns (GetSocialAuthNonceByIDReply) {
+    option (google.api.http) = {
+      get: "/api/users/auth-nonces/{id}"
+    };
+  }
+
+  // Get a paginated list of socialAuthNonce by custom conditions
+  rpc List(ListSocialAuthNonceRequest) returns (ListSocialAuthNonceReply) {
+    option (google.api.http) = {
+      post: "/api/users/auth-nonces/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete socialAuthNonce by ids
+  rpc DeleteByIDs(DeleteSocialAuthNonceByIDsRequest) returns (DeleteSocialAuthNonceByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/users/auth-nonces/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a socialAuthNonce by custom condition
+  rpc GetByCondition(GetSocialAuthNonceByConditionRequest) returns (GetSocialAuthNonceByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/users/auth-nonces/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get socialAuthNonce by ids
+  rpc ListByIDs(ListSocialAuthNonceByIDsRequest) returns (ListSocialAuthNonceByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/users/auth-nonces/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of socialAuthNonce by last id
+  rpc ListByLastID(ListSocialAuthNonceByLastIDRequest) returns (ListSocialAuthNonceByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/users/auth-nonces"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/socialAuthNonce/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getSocialAuthNonce?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateSocialAuthNonceRequest {
+	string serverURL = 1; 
+	int32 timestamp = 2; 
+	string salt = 3; 
+}
+
+message CreateSocialAuthNonceReply {
+  uint64 id = 1;
+}
+
+message DeleteSocialAuthNonceByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteSocialAuthNonceByIDReply {
+
+}
+
+message UpdateSocialAuthNonceByIDRequest {
+	uint64 id = 1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	string serverURL = 2; 
+	int32 timestamp = 3; 
+	string salt = 4; 
+}
+
+message UpdateSocialAuthNonceByIDReply {
+
+}
+
+message SocialAuthNonce {
+	uint64 id = 1; 
+	string serverURL = 2; 
+	int32 timestamp = 3; 
+	string salt = 4; 
+}
+
+message GetSocialAuthNonceByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetSocialAuthNonceByIDReply {
+  SocialAuthNonce socialAuthNonce = 1;
+}
+
+message ListSocialAuthNonceRequest {
+  api.types.Params params = 1;
+}
+
+message ListSocialAuthNonceReply {
+  int64 total = 1;
+  repeated SocialAuthNonce socialAuthNonces = 2;
+}
+
+message DeleteSocialAuthNonceByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteSocialAuthNonceByIDsReply {
+
+}
+
+message GetSocialAuthNonceByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetSocialAuthNonceByConditionReply {
+  SocialAuthNonce socialAuthNonce = 1;
+}
+
+message ListSocialAuthNonceByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListSocialAuthNonceByIDsReply {
+  repeated SocialAuthNonce socialAuthNonces = 1;
+}
+
+message ListSocialAuthNonceByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListSocialAuthNonceByLastIDReply {
+  repeated SocialAuthNonce socialAuthNonces = 1;
+}
+
+

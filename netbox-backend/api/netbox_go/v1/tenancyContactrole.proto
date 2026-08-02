@@ -1,0 +1,244 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service tenancyContactrole {
+  // Create a new tenancyContactrole
+  rpc Create(CreateTenancyContactroleRequest) returns (CreateTenancyContactroleReply) {
+    option (google.api.http) = {
+      post: "/api/tenancy/contactroles"
+      body: "*"
+    };
+  }
+
+  // Delete a tenancyContactrole by id
+  rpc DeleteByID(DeleteTenancyContactroleByIDRequest) returns (DeleteTenancyContactroleByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/tenancy/contactroles/{id}"
+    };
+  }
+
+  // Update a tenancyContactrole by id
+  rpc UpdateByID(UpdateTenancyContactroleByIDRequest) returns (UpdateTenancyContactroleByIDReply) {
+    option (google.api.http) = {
+      put: "/api/tenancy/contactroles/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a tenancyContactrole by id
+  rpc GetByID(GetTenancyContactroleByIDRequest) returns (GetTenancyContactroleByIDReply) {
+    option (google.api.http) = {
+      get: "/api/tenancy/contactroles/{id}"
+    };
+  }
+
+  // Get a paginated list of tenancyContactrole by custom conditions
+  rpc List(ListTenancyContactroleRequest) returns (ListTenancyContactroleReply) {
+    option (google.api.http) = {
+      post: "/api/tenancy/contactroles/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete tenancyContactrole by ids
+  rpc DeleteByIDs(DeleteTenancyContactroleByIDsRequest) returns (DeleteTenancyContactroleByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/tenancy/contactroles/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a tenancyContactrole by custom condition
+  rpc GetByCondition(GetTenancyContactroleByConditionRequest) returns (GetTenancyContactroleByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/tenancy/contactroles/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get tenancyContactrole by ids
+  rpc ListByIDs(ListTenancyContactroleByIDsRequest) returns (ListTenancyContactroleByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/tenancy/contactroles/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of tenancyContactrole by last id
+  rpc ListByLastID(ListTenancyContactroleByLastIDRequest) returns (ListTenancyContactroleByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/tenancy/contactroles"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/tenancyContactrole/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getTenancyContactrole?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateTenancyContactroleRequest {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	string name = 4; 
+	string slug = 5; 
+	string description = 6; 
+}
+
+message CreateTenancyContactroleReply {
+  uint64 id = 1;
+}
+
+message DeleteTenancyContactroleByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteTenancyContactroleByIDReply {
+
+}
+
+message UpdateTenancyContactroleByIDRequest {
+	uint64 id = 1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	string created = 2; 
+	string lastUpdated = 3; 
+	string customFieldData = 4; 
+	string name = 5; 
+	string slug = 6; 
+	string description = 7; 
+}
+
+message UpdateTenancyContactroleByIDReply {
+
+}
+
+message TenancyContactrole {
+	uint64 id = 1; 
+	string created = 2; 
+	string lastUpdated = 3; 
+	string customFieldData = 4; 
+	string name = 5; 
+	string slug = 6; 
+	string description = 7; 
+}
+
+message GetTenancyContactroleByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetTenancyContactroleByIDReply {
+  TenancyContactrole tenancyContactrole = 1;
+}
+
+message ListTenancyContactroleRequest {
+  api.types.Params params = 1;
+}
+
+message ListTenancyContactroleReply {
+  int64 total = 1;
+  repeated TenancyContactrole tenancyContactroles = 2;
+}
+
+message DeleteTenancyContactroleByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteTenancyContactroleByIDsReply {
+
+}
+
+message GetTenancyContactroleByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetTenancyContactroleByConditionReply {
+  TenancyContactrole tenancyContactrole = 1;
+}
+
+message ListTenancyContactroleByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListTenancyContactroleByIDsReply {
+  repeated TenancyContactrole tenancyContactroles = 1;
+}
+
+message ListTenancyContactroleByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListTenancyContactroleByLastIDReply {
+  repeated TenancyContactrole tenancyContactroles = 1;
+}
+
+

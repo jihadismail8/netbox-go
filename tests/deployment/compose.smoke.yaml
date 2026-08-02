@@ -1,0 +1,45 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    pull_policy: never
+    environment:
+      POSTGRES_USER: netbox
+      POSTGRES_PASSWORD: "${NETBOX_POSTGRES_PASSWORD:-netbox-smoke-only}"
+      POSTGRES_DB: netbox
+    ports:
+      - "${NETBOX_POSTGRES_BIND:-127.0.0.1}:${NETBOX_POSTGRES_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U netbox -d netbox"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
+  netbox-go:
+    image: "netbox-go-smoke:${NETBOX_SMOKE_IMAGE_TAG}"
+    pull_policy: never
+    build:
+      context: "${NETBOX_SMOKE_REPOSITORY_ROOT}"
+      dockerfile: tests/deployment/Dockerfile.smoke
+      pull: false
+      args:
+        NETBOX_SMOKE_ARTIFACT_DIR: "${NETBOX_SMOKE_ARTIFACT_DIR}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NETBOX_DATABASE_DSN: "netbox:${NETBOX_POSTGRES_PASSWORD:-netbox-smoke-only}@postgres:5432/netbox?sslmode=disable"
+      NETBOX_APP_ENV: dev
+    ports:
+      - "${NETBOX_HTTP_BIND:-127.0.0.1}:${NETBOX_HTTP_PORT}:8080"
+      - "${NETBOX_GRPC_BIND:-127.0.0.1}:${NETBOX_GRPC_PORT}:7682"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+volumes:
+  postgres_data:

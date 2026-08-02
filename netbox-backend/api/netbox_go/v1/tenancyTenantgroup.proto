@@ -1,0 +1,262 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service tenancyTenantgroup {
+  // Create a new tenancyTenantgroup
+  rpc Create(CreateTenancyTenantgroupRequest) returns (CreateTenancyTenantgroupReply) {
+    option (google.api.http) = {
+      post: "/api/tenancy/tenantgroups"
+      body: "*"
+    };
+  }
+
+  // Delete a tenancyTenantgroup by id
+  rpc DeleteByID(DeleteTenancyTenantgroupByIDRequest) returns (DeleteTenancyTenantgroupByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/tenancy/tenantgroups/{id}"
+    };
+  }
+
+  // Update a tenancyTenantgroup by id
+  rpc UpdateByID(UpdateTenancyTenantgroupByIDRequest) returns (UpdateTenancyTenantgroupByIDReply) {
+    option (google.api.http) = {
+      put: "/api/tenancy/tenantgroups/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a tenancyTenantgroup by id
+  rpc GetByID(GetTenancyTenantgroupByIDRequest) returns (GetTenancyTenantgroupByIDReply) {
+    option (google.api.http) = {
+      get: "/api/tenancy/tenantgroups/{id}"
+    };
+  }
+
+  // Get a paginated list of tenancyTenantgroup by custom conditions
+  rpc List(ListTenancyTenantgroupRequest) returns (ListTenancyTenantgroupReply) {
+    option (google.api.http) = {
+      post: "/api/tenancy/tenantgroups/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete tenancyTenantgroup by ids
+  rpc DeleteByIDs(DeleteTenancyTenantgroupByIDsRequest) returns (DeleteTenancyTenantgroupByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/tenancy/tenantgroups/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a tenancyTenantgroup by custom condition
+  rpc GetByCondition(GetTenancyTenantgroupByConditionRequest) returns (GetTenancyTenantgroupByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/tenancy/tenantgroups/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get tenancyTenantgroup by ids
+  rpc ListByIDs(ListTenancyTenantgroupByIDsRequest) returns (ListTenancyTenantgroupByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/tenancy/tenantgroups/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of tenancyTenantgroup by last id
+  rpc ListByLastID(ListTenancyTenantgroupByLastIDRequest) returns (ListTenancyTenantgroupByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/tenancy/tenantgroups"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/tenancyTenantgroup/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getTenancyTenantgroup?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateTenancyTenantgroupRequest {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	string name = 4; 
+	string slug = 5; 
+	string description = 6; 
+	int32 lft = 7; 
+	int32 rght = 8; 
+	int32 treeID = 9; 
+	int32 level = 10; 
+	int64 parentID = 11; 
+	string comments = 12; 
+}
+
+message CreateTenancyTenantgroupReply {
+  uint64 id = 1;
+}
+
+message DeleteTenancyTenantgroupByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteTenancyTenantgroupByIDReply {
+
+}
+
+message UpdateTenancyTenantgroupByIDRequest {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	uint64 id = 4 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	string name = 5; 
+	string slug = 6; 
+	string description = 7; 
+	int32 lft = 8; 
+	int32 rght = 9; 
+	int32 treeID = 10; 
+	int32 level = 11; 
+	int64 parentID = 12; 
+	string comments = 13; 
+}
+
+message UpdateTenancyTenantgroupByIDReply {
+
+}
+
+message TenancyTenantgroup {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	uint64 id = 4; 
+	string name = 5; 
+	string slug = 6; 
+	string description = 7; 
+	int32 lft = 8; 
+	int32 rght = 9; 
+	int32 treeID = 10; 
+	int32 level = 11; 
+	int64 parentID = 12; 
+	string comments = 13; 
+}
+
+message GetTenancyTenantgroupByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetTenancyTenantgroupByIDReply {
+  TenancyTenantgroup tenancyTenantgroup = 1;
+}
+
+message ListTenancyTenantgroupRequest {
+  api.types.Params params = 1;
+}
+
+message ListTenancyTenantgroupReply {
+  int64 total = 1;
+  repeated TenancyTenantgroup tenancyTenantgroups = 2;
+}
+
+message DeleteTenancyTenantgroupByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteTenancyTenantgroupByIDsReply {
+
+}
+
+message GetTenancyTenantgroupByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetTenancyTenantgroupByConditionReply {
+  TenancyTenantgroup tenancyTenantgroup = 1;
+}
+
+message ListTenancyTenantgroupByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListTenancyTenantgroupByIDsReply {
+  repeated TenancyTenantgroup tenancyTenantgroups = 1;
+}
+
+message ListTenancyTenantgroupByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListTenancyTenantgroupByLastIDReply {
+  repeated TenancyTenantgroup tenancyTenantgroups = 1;
+}
+
+

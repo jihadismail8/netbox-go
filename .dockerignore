@@ -1,0 +1,57 @@
+# Git
+.git
+.gitignore
+.gitmodules
+
+# Repository-local tools and environment files
+.tools/
+.agents/
+.codex/
+.env
+.env.*
+netbox-frontend/.env
+netbox-frontend/.env.*
+
+# Python source project (reference only, not built)
+netbox/
+
+# Frontend build artifacts (rebuilt in Docker)
+netbox-frontend/node_modules/
+netbox-frontend/dist/
+netbox-frontend/coverage/
+
+# Go test/build artifacts
+netbox-backend/netbox_go
+netbox-backend/*.test
+netbox-backend/cover.out
+
+# Test-run artifacts
+tests/deployment/.artifacts/
+
+# IDE
+.vscode
+.idea
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker metadata
+docker-compose.yml
+
+# Heavy documentation not needed in the image
+REWRITE_PLAN.md
+docs/FRONTEND_ANALYSIS.md
+docs/FRONTEND_PLAN.md
+docs/FRONTEND_COMPLETION_PLAN.md
+docs/CRUD_PARADIGM.md
+docs/business-logic/
+docs/business-
+docs/entities/
+docs/entities/dc
+docs/apis/API_GAPS.md
+docs/apis/README.md
+
+# Unnamed local pre-Git scratch fragments
+net
+netbox-

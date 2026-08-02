@@ -1,0 +1,15 @@
+* text=auto eol=lf
+
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+*.ico binary
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.webp binary
+
+# Frozen Sponge protobuf sources are retained byte-for-byte until their owned
+# generator is retired. Do not normalize their historical trailing whitespace
+# by hand.
+netbox-backend/api/netbox_go/v1/*.proto whitespace=-trailing-space

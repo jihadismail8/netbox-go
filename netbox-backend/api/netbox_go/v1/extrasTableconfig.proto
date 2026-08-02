@@ -1,0 +1,262 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service extrasTableconfig {
+  // Create a new extrasTableconfig
+  rpc Create(CreateExtrasTableconfigRequest) returns (CreateExtrasTableconfigReply) {
+    option (google.api.http) = {
+      post: "/api/extras/tableconfigs"
+      body: "*"
+    };
+  }
+
+  // Delete a extrasTableconfig by id
+  rpc DeleteByID(DeleteExtrasTableconfigByIDRequest) returns (DeleteExtrasTableconfigByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/extras/tableconfigs/{id}"
+    };
+  }
+
+  // Update a extrasTableconfig by id
+  rpc UpdateByID(UpdateExtrasTableconfigByIDRequest) returns (UpdateExtrasTableconfigByIDReply) {
+    option (google.api.http) = {
+      put: "/api/extras/tableconfigs/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a extrasTableconfig by id
+  rpc GetByID(GetExtrasTableconfigByIDRequest) returns (GetExtrasTableconfigByIDReply) {
+    option (google.api.http) = {
+      get: "/api/extras/tableconfigs/{id}"
+    };
+  }
+
+  // Get a paginated list of extrasTableconfig by custom conditions
+  rpc List(ListExtrasTableconfigRequest) returns (ListExtrasTableconfigReply) {
+    option (google.api.http) = {
+      post: "/api/extras/tableconfigs/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete extrasTableconfig by ids
+  rpc DeleteByIDs(DeleteExtrasTableconfigByIDsRequest) returns (DeleteExtrasTableconfigByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/extras/tableconfigs/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a extrasTableconfig by custom condition
+  rpc GetByCondition(GetExtrasTableconfigByConditionRequest) returns (GetExtrasTableconfigByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/extras/tableconfigs/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get extrasTableconfig by ids
+  rpc ListByIDs(ListExtrasTableconfigByIDsRequest) returns (ListExtrasTableconfigByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/extras/tableconfigs/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of extrasTableconfig by last id
+  rpc ListByLastID(ListExtrasTableconfigByLastIDRequest) returns (ListExtrasTableconfigByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/extras/tableconfigs"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/extrasTableconfig/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getExtrasTableconfig?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateExtrasTableconfigRequest {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string table = 3; 
+	string name = 4; 
+	string description = 5; 
+	int32 weight = 6; 
+	bool enabled = 7; 
+	bool shared = 8; 
+	string columns = 9; 
+	string ordering = 10; 
+	int32 objectTypeID = 11; 
+	int64 userID = 12; 
+}
+
+message CreateExtrasTableconfigReply {
+  uint64 id = 1;
+}
+
+message DeleteExtrasTableconfigByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteExtrasTableconfigByIDReply {
+
+}
+
+message UpdateExtrasTableconfigByIDRequest {
+	uint64 id = 1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	string created = 2; 
+	string lastUpdated = 3; 
+	string table = 4; 
+	string name = 5; 
+	string description = 6; 
+	int32 weight = 7; 
+	bool enabled = 8; 
+	bool shared = 9; 
+	string columns = 10; 
+	string ordering = 11; 
+	int32 objectTypeID = 12; 
+	int64 userID = 13; 
+}
+
+message UpdateExtrasTableconfigByIDReply {
+
+}
+
+message ExtrasTableconfig {
+	uint64 id = 1; 
+	string created = 2; 
+	string lastUpdated = 3; 
+	string table = 4; 
+	string name = 5; 
+	string description = 6; 
+	int32 weight = 7; 
+	bool enabled = 8; 
+	bool shared = 9; 
+	string columns = 10; 
+	string ordering = 11; 
+	int32 objectTypeID = 12; 
+	int64 userID = 13; 
+}
+
+message GetExtrasTableconfigByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetExtrasTableconfigByIDReply {
+  ExtrasTableconfig extrasTableconfig = 1;
+}
+
+message ListExtrasTableconfigRequest {
+  api.types.Params params = 1;
+}
+
+message ListExtrasTableconfigReply {
+  int64 total = 1;
+  repeated ExtrasTableconfig extrasTableconfigs = 2;
+}
+
+message DeleteExtrasTableconfigByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteExtrasTableconfigByIDsReply {
+
+}
+
+message GetExtrasTableconfigByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetExtrasTableconfigByConditionReply {
+  ExtrasTableconfig extrasTableconfig = 1;
+}
+
+message ListExtrasTableconfigByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListExtrasTableconfigByIDsReply {
+  repeated ExtrasTableconfig extrasTableconfigs = 1;
+}
+
+message ListExtrasTableconfigByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListExtrasTableconfigByLastIDReply {
+  repeated ExtrasTableconfig extrasTableconfigs = 1;
+}
+
+

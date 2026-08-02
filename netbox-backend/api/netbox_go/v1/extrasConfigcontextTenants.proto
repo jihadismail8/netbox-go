@@ -1,0 +1,232 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service extrasConfigcontextTenants {
+  // Create a new extrasConfigcontextTenants
+  rpc Create(CreateExtrasConfigcontextTenantsRequest) returns (CreateExtrasConfigcontextTenantsReply) {
+    option (google.api.http) = {
+      post: "/api/extras/extrasConfigcontextTenants"
+      body: "*"
+    };
+  }
+
+  // Delete a extrasConfigcontextTenants by id
+  rpc DeleteByID(DeleteExtrasConfigcontextTenantsByIDRequest) returns (DeleteExtrasConfigcontextTenantsByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/extras/extrasConfigcontextTenants/{id}"
+    };
+  }
+
+  // Update a extrasConfigcontextTenants by id
+  rpc UpdateByID(UpdateExtrasConfigcontextTenantsByIDRequest) returns (UpdateExtrasConfigcontextTenantsByIDReply) {
+    option (google.api.http) = {
+      put: "/api/extras/extrasConfigcontextTenants/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a extrasConfigcontextTenants by id
+  rpc GetByID(GetExtrasConfigcontextTenantsByIDRequest) returns (GetExtrasConfigcontextTenantsByIDReply) {
+    option (google.api.http) = {
+      get: "/api/extras/extrasConfigcontextTenants/{id}"
+    };
+  }
+
+  // Get a paginated list of extrasConfigcontextTenants by custom conditions
+  rpc List(ListExtrasConfigcontextTenantsRequest) returns (ListExtrasConfigcontextTenantsReply) {
+    option (google.api.http) = {
+      post: "/api/extras/extrasConfigcontextTenants/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete extrasConfigcontextTenants by ids
+  rpc DeleteByIDs(DeleteExtrasConfigcontextTenantsByIDsRequest) returns (DeleteExtrasConfigcontextTenantsByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/extras/extrasConfigcontextTenants/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a extrasConfigcontextTenants by custom condition
+  rpc GetByCondition(GetExtrasConfigcontextTenantsByConditionRequest) returns (GetExtrasConfigcontextTenantsByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/extras/extrasConfigcontextTenants/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get extrasConfigcontextTenants by ids
+  rpc ListByIDs(ListExtrasConfigcontextTenantsByIDsRequest) returns (ListExtrasConfigcontextTenantsByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/extras/extrasConfigcontextTenants/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of extrasConfigcontextTenants by last id
+  rpc ListByLastID(ListExtrasConfigcontextTenantsByLastIDRequest) returns (ListExtrasConfigcontextTenantsByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/extras/extrasConfigcontextTenants"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/extrasConfigcontextTenants/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getExtrasConfigcontextTenants?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateExtrasConfigcontextTenantsRequest {
+	int64 configcontextID = 1; 
+	int64 tenantID = 2; 
+}
+
+message CreateExtrasConfigcontextTenantsReply {
+  uint64 id = 1;
+}
+
+message DeleteExtrasConfigcontextTenantsByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteExtrasConfigcontextTenantsByIDReply {
+
+}
+
+message UpdateExtrasConfigcontextTenantsByIDRequest {
+	uint64 id = 1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	int64 configcontextID = 2; 
+	int64 tenantID = 3; 
+}
+
+message UpdateExtrasConfigcontextTenantsByIDReply {
+
+}
+
+message ExtrasConfigcontextTenants {
+	uint64 id = 1; 
+	int64 configcontextID = 2; 
+	int64 tenantID = 3; 
+}
+
+message GetExtrasConfigcontextTenantsByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetExtrasConfigcontextTenantsByIDReply {
+  ExtrasConfigcontextTenants extrasConfigcontextTenants = 1;
+}
+
+message ListExtrasConfigcontextTenantsRequest {
+  api.types.Params params = 1;
+}
+
+message ListExtrasConfigcontextTenantsReply {
+  int64 total = 1;
+  repeated ExtrasConfigcontextTenants extrasConfigcontextTenantss = 2;
+}
+
+message DeleteExtrasConfigcontextTenantsByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteExtrasConfigcontextTenantsByIDsReply {
+
+}
+
+message GetExtrasConfigcontextTenantsByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetExtrasConfigcontextTenantsByConditionReply {
+  ExtrasConfigcontextTenants extrasConfigcontextTenants = 1;
+}
+
+message ListExtrasConfigcontextTenantsByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListExtrasConfigcontextTenantsByIDsReply {
+  repeated ExtrasConfigcontextTenants extrasConfigcontextTenantss = 1;
+}
+
+message ListExtrasConfigcontextTenantsByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListExtrasConfigcontextTenantsByLastIDReply {
+  repeated ExtrasConfigcontextTenants extrasConfigcontextTenantss = 1;
+}
+
+

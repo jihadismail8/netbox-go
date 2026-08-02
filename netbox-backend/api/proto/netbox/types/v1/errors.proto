@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package netbox.types.v1;
+
+option go_package = "netbox-go/gen/go/netbox/types/v1;typesv1";
+
+enum ErrorReason {
+  ERROR_REASON_UNSPECIFIED = 0;
+  ERROR_REASON_VALIDATION = 1;
+  ERROR_REASON_UNAUTHENTICATED = 2;
+  ERROR_REASON_FORBIDDEN = 3;
+  ERROR_REASON_NOT_FOUND = 4;
+  ERROR_REASON_CONFLICT = 5;
+  ERROR_REASON_INTERNAL = 6;
+}
+
+message FieldViolation {
+  string field = 1;
+  string reason = 2;
+  string description = 3;
+}
+
+message ErrorDetail {
+  ErrorReason reason = 1;
+  string message = 2;
+  repeated FieldViolation field_violations = 3;
+  string request_id = 4;
+}

@@ -1,0 +1,195 @@
+syntax = "proto3";
+
+package netbox.ipam.v1;
+
+import "google/protobuf/field_mask.proto";
+import "netbox/ipam/v1/resources.proto";
+import "netbox/types/v1/pagination.proto";
+
+option go_package = "netbox-go/gen/go/netbox/ipam/v1;ipamv1";
+
+service IPAMService {
+  rpc ListVRFs(ListVRFsRequest) returns (ListVRFsResponse);
+  rpc GetVRF(GetVRFRequest) returns (GetVRFResponse);
+  rpc CreateVRF(CreateVRFRequest) returns (CreateVRFResponse);
+  rpc ReplaceVRF(ReplaceVRFRequest) returns (ReplaceVRFResponse);
+  rpc UpdateVRF(UpdateVRFRequest) returns (UpdateVRFResponse);
+  rpc DeleteVRF(DeleteVRFRequest) returns (DeleteVRFResponse);
+
+  rpc ListPrefixes(ListPrefixesRequest) returns (ListPrefixesResponse);
+  rpc GetPrefix(GetPrefixRequest) returns (GetPrefixResponse);
+  rpc CreatePrefix(CreatePrefixRequest) returns (CreatePrefixResponse);
+  rpc ReplacePrefix(ReplacePrefixRequest) returns (ReplacePrefixResponse);
+  rpc UpdatePrefix(UpdatePrefixRequest) returns (UpdatePrefixResponse);
+  rpc DeletePrefix(DeletePrefixRequest) returns (DeletePrefixResponse);
+
+  rpc ListIPAddresses(ListIPAddressesRequest) returns (ListIPAddressesResponse);
+  rpc GetIPAddress(GetIPAddressRequest) returns (GetIPAddressResponse);
+  rpc CreateIPAddress(CreateIPAddressRequest) returns (CreateIPAddressResponse);
+  rpc ReplaceIPAddress(ReplaceIPAddressRequest) returns (ReplaceIPAddressResponse);
+  rpc UpdateIPAddress(UpdateIPAddressRequest) returns (UpdateIPAddressResponse);
+  rpc DeleteIPAddress(DeleteIPAddressRequest) returns (DeleteIPAddressResponse);
+  rpc AssignIPAddress(AssignIPAddressRequest) returns (AssignIPAddressResponse);
+  rpc UnassignIPAddress(UnassignIPAddressRequest) returns (UnassignIPAddressResponse);
+}
+
+message ListVRFsRequest {
+  netbox.types.v1.PageRequest page = 1;
+  optional string name = 2;
+  optional string rd = 3;
+  optional bool enforce_unique = 4;
+}
+
+message ListVRFsResponse {
+  netbox.types.v1.PageInfo page = 1;
+  repeated VRF results = 2;
+}
+
+message CreateVRFRequest {
+  VRFInput vrf = 1;
+}
+message ReplaceVRFRequest {
+  int64 id = 1;
+  VRFInput vrf = 2;
+}
+message UpdateVRFRequest {
+  int64 id = 1;
+  VRFInput vrf = 2;
+  google.protobuf.FieldMask update_mask = 3;
+}
+
+message ListPrefixesRequest {
+  netbox.types.v1.PageRequest page = 1;
+  optional int64 vrf_id = 2;
+  optional string vrf_rd = 3;
+  optional string prefix = 4;
+  optional uint32 family = 5;
+  optional string status = 6;
+  optional string within = 7;
+  optional string within_include = 8;
+  optional string contains = 9;
+}
+
+message ListPrefixesResponse {
+  netbox.types.v1.PageInfo page = 1;
+  repeated Prefix results = 2;
+}
+
+message CreatePrefixRequest {
+  PrefixInput prefix = 1;
+}
+message ReplacePrefixRequest {
+  int64 id = 1;
+  PrefixInput prefix = 2;
+}
+message UpdatePrefixRequest {
+  int64 id = 1;
+  PrefixInput prefix = 2;
+  google.protobuf.FieldMask update_mask = 3;
+}
+
+message ListIPAddressesRequest {
+  netbox.types.v1.PageRequest page = 1;
+  optional int64 vrf_id = 2;
+  optional string vrf_rd = 3;
+  optional string address = 4;
+  optional uint32 family = 5;
+  optional string parent = 6;
+  optional string status = 7;
+  optional bool assigned = 8;
+  optional int64 interface_id = 9;
+  optional int64 device_id = 10;
+}
+
+message ListIPAddressesResponse {
+  netbox.types.v1.PageInfo page = 1;
+  repeated IPAddress results = 2;
+}
+
+message CreateIPAddressRequest {
+  IPAddressInput ip_address = 1;
+}
+message ReplaceIPAddressRequest {
+  int64 id = 1;
+  IPAddressInput ip_address = 2;
+}
+message UpdateIPAddressRequest {
+  int64 id = 1;
+  IPAddressInput ip_address = 2;
+  google.protobuf.FieldMask update_mask = 3;
+}
+
+message AssignIPAddressRequest {
+  int64 id = 1;
+  int64 interface_id = 2;
+}
+
+message UnassignIPAddressRequest {
+  int64 id = 1;
+}
+
+message GetVRFRequest {
+  int64 id = 1;
+}
+message GetVRFResponse {
+  VRF vrf = 1;
+}
+message CreateVRFResponse {
+  VRF vrf = 1;
+}
+message ReplaceVRFResponse {
+  VRF vrf = 1;
+}
+message UpdateVRFResponse {
+  VRF vrf = 1;
+}
+message DeleteVRFRequest {
+  int64 id = 1;
+}
+message DeleteVRFResponse {}
+
+message GetPrefixRequest {
+  int64 id = 1;
+}
+message GetPrefixResponse {
+  Prefix prefix = 1;
+}
+message CreatePrefixResponse {
+  Prefix prefix = 1;
+}
+message ReplacePrefixResponse {
+  Prefix prefix = 1;
+}
+message UpdatePrefixResponse {
+  Prefix prefix = 1;
+}
+message DeletePrefixRequest {
+  int64 id = 1;
+}
+message DeletePrefixResponse {}
+
+message GetIPAddressRequest {
+  int64 id = 1;
+}
+message GetIPAddressResponse {
+  IPAddress ip_address = 1;
+}
+message CreateIPAddressResponse {
+  IPAddress ip_address = 1;
+}
+message ReplaceIPAddressResponse {
+  IPAddress ip_address = 1;
+}
+message UpdateIPAddressResponse {
+  IPAddress ip_address = 1;
+}
+message DeleteIPAddressRequest {
+  int64 id = 1;
+}
+message DeleteIPAddressResponse {}
+message AssignIPAddressResponse {
+  IPAddress ip_address = 1;
+}
+message UnassignIPAddressResponse {
+  IPAddress ip_address = 1;
+}

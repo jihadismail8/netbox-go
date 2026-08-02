@@ -1,0 +1,24 @@
+version: "3.7"
+
+services:
+  netbox-go:
+    image: netbox-go/netbox-go:latest
+    container_name: netbox-go
+    restart: always
+    command: ["./netbox_go", "-c", "/app/configs/netbox_go.yml"]
+    volumes:
+      - $PWD/configs:/app/configs
+      - /etc/localtime:/etc/localtime:ro  # mount the local time file
+    #environment:
+    #  - TZ=Asia/Shanghai
+
+    ports:
+      - "7682:7682"   # grpc port
+      - "7683:7683"   # grpc metrics or pprof port
+    healthcheck:
+      test: ["CMD", "grpc_health_probe", "-addr=localhost:7682"]    # grpc health check, note: the image must contain the grpc_health_probe command
+
+      interval: 10s         # interval time
+      timeout: 5s           # timeout time
+      retries: 3              # number of retries
+      start_period: 10s  # how long after start-up does the check begin

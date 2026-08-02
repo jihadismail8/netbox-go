@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "normalizers": [
+    {
+      "id": "absolute-url-origin",
+      "applies_to": ["url", "display_url"],
+      "behavior": "compare path and query while ignoring the configured oracle origin",
+      "does_not_ignore": ["path", "query", "trailing_slash"]
+    },
+    {
+      "id": "volatile-timestamps",
+      "applies_to": ["created", "last_updated"],
+      "behavior": "assert RFC3339 shape and scenario-relative ordering instead of byte equality",
+      "does_not_ignore": ["presence", "nullability", "ordering"]
+    },
+    {
+      "id": "generated-identifiers",
+      "applies_to": ["id"],
+      "behavior": "bind oracle and rewrite identifiers to a scenario symbol after creation",
+      "does_not_ignore": ["type", "relationship_identity", "uniqueness"]
+    }
+  ],
+  "forbidden_normalization": [
+    "status codes",
+    "validation reasons",
+    "authorization outcomes",
+    "missing or extra fields",
+    "choice envelopes or labels",
+    "numeric JSON types",
+    "query ordering or encoding",
+    "committed state",
+    "side effects"
+  ]
+}

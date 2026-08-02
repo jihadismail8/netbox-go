@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package netbox.identity.v1;
+
+import "google/protobuf/timestamp.proto";
+import "netbox/types/v1/pagination.proto";
+
+option go_package = "netbox-go/gen/go/netbox/identity/v1;identityv1";
+
+service IdentityService {
+  rpc GetCurrentUser(GetCurrentUserRequest) returns (GetCurrentUserResponse);
+  rpc ListAPITokens(ListAPITokensRequest) returns (ListAPITokensResponse);
+  rpc CreateAPIToken(CreateAPITokenRequest) returns (CreateAPITokenResponse);
+  rpc RevokeAPIToken(RevokeAPITokenRequest) returns (RevokeAPITokenResponse);
+  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
+}
+
+message User {
+  int64 id = 1;
+  string username = 2;
+  string email = 3;
+  string first_name = 4;
+  string last_name = 5;
+  bool is_staff = 6;
+  bool is_superuser = 7;
+  repeated string permissions = 8;
+}
+
+message APIToken {
+  int64 id = 1;
+  string display = 2;
+  string description = 3;
+  bool write_enabled = 4;
+  google.protobuf.Timestamp created = 5;
+  optional google.protobuf.Timestamp expires = 6;
+  optional google.protobuf.Timestamp last_used = 7;
+  repeated string allowed_ips = 8;
+}
+
+message GetCurrentUserRequest {}
+
+message GetCurrentUserResponse {
+  User user = 1;
+}
+
+message ListAPITokensRequest {
+  netbox.types.v1.PageRequest page = 1;
+}
+
+message ListAPITokensResponse {
+  netbox.types.v1.PageInfo page = 1;
+  repeated APIToken results = 2;
+}
+
+message CreateAPITokenRequest {
+  string description = 1;
+  optional google.protobuf.Timestamp expires = 2;
+  bool write_enabled = 3;
+  repeated string allowed_ips = 4;
+}
+
+message CreateAPITokenResponse {
+  APIToken token = 1;
+  string secret = 2;
+}
+
+message RevokeAPITokenRequest {
+  int64 id = 1;
+}
+
+message RevokeAPITokenResponse {}
+
+message ChangePasswordRequest {
+  string current_password = 1;
+  string new_password = 2;
+}
+
+message ChangePasswordResponse {}

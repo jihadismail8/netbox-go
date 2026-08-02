@@ -1,0 +1,24 @@
+# Offline deployment-test packaging. The gate builds the Go binaries and Vue
+# distribution on the host with the repository-pinned toolchains, then packages
+# those exact artifacts into a fresh disposable image. postgres:16-alpine is a
+# deliberately cached test carrier with wget and CA certificates; it is not the
+# production runtime base from the root Dockerfile.
+FROM postgres:16-alpine
+
+ARG NETBOX_SMOKE_ARTIFACT_DIR
+
+WORKDIR /app
+
+COPY ${NETBOX_SMOKE_ARTIFACT_DIR}/netbox_go /app/netbox_go
+COPY ${NETBOX_SMOKE_ARTIFACT_DIR}/netbox_go_admin /app/netbox_go_admin
+COPY ${NETBOX_SMOKE_ARTIFACT_DIR}/web/dist /app/web/dist
+COPY netbox-backend/configs/ /app/configs/
+COPY docs/ /app/docs/
+
+EXPOSE 8080 7682
+
+HEALTHCHECK --interval=5s --timeout=5s --retries=10 --start-period=10s \
+  CMD wget -qO- http://127.0.0.1:8080/health || exit 1
+
+ENTRYPOINT ["/app/netbox_go", "-c", "/app/configs/netbox_go.docker.yml"]
+CMD []

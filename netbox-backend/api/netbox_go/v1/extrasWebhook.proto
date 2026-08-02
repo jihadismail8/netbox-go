@@ -1,0 +1,265 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service extrasWebhook {
+  // Create a new extrasWebhook
+  rpc Create(CreateExtrasWebhookRequest) returns (CreateExtrasWebhookReply) {
+    option (google.api.http) = {
+      post: "/api/extras/webhooks"
+      body: "*"
+    };
+  }
+
+  // Delete a extrasWebhook by id
+  rpc DeleteByID(DeleteExtrasWebhookByIDRequest) returns (DeleteExtrasWebhookByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/extras/webhooks/{id}"
+    };
+  }
+
+  // Update a extrasWebhook by id
+  rpc UpdateByID(UpdateExtrasWebhookByIDRequest) returns (UpdateExtrasWebhookByIDReply) {
+    option (google.api.http) = {
+      put: "/api/extras/webhooks/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a extrasWebhook by id
+  rpc GetByID(GetExtrasWebhookByIDRequest) returns (GetExtrasWebhookByIDReply) {
+    option (google.api.http) = {
+      get: "/api/extras/webhooks/{id}"
+    };
+  }
+
+  // Get a paginated list of extrasWebhook by custom conditions
+  rpc List(ListExtrasWebhookRequest) returns (ListExtrasWebhookReply) {
+    option (google.api.http) = {
+      post: "/api/extras/webhooks/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete extrasWebhook by ids
+  rpc DeleteByIDs(DeleteExtrasWebhookByIDsRequest) returns (DeleteExtrasWebhookByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/extras/webhooks/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a extrasWebhook by custom condition
+  rpc GetByCondition(GetExtrasWebhookByConditionRequest) returns (GetExtrasWebhookByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/extras/webhooks/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get extrasWebhook by ids
+  rpc ListByIDs(ListExtrasWebhookByIDsRequest) returns (ListExtrasWebhookByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/extras/webhooks/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of extrasWebhook by last id
+  rpc ListByLastID(ListExtrasWebhookByLastIDRequest) returns (ListExtrasWebhookByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/extras/webhooks"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/extrasWebhook/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getExtrasWebhook?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateExtrasWebhookRequest {
+	string name = 1; 
+	string payloadURL = 2; 
+	string httpMethod = 3; 
+	string httpContentType = 4; 
+	string additionalHeaders = 5; 
+	string bodyTemplate = 6; 
+	string secret = 7; 
+	bool sslVerification = 8; 
+	string caFilePath = 9; 
+	string created = 10; 
+	string lastUpdated = 11; 
+	string customFieldData = 12; 
+	string description = 13; 
+}
+
+message CreateExtrasWebhookReply {
+  uint64 id = 1;
+}
+
+message DeleteExtrasWebhookByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteExtrasWebhookByIDReply {
+
+}
+
+message UpdateExtrasWebhookByIDRequest {
+	uint64 id = 1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	string name = 2; 
+	string payloadURL = 3; 
+	string httpMethod = 4; 
+	string httpContentType = 5; 
+	string additionalHeaders = 6; 
+	string bodyTemplate = 7; 
+	string secret = 8; 
+	bool sslVerification = 9; 
+	string caFilePath = 10; 
+	string created = 11; 
+	string lastUpdated = 12; 
+	string customFieldData = 13; 
+	string description = 14; 
+}
+
+message UpdateExtrasWebhookByIDReply {
+
+}
+
+message ExtrasWebhook {
+	uint64 id = 1; 
+	string name = 2; 
+	string payloadURL = 3; 
+	string httpMethod = 4; 
+	string httpContentType = 5; 
+	string additionalHeaders = 6; 
+	string bodyTemplate = 7; 
+	string secret = 8; 
+	bool sslVerification = 9; 
+	string caFilePath = 10; 
+	string created = 11; 
+	string lastUpdated = 12; 
+	string customFieldData = 13; 
+	string description = 14; 
+}
+
+message GetExtrasWebhookByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetExtrasWebhookByIDReply {
+  ExtrasWebhook extrasWebhook = 1;
+}
+
+message ListExtrasWebhookRequest {
+  api.types.Params params = 1;
+}
+
+message ListExtrasWebhookReply {
+  int64 total = 1;
+  repeated ExtrasWebhook extrasWebhooks = 2;
+}
+
+message DeleteExtrasWebhookByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteExtrasWebhookByIDsReply {
+
+}
+
+message GetExtrasWebhookByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetExtrasWebhookByConditionReply {
+  ExtrasWebhook extrasWebhook = 1;
+}
+
+message ListExtrasWebhookByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListExtrasWebhookByIDsReply {
+  repeated ExtrasWebhook extrasWebhooks = 1;
+}
+
+message ListExtrasWebhookByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListExtrasWebhookByLastIDReply {
+  repeated ExtrasWebhook extrasWebhooks = 1;
+}
+
+

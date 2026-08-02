@@ -1,0 +1,232 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service virtualizationVminterfaceTaggedVlans {
+  // Create a new virtualizationVminterfaceTaggedVlans
+  rpc Create(CreateVirtualizationVminterfaceTaggedVlansRequest) returns (CreateVirtualizationVminterfaceTaggedVlansReply) {
+    option (google.api.http) = {
+      post: "/api/virtualization/virtualizationVminterfaceTaggedVlans"
+      body: "*"
+    };
+  }
+
+  // Delete a virtualizationVminterfaceTaggedVlans by id
+  rpc DeleteByID(DeleteVirtualizationVminterfaceTaggedVlansByIDRequest) returns (DeleteVirtualizationVminterfaceTaggedVlansByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/virtualization/virtualizationVminterfaceTaggedVlans/{id}"
+    };
+  }
+
+  // Update a virtualizationVminterfaceTaggedVlans by id
+  rpc UpdateByID(UpdateVirtualizationVminterfaceTaggedVlansByIDRequest) returns (UpdateVirtualizationVminterfaceTaggedVlansByIDReply) {
+    option (google.api.http) = {
+      put: "/api/virtualization/virtualizationVminterfaceTaggedVlans/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a virtualizationVminterfaceTaggedVlans by id
+  rpc GetByID(GetVirtualizationVminterfaceTaggedVlansByIDRequest) returns (GetVirtualizationVminterfaceTaggedVlansByIDReply) {
+    option (google.api.http) = {
+      get: "/api/virtualization/virtualizationVminterfaceTaggedVlans/{id}"
+    };
+  }
+
+  // Get a paginated list of virtualizationVminterfaceTaggedVlans by custom conditions
+  rpc List(ListVirtualizationVminterfaceTaggedVlansRequest) returns (ListVirtualizationVminterfaceTaggedVlansReply) {
+    option (google.api.http) = {
+      post: "/api/virtualization/virtualizationVminterfaceTaggedVlans/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete virtualizationVminterfaceTaggedVlans by ids
+  rpc DeleteByIDs(DeleteVirtualizationVminterfaceTaggedVlansByIDsRequest) returns (DeleteVirtualizationVminterfaceTaggedVlansByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/virtualization/virtualizationVminterfaceTaggedVlans/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a virtualizationVminterfaceTaggedVlans by custom condition
+  rpc GetByCondition(GetVirtualizationVminterfaceTaggedVlansByConditionRequest) returns (GetVirtualizationVminterfaceTaggedVlansByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/virtualization/virtualizationVminterfaceTaggedVlans/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get virtualizationVminterfaceTaggedVlans by ids
+  rpc ListByIDs(ListVirtualizationVminterfaceTaggedVlansByIDsRequest) returns (ListVirtualizationVminterfaceTaggedVlansByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/virtualization/virtualizationVminterfaceTaggedVlans/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of virtualizationVminterfaceTaggedVlans by last id
+  rpc ListByLastID(ListVirtualizationVminterfaceTaggedVlansByLastIDRequest) returns (ListVirtualizationVminterfaceTaggedVlansByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/virtualization/virtualizationVminterfaceTaggedVlans"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/virtualizationVminterfaceTaggedVlans/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getVirtualizationVminterfaceTaggedVlans?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateVirtualizationVminterfaceTaggedVlansRequest {
+	int64 vminterfaceID = 1; 
+	int64 vlanID = 2; 
+}
+
+message CreateVirtualizationVminterfaceTaggedVlansReply {
+  uint64 id = 1;
+}
+
+message DeleteVirtualizationVminterfaceTaggedVlansByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteVirtualizationVminterfaceTaggedVlansByIDReply {
+
+}
+
+message UpdateVirtualizationVminterfaceTaggedVlansByIDRequest {
+	uint64 id = 1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	int64 vminterfaceID = 2; 
+	int64 vlanID = 3; 
+}
+
+message UpdateVirtualizationVminterfaceTaggedVlansByIDReply {
+
+}
+
+message VirtualizationVminterfaceTaggedVlans {
+	uint64 id = 1; 
+	int64 vminterfaceID = 2; 
+	int64 vlanID = 3; 
+}
+
+message GetVirtualizationVminterfaceTaggedVlansByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetVirtualizationVminterfaceTaggedVlansByIDReply {
+  VirtualizationVminterfaceTaggedVlans virtualizationVminterfaceTaggedVlans = 1;
+}
+
+message ListVirtualizationVminterfaceTaggedVlansRequest {
+  api.types.Params params = 1;
+}
+
+message ListVirtualizationVminterfaceTaggedVlansReply {
+  int64 total = 1;
+  repeated VirtualizationVminterfaceTaggedVlans virtualizationVminterfaceTaggedVlanss = 2;
+}
+
+message DeleteVirtualizationVminterfaceTaggedVlansByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteVirtualizationVminterfaceTaggedVlansByIDsReply {
+
+}
+
+message GetVirtualizationVminterfaceTaggedVlansByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetVirtualizationVminterfaceTaggedVlansByConditionReply {
+  VirtualizationVminterfaceTaggedVlans virtualizationVminterfaceTaggedVlans = 1;
+}
+
+message ListVirtualizationVminterfaceTaggedVlansByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListVirtualizationVminterfaceTaggedVlansByIDsReply {
+  repeated VirtualizationVminterfaceTaggedVlans virtualizationVminterfaceTaggedVlanss = 1;
+}
+
+message ListVirtualizationVminterfaceTaggedVlansByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListVirtualizationVminterfaceTaggedVlansByLastIDReply {
+  repeated VirtualizationVminterfaceTaggedVlans virtualizationVminterfaceTaggedVlanss = 1;
+}
+
+

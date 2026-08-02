@@ -1,0 +1,55 @@
+version: "2"
+
+run:
+  timeout: 10m
+  tests: true
+
+linters:
+  default: none
+  enable:
+    - errcheck
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+  exclusions:
+    generated: strict
+    paths:
+      # Transitional Sponge scaffolding. New handwritten code lives under the
+      # layer-first packages and must never be added to this list.
+      - ^api/netbox_go/v1/
+      - ^api/types/
+      - ^internal/cache/
+      - ^internal/dao/
+      - ^internal/ecode/
+      - ^internal/handler/
+      - ^internal/model/
+      - ^internal/routers/
+      - ^internal/service/
+    rules:
+      # GORM intentionally embeds Dialector. Keeping the qualified selector is
+      # clearer at this transitional boundary; the file is retired in Phase 3.
+      - path: ^internal/contenttype/resolver\.go$
+        linters:
+          - staticcheck
+        text: 'QF1008:'
+
+formatters:
+  enable:
+    - gofmt
+  exclusions:
+    generated: strict
+    paths:
+      - ^api/netbox_go/v1/
+      - ^api/types/
+      - ^internal/cache/
+      - ^internal/dao/
+      - ^internal/ecode/
+      - ^internal/handler/
+      - ^internal/model/
+      - ^internal/routers/
+      - ^internal/service/
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0

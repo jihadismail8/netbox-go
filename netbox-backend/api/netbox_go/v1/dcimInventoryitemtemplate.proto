@@ -1,0 +1,274 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service dcimInventoryitemtemplate {
+  // Create a new dcimInventoryitemtemplate
+  rpc Create(CreateDcimInventoryitemtemplateRequest) returns (CreateDcimInventoryitemtemplateReply) {
+    option (google.api.http) = {
+      post: "/api/dcim/inventoryitemtemplates"
+      body: "*"
+    };
+  }
+
+  // Delete a dcimInventoryitemtemplate by id
+  rpc DeleteByID(DeleteDcimInventoryitemtemplateByIDRequest) returns (DeleteDcimInventoryitemtemplateByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/dcim/inventoryitemtemplates/{id}"
+    };
+  }
+
+  // Update a dcimInventoryitemtemplate by id
+  rpc UpdateByID(UpdateDcimInventoryitemtemplateByIDRequest) returns (UpdateDcimInventoryitemtemplateByIDReply) {
+    option (google.api.http) = {
+      put: "/api/dcim/inventoryitemtemplates/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a dcimInventoryitemtemplate by id
+  rpc GetByID(GetDcimInventoryitemtemplateByIDRequest) returns (GetDcimInventoryitemtemplateByIDReply) {
+    option (google.api.http) = {
+      get: "/api/dcim/inventoryitemtemplates/{id}"
+    };
+  }
+
+  // Get a paginated list of dcimInventoryitemtemplate by custom conditions
+  rpc List(ListDcimInventoryitemtemplateRequest) returns (ListDcimInventoryitemtemplateReply) {
+    option (google.api.http) = {
+      post: "/api/dcim/inventoryitemtemplates/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete dcimInventoryitemtemplate by ids
+  rpc DeleteByIDs(DeleteDcimInventoryitemtemplateByIDsRequest) returns (DeleteDcimInventoryitemtemplateByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/dcim/inventoryitemtemplates/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a dcimInventoryitemtemplate by custom condition
+  rpc GetByCondition(GetDcimInventoryitemtemplateByConditionRequest) returns (GetDcimInventoryitemtemplateByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/dcim/inventoryitemtemplates/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get dcimInventoryitemtemplate by ids
+  rpc ListByIDs(ListDcimInventoryitemtemplateByIDsRequest) returns (ListDcimInventoryitemtemplateByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/dcim/inventoryitemtemplates/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of dcimInventoryitemtemplate by last id
+  rpc ListByLastID(ListDcimInventoryitemtemplateByLastIDRequest) returns (ListDcimInventoryitemtemplateByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/dcim/inventoryitemtemplates"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/dcimInventoryitemtemplate/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getDcimInventoryitemtemplate?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateDcimInventoryitemtemplateRequest {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string name = 3; 
+	string label = 4; 
+	string description = 5; 
+	int64 componentID = 6; 
+	string partID = 7; 
+	int32 lft = 8; 
+	int32 rght = 9; 
+	int32 treeID = 10; 
+	int32 level = 11; 
+	int32 componentTypeID = 12; 
+	int64 deviceTypeID = 13; 
+	int64 manufacturerID = 14; 
+	int64 parentID = 15; 
+	int64 roleID = 16; 
+}
+
+message CreateDcimInventoryitemtemplateReply {
+  uint64 id = 1;
+}
+
+message DeleteDcimInventoryitemtemplateByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteDcimInventoryitemtemplateByIDReply {
+
+}
+
+message UpdateDcimInventoryitemtemplateByIDRequest {
+	uint64 id = 1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	string created = 2; 
+	string lastUpdated = 3; 
+	string name = 4; 
+	string label = 5; 
+	string description = 6; 
+	int64 componentID = 7; 
+	string partID = 8; 
+	int32 lft = 9; 
+	int32 rght = 10; 
+	int32 treeID = 11; 
+	int32 level = 12; 
+	int32 componentTypeID = 13; 
+	int64 deviceTypeID = 14; 
+	int64 manufacturerID = 15; 
+	int64 parentID = 16; 
+	int64 roleID = 17; 
+}
+
+message UpdateDcimInventoryitemtemplateByIDReply {
+
+}
+
+message DcimInventoryitemtemplate {
+	uint64 id = 1; 
+	string created = 2; 
+	string lastUpdated = 3; 
+	string name = 4; 
+	string label = 5; 
+	string description = 6; 
+	int64 componentID = 7; 
+	string partID = 8; 
+	int32 lft = 9; 
+	int32 rght = 10; 
+	int32 treeID = 11; 
+	int32 level = 12; 
+	int32 componentTypeID = 13; 
+	int64 deviceTypeID = 14; 
+	int64 manufacturerID = 15; 
+	int64 parentID = 16; 
+	int64 roleID = 17; 
+}
+
+message GetDcimInventoryitemtemplateByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetDcimInventoryitemtemplateByIDReply {
+  DcimInventoryitemtemplate dcimInventoryitemtemplate = 1;
+}
+
+message ListDcimInventoryitemtemplateRequest {
+  api.types.Params params = 1;
+}
+
+message ListDcimInventoryitemtemplateReply {
+  int64 total = 1;
+  repeated DcimInventoryitemtemplate dcimInventoryitemtemplates = 2;
+}
+
+message DeleteDcimInventoryitemtemplateByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteDcimInventoryitemtemplateByIDsReply {
+
+}
+
+message GetDcimInventoryitemtemplateByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetDcimInventoryitemtemplateByConditionReply {
+  DcimInventoryitemtemplate dcimInventoryitemtemplate = 1;
+}
+
+message ListDcimInventoryitemtemplateByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListDcimInventoryitemtemplateByIDsReply {
+  repeated DcimInventoryitemtemplate dcimInventoryitemtemplates = 1;
+}
+
+message ListDcimInventoryitemtemplateByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListDcimInventoryitemtemplateByLastIDReply {
+  repeated DcimInventoryitemtemplate dcimInventoryitemtemplates = 1;
+}
+
+

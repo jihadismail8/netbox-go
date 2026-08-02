@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netbox-go-dm
+  namespace: netbox-go
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: netbox-go
+  template:
+    metadata:
+      name: netbox-go-pod
+      labels:
+        app: netbox-go
+    spec:
+      containers:
+        - name: netbox-go
+          image: /netbox-go/netbox-go:latest
+          # If using a local image, use Never, default is Always
+          #imagePullPolicy: Never
+          command: ["./netbox_go", "-c", "/app/configs/netbox_go.yml"]
+          resources:
+            requests:
+              cpu: 10m
+              memory: 10Mi
+            limits:
+              cpu: 1000m
+              memory: 1000Mi
+          volumeMounts:
+            - name: netbox-go-vl
+              mountPath: /app/configs/
+              readOnly: true
+            - name: host-timezone
+              mountPath: /etc/localtime
+              readOnly: true
+          env:
+            - name: NETBOX_DATABASE_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: netbox-go-secrets
+                  key: database-dsn
+
+          ports:
+            - name: grpc-port
+              containerPort: 7682
+            - name: metrics-port
+              containerPort: 7683
+          readinessProbe:
+            exec:
+              command: ["/bin/grpc_health_probe", "-addr=:7682"]
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            exec:
+              command: ["/bin/grpc_health_probe", "-addr=:7682"]
+
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+      # todo for private repositories, you need to create a secret (here docker-auth-secret) to store the account and password to log into docker
+      imagePullSecrets:
+        - name: docker-auth-secret
+      volumes:
+        - name: netbox-go-vl
+          configMap:
+            name: netbox-go-config
+        - name: host-timezone
+          hostPath:
+            path: /etc/localtime
+            type: File

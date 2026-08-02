@@ -1,0 +1,277 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service dcimConsoleserverport {
+  // Create a new dcimConsoleserverport
+  rpc Create(CreateDcimConsoleserverportRequest) returns (CreateDcimConsoleserverportReply) {
+    option (google.api.http) = {
+      post: "/api/dcim/consoleserverports"
+      body: "*"
+    };
+  }
+
+  // Delete a dcimConsoleserverport by id
+  rpc DeleteByID(DeleteDcimConsoleserverportByIDRequest) returns (DeleteDcimConsoleserverportByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/dcim/consoleserverports/{id}"
+    };
+  }
+
+  // Update a dcimConsoleserverport by id
+  rpc UpdateByID(UpdateDcimConsoleserverportByIDRequest) returns (UpdateDcimConsoleserverportByIDReply) {
+    option (google.api.http) = {
+      put: "/api/dcim/consoleserverports/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a dcimConsoleserverport by id
+  rpc GetByID(GetDcimConsoleserverportByIDRequest) returns (GetDcimConsoleserverportByIDReply) {
+    option (google.api.http) = {
+      get: "/api/dcim/consoleserverports/{id}"
+    };
+  }
+
+  // Get a paginated list of dcimConsoleserverport by custom conditions
+  rpc List(ListDcimConsoleserverportRequest) returns (ListDcimConsoleserverportReply) {
+    option (google.api.http) = {
+      post: "/api/dcim/consoleserverports/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete dcimConsoleserverport by ids
+  rpc DeleteByIDs(DeleteDcimConsoleserverportByIDsRequest) returns (DeleteDcimConsoleserverportByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/dcim/consoleserverports/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a dcimConsoleserverport by custom condition
+  rpc GetByCondition(GetDcimConsoleserverportByConditionRequest) returns (GetDcimConsoleserverportByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/dcim/consoleserverports/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get dcimConsoleserverport by ids
+  rpc ListByIDs(ListDcimConsoleserverportByIDsRequest) returns (ListDcimConsoleserverportByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/dcim/consoleserverports/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of dcimConsoleserverport by last id
+  rpc ListByLastID(ListDcimConsoleserverportByLastIDRequest) returns (ListDcimConsoleserverportByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/dcim/consoleserverports"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/dcimConsoleserverport/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getDcimConsoleserverport?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateDcimConsoleserverportRequest {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	string name = 4; 
+	string label = 5; 
+	string description = 6; 
+	bool markConnected = 7; 
+	string type = 8; 
+	int32 speed = 9; 
+	int64 xPathID = 10; 
+	int64 cableID = 11; 
+	int64 deviceID = 12; 
+	int64 moduleID = 13; 
+	string cableEnd = 14; 
+	int64 xLocationID = 15; 
+	int64 xRackID = 16; 
+	int64 xSiteID = 17; 
+}
+
+message CreateDcimConsoleserverportReply {
+  uint64 id = 1;
+}
+
+message DeleteDcimConsoleserverportByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteDcimConsoleserverportByIDReply {
+
+}
+
+message UpdateDcimConsoleserverportByIDRequest {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	uint64 id = 4 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	string name = 5; 
+	string label = 6; 
+	string description = 7; 
+	bool markConnected = 8; 
+	string type = 9; 
+	int32 speed = 10; 
+	int64 xPathID = 11; 
+	int64 cableID = 12; 
+	int64 deviceID = 13; 
+	int64 moduleID = 14; 
+	string cableEnd = 15; 
+	int64 xLocationID = 16; 
+	int64 xRackID = 17; 
+	int64 xSiteID = 18; 
+}
+
+message UpdateDcimConsoleserverportByIDReply {
+
+}
+
+message DcimConsoleserverport {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	uint64 id = 4; 
+	string name = 5; 
+	string label = 6; 
+	string description = 7; 
+	bool markConnected = 8; 
+	string type = 9; 
+	int32 speed = 10; 
+	int64 xPathID = 11; 
+	int64 cableID = 12; 
+	int64 deviceID = 13; 
+	int64 moduleID = 14; 
+	string cableEnd = 15; 
+	int64 xLocationID = 16; 
+	int64 xRackID = 17; 
+	int64 xSiteID = 18; 
+}
+
+message GetDcimConsoleserverportByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetDcimConsoleserverportByIDReply {
+  DcimConsoleserverport dcimConsoleserverport = 1;
+}
+
+message ListDcimConsoleserverportRequest {
+  api.types.Params params = 1;
+}
+
+message ListDcimConsoleserverportReply {
+  int64 total = 1;
+  repeated DcimConsoleserverport dcimConsoleserverports = 2;
+}
+
+message DeleteDcimConsoleserverportByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteDcimConsoleserverportByIDsReply {
+
+}
+
+message GetDcimConsoleserverportByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetDcimConsoleserverportByConditionReply {
+  DcimConsoleserverport dcimConsoleserverport = 1;
+}
+
+message ListDcimConsoleserverportByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListDcimConsoleserverportByIDsReply {
+  repeated DcimConsoleserverport dcimConsoleserverports = 1;
+}
+
+message ListDcimConsoleserverportByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListDcimConsoleserverportByLastIDReply {
+  repeated DcimConsoleserverport dcimConsoleserverports = 1;
+}
+
+

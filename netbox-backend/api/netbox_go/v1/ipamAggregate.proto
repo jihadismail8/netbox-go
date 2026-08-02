@@ -1,0 +1,253 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service ipamAggregate {
+  // Create a new ipamAggregate
+  rpc Create(CreateIpamAggregateRequest) returns (CreateIpamAggregateReply) {
+    option (google.api.http) = {
+      post: "/api/ipam/aggregates"
+      body: "*"
+    };
+  }
+
+  // Delete a ipamAggregate by id
+  rpc DeleteByID(DeleteIpamAggregateByIDRequest) returns (DeleteIpamAggregateByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/ipam/aggregates/{id}"
+    };
+  }
+
+  // Update a ipamAggregate by id
+  rpc UpdateByID(UpdateIpamAggregateByIDRequest) returns (UpdateIpamAggregateByIDReply) {
+    option (google.api.http) = {
+      put: "/api/ipam/aggregates/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a ipamAggregate by id
+  rpc GetByID(GetIpamAggregateByIDRequest) returns (GetIpamAggregateByIDReply) {
+    option (google.api.http) = {
+      get: "/api/ipam/aggregates/{id}"
+    };
+  }
+
+  // Get a paginated list of ipamAggregate by custom conditions
+  rpc List(ListIpamAggregateRequest) returns (ListIpamAggregateReply) {
+    option (google.api.http) = {
+      post: "/api/ipam/aggregates/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete ipamAggregate by ids
+  rpc DeleteByIDs(DeleteIpamAggregateByIDsRequest) returns (DeleteIpamAggregateByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/ipam/aggregates/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a ipamAggregate by custom condition
+  rpc GetByCondition(GetIpamAggregateByConditionRequest) returns (GetIpamAggregateByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/ipam/aggregates/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get ipamAggregate by ids
+  rpc ListByIDs(ListIpamAggregateByIDsRequest) returns (ListIpamAggregateByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/ipam/aggregates/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of ipamAggregate by last id
+  rpc ListByLastID(ListIpamAggregateByLastIDRequest) returns (ListIpamAggregateByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/ipam/aggregates"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/ipamAggregate/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getIpamAggregate?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateIpamAggregateRequest {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	string prefix = 4; 
+	string dateAdded = 5; 
+	string description = 6; 
+	int64 rirID = 7; 
+	int64 tenantID = 8; 
+	string comments = 9; 
+}
+
+message CreateIpamAggregateReply {
+  uint64 id = 1;
+}
+
+message DeleteIpamAggregateByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteIpamAggregateByIDReply {
+
+}
+
+message UpdateIpamAggregateByIDRequest {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	uint64 id = 4 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	string prefix = 5; 
+	string dateAdded = 6; 
+	string description = 7; 
+	int64 rirID = 8; 
+	int64 tenantID = 9; 
+	string comments = 10; 
+}
+
+message UpdateIpamAggregateByIDReply {
+
+}
+
+message IpamAggregate {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	uint64 id = 4; 
+	string prefix = 5; 
+	string dateAdded = 6; 
+	string description = 7; 
+	int64 rirID = 8; 
+	int64 tenantID = 9; 
+	string comments = 10; 
+}
+
+message GetIpamAggregateByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetIpamAggregateByIDReply {
+  IpamAggregate ipamAggregate = 1;
+}
+
+message ListIpamAggregateRequest {
+  api.types.Params params = 1;
+}
+
+message ListIpamAggregateReply {
+  int64 total = 1;
+  repeated IpamAggregate ipamAggregates = 2;
+}
+
+message DeleteIpamAggregateByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteIpamAggregateByIDsReply {
+
+}
+
+message GetIpamAggregateByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetIpamAggregateByConditionReply {
+  IpamAggregate ipamAggregate = 1;
+}
+
+message ListIpamAggregateByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListIpamAggregateByIDsReply {
+  repeated IpamAggregate ipamAggregates = 1;
+}
+
+message ListIpamAggregateByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListIpamAggregateByLastIDReply {
+  repeated IpamAggregate ipamAggregates = 1;
+}
+
+

@@ -1,0 +1,247 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service extrasNotification {
+  // Create a new extrasNotification
+  rpc Create(CreateExtrasNotificationRequest) returns (CreateExtrasNotificationReply) {
+    option (google.api.http) = {
+      post: "/api/extras/notifications"
+      body: "*"
+    };
+  }
+
+  // Delete a extrasNotification by id
+  rpc DeleteByID(DeleteExtrasNotificationByIDRequest) returns (DeleteExtrasNotificationByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/extras/notifications/{id}"
+    };
+  }
+
+  // Update a extrasNotification by id
+  rpc UpdateByID(UpdateExtrasNotificationByIDRequest) returns (UpdateExtrasNotificationByIDReply) {
+    option (google.api.http) = {
+      put: "/api/extras/notifications/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a extrasNotification by id
+  rpc GetByID(GetExtrasNotificationByIDRequest) returns (GetExtrasNotificationByIDReply) {
+    option (google.api.http) = {
+      get: "/api/extras/notifications/{id}"
+    };
+  }
+
+  // Get a paginated list of extrasNotification by custom conditions
+  rpc List(ListExtrasNotificationRequest) returns (ListExtrasNotificationReply) {
+    option (google.api.http) = {
+      post: "/api/extras/notifications/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete extrasNotification by ids
+  rpc DeleteByIDs(DeleteExtrasNotificationByIDsRequest) returns (DeleteExtrasNotificationByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/extras/notifications/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a extrasNotification by custom condition
+  rpc GetByCondition(GetExtrasNotificationByConditionRequest) returns (GetExtrasNotificationByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/extras/notifications/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get extrasNotification by ids
+  rpc ListByIDs(ListExtrasNotificationByIDsRequest) returns (ListExtrasNotificationByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/extras/notifications/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of extrasNotification by last id
+  rpc ListByLastID(ListExtrasNotificationByLastIDRequest) returns (ListExtrasNotificationByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/extras/notifications"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/extrasNotification/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getExtrasNotification?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateExtrasNotificationRequest {
+	string created = 1; 
+	string read = 2; 
+	int64 objectID = 3; 
+	string eventType = 4; 
+	int32 objectTypeID = 5; 
+	string objectRepr = 6; 
+	int64 userID = 7; 
+}
+
+message CreateExtrasNotificationReply {
+  uint64 id = 1;
+}
+
+message DeleteExtrasNotificationByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteExtrasNotificationByIDReply {
+
+}
+
+message UpdateExtrasNotificationByIDRequest {
+	uint64 id = 1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	string created = 2; 
+	string read = 3; 
+	int64 objectID = 4; 
+	string eventType = 5; 
+	int32 objectTypeID = 6; 
+	string objectRepr = 7; 
+	int64 userID = 8; 
+}
+
+message UpdateExtrasNotificationByIDReply {
+
+}
+
+message ExtrasNotification {
+	uint64 id = 1; 
+	string created = 2; 
+	string read = 3; 
+	int64 objectID = 4; 
+	string eventType = 5; 
+	int32 objectTypeID = 6; 
+	string objectRepr = 7; 
+	int64 userID = 8; 
+}
+
+message GetExtrasNotificationByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetExtrasNotificationByIDReply {
+  ExtrasNotification extrasNotification = 1;
+}
+
+message ListExtrasNotificationRequest {
+  api.types.Params params = 1;
+}
+
+message ListExtrasNotificationReply {
+  int64 total = 1;
+  repeated ExtrasNotification extrasNotifications = 2;
+}
+
+message DeleteExtrasNotificationByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteExtrasNotificationByIDsReply {
+
+}
+
+message GetExtrasNotificationByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetExtrasNotificationByConditionReply {
+  ExtrasNotification extrasNotification = 1;
+}
+
+message ListExtrasNotificationByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListExtrasNotificationByIDsReply {
+  repeated ExtrasNotification extrasNotifications = 1;
+}
+
+message ListExtrasNotificationByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListExtrasNotificationByLastIDReply {
+  repeated ExtrasNotification extrasNotifications = 1;
+}
+
+

@@ -1,0 +1,546 @@
+syntax = "proto3";
+
+package netbox.dcim.v1;
+
+import "google/protobuf/field_mask.proto";
+import "netbox/dcim/v1/resources.proto";
+import "netbox/types/v1/pagination.proto";
+
+option go_package = "netbox-go/gen/go/netbox/dcim/v1;dcimv1";
+
+service DCIMService {
+  rpc ListSites(ListSitesRequest) returns (ListSitesResponse);
+  rpc GetSite(GetSiteRequest) returns (GetSiteResponse);
+  rpc CreateSite(CreateSiteRequest) returns (CreateSiteResponse);
+  rpc ReplaceSite(ReplaceSiteRequest) returns (ReplaceSiteResponse);
+  rpc UpdateSite(UpdateSiteRequest) returns (UpdateSiteResponse);
+  rpc DeleteSite(DeleteSiteRequest) returns (DeleteSiteResponse);
+
+  rpc ListManufacturers(ListManufacturersRequest) returns (ListManufacturersResponse);
+  rpc GetManufacturer(GetManufacturerRequest) returns (GetManufacturerResponse);
+  rpc CreateManufacturer(CreateManufacturerRequest) returns (CreateManufacturerResponse);
+  rpc ReplaceManufacturer(ReplaceManufacturerRequest) returns (ReplaceManufacturerResponse);
+  rpc UpdateManufacturer(UpdateManufacturerRequest) returns (UpdateManufacturerResponse);
+  rpc DeleteManufacturer(DeleteManufacturerRequest) returns (DeleteManufacturerResponse);
+
+  rpc ListRackRoles(ListRackRolesRequest) returns (ListRackRolesResponse);
+  rpc GetRackRole(GetRackRoleRequest) returns (GetRackRoleResponse);
+  rpc CreateRackRole(CreateRackRoleRequest) returns (CreateRackRoleResponse);
+  rpc ReplaceRackRole(ReplaceRackRoleRequest) returns (ReplaceRackRoleResponse);
+  rpc UpdateRackRole(UpdateRackRoleRequest) returns (UpdateRackRoleResponse);
+  rpc DeleteRackRole(DeleteRackRoleRequest) returns (DeleteRackRoleResponse);
+
+  rpc ListRackTypes(ListRackTypesRequest) returns (ListRackTypesResponse);
+  rpc GetRackType(GetRackTypeRequest) returns (GetRackTypeResponse);
+  rpc CreateRackType(CreateRackTypeRequest) returns (CreateRackTypeResponse);
+  rpc ReplaceRackType(ReplaceRackTypeRequest) returns (ReplaceRackTypeResponse);
+  rpc UpdateRackType(UpdateRackTypeRequest) returns (UpdateRackTypeResponse);
+  rpc DeleteRackType(DeleteRackTypeRequest) returns (DeleteRackTypeResponse);
+
+  rpc ListRacks(ListRacksRequest) returns (ListRacksResponse);
+  rpc GetRack(GetRackRequest) returns (GetRackResponse);
+  rpc CreateRack(CreateRackRequest) returns (CreateRackResponse);
+  rpc ReplaceRack(ReplaceRackRequest) returns (ReplaceRackResponse);
+  rpc UpdateRack(UpdateRackRequest) returns (UpdateRackResponse);
+  rpc DeleteRack(DeleteRackRequest) returns (DeleteRackResponse);
+
+  rpc ListDeviceRoles(ListDeviceRolesRequest) returns (ListDeviceRolesResponse);
+  rpc GetDeviceRole(GetDeviceRoleRequest) returns (GetDeviceRoleResponse);
+  rpc CreateDeviceRole(CreateDeviceRoleRequest) returns (CreateDeviceRoleResponse);
+  rpc ReplaceDeviceRole(ReplaceDeviceRoleRequest) returns (ReplaceDeviceRoleResponse);
+  rpc UpdateDeviceRole(UpdateDeviceRoleRequest) returns (UpdateDeviceRoleResponse);
+  rpc DeleteDeviceRole(DeleteDeviceRoleRequest) returns (DeleteDeviceRoleResponse);
+
+  rpc ListDeviceTypes(ListDeviceTypesRequest) returns (ListDeviceTypesResponse);
+  rpc GetDeviceType(GetDeviceTypeRequest) returns (GetDeviceTypeResponse);
+  rpc CreateDeviceType(CreateDeviceTypeRequest) returns (CreateDeviceTypeResponse);
+  rpc ReplaceDeviceType(ReplaceDeviceTypeRequest) returns (ReplaceDeviceTypeResponse);
+  rpc UpdateDeviceType(UpdateDeviceTypeRequest) returns (UpdateDeviceTypeResponse);
+  rpc DeleteDeviceType(DeleteDeviceTypeRequest) returns (DeleteDeviceTypeResponse);
+
+  rpc ListInterfaceTemplates(ListInterfaceTemplatesRequest) returns (ListInterfaceTemplatesResponse);
+  rpc GetInterfaceTemplate(GetInterfaceTemplateRequest) returns (GetInterfaceTemplateResponse);
+  rpc CreateInterfaceTemplate(CreateInterfaceTemplateRequest) returns (CreateInterfaceTemplateResponse);
+  rpc ReplaceInterfaceTemplate(ReplaceInterfaceTemplateRequest) returns (ReplaceInterfaceTemplateResponse);
+  rpc UpdateInterfaceTemplate(UpdateInterfaceTemplateRequest) returns (UpdateInterfaceTemplateResponse);
+  rpc DeleteInterfaceTemplate(DeleteInterfaceTemplateRequest) returns (DeleteInterfaceTemplateResponse);
+
+  rpc ListDevices(ListDevicesRequest) returns (ListDevicesResponse);
+  rpc GetDevice(GetDeviceRequest) returns (GetDeviceResponse);
+  rpc CreateDevice(CreateDeviceRequest) returns (CreateDeviceResponse);
+  rpc ReplaceDevice(ReplaceDeviceRequest) returns (ReplaceDeviceResponse);
+  rpc UpdateDevice(UpdateDeviceRequest) returns (UpdateDeviceResponse);
+  rpc DeleteDevice(DeleteDeviceRequest) returns (DeleteDeviceResponse);
+
+  rpc ListInterfaces(ListInterfacesRequest) returns (ListInterfacesResponse);
+  rpc GetInterface(GetInterfaceRequest) returns (GetInterfaceResponse);
+  rpc CreateInterface(CreateInterfaceRequest) returns (CreateInterfaceResponse);
+  rpc ReplaceInterface(ReplaceInterfaceRequest) returns (ReplaceInterfaceResponse);
+  rpc UpdateInterface(UpdateInterfaceRequest) returns (UpdateInterfaceResponse);
+  rpc DeleteInterface(DeleteInterfaceRequest) returns (DeleteInterfaceResponse);
+}
+
+message ListSitesRequest {
+  netbox.types.v1.PageRequest page = 1;
+  optional string name = 2;
+  optional string slug = 3;
+  optional string status = 4;
+}
+
+message ListSitesResponse {
+  netbox.types.v1.PageInfo page = 1;
+  repeated Site results = 2;
+}
+
+message CreateSiteRequest {
+  SiteInput site = 1;
+}
+message ReplaceSiteRequest {
+  int64 id = 1;
+  SiteInput site = 2;
+}
+message UpdateSiteRequest {
+  int64 id = 1;
+  SiteInput site = 2;
+  google.protobuf.FieldMask update_mask = 3;
+}
+
+message ListManufacturersRequest {
+  netbox.types.v1.PageRequest page = 1;
+  optional string name = 2;
+  optional string slug = 3;
+}
+
+message ListManufacturersResponse {
+  netbox.types.v1.PageInfo page = 1;
+  repeated Manufacturer results = 2;
+}
+
+message CreateManufacturerRequest {
+  ManufacturerInput manufacturer = 1;
+}
+message ReplaceManufacturerRequest {
+  int64 id = 1;
+  ManufacturerInput manufacturer = 2;
+}
+message UpdateManufacturerRequest {
+  int64 id = 1;
+  ManufacturerInput manufacturer = 2;
+  google.protobuf.FieldMask update_mask = 3;
+}
+
+message ListRackRolesRequest {
+  netbox.types.v1.PageRequest page = 1;
+  optional string name = 2;
+  optional string slug = 3;
+}
+
+message ListRackRolesResponse {
+  netbox.types.v1.PageInfo page = 1;
+  repeated RackRole results = 2;
+}
+
+message CreateRackRoleRequest {
+  RackRoleInput rack_role = 1;
+}
+message ReplaceRackRoleRequest {
+  int64 id = 1;
+  RackRoleInput rack_role = 2;
+}
+message UpdateRackRoleRequest {
+  int64 id = 1;
+  RackRoleInput rack_role = 2;
+  google.protobuf.FieldMask update_mask = 3;
+}
+
+message ListRackTypesRequest {
+  netbox.types.v1.PageRequest page = 1;
+  optional int64 manufacturer_id = 2;
+  optional string manufacturer_slug = 3;
+  optional string model = 4;
+  optional string slug = 5;
+}
+
+message ListRackTypesResponse {
+  netbox.types.v1.PageInfo page = 1;
+  repeated RackType results = 2;
+}
+
+message CreateRackTypeRequest {
+  RackTypeInput rack_type = 1;
+}
+message ReplaceRackTypeRequest {
+  int64 id = 1;
+  RackTypeInput rack_type = 2;
+}
+message UpdateRackTypeRequest {
+  int64 id = 1;
+  RackTypeInput rack_type = 2;
+  google.protobuf.FieldMask update_mask = 3;
+}
+
+message ListRacksRequest {
+  netbox.types.v1.PageRequest page = 1;
+  optional int64 site_id = 2;
+  optional string site_slug = 3;
+  optional string name = 4;
+  optional string status = 5;
+  optional int64 role_id = 6;
+  optional string role_slug = 7;
+  optional int64 rack_type_id = 8;
+  optional string rack_type_slug = 9;
+}
+
+message ListRacksResponse {
+  netbox.types.v1.PageInfo page = 1;
+  repeated Rack results = 2;
+}
+
+message CreateRackRequest {
+  RackInput rack = 1;
+}
+message ReplaceRackRequest {
+  int64 id = 1;
+  RackInput rack = 2;
+}
+message UpdateRackRequest {
+  int64 id = 1;
+  RackInput rack = 2;
+  google.protobuf.FieldMask update_mask = 3;
+}
+
+message ListDeviceRolesRequest {
+  netbox.types.v1.PageRequest page = 1;
+  optional string name = 2;
+  optional string slug = 3;
+}
+
+message ListDeviceRolesResponse {
+  netbox.types.v1.PageInfo page = 1;
+  repeated DeviceRole results = 2;
+}
+
+message CreateDeviceRoleRequest {
+  DeviceRoleInput device_role = 1;
+}
+message ReplaceDeviceRoleRequest {
+  int64 id = 1;
+  DeviceRoleInput device_role = 2;
+}
+message UpdateDeviceRoleRequest {
+  int64 id = 1;
+  DeviceRoleInput device_role = 2;
+  google.protobuf.FieldMask update_mask = 3;
+}
+
+message ListDeviceTypesRequest {
+  netbox.types.v1.PageRequest page = 1;
+  optional int64 manufacturer_id = 2;
+  optional string manufacturer_slug = 3;
+  optional string model = 4;
+  optional string slug = 5;
+}
+
+message ListDeviceTypesResponse {
+  netbox.types.v1.PageInfo page = 1;
+  repeated DeviceType results = 2;
+}
+
+message CreateDeviceTypeRequest {
+  DeviceTypeInput device_type = 1;
+}
+message ReplaceDeviceTypeRequest {
+  int64 id = 1;
+  DeviceTypeInput device_type = 2;
+}
+message UpdateDeviceTypeRequest {
+  int64 id = 1;
+  DeviceTypeInput device_type = 2;
+  google.protobuf.FieldMask update_mask = 3;
+}
+
+message ListInterfaceTemplatesRequest {
+  netbox.types.v1.PageRequest page = 1;
+  optional int64 device_type_id = 2;
+  optional string name = 3;
+  optional string type = 4;
+  optional bool enabled = 5;
+  optional bool mgmt_only = 6;
+}
+
+message ListInterfaceTemplatesResponse {
+  netbox.types.v1.PageInfo page = 1;
+  repeated InterfaceTemplate results = 2;
+}
+
+message CreateInterfaceTemplateRequest {
+  InterfaceTemplateInput interface_template = 1;
+}
+message ReplaceInterfaceTemplateRequest {
+  int64 id = 1;
+  InterfaceTemplateInput interface_template = 2;
+}
+message UpdateInterfaceTemplateRequest {
+  int64 id = 1;
+  InterfaceTemplateInput interface_template = 2;
+  google.protobuf.FieldMask update_mask = 3;
+}
+
+message ListDevicesRequest {
+  netbox.types.v1.PageRequest page = 1;
+  optional int64 site_id = 2;
+  optional string site_slug = 3;
+  optional int64 rack_id = 4;
+  optional int64 device_type_id = 5;
+  optional string device_type_slug = 6;
+  optional int64 role_id = 7;
+  optional string role_slug = 8;
+  optional string name = 9;
+  optional string status = 10;
+}
+
+message ListDevicesResponse {
+  netbox.types.v1.PageInfo page = 1;
+  repeated Device results = 2;
+}
+
+message CreateDeviceRequest {
+  DeviceInput device = 1;
+}
+message ReplaceDeviceRequest {
+  int64 id = 1;
+  DeviceInput device = 2;
+}
+message UpdateDeviceRequest {
+  int64 id = 1;
+  DeviceInput device = 2;
+  google.protobuf.FieldMask update_mask = 3;
+}
+
+message ListInterfacesRequest {
+  netbox.types.v1.PageRequest page = 1;
+  optional int64 device_id = 2;
+  optional string device_name = 3;
+  optional string name = 4;
+  optional string type = 5;
+  optional bool enabled = 6;
+  optional bool mgmt_only = 7;
+}
+
+message ListInterfacesResponse {
+  netbox.types.v1.PageInfo page = 1;
+  repeated Interface results = 2;
+}
+
+message CreateInterfaceRequest {
+  InterfaceInput interface = 1;
+}
+message ReplaceInterfaceRequest {
+  int64 id = 1;
+  InterfaceInput interface = 2;
+}
+message UpdateInterfaceRequest {
+  int64 id = 1;
+  InterfaceInput interface = 2;
+  google.protobuf.FieldMask update_mask = 3;
+}
+
+message GetSiteRequest {
+  int64 id = 1;
+}
+message GetSiteResponse {
+  Site site = 1;
+}
+message CreateSiteResponse {
+  Site site = 1;
+}
+message ReplaceSiteResponse {
+  Site site = 1;
+}
+message UpdateSiteResponse {
+  Site site = 1;
+}
+message DeleteSiteRequest {
+  int64 id = 1;
+}
+message DeleteSiteResponse {}
+
+message GetManufacturerRequest {
+  int64 id = 1;
+}
+message GetManufacturerResponse {
+  Manufacturer manufacturer = 1;
+}
+message CreateManufacturerResponse {
+  Manufacturer manufacturer = 1;
+}
+message ReplaceManufacturerResponse {
+  Manufacturer manufacturer = 1;
+}
+message UpdateManufacturerResponse {
+  Manufacturer manufacturer = 1;
+}
+message DeleteManufacturerRequest {
+  int64 id = 1;
+}
+message DeleteManufacturerResponse {}
+
+message GetRackRoleRequest {
+  int64 id = 1;
+}
+message GetRackRoleResponse {
+  RackRole rack_role = 1;
+}
+message CreateRackRoleResponse {
+  RackRole rack_role = 1;
+}
+message ReplaceRackRoleResponse {
+  RackRole rack_role = 1;
+}
+message UpdateRackRoleResponse {
+  RackRole rack_role = 1;
+}
+message DeleteRackRoleRequest {
+  int64 id = 1;
+}
+message DeleteRackRoleResponse {}
+
+message GetRackTypeRequest {
+  int64 id = 1;
+}
+message GetRackTypeResponse {
+  RackType rack_type = 1;
+}
+message CreateRackTypeResponse {
+  RackType rack_type = 1;
+}
+message ReplaceRackTypeResponse {
+  RackType rack_type = 1;
+}
+message UpdateRackTypeResponse {
+  RackType rack_type = 1;
+}
+message DeleteRackTypeRequest {
+  int64 id = 1;
+}
+message DeleteRackTypeResponse {}
+
+message GetRackRequest {
+  int64 id = 1;
+}
+message GetRackResponse {
+  Rack rack = 1;
+}
+message CreateRackResponse {
+  Rack rack = 1;
+}
+message ReplaceRackResponse {
+  Rack rack = 1;
+}
+message UpdateRackResponse {
+  Rack rack = 1;
+}
+message DeleteRackRequest {
+  int64 id = 1;
+}
+message DeleteRackResponse {}
+
+message GetDeviceRoleRequest {
+  int64 id = 1;
+}
+message GetDeviceRoleResponse {
+  DeviceRole device_role = 1;
+}
+message CreateDeviceRoleResponse {
+  DeviceRole device_role = 1;
+}
+message ReplaceDeviceRoleResponse {
+  DeviceRole device_role = 1;
+}
+message UpdateDeviceRoleResponse {
+  DeviceRole device_role = 1;
+}
+message DeleteDeviceRoleRequest {
+  int64 id = 1;
+}
+message DeleteDeviceRoleResponse {}
+
+message GetDeviceTypeRequest {
+  int64 id = 1;
+}
+message GetDeviceTypeResponse {
+  DeviceType device_type = 1;
+}
+message CreateDeviceTypeResponse {
+  DeviceType device_type = 1;
+}
+message ReplaceDeviceTypeResponse {
+  DeviceType device_type = 1;
+}
+message UpdateDeviceTypeResponse {
+  DeviceType device_type = 1;
+}
+message DeleteDeviceTypeRequest {
+  int64 id = 1;
+}
+message DeleteDeviceTypeResponse {}
+
+message GetInterfaceTemplateRequest {
+  int64 id = 1;
+}
+message GetInterfaceTemplateResponse {
+  InterfaceTemplate interface_template = 1;
+}
+message CreateInterfaceTemplateResponse {
+  InterfaceTemplate interface_template = 1;
+}
+message ReplaceInterfaceTemplateResponse {
+  InterfaceTemplate interface_template = 1;
+}
+message UpdateInterfaceTemplateResponse {
+  InterfaceTemplate interface_template = 1;
+}
+message DeleteInterfaceTemplateRequest {
+  int64 id = 1;
+}
+message DeleteInterfaceTemplateResponse {}
+
+message GetDeviceRequest {
+  int64 id = 1;
+}
+message GetDeviceResponse {
+  Device device = 1;
+}
+message CreateDeviceResponse {
+  Device device = 1;
+}
+message ReplaceDeviceResponse {
+  Device device = 1;
+}
+message UpdateDeviceResponse {
+  Device device = 1;
+}
+message DeleteDeviceRequest {
+  int64 id = 1;
+}
+message DeleteDeviceResponse {}
+
+message GetInterfaceRequest {
+  int64 id = 1;
+}
+message GetInterfaceResponse {
+  Interface interface = 1;
+}
+message CreateInterfaceResponse {
+  Interface interface = 1;
+}
+message ReplaceInterfaceResponse {
+  Interface interface = 1;
+}
+message UpdateInterfaceResponse {
+  Interface interface = 1;
+}
+message DeleteInterfaceRequest {
+  int64 id = 1;
+}
+message DeleteInterfaceResponse {}

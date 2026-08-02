@@ -1,0 +1,262 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service wirelessWirelesslangroup {
+  // Create a new wirelessWirelesslangroup
+  rpc Create(CreateWirelessWirelesslangroupRequest) returns (CreateWirelessWirelesslangroupReply) {
+    option (google.api.http) = {
+      post: "/api/wireless/wirelesslangroups"
+      body: "*"
+    };
+  }
+
+  // Delete a wirelessWirelesslangroup by id
+  rpc DeleteByID(DeleteWirelessWirelesslangroupByIDRequest) returns (DeleteWirelessWirelesslangroupByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/wireless/wirelesslangroups/{id}"
+    };
+  }
+
+  // Update a wirelessWirelesslangroup by id
+  rpc UpdateByID(UpdateWirelessWirelesslangroupByIDRequest) returns (UpdateWirelessWirelesslangroupByIDReply) {
+    option (google.api.http) = {
+      put: "/api/wireless/wirelesslangroups/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a wirelessWirelesslangroup by id
+  rpc GetByID(GetWirelessWirelesslangroupByIDRequest) returns (GetWirelessWirelesslangroupByIDReply) {
+    option (google.api.http) = {
+      get: "/api/wireless/wirelesslangroups/{id}"
+    };
+  }
+
+  // Get a paginated list of wirelessWirelesslangroup by custom conditions
+  rpc List(ListWirelessWirelesslangroupRequest) returns (ListWirelessWirelesslangroupReply) {
+    option (google.api.http) = {
+      post: "/api/wireless/wirelesslangroups/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete wirelessWirelesslangroup by ids
+  rpc DeleteByIDs(DeleteWirelessWirelesslangroupByIDsRequest) returns (DeleteWirelessWirelesslangroupByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/wireless/wirelesslangroups/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a wirelessWirelesslangroup by custom condition
+  rpc GetByCondition(GetWirelessWirelesslangroupByConditionRequest) returns (GetWirelessWirelesslangroupByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/wireless/wirelesslangroups/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get wirelessWirelesslangroup by ids
+  rpc ListByIDs(ListWirelessWirelesslangroupByIDsRequest) returns (ListWirelessWirelesslangroupByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/wireless/wirelesslangroups/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of wirelessWirelesslangroup by last id
+  rpc ListByLastID(ListWirelessWirelesslangroupByLastIDRequest) returns (ListWirelessWirelesslangroupByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/wireless/wirelesslangroups"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/wirelessWirelesslangroup/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getWirelessWirelesslangroup?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateWirelessWirelesslangroupRequest {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	string name = 4; 
+	string slug = 5; 
+	string description = 6; 
+	int32 lft = 7; 
+	int32 rght = 8; 
+	int32 treeID = 9; 
+	int32 level = 10; 
+	int64 parentID = 11; 
+	string comments = 12; 
+}
+
+message CreateWirelessWirelesslangroupReply {
+  uint64 id = 1;
+}
+
+message DeleteWirelessWirelesslangroupByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteWirelessWirelesslangroupByIDReply {
+
+}
+
+message UpdateWirelessWirelesslangroupByIDRequest {
+	uint64 id = 1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	string created = 2; 
+	string lastUpdated = 3; 
+	string customFieldData = 4; 
+	string name = 5; 
+	string slug = 6; 
+	string description = 7; 
+	int32 lft = 8; 
+	int32 rght = 9; 
+	int32 treeID = 10; 
+	int32 level = 11; 
+	int64 parentID = 12; 
+	string comments = 13; 
+}
+
+message UpdateWirelessWirelesslangroupByIDReply {
+
+}
+
+message WirelessWirelesslangroup {
+	uint64 id = 1; 
+	string created = 2; 
+	string lastUpdated = 3; 
+	string customFieldData = 4; 
+	string name = 5; 
+	string slug = 6; 
+	string description = 7; 
+	int32 lft = 8; 
+	int32 rght = 9; 
+	int32 treeID = 10; 
+	int32 level = 11; 
+	int64 parentID = 12; 
+	string comments = 13; 
+}
+
+message GetWirelessWirelesslangroupByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetWirelessWirelesslangroupByIDReply {
+  WirelessWirelesslangroup wirelessWirelesslangroup = 1;
+}
+
+message ListWirelessWirelesslangroupRequest {
+  api.types.Params params = 1;
+}
+
+message ListWirelessWirelesslangroupReply {
+  int64 total = 1;
+  repeated WirelessWirelesslangroup wirelessWirelesslangroups = 2;
+}
+
+message DeleteWirelessWirelesslangroupByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteWirelessWirelesslangroupByIDsReply {
+
+}
+
+message GetWirelessWirelesslangroupByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetWirelessWirelesslangroupByConditionReply {
+  WirelessWirelesslangroup wirelessWirelesslangroup = 1;
+}
+
+message ListWirelessWirelesslangroupByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListWirelessWirelesslangroupByIDsReply {
+  repeated WirelessWirelesslangroup wirelessWirelesslangroups = 1;
+}
+
+message ListWirelessWirelesslangroupByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListWirelessWirelesslangroupByLastIDReply {
+  repeated WirelessWirelesslangroup wirelessWirelesslangroups = 1;
+}
+
+

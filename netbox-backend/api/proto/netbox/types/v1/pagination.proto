@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package netbox.types.v1;
+
+option go_package = "netbox-go/gen/go/netbox/types/v1;typesv1";
+
+message PageRequest {
+  optional uint32 limit = 1;
+  optional uint32 offset = 2;
+  repeated string ordering = 3;
+  optional string query = 4;
+  repeated int64 id = 5;
+}
+
+message PageInfo {
+  uint64 count = 1;
+  optional string next = 2;
+  optional string previous = 3;
+}
+
+message ObjectReference {
+  int64 id = 1;
+  string url = 2;
+  string display = 3;
+}

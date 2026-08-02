@@ -1,0 +1,232 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service usersUserconfig {
+  // Create a new usersUserconfig
+  rpc Create(CreateUsersUserconfigRequest) returns (CreateUsersUserconfigReply) {
+    option (google.api.http) = {
+      post: "/api/users/userconfigs"
+      body: "*"
+    };
+  }
+
+  // Delete a usersUserconfig by id
+  rpc DeleteByID(DeleteUsersUserconfigByIDRequest) returns (DeleteUsersUserconfigByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/users/userconfigs/{id}"
+    };
+  }
+
+  // Update a usersUserconfig by id
+  rpc UpdateByID(UpdateUsersUserconfigByIDRequest) returns (UpdateUsersUserconfigByIDReply) {
+    option (google.api.http) = {
+      put: "/api/users/userconfigs/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a usersUserconfig by id
+  rpc GetByID(GetUsersUserconfigByIDRequest) returns (GetUsersUserconfigByIDReply) {
+    option (google.api.http) = {
+      get: "/api/users/userconfigs/{id}"
+    };
+  }
+
+  // Get a paginated list of usersUserconfig by custom conditions
+  rpc List(ListUsersUserconfigRequest) returns (ListUsersUserconfigReply) {
+    option (google.api.http) = {
+      post: "/api/users/userconfigs/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete usersUserconfig by ids
+  rpc DeleteByIDs(DeleteUsersUserconfigByIDsRequest) returns (DeleteUsersUserconfigByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/users/userconfigs/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a usersUserconfig by custom condition
+  rpc GetByCondition(GetUsersUserconfigByConditionRequest) returns (GetUsersUserconfigByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/users/userconfigs/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get usersUserconfig by ids
+  rpc ListByIDs(ListUsersUserconfigByIDsRequest) returns (ListUsersUserconfigByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/users/userconfigs/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of usersUserconfig by last id
+  rpc ListByLastID(ListUsersUserconfigByLastIDRequest) returns (ListUsersUserconfigByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/users/userconfigs"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/usersUserconfig/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getUsersUserconfig?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateUsersUserconfigRequest {
+	string data = 1; 
+	int64 userID = 2; 
+}
+
+message CreateUsersUserconfigReply {
+  uint64 id = 1;
+}
+
+message DeleteUsersUserconfigByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteUsersUserconfigByIDReply {
+
+}
+
+message UpdateUsersUserconfigByIDRequest {
+	uint64 id = 1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	string data = 2; 
+	int64 userID = 3; 
+}
+
+message UpdateUsersUserconfigByIDReply {
+
+}
+
+message UsersUserconfig {
+	uint64 id = 1; 
+	string data = 2; 
+	int64 userID = 3; 
+}
+
+message GetUsersUserconfigByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetUsersUserconfigByIDReply {
+  UsersUserconfig usersUserconfig = 1;
+}
+
+message ListUsersUserconfigRequest {
+  api.types.Params params = 1;
+}
+
+message ListUsersUserconfigReply {
+  int64 total = 1;
+  repeated UsersUserconfig usersUserconfigs = 2;
+}
+
+message DeleteUsersUserconfigByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteUsersUserconfigByIDsReply {
+
+}
+
+message GetUsersUserconfigByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetUsersUserconfigByConditionReply {
+  UsersUserconfig usersUserconfig = 1;
+}
+
+message ListUsersUserconfigByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListUsersUserconfigByIDsReply {
+  repeated UsersUserconfig usersUserconfigs = 1;
+}
+
+message ListUsersUserconfigByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListUsersUserconfigByLastIDReply {
+  repeated UsersUserconfig usersUserconfigs = 1;
+}
+
+

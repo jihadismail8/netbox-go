@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "module": "identity",
+  "classification": "extension",
+  "tier": "not_applicable",
+  "service": "netbox.identity.v1.IdentityService",
+  "verification": {
+    "contract": "partial",
+    "parity": "partial",
+    "security": "partial"
+  },
+  "rest_operations": [
+    {"method": "GET", "path": "/api/auth/session/", "public": false, "grpc_mapping": "GetCurrentUser"},
+    {"method": "GET", "path": "/api/auth/csrf/", "public": true, "grpc_mapping": null},
+    {"method": "POST", "path": "/api/auth/login/", "public": true, "grpc_mapping": null},
+    {"method": "POST", "path": "/api/auth/logout/", "public": false, "grpc_mapping": null},
+    {"method": "POST", "path": "/api/auth/password/change/", "public": false, "grpc_mapping": "ChangePassword"},
+    {"method": "GET", "path": "/api/auth/tokens/", "public": false, "grpc_mapping": "ListAPITokens"},
+    {"method": "POST", "path": "/api/auth/tokens/", "public": false, "grpc_mapping": "CreateAPIToken"},
+    {"method": "DELETE", "path": "/api/auth/tokens/{id}/", "public": false, "grpc_mapping": "RevokeAPIToken"}
+  ],
+  "grpc_operations": ["GetCurrentUser", "ListAPITokens", "CreateAPIToken", "RevokeAPIToken", "ChangePassword"],
+  "cli_operations": [
+    {
+      "name": "bootstrap",
+      "authentication": "empty identity store",
+      "password_input": "protected stdin"
+    },
+    {
+      "name": "reset-password",
+      "authentication": "local administrator recovery boundary",
+      "password_input": "protected stdin"
+    },
+    {
+      "name": "create-user",
+      "authentication": "existing active superuser",
+      "password_input": "protected stdin",
+      "scope": "non-superuser only"
+    },
+    {
+      "name": "grant-permission",
+      "authentication": "existing active superuser",
+      "password_input": "protected stdin",
+      "scope": "global model permission by username"
+    }
+  ],
+  "credential_paths": {
+    "browser": "HttpOnly SameSite session cookie plus CSRF",
+    "rest_automation": "Authorization Token key",
+    "grpc": "authorization Bearer key metadata"
+  },
+  "rejected_baseline_operations": [
+    "/api/users/tokens/provision/",
+    "baseline token CRUD under /api/users/tokens/"
+  ]
+}

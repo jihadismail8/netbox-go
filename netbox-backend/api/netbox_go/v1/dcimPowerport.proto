@@ -1,0 +1,280 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service dcimPowerport {
+  // Create a new dcimPowerport
+  rpc Create(CreateDcimPowerportRequest) returns (CreateDcimPowerportReply) {
+    option (google.api.http) = {
+      post: "/api/dcim/powerports"
+      body: "*"
+    };
+  }
+
+  // Delete a dcimPowerport by id
+  rpc DeleteByID(DeleteDcimPowerportByIDRequest) returns (DeleteDcimPowerportByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/dcim/powerports/{id}"
+    };
+  }
+
+  // Update a dcimPowerport by id
+  rpc UpdateByID(UpdateDcimPowerportByIDRequest) returns (UpdateDcimPowerportByIDReply) {
+    option (google.api.http) = {
+      put: "/api/dcim/powerports/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a dcimPowerport by id
+  rpc GetByID(GetDcimPowerportByIDRequest) returns (GetDcimPowerportByIDReply) {
+    option (google.api.http) = {
+      get: "/api/dcim/powerports/{id}"
+    };
+  }
+
+  // Get a paginated list of dcimPowerport by custom conditions
+  rpc List(ListDcimPowerportRequest) returns (ListDcimPowerportReply) {
+    option (google.api.http) = {
+      post: "/api/dcim/powerports/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete dcimPowerport by ids
+  rpc DeleteByIDs(DeleteDcimPowerportByIDsRequest) returns (DeleteDcimPowerportByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/dcim/powerports/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a dcimPowerport by custom condition
+  rpc GetByCondition(GetDcimPowerportByConditionRequest) returns (GetDcimPowerportByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/dcim/powerports/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get dcimPowerport by ids
+  rpc ListByIDs(ListDcimPowerportByIDsRequest) returns (ListDcimPowerportByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/dcim/powerports/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of dcimPowerport by last id
+  rpc ListByLastID(ListDcimPowerportByLastIDRequest) returns (ListDcimPowerportByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/dcim/powerports"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/dcimPowerport/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getDcimPowerport?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateDcimPowerportRequest {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	string name = 4; 
+	string label = 5; 
+	string description = 6; 
+	bool markConnected = 7; 
+	string type = 8; 
+	int32 maximumDraw = 9; 
+	int32 allocatedDraw = 10; 
+	int64 xPathID = 11; 
+	int64 cableID = 12; 
+	int64 deviceID = 13; 
+	int64 moduleID = 14; 
+	string cableEnd = 15; 
+	int64 xLocationID = 16; 
+	int64 xRackID = 17; 
+	int64 xSiteID = 18; 
+}
+
+message CreateDcimPowerportReply {
+  uint64 id = 1;
+}
+
+message DeleteDcimPowerportByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteDcimPowerportByIDReply {
+
+}
+
+message UpdateDcimPowerportByIDRequest {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	uint64 id = 4 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	string name = 5; 
+	string label = 6; 
+	string description = 7; 
+	bool markConnected = 8; 
+	string type = 9; 
+	int32 maximumDraw = 10; 
+	int32 allocatedDraw = 11; 
+	int64 xPathID = 12; 
+	int64 cableID = 13; 
+	int64 deviceID = 14; 
+	int64 moduleID = 15; 
+	string cableEnd = 16; 
+	int64 xLocationID = 17; 
+	int64 xRackID = 18; 
+	int64 xSiteID = 19; 
+}
+
+message UpdateDcimPowerportByIDReply {
+
+}
+
+message DcimPowerport {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	uint64 id = 4; 
+	string name = 5; 
+	string label = 6; 
+	string description = 7; 
+	bool markConnected = 8; 
+	string type = 9; 
+	int32 maximumDraw = 10; 
+	int32 allocatedDraw = 11; 
+	int64 xPathID = 12; 
+	int64 cableID = 13; 
+	int64 deviceID = 14; 
+	int64 moduleID = 15; 
+	string cableEnd = 16; 
+	int64 xLocationID = 17; 
+	int64 xRackID = 18; 
+	int64 xSiteID = 19; 
+}
+
+message GetDcimPowerportByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetDcimPowerportByIDReply {
+  DcimPowerport dcimPowerport = 1;
+}
+
+message ListDcimPowerportRequest {
+  api.types.Params params = 1;
+}
+
+message ListDcimPowerportReply {
+  int64 total = 1;
+  repeated DcimPowerport dcimPowerports = 2;
+}
+
+message DeleteDcimPowerportByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteDcimPowerportByIDsReply {
+
+}
+
+message GetDcimPowerportByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetDcimPowerportByConditionReply {
+  DcimPowerport dcimPowerport = 1;
+}
+
+message ListDcimPowerportByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListDcimPowerportByIDsReply {
+  repeated DcimPowerport dcimPowerports = 1;
+}
+
+message ListDcimPowerportByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListDcimPowerportByLastIDReply {
+  repeated DcimPowerport dcimPowerports = 1;
+}
+
+

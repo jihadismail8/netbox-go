@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "module": "dcim",
+  "service": "netbox.dcim.v1.DCIMService",
+  "shared_operations": ["list", "get", "create", "replace", "update", "delete"],
+  "shared_list_fields": ["id", "q", "limit", "offset", "ordering"],
+  "shared_permissions": ["view", "add", "change", "delete", "object_visibility"],
+  "resources": [
+    {
+      "name": "Site",
+      "rest_path": "/api/dcim/sites/",
+      "grpc_prefix": "Site",
+      "writable_fields": ["name", "slug", "status", "facility", "description", "comments"],
+      "response_only_fields": ["id", "url", "display", "created", "last_updated", "device_count", "prefix_count", "rack_count"],
+      "choice_fields": {"status": {"value_type": "string", "nullable": false}},
+      "filters": ["name", "slug", "status"],
+      "ordering": ["id", "name", "slug", "status", "created", "last_updated"],
+      "relationships": [],
+      "delete_behavior": "protect_when_referenced"
+    },
+    {
+      "name": "Manufacturer",
+      "rest_path": "/api/dcim/manufacturers/",
+      "grpc_prefix": "Manufacturer",
+      "writable_fields": ["name", "slug", "description"],
+      "response_only_fields": ["id", "url", "display", "created", "last_updated", "devicetype_count"],
+      "filters": ["name", "slug"],
+      "ordering": ["id", "name", "slug", "created", "last_updated"],
+      "relationships": [],
+      "delete_behavior": "protect_when_referenced"
+    },
+    {
+      "name": "RackRole",
+      "rest_path": "/api/dcim/rack-roles/",
+      "grpc_prefix": "RackRole",
+      "writable_fields": ["name", "slug", "color", "description"],
+      "response_only_fields": ["id", "url", "display", "created", "last_updated", "rack_count"],
+      "filters": ["name", "slug"],
+      "ordering": ["id", "name", "slug", "created", "last_updated"],
+      "relationships": [],
+      "delete_behavior": "protect_when_referenced"
+    },
+    {
+      "name": "RackType",
+      "rest_path": "/api/dcim/rack-types/",
+      "grpc_prefix": "RackType",
+      "writable_fields": ["manufacturer", "model", "slug", "form_factor", "width", "u_height", "starting_unit", "desc_units", "description", "comments"],
+      "response_only_fields": ["id", "url", "display", "created", "last_updated"],
+      "choice_fields": {"form_factor": {"value_type": "string", "nullable": false}, "width": {"value_type": "integer", "nullable": false}},
+      "filters": ["manufacturer_id", "manufacturer_slug", "model", "slug"],
+      "ordering": ["id", "manufacturer", "model", "slug", "u_height", "created", "last_updated"],
+      "relationships": ["manufacturer"],
+      "delete_behavior": "protect_when_referenced"
+    },
+    {
+      "name": "Rack",
+      "rest_path": "/api/dcim/racks/",
+      "grpc_prefix": "Rack",
+      "writable_fields": ["site", "name", "facility_id", "rack_type", "status", "role", "serial", "asset_tag", "form_factor", "width", "u_height", "starting_unit", "desc_units", "airflow", "description", "comments"],
+      "response_only_fields": ["id", "url", "display", "created", "last_updated", "device_count"],
+      "choice_fields": {"status": {"value_type": "string", "nullable": false}, "form_factor": {"value_type": "string", "nullable": true}, "width": {"value_type": "integer", "nullable": false}, "airflow": {"value_type": "string", "nullable": true}},
+      "filters": ["site_id", "site_slug", "name", "status", "role_id", "role_slug", "rack_type_id", "rack_type_slug"],
+      "ordering": ["id", "site", "name", "facility_id", "status", "u_height", "created", "last_updated"],
+      "relationships": ["site", "rack_type", "role"],
+      "delete_behavior": "protect_when_device_references"
+    },
+    {
+      "name": "DeviceRole",
+      "rest_path": "/api/dcim/device-roles/",
+      "grpc_prefix": "DeviceRole",
+      "writable_fields": ["parent", "name", "slug", "color", "vm_role", "description", "comments"],
+      "response_only_fields": ["id", "url", "display", "created", "last_updated", "device_count", "_depth"],
+      "filters": ["name", "slug"],
+      "ordering": ["id", "name", "slug", "created", "last_updated"],
+      "relationships": ["parent"],
+      "delete_behavior": "cascade_descendants_unless_device_protects"
+    },
+    {
+      "name": "DeviceType",
+      "rest_path": "/api/dcim/device-types/",
+      "grpc_prefix": "DeviceType",
+      "writable_fields": ["manufacturer", "model", "slug", "part_number", "u_height", "exclude_from_utilization", "is_full_depth", "airflow", "description", "comments"],
+      "response_only_fields": ["id", "url", "display", "created", "last_updated", "device_count", "interface_template_count"],
+      "choice_fields": {"airflow": {"value_type": "string", "nullable": true}},
+      "filters": ["manufacturer_id", "manufacturer_slug", "model", "slug"],
+      "ordering": ["id", "manufacturer", "model", "slug", "u_height", "created", "last_updated"],
+      "relationships": ["manufacturer"],
+      "delete_behavior": "protect_when_device_references_and_cascade_templates"
+    },
+    {
+      "name": "InterfaceTemplate",
+      "rest_path": "/api/dcim/interface-templates/",
+      "grpc_prefix": "InterfaceTemplate",
+      "writable_fields": ["device_type", "name", "label", "type", "enabled", "mgmt_only", "description"],
+      "response_only_fields": ["id", "url", "display", "created", "last_updated"],
+      "choice_fields": {"type": {"value_type": "string", "nullable": false}},
+      "filters": ["device_type_id", "name", "type", "enabled", "mgmt_only"],
+      "ordering": ["id", "device_type", "name", "type", "created", "last_updated"],
+      "relationships": ["device_type"],
+      "delete_behavior": "delete",
+      "instantiate_on_device_create": ["name", "label", "type", "enabled", "mgmt_only"]
+    },
+    {
+      "name": "Device",
+      "rest_path": "/api/dcim/devices/",
+      "grpc_prefix": "Device",
+      "writable_fields": ["device_type", "role", "name", "site", "rack", "position", "face", "status", "serial", "asset_tag", "airflow", "description", "comments"],
+      "response_only_fields": ["id", "url", "display", "created", "last_updated", "interface_count"],
+      "choice_fields": {"face": {"value_type": "string", "nullable": true}, "status": {"value_type": "string", "nullable": false}, "airflow": {"value_type": "string", "nullable": true}},
+      "filters": ["site_id", "site_slug", "rack_id", "device_type_id", "device_type_slug", "role_id", "role_slug", "name", "status"],
+      "ordering": ["id", "site", "rack", "position", "name", "status", "created", "last_updated"],
+      "relationships": ["device_type", "role", "site", "rack"],
+      "delete_behavior": "cascade_interfaces",
+      "create_side_effect": "instantiate_interface_templates_atomically"
+    },
+    {
+      "name": "Interface",
+      "rest_path": "/api/dcim/interfaces/",
+      "grpc_prefix": "Interface",
+      "writable_fields": ["device", "name", "label", "type", "enabled", "mgmt_only", "mtu", "speed", "duplex", "description"],
+      "response_only_fields": ["id", "url", "display", "created", "last_updated", "count_ipaddresses"],
+      "choice_fields": {"type": {"value_type": "string", "nullable": false}, "duplex": {"value_type": "string", "nullable": true}},
+      "filters": ["device_id", "device_name", "name", "type", "enabled", "mgmt_only"],
+      "ordering": ["id", "device", "name", "type", "created", "last_updated"],
+      "relationships": ["device"],
+      "delete_behavior": "cascade_assigned_ipaddresses"
+    }
+  ]
+}

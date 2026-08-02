@@ -1,0 +1,265 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service extrasEventrule {
+  // Create a new extrasEventrule
+  rpc Create(CreateExtrasEventruleRequest) returns (CreateExtrasEventruleReply) {
+    option (google.api.http) = {
+      post: "/api/extras/eventrules"
+      body: "*"
+    };
+  }
+
+  // Delete a extrasEventrule by id
+  rpc DeleteByID(DeleteExtrasEventruleByIDRequest) returns (DeleteExtrasEventruleByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/extras/eventrules/{id}"
+    };
+  }
+
+  // Update a extrasEventrule by id
+  rpc UpdateByID(UpdateExtrasEventruleByIDRequest) returns (UpdateExtrasEventruleByIDReply) {
+    option (google.api.http) = {
+      put: "/api/extras/eventrules/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a extrasEventrule by id
+  rpc GetByID(GetExtrasEventruleByIDRequest) returns (GetExtrasEventruleByIDReply) {
+    option (google.api.http) = {
+      get: "/api/extras/eventrules/{id}"
+    };
+  }
+
+  // Get a paginated list of extrasEventrule by custom conditions
+  rpc List(ListExtrasEventruleRequest) returns (ListExtrasEventruleReply) {
+    option (google.api.http) = {
+      post: "/api/extras/eventrules/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete extrasEventrule by ids
+  rpc DeleteByIDs(DeleteExtrasEventruleByIDsRequest) returns (DeleteExtrasEventruleByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/extras/eventrules/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a extrasEventrule by custom condition
+  rpc GetByCondition(GetExtrasEventruleByConditionRequest) returns (GetExtrasEventruleByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/extras/eventrules/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get extrasEventrule by ids
+  rpc ListByIDs(ListExtrasEventruleByIDsRequest) returns (ListExtrasEventruleByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/extras/eventrules/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of extrasEventrule by last id
+  rpc ListByLastID(ListExtrasEventruleByLastIDRequest) returns (ListExtrasEventruleByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/extras/eventrules"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/extrasEventrule/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getExtrasEventrule?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateExtrasEventruleRequest {
+	string created = 1; 
+	string lastUpdated = 2; 
+	string customFieldData = 3; 
+	string name = 4; 
+	string description = 5; 
+	bool enabled = 6; 
+	string conditions = 7; 
+	string actionType = 8; 
+	int64 actionObjectID = 9; 
+	string actionData = 10; 
+	string comments = 11; 
+	int32 actionObjectTypeID = 12; 
+	string eventTypes = 13; 
+}
+
+message CreateExtrasEventruleReply {
+  uint64 id = 1;
+}
+
+message DeleteExtrasEventruleByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteExtrasEventruleByIDReply {
+
+}
+
+message UpdateExtrasEventruleByIDRequest {
+	uint64 id = 1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	string created = 2; 
+	string lastUpdated = 3; 
+	string customFieldData = 4; 
+	string name = 5; 
+	string description = 6; 
+	bool enabled = 7; 
+	string conditions = 8; 
+	string actionType = 9; 
+	int64 actionObjectID = 10; 
+	string actionData = 11; 
+	string comments = 12; 
+	int32 actionObjectTypeID = 13; 
+	string eventTypes = 14; 
+}
+
+message UpdateExtrasEventruleByIDReply {
+
+}
+
+message ExtrasEventrule {
+	uint64 id = 1; 
+	string created = 2; 
+	string lastUpdated = 3; 
+	string customFieldData = 4; 
+	string name = 5; 
+	string description = 6; 
+	bool enabled = 7; 
+	string conditions = 8; 
+	string actionType = 9; 
+	int64 actionObjectID = 10; 
+	string actionData = 11; 
+	string comments = 12; 
+	int32 actionObjectTypeID = 13; 
+	string eventTypes = 14; 
+}
+
+message GetExtrasEventruleByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetExtrasEventruleByIDReply {
+  ExtrasEventrule extrasEventrule = 1;
+}
+
+message ListExtrasEventruleRequest {
+  api.types.Params params = 1;
+}
+
+message ListExtrasEventruleReply {
+  int64 total = 1;
+  repeated ExtrasEventrule extrasEventrules = 2;
+}
+
+message DeleteExtrasEventruleByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteExtrasEventruleByIDsReply {
+
+}
+
+message GetExtrasEventruleByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetExtrasEventruleByConditionReply {
+  ExtrasEventrule extrasEventrule = 1;
+}
+
+message ListExtrasEventruleByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListExtrasEventruleByIDsReply {
+  repeated ExtrasEventrule extrasEventrules = 1;
+}
+
+message ListExtrasEventruleByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListExtrasEventruleByLastIDReply {
+  repeated ExtrasEventrule extrasEventrules = 1;
+}
+
+

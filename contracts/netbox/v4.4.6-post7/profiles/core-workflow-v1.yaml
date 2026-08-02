@@ -1,0 +1,69 @@
+{
+  "$schema": "../schema/profile.schema.json",
+  "schema_version": 1,
+  "id": "core-workflow-v1",
+  "title": "Core DCIM and IPAM workflow",
+  "compatibility_baseline": "netbox-v4.4.6-post7",
+  "contract_state": "pre-publication",
+  "owners": ["identity-core-workflow", "dcim-core-workflow", "ipam-core-workflow", "frontend-core-workflow"],
+  "interfaces": {
+    "rest": {"prefix": "/api/", "compatibility": "exact-in-profile"},
+    "grpc": {"packages": ["netbox.identity.v1", "netbox.dcim.v1", "netbox.ipam.v1"], "compatibility": "semantic-parity"},
+    "vue": {"compatibility": "workflow-parity"}
+  },
+  "operations": ["list", "get", "create", "replace", "update", "delete"],
+  "bulk_operations": false,
+  "resources": [
+    {"module": "dcim", "name": "Site", "rest_path": "/api/dcim/sites/", "grpc_service": "netbox.dcim.v1.DCIMService", "grpc_prefix": "Site", "tier": "T1", "owner": "dcim-core-workflow"},
+    {"module": "dcim", "name": "Manufacturer", "rest_path": "/api/dcim/manufacturers/", "grpc_service": "netbox.dcim.v1.DCIMService", "grpc_prefix": "Manufacturer", "tier": "T1", "owner": "dcim-core-workflow"},
+    {"module": "dcim", "name": "RackRole", "rest_path": "/api/dcim/rack-roles/", "grpc_service": "netbox.dcim.v1.DCIMService", "grpc_prefix": "RackRole", "tier": "T1", "owner": "dcim-core-workflow"},
+    {"module": "dcim", "name": "RackType", "rest_path": "/api/dcim/rack-types/", "grpc_service": "netbox.dcim.v1.DCIMService", "grpc_prefix": "RackType", "tier": "T1", "owner": "dcim-core-workflow"},
+    {"module": "dcim", "name": "Rack", "rest_path": "/api/dcim/racks/", "grpc_service": "netbox.dcim.v1.DCIMService", "grpc_prefix": "Rack", "tier": "T1", "owner": "dcim-core-workflow"},
+    {"module": "dcim", "name": "DeviceRole", "rest_path": "/api/dcim/device-roles/", "grpc_service": "netbox.dcim.v1.DCIMService", "grpc_prefix": "DeviceRole", "tier": "T1", "owner": "dcim-core-workflow"},
+    {"module": "dcim", "name": "DeviceType", "rest_path": "/api/dcim/device-types/", "grpc_service": "netbox.dcim.v1.DCIMService", "grpc_prefix": "DeviceType", "tier": "T1", "owner": "dcim-core-workflow"},
+    {"module": "dcim", "name": "InterfaceTemplate", "rest_path": "/api/dcim/interface-templates/", "grpc_service": "netbox.dcim.v1.DCIMService", "grpc_prefix": "InterfaceTemplate", "tier": "T1", "owner": "dcim-core-workflow"},
+    {"module": "dcim", "name": "Device", "rest_path": "/api/dcim/devices/", "grpc_service": "netbox.dcim.v1.DCIMService", "grpc_prefix": "Device", "tier": "T1", "owner": "dcim-core-workflow"},
+    {"module": "dcim", "name": "Interface", "rest_path": "/api/dcim/interfaces/", "grpc_service": "netbox.dcim.v1.DCIMService", "grpc_prefix": "Interface", "tier": "T1", "owner": "dcim-core-workflow"},
+    {"module": "ipam", "name": "VRF", "rest_path": "/api/ipam/vrfs/", "grpc_service": "netbox.ipam.v1.IPAMService", "grpc_prefix": "VRF", "tier": "T1", "owner": "ipam-core-workflow"},
+    {"module": "ipam", "name": "Prefix", "rest_path": "/api/ipam/prefixes/", "grpc_service": "netbox.ipam.v1.IPAMService", "grpc_prefix": "Prefix", "tier": "T1", "owner": "ipam-core-workflow"},
+    {"module": "ipam", "name": "IPAddress", "rest_path": "/api/ipam/ip-addresses/", "grpc_service": "netbox.ipam.v1.IPAMService", "grpc_prefix": "IPAddress", "tier": "T1", "owner": "ipam-core-workflow", "extra_rpcs": ["AssignIPAddress", "UnassignIPAddress"]}
+  ],
+  "identity_extension": {
+    "resource_metadata": "../resources/identity.yaml",
+    "classification": "extension",
+    "tier": "not_applicable",
+    "owner": "identity-core-workflow",
+    "verification": {"contract": "partial", "parity": "partial", "security": "partial"}
+  },
+  "resource_metadata": ["../resources/dcim.yaml", "../resources/ipam.yaml"],
+  "scenarios": [
+    "identity.missing-credential-denied",
+    "identity.session-login-logout",
+    "identity.token-lifecycle",
+    "identity.permission-matrix",
+    "identity.local-administration",
+    "dcim.site-crud-parity",
+    "dcim.device-instantiates-interfaces",
+    "dcim.device-instantiation-rollback",
+    "dcim.rack-placement-validation",
+    "dcim.relationship-delete-semantics",
+    "ipam.prefix-and-address-semantics",
+    "ipam.assign-interface",
+    "ipam.assignment-presence-matrix",
+    "ipam.address-edge-rules",
+    "contract.surface-manifest",
+    "contract.oracle-pin",
+    "contract.transport-errors"
+  ],
+  "required_evidence": ["domain-unit", "postgres-integration", "rest-differential", "grpc-parity", "rbac", "change-log", "vue-component", "browser-e2e"],
+  "deferred": [
+    "bulk mutations and imports",
+    "rack elevation",
+    "automatic prefix and address allocation",
+    "cable tracing and physical cabling",
+    "baseline users token CRUD and anonymous token provision",
+    "GraphQL",
+    "Python scripts, reports, and in-process plugins",
+    "all fields and relationships not declared by resource metadata"
+  ]
+}

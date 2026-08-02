@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "scenarios": [
+    {
+      "id": "dcim.site-crud-parity",
+      "given": ["authorized principal", "empty database"],
+      "when": ["create, list, get, replace, patch, and delete a Site through both transports"],
+      "then": ["validation and state match", "every mutation writes one object change", "pagination and filters match"]
+    },
+    {
+      "id": "dcim.device-instantiates-interfaces",
+      "given": ["Manufacturer", "DeviceType with two bridge-free InterfaceTemplates", "DeviceRole", "Site", "Rack"],
+      "when": ["create Device"],
+      "then": ["Device and two Interfaces commit atomically", "template description is not copied", "later template edits do not alter Interfaces"]
+    },
+    {
+      "id": "dcim.device-instantiation-rollback",
+      "given": ["valid Device inputs", "forced failure after first Interface persistence"],
+      "when": ["create Device"],
+      "then": ["Device, Interfaces, and changes all roll back"]
+    },
+    {
+      "id": "dcim.rack-placement-validation",
+      "given": ["Rack and positioned Devices"],
+      "when": ["create or move Device across invalid bounds, face, half-unit, site, and occupancy cases"],
+      "then": ["stable validation errors", "no overlapping placement", "zero-U Device cannot be positioned"]
+    },
+    {
+      "id": "dcim.relationship-delete-semantics",
+      "given": ["referenced Site, Rack, roles, Manufacturer, DeviceType, Device, Interface"],
+      "when": ["delete each relationship owner"],
+      "then": ["protected references reject", "Device cascades Interfaces", "Interface deletion cascades assigned IP addresses", "changes are atomic"]
+    }
+  ]
+}

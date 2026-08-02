@@ -1,0 +1,241 @@
+syntax = "proto3";
+
+package api.netbox_go.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "netbox-go/api/netbox_go/v1;v1";
+
+/*
+Default settings for generating *.swagger.json documents. For reference, see: https://bit.ly/4dE5jj7
+Tip: To enhance the generated Swagger documentation, you can add the openapiv2_operation option to your RPC method. For example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "netbox_go api docs";
+    version: "v1.0.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service dcimCablepath {
+  // Create a new dcimCablepath
+  rpc Create(CreateDcimCablepathRequest) returns (CreateDcimCablepathReply) {
+    option (google.api.http) = {
+      post: "/api/dcim/cablepaths"
+      body: "*"
+    };
+  }
+
+  // Delete a dcimCablepath by id
+  rpc DeleteByID(DeleteDcimCablepathByIDRequest) returns (DeleteDcimCablepathByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/dcim/cablepaths/{id}"
+    };
+  }
+
+  // Update a dcimCablepath by id
+  rpc UpdateByID(UpdateDcimCablepathByIDRequest) returns (UpdateDcimCablepathByIDReply) {
+    option (google.api.http) = {
+      put: "/api/dcim/cablepaths/{id}"
+      body: "*"
+    };
+  }
+
+  // Get a dcimCablepath by id
+  rpc GetByID(GetDcimCablepathByIDRequest) returns (GetDcimCablepathByIDReply) {
+    option (google.api.http) = {
+      get: "/api/dcim/cablepaths/{id}"
+    };
+  }
+
+  // Get a paginated list of dcimCablepath by custom conditions
+  rpc List(ListDcimCablepathRequest) returns (ListDcimCablepathReply) {
+    option (google.api.http) = {
+      post: "/api/dcim/cablepaths/list"
+      body: "*"
+    };
+  }
+
+  // Batch delete dcimCablepath by ids
+  rpc DeleteByIDs(DeleteDcimCablepathByIDsRequest) returns (DeleteDcimCablepathByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/dcim/cablepaths/delete/ids"
+      body: "*"
+    };
+  }
+
+  // Get a dcimCablepath by custom condition
+  rpc GetByCondition(GetDcimCablepathByConditionRequest) returns (GetDcimCablepathByConditionReply) {
+    option (google.api.http) = {
+      post: "/api/dcim/cablepaths/condition"
+      body: "*"
+    };
+  }
+
+  // Batch get dcimCablepath by ids
+  rpc ListByIDs(ListDcimCablepathByIDsRequest) returns (ListDcimCablepathByIDsReply) {
+    option (google.api.http) = {
+      post: "/api/dcim/cablepaths/list/ids"
+      body: "*"
+    };
+  }
+
+  // Get a paginated list of dcimCablepath by last id
+  rpc ListByLastID(ListDcimCablepathByLastIDRequest) returns (ListDcimCablepathByLastIDReply) {
+    option (google.api.http) = {
+      get: "/api/dcim/cablepaths"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/dcimCablepath/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getDcimCablepath?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. When the message fields use snake_case naming (e.g., order_id), the generated swagger.json file
+        will use camelCase (e.g., orderId) instead of the expected snake_case. This behavior aligns with
+        the JSON tag names used by gRPC, but it can cause the Gin framework to fail to correctly bind and
+        retrieve parameter values. There are two ways to resolve this issue:
+            (1) Explicitly specify the JSON tag name using the json_name option, such as:
+                 string order_id = 1 [json_name = "order_id"];
+            (2) If you want to switch to camelCase naming and update the JSON tag name accordingly, such as:
+                 string order_id = 1 [json_name = "orderID", (tagger.tags) = "json:\"orderID\""];
+*/
+
+
+message CreateDcimCablepathRequest {
+	string xNodes = 1; 
+	bool isActive = 2; 
+	bool isSplit = 3; 
+	string path = 4; 
+	bool isComplete = 5; 
+}
+
+message CreateDcimCablepathReply {
+  uint64 id = 1;
+}
+
+message DeleteDcimCablepathByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteDcimCablepathByIDReply {
+
+}
+
+message UpdateDcimCablepathByIDRequest {
+	uint64 id = 1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""]; 
+	string xNodes = 2; 
+	bool isActive = 3; 
+	bool isSplit = 4; 
+	string path = 5; 
+	bool isComplete = 6; 
+}
+
+message UpdateDcimCablepathByIDReply {
+
+}
+
+message DcimCablepath {
+	uint64 id = 1; 
+	string xNodes = 2; 
+	bool isActive = 3; 
+	bool isSplit = 4; 
+	string path = 5; 
+	bool isComplete = 6; 
+}
+
+message GetDcimCablepathByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetDcimCablepathByIDReply {
+  DcimCablepath dcimCablepath = 1;
+}
+
+message ListDcimCablepathRequest {
+  api.types.Params params = 1;
+}
+
+message ListDcimCablepathReply {
+  int64 total = 1;
+  repeated DcimCablepath dcimCablepaths = 2;
+}
+
+message DeleteDcimCablepathByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message DeleteDcimCablepathByIDsReply {
+
+}
+
+message GetDcimCablepathByConditionRequest {
+  types.Conditions conditions = 1;
+}
+
+message GetDcimCablepathByConditionReply {
+  DcimCablepath dcimCablepath = 1;
+}
+
+message ListDcimCablepathByIDsRequest {
+  repeated uint64 ids = 1 [(validate.rules).repeated.min_items = 1];
+}
+
+message ListDcimCablepathByIDsReply {
+  repeated DcimCablepath dcimCablepaths = 1;
+}
+
+message ListDcimCablepathByLastIDRequest {
+  uint64 lastID = 1 [(tagger.tags) = "form:\"lastID\""]; // last id
+  uint32 limit = 2 [(validate.rules).uint32.gt = 0, (tagger.tags) = "form:\"limit\""]; // limit size per page
+  string sort = 3 [(tagger.tags) = "form:\"sort\""]; // sort by column name of table, default is -id, the - sign indicates descending order.
+}
+
+message ListDcimCablepathByLastIDReply {
+  repeated DcimCablepath dcimCablepaths = 1;
+}
+
+

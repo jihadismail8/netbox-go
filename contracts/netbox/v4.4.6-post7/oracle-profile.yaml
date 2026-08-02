@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "baseline": "netbox-v4.4.6-post7",
+  "asserted_git_sha": "fbb948d30e79ce657fac62994a22aca72c1770a9",
+  "configuration": {
+    "authentication_required": true,
+    "allow_token_retrieval": false,
+    "maintenance_mode": false,
+    "timezone": "UTC",
+    "plugins": [],
+    "database": "postgresql",
+    "fixture_set": "core-workflow-v1"
+  },
+  "refuse_on_sha_mismatch": true,
+  "refuse_on_configuration_mismatch": true
+}
