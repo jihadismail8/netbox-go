@@ -10,7 +10,6 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
-	"net"
 	"net/netip"
 	"strings"
 	"sync"
@@ -196,11 +195,11 @@ func (s *Service) Logout(ctx context.Context, secret string) error {
 
 func (s *Service) AuthenticateToken(ctx context.Context, secret, remoteAddress string, write bool) (domain.User, error) {
 	if secret == "" {
-		return domain.User{}, unauthenticated()
+		return domain.User{}, tokenCredentialError(TokenCredentialFailureMissing, "")
 	}
 	record, user, err := s.store.TokenByHash(ctx, digest(secret))
 	if errors.Is(err, ErrNotFound) {
-		return domain.User{}, unauthenticated()
+		return domain.User{}, tokenCredentialError(TokenCredentialFailureUnknown, "")
 	}
 	if err != nil {
 		return domain.User{}, internal(err)
@@ -209,7 +208,7 @@ func (s *Service) AuthenticateToken(ctx context.Context, secret, remoteAddress s
 	// extension must therefore behave like an unknown key and never mutate the
 	// credential after revocation.
 	if record.RevokedAt != nil {
-		return domain.User{}, unauthenticated()
+		return domain.User{}, tokenCredentialError(TokenCredentialFailureRevoked, "")
 	}
 	now := s.clock.Now()
 	// Match the baseline ordering: a recognized key is touched at most once per
@@ -219,11 +218,20 @@ func (s *Service) AuthenticateToken(ctx context.Context, secret, remoteAddress s
 			return domain.User{}, internal(err)
 		}
 	}
-	if (record.Token.Expires != nil && !record.Token.Expires.After(now)) || !user.IsActive {
-		return domain.User{}, unauthenticated()
+	if record.Token.Expires != nil && !record.Token.Expires.After(now) {
+		return domain.User{}, tokenCredentialError(TokenCredentialFailureExpired, "")
 	}
-	if len(record.Token.AllowedIPs) > 0 && !allowedAddress(remoteAddress, record.Token.AllowedIPs) {
-		return domain.User{}, unauthenticated()
+	if !user.IsActive {
+		return domain.User{}, tokenCredentialError(TokenCredentialFailureInactiveOwner, "")
+	}
+	if len(record.Token.AllowedIPs) > 0 {
+		address, ok := parseDirectPeer(remoteAddress)
+		if !ok {
+			return domain.User{}, tokenCredentialError(TokenCredentialFailureSourceUnavailable, "")
+		}
+		if !addressAllowed(address, record.Token.AllowedIPs) {
+			return domain.User{}, tokenCredentialError(TokenCredentialFailureSourceDenied, address.String())
+		}
 	}
 	if write && !record.Token.WriteEnabled {
 		return domain.User{}, forbidden()
@@ -590,16 +598,18 @@ func newSecret() (string, []byte, error) {
 	return secret, digest(secret), nil
 }
 func digest(value string) []byte { sum := sha256.Sum256([]byte(value)); return sum[:] }
-func allowedAddress(remote string, networks []string) bool {
-	host := remote
-	if parsedHost, _, err := net.SplitHostPort(remote); err == nil {
-		host = parsedHost
+func parseDirectPeer(remote string) (netip.Addr, bool) {
+	if address, err := netip.ParseAddr(remote); err == nil {
+		return address, true
 	}
-	host = strings.Trim(host, "[]")
-	address, err := netip.ParseAddr(host)
+	addressPort, err := netip.ParseAddrPort(remote)
 	if err != nil {
-		return false
+		return netip.Addr{}, false
 	}
+	return addressPort.Addr(), true
+}
+
+func addressAllowed(address netip.Addr, networks []string) bool {
 	for _, raw := range networks {
 		network, err := netip.ParsePrefix(raw)
 		if err == nil && network.Contains(address) {
@@ -618,7 +628,7 @@ func invalid(field, description string) error {
 func unauthenticated() error {
 	return shared.NewError(
 		shared.ErrorReasonUnauthenticated,
-		"Authentication credentials were not provided.",
+		unauthenticatedMessage,
 	)
 }
 

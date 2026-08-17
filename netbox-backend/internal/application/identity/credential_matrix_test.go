@@ -90,6 +90,309 @@ func TestTokenCredentialMatrixLookupClassification(t *testing.T) {
 	}
 }
 
+func TestTokenCredentialOutcomeClassification(t *testing.T) {
+	now := time.Date(2026, 8, 17, 6, 30, 0, 0, time.UTC)
+	stale := now.Add(-2 * time.Minute)
+	expired := now
+	revoked := now.Add(-time.Hour)
+	lookupFailure := errors.New("credential lookup unavailable")
+	touchFailure := errors.New("credential touch unavailable")
+	activeUser := activeCredentialUser()
+
+	restrictedToken := func(networks ...string) domain.APIToken {
+		token := credentialToken(activeUser.ID, &stale)
+		token.AllowedIPs = append([]string(nil), networks...)
+		return token
+	}
+
+	tests := []struct {
+		name         string
+		secret       string
+		record       application.TokenRecord
+		user         domain.User
+		lookupErr    error
+		touchErr     error
+		remote       string
+		write        bool
+		wantReason   shared.ErrorReason
+		wantMessage  string
+		wantKind     application.TokenCredentialFailureKind
+		wantSourceIP string
+		wantTyped    bool
+		wantLookups  int
+		wantTouch    bool
+		wantUser     bool
+		wantCause    error
+	}{
+		{
+			name:        "missing",
+			wantReason:  shared.ErrorReasonUnauthenticated,
+			wantMessage: "Authentication credentials were not provided.",
+			wantKind:    application.TokenCredentialFailureMissing,
+			wantTyped:   true,
+			wantLookups: 0,
+		},
+		{
+			name:        "unknown",
+			secret:      "present",
+			lookupErr:   application.ErrNotFound,
+			wantReason:  shared.ErrorReasonUnauthenticated,
+			wantMessage: "Authentication credentials were not provided.",
+			wantKind:    application.TokenCredentialFailureUnknown,
+			wantTyped:   true,
+			wantLookups: 1,
+		},
+		{
+			name:   "revoked",
+			secret: "present",
+			record: application.TokenRecord{
+				Token:     credentialToken(activeUser.ID, &stale),
+				RevokedAt: &revoked,
+			},
+			user:        activeUser,
+			wantReason:  shared.ErrorReasonUnauthenticated,
+			wantMessage: "Authentication credentials were not provided.",
+			wantKind:    application.TokenCredentialFailureRevoked,
+			wantTyped:   true,
+			wantLookups: 1,
+		},
+		{
+			name:   "expired",
+			secret: "present",
+			record: application.TokenRecord{Token: func() domain.APIToken {
+				token := credentialToken(activeUser.ID, &stale)
+				token.Expires = &expired
+				return token
+			}()},
+			user:        activeUser,
+			wantReason:  shared.ErrorReasonUnauthenticated,
+			wantMessage: "Authentication credentials were not provided.",
+			wantKind:    application.TokenCredentialFailureExpired,
+			wantTyped:   true,
+			wantLookups: 1,
+			wantTouch:   true,
+		},
+		{
+			name:        "inactive owner",
+			secret:      "present",
+			record:      application.TokenRecord{Token: credentialToken(activeUser.ID, &stale)},
+			user:        domain.User{ID: activeUser.ID, Username: "inactive"},
+			wantReason:  shared.ErrorReasonUnauthenticated,
+			wantMessage: "Authentication credentials were not provided.",
+			wantKind:    application.TokenCredentialFailureInactiveOwner,
+			wantTyped:   true,
+			wantLookups: 1,
+			wantTouch:   true,
+		},
+		{
+			name:        "restricted source unavailable when absent",
+			secret:      "present",
+			record:      application.TokenRecord{Token: restrictedToken("192.0.2.0/24")},
+			user:        activeUser,
+			wantReason:  shared.ErrorReasonUnauthenticated,
+			wantMessage: "Authentication credentials were not provided.",
+			wantKind:    application.TokenCredentialFailureSourceUnavailable,
+			wantTyped:   true,
+			wantLookups: 1,
+			wantTouch:   true,
+		},
+		{
+			name:        "restricted source unavailable when malformed",
+			secret:      "present",
+			record:      application.TokenRecord{Token: restrictedToken("192.0.2.0/24")},
+			user:        activeUser,
+			remote:      "not-an-address",
+			wantReason:  shared.ErrorReasonUnauthenticated,
+			wantMessage: "Authentication credentials were not provided.",
+			wantKind:    application.TokenCredentialFailureSourceUnavailable,
+			wantTyped:   true,
+			wantLookups: 1,
+			wantTouch:   true,
+		},
+		{
+			name:         "restricted IPv4 source denied and canonicalized",
+			secret:       "present",
+			record:       application.TokenRecord{Token: restrictedToken("192.0.2.0/24")},
+			user:         activeUser,
+			remote:       "198.51.100.1:443",
+			wantReason:   shared.ErrorReasonUnauthenticated,
+			wantMessage:  "Authentication credentials were not provided.",
+			wantKind:     application.TokenCredentialFailureSourceDenied,
+			wantSourceIP: "198.51.100.1",
+			wantTyped:    true,
+			wantLookups:  1,
+			wantTouch:    true,
+		},
+		{
+			name:         "restricted IPv6 source denied and canonicalized",
+			secret:       "present",
+			record:       application.TokenRecord{Token: restrictedToken("2001:db8::/32")},
+			user:         activeUser,
+			remote:       "[2001:0db9:0:0::1]:443",
+			wantReason:   shared.ErrorReasonUnauthenticated,
+			wantMessage:  "Authentication credentials were not provided.",
+			wantKind:     application.TokenCredentialFailureSourceDenied,
+			wantSourceIP: "2001:db9::1",
+			wantTyped:    true,
+			wantLookups:  1,
+			wantTouch:    true,
+		},
+		{
+			name:         "invalid persisted prefix fails closed",
+			secret:       "present",
+			record:       application.TokenRecord{Token: restrictedToken("invalid-prefix")},
+			user:         activeUser,
+			remote:       "198.51.100.2",
+			wantReason:   shared.ErrorReasonUnauthenticated,
+			wantMessage:  "Authentication credentials were not provided.",
+			wantKind:     application.TokenCredentialFailureSourceDenied,
+			wantSourceIP: "198.51.100.2",
+			wantTyped:    true,
+			wantLookups:  1,
+			wantTouch:    true,
+		},
+		{
+			name:   "source denial precedes write denial",
+			secret: "present",
+			record: application.TokenRecord{Token: func() domain.APIToken {
+				token := restrictedToken("192.0.2.0/24")
+				token.WriteEnabled = false
+				return token
+			}()},
+			user:         activeUser,
+			remote:       "198.51.100.3",
+			write:        true,
+			wantReason:   shared.ErrorReasonUnauthenticated,
+			wantMessage:  "Authentication credentials were not provided.",
+			wantKind:     application.TokenCredentialFailureSourceDenied,
+			wantSourceIP: "198.51.100.3",
+			wantTyped:    true,
+			wantLookups:  1,
+			wantTouch:    true,
+		},
+		{
+			name:        "unrestricted token ignores malformed source",
+			secret:      "present",
+			record:      application.TokenRecord{Token: credentialToken(activeUser.ID, &stale)},
+			user:        activeUser,
+			remote:      "not-an-address",
+			wantLookups: 1,
+			wantTouch:   true,
+			wantUser:    true,
+		},
+		{
+			name:        "restricted bare IPv4 source allowed",
+			secret:      "present",
+			record:      application.TokenRecord{Token: restrictedToken("192.0.2.0/24")},
+			user:        activeUser,
+			remote:      "192.0.2.7",
+			wantLookups: 1,
+			wantTouch:   true,
+			wantUser:    true,
+		},
+		{
+			name:        "restricted bare IPv6 source allowed",
+			secret:      "present",
+			record:      application.TokenRecord{Token: restrictedToken("2001:db8::/32")},
+			user:        activeUser,
+			remote:      "2001:db8::7",
+			wantLookups: 1,
+			wantTouch:   true,
+			wantUser:    true,
+		},
+		{
+			name:   "write disabled",
+			secret: "present",
+			record: application.TokenRecord{Token: func() domain.APIToken {
+				token := credentialToken(activeUser.ID, &stale)
+				token.WriteEnabled = false
+				return token
+			}()},
+			user:        activeUser,
+			remote:      "192.0.2.1",
+			write:       true,
+			wantReason:  shared.ErrorReasonForbidden,
+			wantMessage: "You do not have permission to perform this action.",
+			wantLookups: 1,
+			wantTouch:   true,
+		},
+		{
+			name:        "lookup infrastructure failure",
+			secret:      "present",
+			lookupErr:   lookupFailure,
+			wantReason:  shared.ErrorReasonInternal,
+			wantMessage: "An internal error occurred.",
+			wantLookups: 1,
+			wantCause:   lookupFailure,
+		},
+		{
+			name:        "touch infrastructure failure",
+			secret:      "present",
+			record:      application.TokenRecord{Token: credentialToken(activeUser.ID, &stale)},
+			user:        activeUser,
+			touchErr:    touchFailure,
+			wantReason:  shared.ErrorReasonInternal,
+			wantMessage: "An internal error occurred.",
+			wantLookups: 1,
+			wantTouch:   true,
+			wantCause:   touchFailure,
+		},
+		{
+			name:        "valid",
+			secret:      "present",
+			record:      application.TokenRecord{Token: credentialToken(activeUser.ID, &stale)},
+			user:        activeUser,
+			remote:      "192.0.2.1",
+			wantLookups: 1,
+			wantTouch:   true,
+			wantUser:    true,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			store := &credentialSpyStore{
+				record:    test.record,
+				user:      test.user,
+				lookupErr: test.lookupErr,
+				touchErr:  test.touchErr,
+			}
+			service := application.NewService(store, &testClock{now: now})
+
+			user, err := service.AuthenticateToken(t.Context(), test.secret, test.remote, test.write)
+
+			var credentialFailure *application.TokenCredentialFailure
+			if test.wantUser {
+				require.NoError(t, err)
+				require.Equal(t, test.user, user)
+				require.False(t, errors.As(err, &credentialFailure))
+			} else {
+				require.Equal(t, domain.User{}, user)
+				require.Equal(t, test.wantReason, shared.ReasonOf(err))
+				var appErr *shared.Error
+				require.ErrorAs(t, err, &appErr)
+				require.Equal(t, test.wantMessage, appErr.Message)
+				if test.wantCause != nil {
+					require.ErrorIs(t, err, test.wantCause)
+				}
+				if test.wantTyped {
+					require.True(t, errors.As(err, &credentialFailure), "expected typed credential failure")
+					require.Equal(t, test.wantKind, credentialFailure.Kind)
+					require.Equal(t, test.wantSourceIP, credentialFailure.SourceIP)
+				} else {
+					require.False(t, errors.As(err, &credentialFailure))
+				}
+			}
+			require.Equal(t, test.wantLookups, store.lookupCalls)
+			if test.wantTouch {
+				require.Equal(t, []credentialTouch{{id: 17, at: now}}, store.touches)
+			} else {
+				require.Empty(t, store.touches)
+			}
+		})
+	}
+}
+
 func TestTokenCredentialMatrixLastUsedStrictBoundary(t *testing.T) {
 	now := time.Date(2026, 8, 17, 6, 0, 0, 0, time.UTC)
 	user := activeCredentialUser()

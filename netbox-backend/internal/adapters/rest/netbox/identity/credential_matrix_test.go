@@ -113,7 +113,7 @@ func TestRESTTokenCredentialMatrixSourceDenialPrecedesWriteDenial(t *testing.T) 
 	router.ServeHTTP(response, request)
 
 	require.Equal(t, http.StatusForbidden, response.Code)
-	require.JSONEq(t, `{"detail":"Authentication credentials were not provided."}`, response.Body.String())
+	require.JSONEq(t, `{"detail":"Source IP 198.51.100.1 is not permitted to authenticate using this token."}`, response.Body.String())
 	require.NotContains(t, response.Body.String(), "permission")
 	require.False(t, handlerCalled)
 }

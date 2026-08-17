@@ -12,6 +12,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-dev-frame/sponge/pkg/logger"
@@ -63,7 +64,138 @@ func (h *Handler) Middleware() gin.HandlerFunc {
 // missing or rejected credential on baseline API resources. The Go-owned
 // identity extension keeps conventional 401 responses through Middleware.
 func (h *Handler) BaselineMiddleware() gin.HandlerFunc {
-	return h.middleware(http.StatusForbidden)
+	return func(c *gin.Context) {
+		ctx := c.Request.Context()
+		var user domain.User
+		var err error
+		sessionAuthenticated := false
+
+		authorizationValues := c.Request.Header.Values("Authorization")
+		hasAuthorization := len(authorizationValues) > 1 ||
+			(len(authorizationValues) == 1 && authorizationValues[0] != "")
+		if hasAuthorization {
+			secret, detail, accepted := parseBaselineTokenAuthorization(authorizationValues)
+			if !accepted {
+				writeBaselineTokenDetail(c, detail)
+				c.Abort()
+				return
+			}
+			user, err = h.service.AuthenticateToken(
+				ctx,
+				secret,
+				c.Request.RemoteAddr,
+				unsafe(c.Request.Method),
+			)
+		} else if secret, cookieErr := c.Cookie(sessionCookie); cookieErr == nil {
+			user, err = h.service.AuthenticateSession(ctx, secret)
+			sessionAuthenticated = err == nil
+		} else {
+			err = unauthenticatedError()
+		}
+
+		if err != nil {
+			writeBaselineTokenError(c, err)
+			c.Abort()
+			return
+		}
+		if sessionAuthenticated && unsafe(c.Request.Method) {
+			secret, _ := c.Cookie(sessionCookie)
+			csrf := c.GetHeader("X-CSRFToken")
+			if err := h.service.VerifyCSRF(ctx, secret, csrf); err != nil {
+				writeError(c, err)
+				c.Abort()
+				return
+			}
+		}
+		workflowhttp.SetPrincipal(c, user.Principal())
+		c.Request = c.Request.WithContext(domain.WithPrincipal(ctx, user.Principal()))
+		c.Next()
+	}
+}
+
+func parseBaselineTokenAuthorization(values []string) (string, string, bool) {
+	if len(values) != 1 {
+		return "", "Authentication credentials were not provided.", false
+	}
+	fields := splitPythonByteWhitespace(values[0])
+	if len(fields) == 0 || !equalFoldASCII(fields[0], "Token") {
+		return "", "Authentication credentials were not provided.", false
+	}
+	if len(fields) == 1 {
+		return "", "Invalid token header. No credentials provided.", false
+	}
+	if len(fields) > 2 {
+		return "", "Invalid token header. Token string should not contain spaces.", false
+	}
+	if !utf8.Valid(fields[1]) {
+		return "", "Invalid token header. Token string should not contain invalid characters.", false
+	}
+	return string(fields[1]), "", true
+}
+
+func splitPythonByteWhitespace(value string) [][]byte {
+	raw := []byte(value)
+	fields := make([][]byte, 0, 2)
+	for index := 0; index < len(raw); {
+		for index < len(raw) && pythonByteWhitespace(raw[index]) {
+			index++
+		}
+		start := index
+		for index < len(raw) && !pythonByteWhitespace(raw[index]) {
+			index++
+		}
+		if start < index {
+			fields = append(fields, raw[start:index])
+		}
+	}
+	return fields
+}
+
+func pythonByteWhitespace(value byte) bool {
+	return value == ' ' || value >= '\t' && value <= '\r'
+}
+
+func equalFoldASCII(value []byte, expected string) bool {
+	if len(value) != len(expected) {
+		return false
+	}
+	for index, character := range value {
+		if character >= 'A' && character <= 'Z' {
+			character += 'a' - 'A'
+		}
+		expectedCharacter := expected[index]
+		if expectedCharacter >= 'A' && expectedCharacter <= 'Z' {
+			expectedCharacter += 'a' - 'A'
+		}
+		if character != expectedCharacter {
+			return false
+		}
+	}
+	return true
+}
+
+func writeBaselineTokenError(c *gin.Context, err error) {
+	var failure *application.TokenCredentialFailure
+	if shared.ReasonOf(err) == shared.ErrorReasonUnauthenticated && errors.As(err, &failure) {
+		detail := map[application.TokenCredentialFailureKind]string{
+			application.TokenCredentialFailureMissing:           "Authentication credentials were not provided.",
+			application.TokenCredentialFailureUnknown:           "Invalid token",
+			application.TokenCredentialFailureRevoked:           "Invalid token",
+			application.TokenCredentialFailureExpired:           "Token expired",
+			application.TokenCredentialFailureInactiveOwner:     "User inactive",
+			application.TokenCredentialFailureSourceUnavailable: "Client IP address could not be determined for validation. Check that the HTTP server is correctly configured to pass the required header(s).",
+			application.TokenCredentialFailureSourceDenied:      "Source IP " + failure.SourceIP + " is not permitted to authenticate using this token.",
+		}[failure.Kind]
+		if detail != "" {
+			writeBaselineTokenDetail(c, detail)
+			return
+		}
+	}
+	writeErrorStatus(c, err, http.StatusForbidden)
+}
+
+func writeBaselineTokenDetail(c *gin.Context, detail string) {
+	c.JSON(http.StatusForbidden, gin.H{"detail": detail})
 }
 
 func (h *Handler) middleware(unauthenticatedStatus int) gin.HandlerFunc {

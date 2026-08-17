@@ -34,9 +34,11 @@ owned symlinks. The exact entry revision now has a human-reviewed retained
 `CW1-G00` result, and `CW1-V1-01` trusted-origin CORS is done. Bounded
 `CW1-V1-02-I1` is accepted and done for token lookup classification, strict
 touch ordering, revocation containment, and durable PostgreSQL touch semantics;
-`CW1-V1-02-I2` is active for baseline REST token grammar/outcomes and unary
-gRPC bearer/method safety. Its parent and the session, CSRF, throttle,
-trusted-proxy, simultaneous-credential, and streaming rows remain open. The 293-row
+`CW1-V1-02-I2` has bounded evidence for exact baseline REST token
+grammar/outcomes, typed application credential causes, strict unary gRPC
+bearer parsing, and fail-closed unary method safety; it awaits project-owner
+review. Its parent and the session, CSRF, throttle, trusted-proxy,
+simultaneous-credential, and streaming rows remain open. The 293-row
 `CW1-V2-01` structural authority has human acceptance, while its 275 unresolved
 and 18 contradicted behavior rows remain open. V1-V5 contain implementation and
 evidence gaps. No T2, T3, T4, V6 sign-off, or publication is claimed until
@@ -286,15 +288,15 @@ replacement completes ADR 0004's governing gate and CP-13.
 
 ## Evidence status
 
-| Checkpoint               | Present foundation                                                                             | Missing before exit                                                                                             | Status                                |
-| ------------------------ | ---------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
-| V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                        | Refresh for the active source and every later relevant merged digest                                            | Continuous; entry source retained     |
-| V1 identity/RBAC         | Persisted identity, retained CORS, and bounded token lookup/touch evidence                     | Complete the remaining transport/session/CSRF/throttle and RBAC/admin/secret matrix                             | V1-01/I1 done; I2 in progress         |
-| V2 domain behavior       | Typed shared services, broad focused tests, and reviewed machine-readable 293-row traceability | Uncovered presence, invariant, rollback, side-effect, and concurrency cases                                     | V2-01 done; behavior/evidence pending |
-| V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, and Compose harness                                      | Dependency-aware HTTP/gRPC readiness, dependency loss/recovery, remaining locking cases, retained external run  | Implementation and evidence pending   |
-| V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                    | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report      | T1; implementation/evidence pending   |
-| V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes | T1; implementation/evidence pending   |
-| V6 sign-off              | First-profile legacy stacks physically retired                                                 | V0-V5 retained green together, per-capability review, protobuf freeze/breaking baseline, joint sign-off         | Not earned                            |
+| Checkpoint               | Present foundation                                                                                    | Missing before exit                                                                                             | Status                                |
+| ------------------------ | ----------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                               | Refresh for the active source and every later relevant merged digest                                            | Continuous; entry source retained     |
+| V1 identity/RBAC         | Persisted identity, retained CORS, bounded token lookup/touch evidence, and token-transport candidate | Complete session/CSRF/throttle/proxy/streaming plus RBAC/admin/secret work; review I2 evidence                  | V1-01/I1 done; I2 evidence            |
+| V2 domain behavior       | Typed shared services, broad focused tests, and reviewed machine-readable 293-row traceability        | Uncovered presence, invariant, rollback, side-effect, and concurrency cases                                     | V2-01 done; behavior/evidence pending |
+| V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, and Compose harness                                             | Dependency-aware HTTP/gRPC readiness, dependency loss/recovery, remaining locking cases, retained external run  | Implementation and evidence pending   |
+| V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                           | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report      | T1; implementation/evidence pending   |
+| V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                       | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes | T1; implementation/evidence pending   |
+| V6 sign-off              | First-profile legacy stacks physically retired                                                        | V0-V5 retained green together, per-capability review, protobuf freeze/breaking baseline, joint sign-off         | Not earned                            |
 
 See [Evidence](evidence/README.md) for the artifact policy and commands.
 

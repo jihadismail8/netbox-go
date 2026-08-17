@@ -2,9 +2,11 @@ package parity
 
 import (
 	"context"
+	"errors"
 	"net"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 	"time"
 
@@ -19,6 +21,7 @@ import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 
+	dcimv1 "netbox-go/gen/go/netbox/dcim/v1"
 	identityv1 "netbox-go/gen/go/netbox/identity/v1"
 	grpcidentity "netbox-go/internal/adapters/grpc/identity"
 	postgresidentity "netbox-go/internal/adapters/postgres/identity"
@@ -30,6 +33,206 @@ import (
 type identityFixedClock struct{ now time.Time }
 
 func (clock identityFixedClock) Now() time.Time { return clock.now }
+
+type parityCredentialStore struct {
+	application.Store
+	record      application.TokenRecord
+	user        domain.User
+	lookupErr   error
+	touchErr    error
+	lookupCalls int
+	touchCalls  int
+	events      []tokenCredentialEvent
+}
+
+func (store *parityCredentialStore) TokenByHash(context.Context, []byte) (application.TokenRecord, domain.User, error) {
+	store.lookupCalls++
+	store.events = append(store.events, tokenCredentialEventLookup)
+	return store.record, store.user, store.lookupErr
+}
+
+func (store *parityCredentialStore) TouchToken(context.Context, int64, time.Time) error {
+	store.touchCalls++
+	store.events = append(store.events, tokenCredentialEventTouch)
+	return store.touchErr
+}
+
+type tokenCredentialEvent string
+
+const (
+	tokenCredentialEventLookup tokenCredentialEvent = "lookup"
+	tokenCredentialEventTouch  tokenCredentialEvent = "touch"
+)
+
+type tokenCredentialParityCase struct {
+	name            string
+	hasCredential   bool
+	record          application.TokenRecord
+	user            domain.User
+	lookupErr       error
+	touchErr        error
+	remoteAddress   string
+	write           bool
+	wantRESTStatus  int
+	wantRESTDetail  string
+	wantGRPCCode    codes.Code
+	wantGRPCMessage string
+	wantHandler     bool
+	wantLookups     int
+	wantTouches     int
+	wantKind        application.TokenCredentialFailureKind
+}
+
+type tokenTransportObservation struct {
+	handlerCalled bool
+	principal     domain.Principal
+	lookupCalls   int
+	touchCalls    int
+	events        []tokenCredentialEvent
+	application   tokenApplicationObservation
+}
+
+type tokenApplicationObservation struct {
+	kind   application.TokenCredentialFailureKind
+	events []tokenCredentialEvent
+}
+
+func observeApplicationTokenCredential(
+	t *testing.T,
+	now time.Time,
+	test tokenCredentialParityCase,
+) tokenApplicationObservation {
+	t.Helper()
+
+	store := &parityCredentialStore{
+		record:    test.record,
+		user:      test.user,
+		lookupErr: test.lookupErr,
+		touchErr:  test.touchErr,
+	}
+	service := application.NewService(store, identityFixedClock{now: now})
+	secret := ""
+	if test.hasCredential {
+		secret = "present"
+	}
+	_, err := service.AuthenticateToken(t.Context(), secret, test.remoteAddress, test.write)
+
+	var failure *application.TokenCredentialFailure
+	observation := tokenApplicationObservation{
+		events: append([]tokenCredentialEvent(nil), store.events...),
+	}
+	if errors.As(err, &failure) {
+		observation.kind = failure.Kind
+	}
+	return observation
+}
+
+func expectedTokenCredentialEvents(lookups, touches int) []tokenCredentialEvent {
+	var events []tokenCredentialEvent
+	for range lookups {
+		events = append(events, tokenCredentialEventLookup)
+	}
+	for range touches {
+		events = append(events, tokenCredentialEventTouch)
+	}
+	return events
+}
+
+func observeRESTTokenCredential(
+	t *testing.T,
+	now time.Time,
+	test tokenCredentialParityCase,
+) (*httptest.ResponseRecorder, tokenTransportObservation) {
+	t.Helper()
+
+	store := &parityCredentialStore{
+		record:    test.record,
+		user:      test.user,
+		lookupErr: test.lookupErr,
+		touchErr:  test.touchErr,
+	}
+	service := application.NewService(store, identityFixedClock{now: now})
+	handler := restidentity.NewHandler(service, false)
+	method := http.MethodGet
+	if test.write {
+		method = http.MethodPost
+	}
+
+	observation := tokenTransportObservation{}
+	router := gin.New()
+	router.Handle(method, "/protected", handler.BaselineMiddleware(), func(c *gin.Context) {
+		observation.handlerCalled = true
+		observation.principal, _ = domain.PrincipalFromContext(c.Request.Context())
+		c.Status(http.StatusNoContent)
+	})
+
+	request := httptest.NewRequest(method, "/protected", nil)
+	request.RemoteAddr = test.remoteAddress
+	if test.hasCredential {
+		request.Header.Set("Authorization", "Token present")
+	}
+	response := httptest.NewRecorder()
+	router.ServeHTTP(response, request)
+
+	observation.lookupCalls = store.lookupCalls
+	observation.touchCalls = store.touchCalls
+	observation.events = append([]tokenCredentialEvent(nil), store.events...)
+	observation.application = observeApplicationTokenCredential(t, now, test)
+	return response, observation
+}
+
+func observeGRPCTokenCredential(
+	t *testing.T,
+	now time.Time,
+	test tokenCredentialParityCase,
+) (codes.Code, string, tokenTransportObservation) {
+	t.Helper()
+
+	store := &parityCredentialStore{
+		record:    test.record,
+		user:      test.user,
+		lookupErr: test.lookupErr,
+		touchErr:  test.touchErr,
+	}
+	service := application.NewService(store, identityFixedClock{now: now})
+	ctx := t.Context()
+	if test.hasCredential {
+		ctx = metadata.NewIncomingContext(ctx, metadata.Pairs("authorization", "Bearer present"))
+	}
+	if test.remoteAddress != "" {
+		host, _, err := net.SplitHostPort(test.remoteAddress)
+		require.NoError(t, err)
+		ip := net.ParseIP(host)
+		require.NotNil(t, ip)
+		ctx = peer.NewContext(ctx, &peer.Peer{Addr: &net.TCPAddr{IP: ip, Port: 443}})
+	}
+
+	fullMethod := dcimv1.DCIMService_GetSite_FullMethodName
+	if test.write {
+		fullMethod = dcimv1.DCIMService_CreateSite_FullMethodName
+	}
+	observation := tokenTransportObservation{}
+	_, err := grpcidentity.UnaryAuthenticator(service)(
+		ctx,
+		nil,
+		&grpc.UnaryServerInfo{FullMethod: fullMethod},
+		func(ctx context.Context, _ any) (any, error) {
+			observation.handlerCalled = true
+			observation.principal, _ = domain.PrincipalFromContext(ctx)
+			return struct{}{}, nil
+		},
+	)
+
+	message := ""
+	if err != nil {
+		message = status.Convert(err).Message()
+	}
+	observation.lookupCalls = store.lookupCalls
+	observation.touchCalls = store.touchCalls
+	observation.events = append([]tokenCredentialEvent(nil), store.events...)
+	observation.application = observeApplicationTokenCredential(t, now, test)
+	return status.Code(err), message, observation
+}
 
 func TestIdentityGRPCLifecycleAndBearerAuthentication(t *testing.T) {
 	db, err := gorm.Open(sqlite.Open("file:identity_grpc_parity?mode=memory&cache=shared"), &gorm.Config{})
@@ -204,4 +407,270 @@ func TestRESTAndGRPCResolveTheSameEffectivePrincipal(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, expected, restPrincipal)
 	require.Equal(t, expected, grpcPrincipal)
+}
+
+func TestRESTAndGRPCTokenCredentialParity(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+
+	now := time.Date(2026, 8, 17, 9, 0, 0, 0, time.UTC)
+	stale := now.Add(-2 * time.Minute)
+	expired := now
+	revoked := now.Add(-time.Hour)
+
+	activeUser := domain.User{
+		ID:          41,
+		Username:    "transport-user",
+		IsActive:    true,
+		Permissions: []string{"dcim.view_site"},
+	}
+	inactiveUser := activeUser
+	inactiveUser.IsActive = false
+
+	token := func() domain.APIToken {
+		return domain.APIToken{
+			ID:           17,
+			UserID:       activeUser.ID,
+			WriteEnabled: true,
+			LastUsed:     &stale,
+		}
+	}
+	withExpiry := func() domain.APIToken {
+		value := token()
+		value.Expires = &expired
+		return value
+	}
+	withRestriction := func(writeEnabled bool) domain.APIToken {
+		value := token()
+		value.WriteEnabled = writeEnabled
+		value.AllowedIPs = []string{"192.0.2.0/24"}
+		return value
+	}
+	readOnly := func() domain.APIToken {
+		value := token()
+		value.WriteEnabled = false
+		return value
+	}
+
+	lookupFailure := errors.New("credential lookup unavailable")
+	touchFailure := errors.New("credential touch unavailable")
+
+	const (
+		missingDetail           = "Authentication credentials were not provided."
+		invalidDetail           = "Invalid token"
+		expiredDetail           = "Token expired"
+		inactiveDetail          = "User inactive"
+		sourceUnavailableDetail = "Client IP address could not be determined for validation. " +
+			"Check that the HTTP server is correctly configured to pass the required header(s)."
+		sourceDeniedDetail = "Source IP 198.51.100.1 is not permitted to authenticate using this token."
+		permissionDetail   = "You do not have permission to perform this action."
+		internalDetail     = "An internal error occurred."
+	)
+
+	tests := []tokenCredentialParityCase{
+		{
+			name:            "missing",
+			remoteAddress:   "192.0.2.10:443",
+			wantRESTStatus:  http.StatusForbidden,
+			wantRESTDetail:  missingDetail,
+			wantGRPCCode:    codes.Unauthenticated,
+			wantGRPCMessage: missingDetail,
+			wantKind:        application.TokenCredentialFailureMissing,
+		},
+		{
+			name:           "valid",
+			hasCredential:  true,
+			record:         application.TokenRecord{Token: token()},
+			user:           activeUser,
+			remoteAddress:  "192.0.2.10:443",
+			wantRESTStatus: http.StatusNoContent,
+			wantGRPCCode:   codes.OK,
+			wantHandler:    true,
+			wantLookups:    1,
+			wantTouches:    1,
+		},
+		{
+			name:            "unknown",
+			hasCredential:   true,
+			lookupErr:       application.ErrNotFound,
+			remoteAddress:   "192.0.2.10:443",
+			wantRESTStatus:  http.StatusForbidden,
+			wantRESTDetail:  invalidDetail,
+			wantGRPCCode:    codes.Unauthenticated,
+			wantGRPCMessage: missingDetail,
+			wantLookups:     1,
+			wantKind:        application.TokenCredentialFailureUnknown,
+		},
+		{
+			name:          "revoked",
+			hasCredential: true,
+			record: application.TokenRecord{
+				Token:     token(),
+				RevokedAt: &revoked,
+			},
+			user:            activeUser,
+			remoteAddress:   "192.0.2.10:443",
+			wantRESTStatus:  http.StatusForbidden,
+			wantRESTDetail:  invalidDetail,
+			wantGRPCCode:    codes.Unauthenticated,
+			wantGRPCMessage: missingDetail,
+			wantLookups:     1,
+			wantKind:        application.TokenCredentialFailureRevoked,
+		},
+		{
+			name:            "expired",
+			hasCredential:   true,
+			record:          application.TokenRecord{Token: withExpiry()},
+			user:            activeUser,
+			remoteAddress:   "192.0.2.10:443",
+			wantRESTStatus:  http.StatusForbidden,
+			wantRESTDetail:  expiredDetail,
+			wantGRPCCode:    codes.Unauthenticated,
+			wantGRPCMessage: missingDetail,
+			wantLookups:     1,
+			wantTouches:     1,
+			wantKind:        application.TokenCredentialFailureExpired,
+		},
+		{
+			name:            "inactive owner",
+			hasCredential:   true,
+			record:          application.TokenRecord{Token: token()},
+			user:            inactiveUser,
+			remoteAddress:   "192.0.2.10:443",
+			wantRESTStatus:  http.StatusForbidden,
+			wantRESTDetail:  inactiveDetail,
+			wantGRPCCode:    codes.Unauthenticated,
+			wantGRPCMessage: missingDetail,
+			wantLookups:     1,
+			wantTouches:     1,
+			wantKind:        application.TokenCredentialFailureInactiveOwner,
+		},
+		{
+			name:            "source unavailable",
+			hasCredential:   true,
+			record:          application.TokenRecord{Token: withRestriction(true)},
+			user:            activeUser,
+			wantRESTStatus:  http.StatusForbidden,
+			wantRESTDetail:  sourceUnavailableDetail,
+			wantGRPCCode:    codes.Unauthenticated,
+			wantGRPCMessage: missingDetail,
+			wantLookups:     1,
+			wantTouches:     1,
+			wantKind:        application.TokenCredentialFailureSourceUnavailable,
+		},
+		{
+			name:            "source denied",
+			hasCredential:   true,
+			record:          application.TokenRecord{Token: withRestriction(true)},
+			user:            activeUser,
+			remoteAddress:   "198.51.100.1:443",
+			wantRESTStatus:  http.StatusForbidden,
+			wantRESTDetail:  sourceDeniedDetail,
+			wantGRPCCode:    codes.Unauthenticated,
+			wantGRPCMessage: missingDetail,
+			wantLookups:     1,
+			wantTouches:     1,
+			wantKind:        application.TokenCredentialFailureSourceDenied,
+		},
+		{
+			name:            "source denial precedes write denial",
+			hasCredential:   true,
+			record:          application.TokenRecord{Token: withRestriction(false)},
+			user:            activeUser,
+			remoteAddress:   "198.51.100.1:443",
+			write:           true,
+			wantRESTStatus:  http.StatusForbidden,
+			wantRESTDetail:  sourceDeniedDetail,
+			wantGRPCCode:    codes.Unauthenticated,
+			wantGRPCMessage: missingDetail,
+			wantLookups:     1,
+			wantTouches:     1,
+			wantKind:        application.TokenCredentialFailureSourceDenied,
+		},
+		{
+			name:            "write disabled",
+			hasCredential:   true,
+			record:          application.TokenRecord{Token: readOnly()},
+			user:            activeUser,
+			remoteAddress:   "192.0.2.10:443",
+			write:           true,
+			wantRESTStatus:  http.StatusForbidden,
+			wantRESTDetail:  permissionDetail,
+			wantGRPCCode:    codes.PermissionDenied,
+			wantGRPCMessage: permissionDetail,
+			wantLookups:     1,
+			wantTouches:     1,
+		},
+		{
+			name:            "lookup infrastructure failure",
+			hasCredential:   true,
+			lookupErr:       lookupFailure,
+			remoteAddress:   "192.0.2.10:443",
+			wantRESTStatus:  http.StatusInternalServerError,
+			wantRESTDetail:  internalDetail,
+			wantGRPCCode:    codes.Internal,
+			wantGRPCMessage: internalDetail,
+			wantLookups:     1,
+		},
+		{
+			name:            "touch infrastructure failure",
+			hasCredential:   true,
+			record:          application.TokenRecord{Token: token()},
+			user:            activeUser,
+			touchErr:        touchFailure,
+			remoteAddress:   "192.0.2.10:443",
+			wantRESTStatus:  http.StatusInternalServerError,
+			wantRESTDetail:  internalDetail,
+			wantGRPCCode:    codes.Internal,
+			wantGRPCMessage: internalDetail,
+			wantLookups:     1,
+			wantTouches:     1,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			restResponse, restObservation := observeRESTTokenCredential(t, now, test)
+			grpcCode, grpcMessage, grpcObservation := observeGRPCTokenCredential(t, now, test)
+
+			require.Equal(t, test.wantRESTStatus, restResponse.Code)
+			require.Empty(t, restResponse.Header().Get("WWW-Authenticate"))
+			if test.wantRESTDetail == "" {
+				require.Empty(t, restResponse.Body.String())
+			} else {
+				require.JSONEq(
+					t,
+					`{"detail":`+strconv.Quote(test.wantRESTDetail)+`}`,
+					restResponse.Body.String(),
+				)
+			}
+
+			require.Equal(t, test.wantGRPCCode, grpcCode)
+			require.Equal(t, test.wantGRPCMessage, grpcMessage)
+			require.Equal(t, test.wantHandler, restObservation.handlerCalled)
+			require.Equal(t, test.wantHandler, grpcObservation.handlerCalled)
+			require.Equal(t, test.wantLookups, restObservation.lookupCalls)
+			require.Equal(t, test.wantLookups, grpcObservation.lookupCalls)
+			require.Equal(t, test.wantTouches, restObservation.touchCalls)
+			require.Equal(t, test.wantTouches, grpcObservation.touchCalls)
+			require.Equal(t, restObservation.lookupCalls, grpcObservation.lookupCalls)
+			require.Equal(t, restObservation.touchCalls, grpcObservation.touchCalls)
+			wantEvents := expectedTokenCredentialEvents(test.wantLookups, test.wantTouches)
+			require.Equal(t, wantEvents, restObservation.events)
+			require.Equal(t, wantEvents, grpcObservation.events)
+			require.Equal(t, wantEvents, restObservation.application.events)
+			require.Equal(t, wantEvents, grpcObservation.application.events)
+			require.Equal(t, test.wantKind, restObservation.application.kind)
+			require.Equal(t, test.wantKind, grpcObservation.application.kind)
+			require.Equal(t, restObservation.application.kind, grpcObservation.application.kind)
+
+			if test.wantHandler {
+				expectedPrincipal := test.user.Principal()
+				require.Equal(t, expectedPrincipal, restObservation.principal)
+				require.Equal(t, expectedPrincipal, grpcObservation.principal)
+				return
+			}
+			require.Equal(t, domain.Principal{}, restObservation.principal)
+			require.Equal(t, domain.Principal{}, grpcObservation.principal)
+		})
+	}
 }

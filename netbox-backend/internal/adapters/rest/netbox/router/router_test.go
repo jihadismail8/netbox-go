@@ -18,9 +18,11 @@ import (
 	"gorm.io/gorm"
 
 	identitypostgres "netbox-go/internal/adapters/postgres/identity"
+	identityhttp "netbox-go/internal/adapters/rest/netbox/identity"
 	workflowhttp "netbox-go/internal/adapters/rest/netbox/workflow"
 	identityapp "netbox-go/internal/application/identity"
 	"netbox-go/internal/config"
+	identitydomain "netbox-go/internal/domain/identity"
 	"netbox-go/internal/platform/composition"
 )
 
@@ -44,6 +46,119 @@ func TestBaselineAndIdentityAuthenticationStatusesRemainDistinct(t *testing.T) {
 		router.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, test.path, nil))
 		if recorder.Code != test.want {
 			t.Fatalf("GET %s = %d, want %d: %s", test.path, recorder.Code, test.want, recorder.Body.String())
+		}
+	}
+}
+
+func TestBaselineTokenHTTPMethodSafety(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+
+	db, err := gorm.Open(
+		sqlite.Open("file:baseline_token_method_safety?mode=memory&cache=shared"),
+		&gorm.Config{},
+	)
+	require.NoError(t, err)
+	require.NoError(t, db.AutoMigrate(identitypostgres.Models()...))
+
+	core := composition.NewCore(db)
+	administrator, err := core.Identity.BootstrapAdministrator(
+		t.Context(),
+		"method-safety-admin",
+		"",
+		"Method-Safety-Password-2026!",
+	)
+	require.NoError(t, err)
+
+	token, err := core.Identity.CreateToken(
+		t.Context(),
+		administrator.Principal(),
+		identityapp.CreateTokenInput{
+			Description:  "HTTP method safety",
+			WriteEnabled: false,
+		},
+	)
+	require.NoError(t, err)
+
+	methods := []struct {
+		name   string
+		method string
+		safe   bool
+	}{
+		{name: "get", method: http.MethodGet, safe: true},
+		{name: "head", method: http.MethodHead, safe: true},
+		{name: "options", method: http.MethodOptions, safe: true},
+		{name: "post", method: http.MethodPost},
+		{name: "put", method: http.MethodPut},
+		{name: "patch", method: http.MethodPatch},
+		{name: "delete", method: http.MethodDelete},
+		{name: "extension method", method: "PROPFIND"},
+	}
+
+	handler := identityhttp.NewHandler(core.Identity, false)
+	engine := gin.New()
+	handlerCalls := make(map[string]int, len(methods))
+	principals := make(map[string]identitydomain.Principal, len(methods))
+	recordHandler := func(method string) gin.HandlerFunc {
+		return func(c *gin.Context) {
+			handlerCalls[method]++
+			principals[method], _ = identitydomain.PrincipalFromContext(c.Request.Context())
+			c.Status(http.StatusNoContent)
+		}
+	}
+	for _, methodCase := range methods {
+		engine.Handle(
+			methodCase.method,
+			"/protected",
+			handler.BaselineMiddleware(),
+			recordHandler(methodCase.method),
+		)
+	}
+
+	headerForms := []struct {
+		name   string
+		format func(string) string
+	}{
+		{
+			name: "canonical",
+			format: func(credential string) string {
+				return "Token " + credential
+			},
+		},
+		{
+			name: "baseline casefold and repeated separator",
+			format: func(credential string) string {
+				return "tOkEn   " + credential
+			},
+		},
+	}
+
+	for _, headerForm := range headerForms {
+		for _, methodCase := range methods {
+			t.Run(headerForm.name+"/"+methodCase.name, func(t *testing.T) {
+				before := handlerCalls[methodCase.method]
+				request := httptest.NewRequest(methodCase.method, "/protected", nil)
+				request.RemoteAddr = "192.0.2.10:443"
+				request.Header.Set("Authorization", headerForm.format(token.Secret))
+				response := httptest.NewRecorder()
+
+				engine.ServeHTTP(response, request)
+
+				require.Empty(t, response.Header().Get("WWW-Authenticate"))
+				if methodCase.safe {
+					require.Equal(t, http.StatusNoContent, response.Code)
+					require.Equal(t, before+1, handlerCalls[methodCase.method])
+					require.Equal(t, administrator.ID, principals[methodCase.method].ID)
+					return
+				}
+
+				require.Equal(t, http.StatusForbidden, response.Code)
+				require.JSONEq(
+					t,
+					`{"detail":"You do not have permission to perform this action."}`,
+					response.Body.String(),
+				)
+				require.Equal(t, before, handlerCalls[methodCase.method])
+			})
 		}
 	}
 }
