@@ -31,12 +31,15 @@ has a retained `CW1-G00` result, `CW1-V1-01` is human-reviewed and done, and
 `CW1-V2-01` is structurally accepted. `CW1-V1-02-I1` is accepted and done for
 token lookup classification, strict touch ordering, and durable PostgreSQL
 touch semantics. `CW1-V1-02-I2` is accepted and done only for baseline REST
-token grammar/outcomes and unary gRPC bearer/method safety; the `CW1-V1-02`
-parent and its session, CSRF,
-throttle, trusted-proxy, simultaneous-credential, and streaming rows remain
-open. Do not begin or merge another Capability Profile while V0 is red or
-before `CW1-V6-03`. Once those gates are durably closed, follow the next
-accepted profile in the roadmap and playbook rather than this dated snapshot.
+token grammar/outcomes and unary gRPC bearer/method safety.
+`CW1-V1-02-I3` is the sole active identity child and owns browser-session
+classification, valid-session-first REST arbitration, exact CSRF pairing,
+transactional login/logout, active-session CSRF recovery, and session-cookie
+shape. The `CW1-V1-02` parent and its password, throttle, trusted-proxy, gRPC
+streaming, and aggregate rows remain open. Do not begin or merge another
+Capability Profile while V0 is red or before `CW1-V6-03`. Once those gates are
+durably closed, follow the next accepted profile in the roadmap and playbook
+rather than this dated snapshot.
 
 ## Non-negotiable rules
 

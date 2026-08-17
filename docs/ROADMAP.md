@@ -120,7 +120,7 @@ production release through PROD-1 and PROD-2.
 | ---- | ----------------------------------- | --------------------------------------- | ---------------------------------------------------- |
 | 0    | Stable language and decisions       | CONTEXT plus ADR 0001–0005              | `done`                                               |
 | 1    | Repository/shared-core baseline     | `CW1-G00`                               | `continuous`                                         |
-| 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01/I1/I2 `done`; parent active                    |
+| 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01/I1/I2 `done`; I3 active; parent active         |
 | 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01 `done`; remainder `blocked`                    |
 | 4    | First Core Workflow Profile         | `CW1-V1-*` through `CW1-V6-*`           | T1; active program                                   |
 | 5    | In-scope feature expansion          | `CP-P01`–`CP-P19`, then `MC-01`–`MC-10` | `blocked`                                            |
@@ -160,12 +160,13 @@ CW1-G00 (continuous V0)
 The starting `CW1-V1-01` and `CW1-V2-01` outcomes are accepted. Bounded
 `CW1-V1-02-I1` is accepted and done for the token credential foundation while
 the `CW1-V1-02` parent remains active. `CW1-V1-02-I2` is accepted and done for
-REST token grammar/outcomes and unary gRPC bearer/method safety. The next
-separately reviewed `CW1-V1-02` child and ready `CW1-V3-01` may run in parallel
-only when their packets declare non-overlapping files and owners; otherwise
-serialize them. All merges serialize through `CW1-G00`. Production foundations
-may proceed in parallel only when they do not destabilize profile work or claim
-production readiness early.
+REST token grammar/outcomes and unary gRPC bearer/method safety.
+`CW1-V1-02-I3` is active for the browser-session, CSRF, login/logout, and REST
+credential-arbitration slice. It and ready `CW1-V3-01` may run in parallel only
+when their packets declare non-overlapping files and owners; otherwise serialize
+them. All merges serialize through `CW1-G00`. Production foundations may proceed
+in parallel only when they do not destabilize profile work or claim production
+readiness early.
 
 ## Current execution board
 
@@ -173,7 +174,7 @@ production readiness early.
 | ------------------- | ------------- | ------------------------------------------------ | ------------------------------------ |
 | `CW1-G00`           | `continuous`  | Keep source-v2 V0 current                        | Every relevant merged source         |
 | `CW1-V1-01`         | `done`        | Trusted-origin CORS retained                     | Retained entry-source `CW1-G00`      |
-| `CW1-V1-02`         | `in-progress` | Execute credential/session/token matrix          | `CW1-V1-01` and current `CW1-G00`    |
+| `CW1-V1-02`         | `in-progress` | Execute I3 browser session/CSRF lifecycle        | `CW1-V1-01` and current `CW1-G00`    |
 | `CW1-V1-03`–`V1-04` | `blocked`     | Complete and retain remaining identity/security  | Preceding V1 goal                    |
 | `CW1-V2-01`         | `done`        | Accepted structural rule/scenario traceability   | Fresh source-v2 V0 follows this gate |
 | `CW1-V2-02`–`V2-08` | `blocked`     | Close typed business behavior                    | V2-01 and named lane dependencies    |
@@ -261,10 +262,13 @@ Entry: `CW1-V1-01` is merged and `CW1-G00` is green.
 Completed bounded packets: [CW1-V1-02-I1 token credential
 foundation](increments/CW1-V1-02.md) and [CW1-V1-02-I2 token transport and unary
 RPC safety](increments/CW1-V1-02-I2.md). The parent checklist remains open until
-every later transport/session/throttle row is proved. I2 proves the direct-peer
-token transport slice but does not cover browser sessions, CSRF, throttles,
-trusted-proxy source resolution, simultaneous credential precedence, or gRPC
-streams. The aggregate token and all-transport rows therefore remain open.
+every later transport/session/throttle row is proved.
+[CW1-V1-02-I3 browser session and CSRF lifecycle](increments/CW1-V1-02-I3.md)
+is active for typed session outcomes, valid-session-first arbitration,
+transactional login/logout, exact CSRF pairing/recovery, and cookie shape. I2
+proves only the direct-peer token transport slice; throttles, trusted-proxy
+source resolution, password-session policy, gRPC streams, and aggregate
+all-transport coverage remain open.
 
 - [ ] Test missing, malformed, unknown, expired, revoked, write-disabled, and
       IP-restricted API tokens.
