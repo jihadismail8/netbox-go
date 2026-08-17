@@ -299,6 +299,91 @@ No skipped boundary is implied by the local or CI results.
   evidence-only commit left the tested digest and entry count unchanged and
   passed its exact-SHA repository CI before project-owner acceptance.
 
+## Human closeout attestation
+
+The project owner accepted this bounded result in the project thread at
+`2026-08-17T17:19:53Z`. The acceptance changes only the state of
+`CW1-V1-02-I2` from `evidence` to `done`; it does not close `CW1-V1-02`, change
+a traceability row, complete an identity verification axis, or promote V1,
+T2, T3, T4, the Capability Profile, publication, deployment, or production
+readiness.
+
+- Tested implementation revision:
+  `3049cc65e354e60015d16670dc53a42505b119fa`.
+- Tested implementation digest:
+  `source-v2:sha256:2c1579e228024d1573489a1cf05978d6cd85a8c0f41fdc1f2db61f34e7515e4c`
+  with 3,002 entries.
+- Pre-closeout evidence revision:
+  `37f5fb2d78b431cf308812b2100a47064709e7a6`; its source digest remained the
+  tested implementation digest.
+- Accepted closeout revision:
+  `105bcf426d2ae52be38f88afede774a2f54abec6`.
+- Accepted closeout digest:
+  `source-v2:sha256:61e2821bb85036df3f62219c807086086cf42a0b8b62b149a87cf0c0262e8b03`
+  with 3,002 entries.
+- Exact-commit local result: the pinned-environment `make check` ran from
+  `2026-08-17T17:33:55Z` through `2026-08-17T17:35:30Z` at exit 0. Backend
+  coverage remained 12.4365% (36,134/290,548) against the 12.4001%
+  (36,013/290,425) floor; 28 frontend files and 125 tests passed at 61.72%
+  statement coverage; 96 traceability-validator tests passed; the active
+  profile remained 13 resources, 3 interfaces, 17 scenarios, and 293 rows;
+  inventories remained 155 baseline REST, 123 current REST, 179 current gRPC,
+  and 13 current Vue entries; OpenAPI remained 33 paths and 86 operations; and
+  all local links were valid across 154 Markdown files.
+- Exact-commit independent result: repository-gate
+  [run 32051029055](https://github.com/jihadismail8/netbox-go/actions/runs/32051029055),
+  [job 95450168136](https://github.com/jihadismail8/netbox-go/actions/runs/32051029055/job/95450168136),
+  started `2026-08-17T17:35:49Z`, completed
+  `2026-08-17T17:45:49Z`, and reported success for every step at the accepted
+  closeout SHA.
+
+The exact local command was:
+
+```bash
+env \
+  PATH=/home/jihad/.nvm/versions/node/v24.18.0/bin:/home/jihad/.local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
+  GOCACHE=/tmp/go-cache \
+  GOFLAGS=-buildvcs=false \
+  make check
+```
+
+Replacement- and graft-disabled Git reads reconstructed the reachable before
+and after trees. Every changed entry retained mode `100644`. The exact
+`37f5fb2d` to `105bcf42` file mapping is below; hashes are SHA-256 over the raw
+blob bytes.
+
+| Path                                                                 | Before bytes | Before SHA-256                                                     | After bytes | After SHA-256                                                      |
+| -------------------------------------------------------------------- | -----------: | ------------------------------------------------------------------ | ----------: | ------------------------------------------------------------------ |
+| `AGENTS.md`                                                          |        5,235 | `c6f0773d9a4c2f812537bed0bd484953416081bef3d4d38ea6f37ace37b41de4` |       5,191 | `6c01cd762ca9f3f708ebf25d9c756657a951a649031fc234dfb306875cef6510` |
+| `docs/IMPLEMENTATION_PLAN.md`                                        |       84,988 | `a11aaa4c1a615e4a03776cb0291e4a2f5b2ac186cb9170c2c7f92cbf7f0a3795` |      85,105 | `f9e74798d50aa745522775e5e7eb362b5dfe384da9cd5e658dbcd446a9a521d3` |
+| `docs/ROADMAP.md`                                                    |       75,377 | `cc2833630d9558252a1aec3f7bc49938eaed3be4f60cc35284e58c2b3ef47248` |      75,368 | `6454fbeee1644234f7b7e7ee03b54e3fe1adb33a1064ba72556be5a4bf91c3a8` |
+| `docs/STATUS.md`                                                     |       22,285 | `90c604e170c28f2ea0105cd9f3de749817065bef63cb48f3f780e8c3373b5d71` |      22,235 | `1bc5b2ecc4f5f1946aae46d7aaf82e2382300254a60abf5ed26e447bbebc59b8` |
+| `docs/TESTING.md`                                                    |       13,010 | `0f36978049cc60349463ce0880a242b2de39bc3fe6626b2fb3e10b46291ed51b` |      13,019 | `c92ce7fcc12e65e99a1ccac5091a7182941d78fc5eed1913916d54deb54e0fcc` |
+| `docs/increments/CW1-V1-02-I2.md`                                    |       33,152 | `0e416329941805a88b7d77d2be11718fedec802b10c319ea296304ea36989cf3` |      33,331 | `b4745e81599822e2559e8c240832824d217f76dc2f19d1a5c21ab7a290f2d634` |
+| `docs/increments/README.md`                                          |        3,098 | `f7f9901cfaf3444b5688f5b9f4ffc51361237b3aa64315405d814aedab1c8650` |       3,074 | `5ee0bf0310ff55665fad63a6d2f70fb9d3d5bd0d996e2f8882fe67f7e7b2be86` |
+| `docs/evidence/2026-08-17-core-workflow-v1-token-transport-i2-v0.md` |       13,292 | `b5352a3856888023ff5779352e8c334fd2fd104c52f7719cf3ea4b8eeabf7387` |      13,995 | `358858186caf0510e3dfcbe36f529dd23d9fe08c4d0dcb20c6996751c34d38fb` |
+| `docs/evidence/README.md`                                            |        6,673 | `5f364a2cf4b604118b8656437556b99d8d013b9f83e75a81aaf2b0762539954b` |       6,555 | `8233c2eaa4291c2c4ff284496217ae7626895aae3991a82e6f318f0fb68c5f4c` |
+
+The first seven rows are source-v2 inputs and constitute the complete
+claim-only source diff. The final two rows are excluded evidence paths. No
+entry was added, removed, renamed, retargeted, or made executable, and no
+other byte changed. The complete manifests retained 3,002 entries before and
+after the claim.
+
+The claim-only transition changed no application behavior, route, schema,
+migration, security rule, scenario, fixture, comparator, normalizer,
+dependency, toolchain, coverage policy, verification set, or parent-goal
+state. This artifact still intentionally carries no `netbox-go-evidence-v2`
+marker because I2 promotes no traceability consumer or extension verification
+set. The evidence-only receipt containing this attestation is excluded from
+`source-v2`; it must preserve the accepted closeout digest and pass its own
+exact-SHA repository CI.
+
+Human reviewer: project owner.
+
+Human decision: accepted only `CW1-V1-02-I2` in the project thread at
+`2026-08-17T17:19:53Z`; the parent goal remains open.
+
 ## Residual work and risk
 
 The following `CW1-V1-02` work remains open and unclaimed:
