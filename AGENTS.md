@@ -28,7 +28,7 @@ interrupted typed-boundary recovery is structurally closed, ADR 0005's
 dormant-wrapper cleanup is complete, and the new mode-aware `source-v2` digest
 has made the older V0 artifacts historical. The exact source-v2 entry revision
 has a retained `CW1-G00` result, `CW1-V1-01` is human-reviewed and done, and
-`CW1-V2-01` is structurally accepted. `CW1-V1-02-I1` has bounded evidence for
+`CW1-V2-01` is structurally accepted. `CW1-V1-02-I1` is accepted and done for
 token lookup classification, strict touch ordering, and durable PostgreSQL
 touch semantics; the `CW1-V1-02` parent and its transport/session rows remain
 open. Do not begin or merge another Capability Profile while V0 is red or

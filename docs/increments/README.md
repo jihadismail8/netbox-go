@@ -33,11 +33,11 @@ implementation exists.
 
 ## Packets
 
-| Goal           | State      | Intended executor | Packet                                        |
-| -------------- | ---------- | ----------------- | --------------------------------------------- |
-| `CW1-V1-01`    | `done`     | Codex GPT-5.6 Sol | [Trusted-origin CORS](CW1-V1-01.md)           |
-| `CW1-V1-02-I1` | `evidence` | Codex GPT-5.6 Sol | [Token credential foundation](CW1-V1-02.md)   |
-| `CW1-V2-01`    | `done`     | Codex GPT-5.6 Sol | [Machine-readable traceability](CW1-V2-01.md) |
+| Goal           | State  | Intended executor | Packet                                        |
+| -------------- | ------ | ----------------- | --------------------------------------------- |
+| `CW1-V1-01`    | `done` | Codex GPT-5.6 Sol | [Trusted-origin CORS](CW1-V1-01.md)           |
+| `CW1-V1-02-I1` | `done` | Codex GPT-5.6 Sol | [Token credential foundation](CW1-V1-02.md)   |
+| `CW1-V2-01`    | `done` | Codex GPT-5.6 Sol | [Machine-readable traceability](CW1-V2-01.md) |
 
 `in-progress` means the packet owns only its explicitly active bounded
 increment; no implementation evidence or parent-goal completion is implied.

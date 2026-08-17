@@ -5,7 +5,7 @@
 - Goal: `CW1-V1-02`.
 - Increment: `CW1-V1-02-I1`.
 - Executor: Codex GPT-5.6 Sol.
-- State: `evidence`; human acceptance is pending.
+- State: `done`; project-owner acceptance is recorded below.
 - Result: **retained for the exact source below**.
 - Capability Profile: `core-workflow-v1`, still T1 and pre-publication.
 
@@ -293,10 +293,19 @@ None of these skipped boundaries is implied by the local or CI results.
 - GitHub CI runs V0 only; the credential-free committed summary retains the
   operator-run L4 receipt.
 
-Human reviewer: pending.
+The evidence-only commit `58c2972df11e19ecda7f2800ed42cf80289d65cd`
+passed independent repository CI in
+[run 32030889834](https://github.com/jihadismail8/netbox-go/actions/runs/32030889834)
+at `2026-08-17T12:51:46Z`; job
+[95390412446](https://github.com/jihadismail8/netbox-go/actions/runs/32030889834/job/95390412446)
+reported every step successful. Its source-v2 digest remained the tested
+implementation digest with 2,998 entries because `docs/evidence/**` is
+excluded.
 
-Human decision: pending. `CW1-V1-02-I1` remains `evidence`, not `done`, and the
-parent goal remains open.
+Human reviewer: project owner.
+
+Human decision: accepted in the project thread on 2026-08-17. This closes only
+`CW1-V1-02-I1` as `done`; the parent goal remains open.
 
 Next bounded increment: `CW1-V1-02-I2`, the REST/gRPC API-token
 header/metadata-shape and stable public-outcome matrix.

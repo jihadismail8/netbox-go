@@ -32,9 +32,9 @@ The profile nevertheless remains **T1 and pre-publication**. The source-digest
 algorithm is versioned `source-v2` and includes executable mode plus closed
 owned symlinks. The exact entry revision now has a human-reviewed retained
 `CW1-G00` result, and `CW1-V1-01` trusted-origin CORS is done. Bounded
-`CW1-V1-02-I1` evidence covers token lookup classification, strict touch
-ordering, revocation containment, and durable PostgreSQL touch semantics; its
-parent and all later transport/session rows remain open. The 293-row
+`CW1-V1-02-I1` is accepted and done for token lookup classification, strict
+touch ordering, revocation containment, and durable PostgreSQL touch semantics;
+its parent and all later transport/session rows remain open. The 293-row
 `CW1-V2-01` structural authority has human acceptance, while its 275 unresolved
 and 18 contradicted behavior rows remain open. V1-V5 contain implementation and
 evidence gaps. No T2, T3, T4, V6 sign-off, or publication is claimed until

@@ -47,8 +47,8 @@ The [2026-08-03 artifact](evidence/2026-08-03-post-cleanup-v0.md) is historical:
 it used the superseded mode-blind v1 digest. The
 [source-v2 artifact](evidence/2026-08-17-core-workflow-v1-source-v2-v0.md)
 retains the exact entry revision after human review. Every later source change
-must refresh that continuous gate. Bounded `CW1-V1-02-I1` evidence separately
-proves token lookup classification, strict `last_used` ordering, affected local
+must refresh that continuous gate. Accepted bounded `CW1-V1-02-I1` evidence
+separately proves token lookup classification, strict `last_used` ordering, affected local
 REST/gRPC mapping, and actual-update behavior on an owned disposable
 PostgreSQL schema. It does not complete the parent credential matrix or promote
 T2/T3. GitHub CI currently runs the V0 command only. The owned PostgreSQL,

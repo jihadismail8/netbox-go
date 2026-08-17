@@ -158,8 +158,8 @@ CW1-G00 (continuous V0)
 ```
 
 The starting `CW1-V1-01` and `CW1-V2-01` outcomes are accepted. Bounded
-`CW1-V1-02-I1` evidence covers the token credential foundation while the
-`CW1-V1-02` parent remains active. Its next increment and ready `CW1-V3-01` may
+`CW1-V1-02-I1` is accepted and done for the token credential foundation while
+the `CW1-V1-02` parent remains active. Its next increment and ready `CW1-V3-01` may
 run in parallel only when their packets declare non-overlapping files and
 owners; otherwise serialize them. All merges serialize through `CW1-G00`.
 Production foundations may proceed in parallel only when they do not
@@ -256,9 +256,11 @@ weakening CSRF.
 
 Entry: `CW1-V1-01` is merged and `CW1-G00` is green.
 
-Active packet: [CW1-V1-02 credential, session, and token matrix](increments/CW1-V1-02.md).
-The packet proves only `CW1-V1-02-I1`; the parent checklist remains open until
-every later transport/session/throttle row is proved.
+Completed bounded packet: [CW1-V1-02-I1 token credential
+foundation](increments/CW1-V1-02.md). The parent checklist remains open until
+every later transport/session/throttle row is proved. The next bounded
+increment is `CW1-V1-02-I2`; it must be separately claimed after this closeout
+revision is retained green.
 
 - [ ] Test missing, malformed, unknown, expired, revoked, write-disabled, and
       IP-restricted API tokens.
