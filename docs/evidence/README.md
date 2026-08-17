@@ -10,21 +10,26 @@ The [2026-08-17 source-v2 V0](2026-08-17-core-workflow-v1-source-v2-v0.md),
 [trusted-origin CORS evidence](2026-08-03-core-workflow-v1-cors-v0.md), and
 [bounded token-authentication foundation](2026-08-17-core-workflow-v1-token-auth-i1-v0.md)
 passed their exact committed local boundaries and linked independent GitHub
-runs. The project owner reviewed and retained the entry V0, CORS, and bounded
-token I1 results. The
+runs. The
+[bounded token-transport and unary-safety candidate](2026-08-17-core-workflow-v1-token-transport-i2-v0.md)
+also passed its exact committed local boundary and independent candidate CI;
+this receipt becomes retained only when its own exact-SHA CI succeeds, after
+which project-owner review remains. The project owner reviewed and retained
+the entry V0, CORS, and bounded token I1 results. The
 [2026-08-03 post-cleanup V0](2026-08-03-post-cleanup-v0.md) used the superseded
 mode-blind v1 source digest and is now historical. The 2026-08-01
 repository V0 and recovery-scoped PostgreSQL replay also remain historical in
 the
 [Core Workflow recovery artifact](2026-08-01-core-workflow-v1-v0.md). The
 Profile remains T1 and pre-publication; V1-V6 remain open. `CW1-G00` is current
-for the token-I1 exact source, `CW1-V1-01` and `CW1-V1-02-I1` are done. The
-parent credential/session matrix remains
-open. Feature work must re-establish V0 after its next owned-source change.
+for the token-I2 exact source, `CW1-V1-01` and `CW1-V1-02-I1` are done, and
+`CW1-V1-02-I2` remains at bounded evidence pending review. The parent
+credential/session matrix remains open. Feature work must re-establish V0
+after its next owned-source change.
 
 | Evidence                 | Required command or boundary                                  | Current state                                           |
 | ------------------------ | ------------------------------------------------------------- | ------------------------------------------------------- |
-| Repository quality       | Revised `make check` including non-mutating backend coverage  | Exact token-I1 source-v2 result retained                |
+| Repository quality       | Revised `make check` including non-mutating backend coverage  | Exact token-I2 source-v2 candidate passed; review open  |
 | Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                 |
 | gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                   |
 | Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | Token I1 slice passed; complete V1/V3 bundles pending   |
