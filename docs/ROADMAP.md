@@ -102,7 +102,7 @@ residual risks.
 | Resource breadth            | 13/131 resources at T1                   | 118 resources                                                            |
 | Custom actions              | 0/22 promoted                            | 22 actions                                                               |
 | Verified compatibility      | 0 retained T2, T3, or T4 capabilities    | Every accepted capability                                                |
-| First-profile repository V0 | Historical v1 pass; source-v2 pending    | Committed source-v2 run and human evidence review                        |
+| First-profile repository V0 | Retained source-v2 entry result          | Refresh continuously for every relevant merged source                    |
 | Later profile candidates    | 19 catalogued candidates                 | All blocked on first-profile V6                                          |
 | Module closeouts            | 0/10                                     | 10                                                                       |
 | Extension Service closeout  | Architectural boundary accepted          | Contract/classification evidence                                         |
@@ -120,7 +120,7 @@ production release through PROD-1 and PROD-2.
 | ---- | ----------------------------------- | --------------------------------------- | ---------------------------------------------------- |
 | 0    | Stable language and decisions       | CONTEXT plus ADR 0001–0005              | `done`                                               |
 | 1    | Repository/shared-core baseline     | `CW1-G00`                               | `continuous`                                         |
-| 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01 `evidence`; remainder `blocked`                |
+| 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01 `done`; V1-02 I1 `evidence`; parent active     |
 | 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01 `done`; remainder `blocked`                    |
 | 4    | First Core Workflow Profile         | `CW1-V1-*` through `CW1-V6-*`           | T1; active program                                   |
 | 5    | In-scope feature expansion          | `CP-P01`–`CP-P19`, then `MC-01`–`MC-10` | `blocked`                                            |
@@ -157,32 +157,34 @@ CW1-G00 (continuous V0)
                                                         PROD-7 release
 ```
 
-`CW1-V1-01`, `CW1-V2-01`, and `CW1-V3-01` are three independent starting
-outcomes. They may run in parallel only after each increment declares
-non-overlapping permitted files and owners; otherwise serialize them. All
-merges serialize through `CW1-G00`. Production foundations may proceed in
-parallel only when they do not destabilize profile work or claim production
-readiness early.
+The starting `CW1-V1-01` and `CW1-V2-01` outcomes are accepted. Bounded
+`CW1-V1-02-I1` evidence covers the token credential foundation while the
+`CW1-V1-02` parent remains active. Its next increment and ready `CW1-V3-01` may
+run in parallel only when their packets declare non-overlapping files and
+owners; otherwise serialize them. All merges serialize through `CW1-G00`.
+Production foundations may proceed in parallel only when they do not
+destabilize profile work or claim production readiness early.
 
 ## Current execution board
 
-| Goal                | State      | Immediate outcome                                | Hard dependency                      |
-| ------------------- | ---------- | ------------------------------------------------ | ------------------------------------ |
-| `CW1-G00`           | `evidence` | Retain fresh committed source-v2 V0              | Committed run and human review       |
-| `CW1-V1-01`         | `evidence` | Review and retain trusted-origin CORS            | Fresh source-v2 `CW1-G00`            |
-| `CW1-V1-02`–`V1-04` | `blocked`  | Complete and retain identity/security            | Preceding V1 goal                    |
-| `CW1-V2-01`         | `done`     | Accepted structural rule/scenario traceability   | Fresh source-v2 V0 follows this gate |
-| `CW1-V2-02`–`V2-08` | `blocked`  | Close typed business behavior                    | V2-01 and named lane dependencies    |
-| `CW1-V3-01`         | `ready`    | Make HTTP/gRPC readiness dependency-aware        | `CW1-G00`                            |
-| `CW1-V3-02`–`V3-05` | `blocked`  | Close PostgreSQL/deployment evidence             | Named V2/V3 dependencies             |
-| `CW1-V4-01`–`V4-03` | `blocked`  | Earn complete first-profile REST T2              | V1–V3 as declared                    |
-| `CW1-V4-04`         | `blocked`  | Retain the identity extension report             | `CW1-V1-04`                          |
-| `CW1-V4-05`         | `blocked`  | Earn corresponding gRPC T3 per capability        | Retained T2 for that capability      |
-| `CW1-V4-06`         | `blocked`  | Retain the complete first-profile T2/T3 boundary | All V4 lanes                         |
-| `CW1-V5-01`–`V5-04` | `blocked`  | Author complete browser scenarios                | Stable named V1/V2/REST contracts    |
-| `CW1-V5-05`         | `blocked`  | Retain T4 for exercised workflows                | Corresponding T2/T3 and V5 authoring |
-| `CW1-V6-*`          | `blocked`  | Converge evidence and sign off the first profile | V1–V5                                |
-| `CP-P01`–`CP-P19`   | `blocked`  | Expand accepted feature breadth                  | `CW1-V6-03`                          |
+| Goal                | State         | Immediate outcome                                | Hard dependency                      |
+| ------------------- | ------------- | ------------------------------------------------ | ------------------------------------ |
+| `CW1-G00`           | `continuous`  | Keep source-v2 V0 current                        | Every relevant merged source         |
+| `CW1-V1-01`         | `done`        | Trusted-origin CORS retained                     | Retained entry-source `CW1-G00`      |
+| `CW1-V1-02`         | `in-progress` | Execute credential/session/token matrix          | `CW1-V1-01` and current `CW1-G00`    |
+| `CW1-V1-03`–`V1-04` | `blocked`     | Complete and retain remaining identity/security  | Preceding V1 goal                    |
+| `CW1-V2-01`         | `done`        | Accepted structural rule/scenario traceability   | Fresh source-v2 V0 follows this gate |
+| `CW1-V2-02`–`V2-08` | `blocked`     | Close typed business behavior                    | V2-01 and named lane dependencies    |
+| `CW1-V3-01`         | `ready`       | Make HTTP/gRPC readiness dependency-aware        | `CW1-G00`                            |
+| `CW1-V3-02`–`V3-05` | `blocked`     | Close PostgreSQL/deployment evidence             | Named V2/V3 dependencies             |
+| `CW1-V4-01`–`V4-03` | `blocked`     | Earn complete first-profile REST T2              | V1–V3 as declared                    |
+| `CW1-V4-04`         | `blocked`     | Retain the identity extension report             | `CW1-V1-04`                          |
+| `CW1-V4-05`         | `blocked`     | Earn corresponding gRPC T3 per capability        | Retained T2 for that capability      |
+| `CW1-V4-06`         | `blocked`     | Retain the complete first-profile T2/T3 boundary | All V4 lanes                         |
+| `CW1-V5-01`–`V5-04` | `blocked`     | Author complete browser scenarios                | Stable named V1/V2/REST contracts    |
+| `CW1-V5-05`         | `blocked`     | Retain T4 for exercised workflows                | Corresponding T2/T3 and V5 authoring |
+| `CW1-V6-*`          | `blocked`     | Converge evidence and sign off the first profile | V1–V5                                |
+| `CP-P01`–`CP-P19`   | `blocked`     | Expand accepted feature breadth                  | `CW1-V6-03`                          |
 
 No owner is assigned merely because a goal is `ready`. An executor claims one
 goal by recording its increment specification before editing code.
@@ -203,9 +205,11 @@ Historical evidence:
 - [x] Coverage, inventory, contract, OpenAPI, architecture, frontend, and
       documentation checks are part of the gate.
 
-Current source-v2 state: retention pending. The versioned digest now includes
-executable mode and closed owned symlinks, so v1 artifacts cannot be relabeled
-as source-v2 evidence.
+Current source-v2 entry state: the exact revision and digest linked by the
+[evidence ledger](evidence/README.md) have a human-reviewed retained V0. The
+versioned digest includes executable mode and closed owned symlinks, so v1
+artifacts cannot be relabeled as source-v2 evidence. Any source edit, including
+this claimed increment, requires a fresh exact-source result before merge.
 
 Repeat for every relevant change:
 
@@ -233,17 +237,17 @@ stale V0 blocks all other goals.
 Entry: `CW1-G00` is current. SEC-009 already decides the policy; no new product
 decision is required.
 
-Execution packet: [CW1-V1-01 trusted-origin CORS](increments/CW1-V1-01.md).
+Completed packet: [CW1-V1-01 trusted-origin CORS](increments/CW1-V1-01.md).
 
-- [ ] Add an owned explicit origin allowlist to configuration.
-- [ ] Reject invalid origin configuration at startup.
-- [ ] Never emit a credentialed wildcard origin.
-- [ ] Give missing, malformed, or untrusted origins no CORS grant.
-- [ ] Give a trusted origin only declared methods and headers.
-- [ ] Test preflight and actual credentialed requests.
-- [ ] Keep CSRF mandatory for cookie-authenticated mutations.
-- [ ] Add focused configuration and canonical HTTP regressions.
-- [ ] Pass L0–L3 without broadening public endpoints.
+- [x] Add an owned explicit origin allowlist to configuration.
+- [x] Reject invalid origin configuration at startup.
+- [x] Never emit a credentialed wildcard origin.
+- [x] Give missing, malformed, or untrusted origins no CORS grant.
+- [x] Give a trusted origin only declared methods and headers.
+- [x] Test preflight and actual credentialed requests.
+- [x] Keep CSRF mandatory for cookie-authenticated mutations.
+- [x] Add focused configuration and canonical HTTP regressions.
+- [x] Pass L0–L3 without broadening public endpoints.
 
 Exit: trusted-origin behavior is explicit, fail-closed, and tested without
 weakening CSRF.
@@ -252,11 +256,15 @@ weakening CSRF.
 
 Entry: `CW1-V1-01` is merged and `CW1-G00` is green.
 
+Active packet: [CW1-V1-02 credential, session, and token matrix](increments/CW1-V1-02.md).
+The packet proves only `CW1-V1-02-I1`; the parent checklist remains open until
+every later transport/session/throttle row is proved.
+
 - [ ] Test missing, malformed, unknown, expired, revoked, write-disabled, and
       IP-restricted API tokens.
-- [ ] Test a token belonging to an inactive user.
-- [ ] Prove baseline `last_used` ordering and one-minute throttling.
-- [ ] Prove an unknown token key performs no durable write.
+- [x] Test a token belonging to an inactive user.
+- [x] Prove baseline `last_used` ordering and one-minute throttling.
+- [x] Prove an unknown token key performs no durable write.
 - [ ] Test valid, invalid, and expired browser sessions.
 - [ ] Test logout and password-change invalidation.
 - [ ] Test session fixation resistance and rotation.

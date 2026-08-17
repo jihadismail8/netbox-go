@@ -44,11 +44,16 @@ baseline is not a permitted repair. Durable V0 status is recorded only in the
 [evidence ledger](evidence/README.md).
 
 The [2026-08-03 artifact](evidence/2026-08-03-post-cleanup-v0.md) is historical:
-it used the superseded mode-blind v1 digest and cannot attest the current
-source-v2 tree. A fresh committed source-v2 V0 run and human evidence review
-remain pending. GitHub CI currently runs the V0 command only. The owned
-PostgreSQL, deployment, differential, gRPC-promotion, and browser gates remain
-manual until connected jobs retain durable artifacts.
+it used the superseded mode-blind v1 digest. The
+[source-v2 artifact](evidence/2026-08-17-core-workflow-v1-source-v2-v0.md)
+retains the exact entry revision after human review. Every later source change
+must refresh that continuous gate. Bounded `CW1-V1-02-I1` evidence separately
+proves token lookup classification, strict `last_used` ordering, affected local
+REST/gRPC mapping, and actual-update behavior on an owned disposable
+PostgreSQL schema. It does not complete the parent credential matrix or promote
+T2/T3. GitHub CI currently runs the V0 command only. The owned PostgreSQL,
+deployment, differential, gRPC-promotion, and browser gates remain manual until
+connected jobs retain durable artifacts.
 
 ## Owned external gates
 
@@ -183,15 +188,15 @@ and exact change-state outcomes remain to be added and retained.
 
 ## Verification checkpoints
 
-| Checkpoint               | Implementation state                                                  | Exit condition                                                                  | Current status                                                  |
-| ------------------------ | --------------------------------------------------------------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage  | `make check` retained green on the exact current source digest                  | Historical v1 pass; source-v2 pending                           |
-| V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests | Trusted-origin CORS plus complete principal/visibility/CLI/session/token matrix | CORS source present; review/evidence and broader matrix pending |
-| V2 profile behavior      | Shared 13-resource service and broad positive/negative tests          | Trace every declared invariant, field/filter/relationship, error, and rollback  | Implementation/evidence gap                                     |
-| V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness            | Truthful readiness, loss/recovery, real PostgreSQL and deployment artifacts     | Implementation/evidence gap                                     |
-| V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites       | Complete T2 scenario report, then equivalent T3 report                          | T1; implementation gap                                          |
-| V5 Vue workflow          | Typed adapters and real-browser harness                               | Both workflows and every required negative/state case retained green            | T1; implementation gap                                          |
-| V6 sign-off              | First-profile legacy stacks retired                                   | V0-V5 green together with linked evidence                                       | Not earned                                                      |
+| Checkpoint               | Implementation state                                                  | Exit condition                                                                 | Current status                                           |
+| ------------------------ | --------------------------------------------------------------------- | ------------------------------------------------------------------------------ | -------------------------------------------------------- |
+| V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage  | `make check` retained green on each exact relevant source digest               | Entry source-v2 retained; active-source refresh required |
+| V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests | Complete principal/visibility/CLI/session/token matrix                         | CORS retained; credential matrix in progress             |
+| V2 profile behavior      | Shared 13-resource service and broad positive/negative tests          | Trace every declared invariant, field/filter/relationship, error, and rollback | Implementation/evidence gap                              |
+| V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness            | Truthful readiness, loss/recovery, real PostgreSQL and deployment artifacts    | Implementation/evidence gap                              |
+| V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites       | Complete T2 scenario report, then equivalent T3 report                         | T1; implementation gap                                   |
+| V5 Vue workflow          | Typed adapters and real-browser harness                               | Both workflows and every required negative/state case retained green           | T1; implementation gap                                   |
+| V6 sign-off              | First-profile legacy stacks retired                                   | V0-V5 green together with linked evidence                                      | Not earned                                               |
 
 ## Merge rules
 

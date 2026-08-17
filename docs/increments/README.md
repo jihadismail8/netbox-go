@@ -33,14 +33,19 @@ implementation exists.
 
 ## Packets
 
-| Goal        | State      | Intended executor | Packet                                        |
-| ----------- | ---------- | ----------------- | --------------------------------------------- |
-| `CW1-V1-01` | `evidence` | Codex GPT-5.6 Sol | [Trusted-origin CORS](CW1-V1-01.md)           |
-| `CW1-V2-01` | `done`     | Codex GPT-5.6 Sol | [Machine-readable traceability](CW1-V2-01.md) |
+| Goal           | State      | Intended executor | Packet                                        |
+| -------------- | ---------- | ----------------- | --------------------------------------------- |
+| `CW1-V1-01`    | `done`     | Codex GPT-5.6 Sol | [Trusted-origin CORS](CW1-V1-01.md)           |
+| `CW1-V1-02-I1` | `evidence` | Codex GPT-5.6 Sol | [Token credential foundation](CW1-V1-02.md)   |
+| `CW1-V2-01`    | `done`     | Codex GPT-5.6 Sol | [Machine-readable traceability](CW1-V2-01.md) |
 
-`evidence` means the implementation candidate is present, but its committed
-source-v2 run and human acceptance are still pending. It does not close V1 or
-promote a compatibility tier.
+`in-progress` means the packet owns only its explicitly active bounded
+increment; no implementation evidence or parent-goal completion is implied.
+
+`evidence` means the bounded candidate has current retained results but still
+awaits any human acceptance required by its packet. `done` means that bounded
+goal or increment has the required accepted evidence. A child increment
+entering either state never closes its parent automatically.
 
 `done` for `CW1-V2-01` records accepted structural authority only. Its pending
 and contradicted behavior remains open, it retains no V0 artifact, and it does

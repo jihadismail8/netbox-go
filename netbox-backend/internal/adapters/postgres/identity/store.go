@@ -162,9 +162,16 @@ func (s *Store) TokenByHash(ctx context.Context, hash []byte) (application.Token
 	if err != nil {
 		return application.TokenRecord{}, domain.User{}, err
 	}
-	user, _, err := s.UserByID(ctx, row.UserID)
+	// ErrNotFound is reserved by this method for an absent token key. Query the
+	// owner row directly so an orphaned credential remains an infrastructure
+	// failure rather than being disguised as an unknown credential.
+	var userRow UserRow
+	if err := s.db.WithContext(ctx).First(&userRow, row.UserID).Error; err != nil {
+		return application.TokenRecord{}, domain.User{}, fmt.Errorf("load identity token owner: %w", err)
+	}
+	user, err := s.userFromRow(ctx, userRow)
 	if err != nil {
-		return application.TokenRecord{}, domain.User{}, err
+		return application.TokenRecord{}, domain.User{}, fmt.Errorf("load identity token owner permissions: %w", err)
 	}
 	token, err := tokenFromRow(row)
 	if err != nil {
@@ -203,7 +210,9 @@ func (s *Store) RevokeToken(ctx context.Context, userID, id int64, at time.Time)
 	return nil
 }
 func (s *Store) TouchToken(ctx context.Context, id int64, at time.Time) error {
-	return s.db.WithContext(ctx).Model(&TokenRow{}).Where("id = ? AND (last_used IS NULL OR last_used <= ?)", id, at.Add(-time.Minute)).Update("last_used", at).Error
+	return s.db.WithContext(ctx).Model(&TokenRow{}).
+		Where("id = ? AND revoked_at IS NULL AND (last_used IS NULL OR last_used < ?)", id, at.Add(-time.Minute)).
+		Update("last_used", at).Error
 }
 func (s *Store) CountUsers(ctx context.Context) (int64, error) {
 	var count int64

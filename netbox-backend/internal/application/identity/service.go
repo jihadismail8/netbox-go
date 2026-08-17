@@ -199,23 +199,34 @@ func (s *Service) AuthenticateToken(ctx context.Context, secret, remoteAddress s
 		return domain.User{}, unauthenticated()
 	}
 	record, user, err := s.store.TokenByHash(ctx, digest(secret))
+	if errors.Is(err, ErrNotFound) {
+		return domain.User{}, unauthenticated()
+	}
 	if err != nil {
+		return domain.User{}, internal(err)
+	}
+	// Baseline revocation deletes the token row. The Go-owned soft-revocation
+	// extension must therefore behave like an unknown key and never mutate the
+	// credential after revocation.
+	if record.RevokedAt != nil {
 		return domain.User{}, unauthenticated()
 	}
 	now := s.clock.Now()
 	// Match the baseline ordering: a recognized key is touched at most once per
 	// minute before expiry, active-user, and allowed-IP rejection.
-	if record.Token.LastUsed == nil || now.Sub(*record.Token.LastUsed) >= time.Minute {
-		_ = s.store.TouchToken(ctx, record.Token.ID, now)
+	if record.Token.LastUsed == nil || now.Sub(*record.Token.LastUsed) > time.Minute {
+		if err := s.store.TouchToken(ctx, record.Token.ID, now); err != nil {
+			return domain.User{}, internal(err)
+		}
 	}
-	if record.RevokedAt != nil || (record.Token.Expires != nil && !record.Token.Expires.After(now)) || !user.IsActive {
+	if (record.Token.Expires != nil && !record.Token.Expires.After(now)) || !user.IsActive {
+		return domain.User{}, unauthenticated()
+	}
+	if len(record.Token.AllowedIPs) > 0 && !allowedAddress(remoteAddress, record.Token.AllowedIPs) {
 		return domain.User{}, unauthenticated()
 	}
 	if write && !record.Token.WriteEnabled {
 		return domain.User{}, forbidden()
-	}
-	if len(record.Token.AllowedIPs) > 0 && !allowedAddress(remoteAddress, record.Token.AllowedIPs) {
-		return domain.User{}, unauthenticated()
 	}
 	return user, nil
 }

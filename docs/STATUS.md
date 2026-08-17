@@ -29,15 +29,16 @@ the Go-owned identity implementation. The displaced legacy stacks for all 13
 resources have been physically removed.
 
 The profile nevertheless remains **T1 and pre-publication**. The source-digest
-algorithm is now versioned `source-v2` and includes executable mode plus closed
-owned symlinks. That deliberate hardening supersedes the mode-blind digest used
-by the 2026-08-03 V0 artifact, so both existing V0 artifacts are historical and
-a fresh committed source-v2 `CW1-G00` run must be retained before feature work
-resumes. The 293-row `CW1-V2-01` structural authority has human acceptance,
-while its 275 unresolved and 18 contradicted behavior rows remain open. V1-V5
-contain implementation and evidence gaps. No T2, T3, T4, V6
-sign-off, or publication is claimed until corresponding current artifacts are
-retained.
+algorithm is versioned `source-v2` and includes executable mode plus closed
+owned symlinks. The exact entry revision now has a human-reviewed retained
+`CW1-G00` result, and `CW1-V1-01` trusted-origin CORS is done. Bounded
+`CW1-V1-02-I1` evidence covers token lookup classification, strict touch
+ordering, revocation containment, and durable PostgreSQL touch semantics; its
+parent and all later transport/session rows remain open. The 293-row
+`CW1-V2-01` structural authority has human acceptance, while its 275 unresolved
+and 18 contradicted behavior rows remain open. V1-V5 contain implementation and
+evidence gaps. No T2, T3, T4, V6 sign-off, or publication is claimed until
+corresponding current artifacts are retained.
 
 > **Operational boundary:** this is a development build for disposable data.
 > Production TLS, schema upgrades, backup/restore, operational hardening, and
@@ -166,8 +167,11 @@ current source includes non-claim-only implementation and test changes, the
 old claim-attestation mapping was not carried forward. The later
 [post-cleanup V0 artifact](evidence/2026-08-03-post-cleanup-v0.md) recorded a
 fresh exact-digest pass under the superseded v1 algorithm. It remains useful
-historical evidence but cannot attest a source-v2 revision. V1-V6 remain
-separate first-profile work, and source-v2 V0 retention is pending.
+historical evidence but cannot attest a source-v2 revision. The
+[source-v2 evidence](evidence/2026-08-17-core-workflow-v1-source-v2-v0.md)
+retains the exact entry revision, and the
+[CORS evidence](evidence/2026-08-03-core-workflow-v1-cors-v0.md) closes
+`CW1-V1-01`. V1-V6 remain separate first-profile work.
 
 ## Current surface inventory
 
@@ -280,22 +284,22 @@ replacement completes ADR 0004's governing gate and CP-13.
 
 ## Evidence status
 
-| Checkpoint               | Present foundation                                                                              | Missing before exit                                                                                             | Status                                           |
-| ------------------------ | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| V0 repository gate       | Backend/frontend quality gates, coverage policy, deterministic checks                           | Fresh committed source-v2 `make check` artifact and human evidence review                                       | Historical v1 pass; source-v2 pending            |
-| V1 identity/RBAC         | Persisted groups, memberships, grants, CLI, session/token paths, and trusted-origin CORS source | Fresh V0, CORS review/evidence, and the complete two-transport credential/RBAC/admin/secret matrix              | CORS evidence and broader implementation pending |
-| V2 domain behavior       | Typed shared services, broad focused tests, and reviewed machine-readable 293-row traceability  | Uncovered presence, invariant, rollback, side-effect, and concurrency cases                                     | V2-01 done; behavior/evidence pending            |
-| V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, and Compose harness                                       | Dependency-aware HTTP/gRPC readiness, dependency loss/recovery, remaining locking cases, retained external run  | Implementation and evidence pending              |
-| V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                     | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report      | T1; implementation/evidence pending              |
-| V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                 | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes | T1; implementation/evidence pending              |
-| V6 sign-off              | First-profile legacy stacks physically retired                                                  | V0-V5 retained green together, per-capability review, protobuf freeze/breaking baseline, joint sign-off         | Not earned                                       |
+| Checkpoint               | Present foundation                                                                             | Missing before exit                                                                                             | Status                                |
+| ------------------------ | ---------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                        | Refresh for the active source and every later relevant merged digest                                            | Continuous; entry source retained     |
+| V1 identity/RBAC         | Persisted identity, retained CORS, and bounded token lookup/touch evidence                     | Complete the remaining transport/session/CSRF/throttle and RBAC/admin/secret matrix                             | V1-01 done; V1-02-I1 evidence         |
+| V2 domain behavior       | Typed shared services, broad focused tests, and reviewed machine-readable 293-row traceability | Uncovered presence, invariant, rollback, side-effect, and concurrency cases                                     | V2-01 done; behavior/evidence pending |
+| V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, and Compose harness                                      | Dependency-aware HTTP/gRPC readiness, dependency loss/recovery, remaining locking cases, retained external run  | Implementation and evidence pending   |
+| V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                    | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report      | T1; implementation/evidence pending   |
+| V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes | T1; implementation/evidence pending   |
+| V6 sign-off              | First-profile legacy stacks physically retired                                                 | V0-V5 retained green together, per-capability review, protobuf freeze/breaking baseline, joint sign-off         | Not earned                            |
 
 See [Evidence](evidence/README.md) for the artifact policy and commands.
 
 ## Remaining first-profile work
 
 1. Keep `CW1-G00` green with pinned Go, Node, and npm.
-2. Complete `CW1-V1-01` through `CW1-V1-04`: close CORS and the full
+2. Complete `CW1-V1-02` through `CW1-V1-04`: close the credential and remaining
    identity/security matrix, then retain V1.
 3. Complete `CW1-V2-02` through `CW1-V2-08`: use the accepted traceability for
    every profile scenario and plan rule;
