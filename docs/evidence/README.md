@@ -6,22 +6,28 @@ release gates. Source files and test harnesses are linked from
 
 ## Current ledger
 
-The [2026-08-03 post-cleanup V0](2026-08-03-post-cleanup-v0.md) used the
-superseded mode-blind v1 source digest and is now historical. The 2026-08-01
+The [2026-08-17 source-v2 V0](2026-08-17-core-workflow-v1-source-v2-v0.md)
+and [trusted-origin CORS evidence](2026-08-03-core-workflow-v1-cors-v0.md)
+passed their exact committed local boundaries, and the V0 source also passed
+the linked independent GitHub run. The project owner reviewed and retained both
+results for their exact revision and source-v2 digest. The
+[2026-08-03 post-cleanup V0](2026-08-03-post-cleanup-v0.md) used the superseded
+mode-blind v1 source digest and is now historical. The 2026-08-01
 repository V0 and recovery-scoped PostgreSQL replay also remain historical in
 the
-[Core Workflow recovery artifact](2026-08-01-core-workflow-v1-v0.md). V1-V6
-Profile remains T1 and pre-publication. A fresh committed `source-v2` V0 run is
-required before feature increments resume.
+[Core Workflow recovery artifact](2026-08-01-core-workflow-v1-v0.md). The
+Profile remains T1 and pre-publication; V1-V6 remain open. `CW1-G00` is current
+for the retained exact source below, and `CW1-V1-01` is done. Feature work must
+re-establish V0 after its next owned-source change.
 
-| Evidence                 | Required command or boundary                                  | Current state                                      |
-| ------------------------ | ------------------------------------------------------------- | -------------------------------------------------- |
-| Repository quality       | Revised `make check` including non-mutating backend coverage  | source-v2 rerun/retention pending                  |
-| Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending            |
-| gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending              |
-| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | Recovery replay passed; complete V3 bundle pending |
-| Standalone deployment    | `make deployment-smoke`                                       | Harness present; current result pending            |
-| Browser workflow         | `make browser-e2e`                                            | Harness present; current result pending            |
+| Evidence                 | Required command or boundary                                  | Current state                                           |
+| ------------------------ | ------------------------------------------------------------- | ------------------------------------------------------- |
+| Repository quality       | Revised `make check` including non-mutating backend coverage  | Exact source-v2 result retained                         |
+| Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                 |
+| gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                   |
+| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | Recovery replay passed; complete V3 bundle pending      |
+| Standalone deployment    | `make deployment-smoke`                                       | CORS-scoped exact-commit result retained; V3 still open |
+| Browser workflow         | `make browser-e2e`                                            | Harness present; current result pending                 |
 
 GitHub CI currently runs V0 only. Real PostgreSQL, deployment, differential
 oracle, gRPC promotion, and browser gates remain operator-run until durable,
