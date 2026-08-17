@@ -32,12 +32,14 @@ func New(
 	identityService *identityapp.Service,
 	siteService *dcimapp.SiteService,
 	secureCookies bool,
+	corsAllowedOrigins []string,
 	workflowOptions ...workflowhttp.HandlerOption,
 ) *gin.Engine {
 	return newWithLogger(
 		identityService,
 		siteService,
 		secureCookies,
+		corsAllowedOrigins,
 		logger.Get(),
 		workflowOptions...,
 	)
@@ -47,6 +49,7 @@ func newWithLogger(
 	identityService *identityapp.Service,
 	siteService *dcimapp.SiteService,
 	secureCookies bool,
+	corsAllowedOrigins []string,
 	log *zap.Logger,
 	workflowOptions ...workflowhttp.HandlerOption,
 ) *gin.Engine {
@@ -57,6 +60,7 @@ func newWithLogger(
 	r := gin.New()
 	r.RedirectTrailingSlash = false
 	r.Use(gin.Recovery())
+	r.Use(trustedOriginCORS(corsAllowedOrigins))
 
 	if config.Get().HTTP.Timeout > 0 {
 		r.Use(middleware.Timeout(time.Second * time.Duration(config.Get().HTTP.Timeout)))

@@ -1,9 +1,15 @@
 # Differential compatibility job
 
 This directory is the only place where Python/Django is permitted at test
-time. The job mounts the checked-in NetBox oracle source, refuses a source or
-configuration mismatch, creates disposable databases, and compares the
-profile-declared REST projection with the standalone Go implementation.
+time. The job materializes the exact regular-file blobs and executable modes
+from the pinned NetBox commit into a temporary tree and mounts that tree as the
+oracle source. Every authoritative Git operation disables local replacement
+refs and grafts, and direct tree/blob reads bypass repository-local export
+attributes. It never executes untracked, ignored, modified,
+replacement-substituted, graft-authorized, or attribute-filtered live-checkout
+content. It refuses a source or configuration mismatch, creates disposable
+databases, and compares the profile-declared REST projection with the standalone
+Go implementation.
 
 Run from the repository root:
 
@@ -18,24 +24,35 @@ Go/Vue application.
 The gate refuses to start unless the original checkout is clean at commit
 `fbb948d30e79ce657fac62994a22aca72c1770a9`, the release reports `4.4.6`,
 and the capability profile names the `netbox-v4.4.6-post7` baseline. It then
-asserts the oracle's effective security and uniqueness settings from inside
-the running Django process.
+materializes that exact Git tree and asserts the oracle's effective security
+and uniqueness settings from inside the running Django process. Unsupported
+Git modes or object types fail closed.
 
-The differential driver covers all 13 resources in `core-workflow-v1`. It
-checks authentication, required-field and network validation, create/get/
-patch/replace/delete, relationship and computed-field projections, canonical
-network values, template-created interfaces, pagination, and every filter and
-ordering field declared for all 13 resources (including relationship,
-containment, and assignment filters). Every writable field is compared on
-mutations; GET/list/PATCH/PUT must expose every
-declared writable and response-only field. The exact POST-only annotated
-counter omissions are pinned explicitly, including a check that Go does not
-emit them. Only generated IDs, configured URL origins, and timestamps are
-normalized as declared in `normalizers.yaml`. Choice envelopes, numeric JSON
-types, paths, queries, trailing slashes, validation reasons, and field
-presence stay exact. Each generated identifier is paired to an explicit
-scenario symbol (including template-created objects); an unbound identifier is
-a hard failure rather than a generic placeholder.
+The same production materializer has a fast adversarial regression which
+plants untracked Python, ignored bytecode, tracked dirt, a wrong trusted commit,
+a malicious Git replacement ref, a forged graft, and repository-local export
+attributes:
+
+```bash
+make compatibility-oracle-source-test
+```
+
+This check requires Git, but no Docker daemon, network, or Python runtime.
+
+The differential driver exercises all 13 resources in `core-workflow-v1` with
+broad authentication, CRUD, projection, canonical-network, template,
+pagination, filter, and ordering coverage. For the payloads it exercises, the
+comparator remains strict about declared writable/response fields, annotated
+counter omissions, choice envelopes, numeric JSON types, paths, queries,
+trailing slashes, validation reasons, field presence, generated identifiers,
+committed state, and side effects.
+
+This is not yet the complete first-profile T2 matrix. The 2026-08-03 coverage
+audit found missing permission, presence, conflict, invariant, rollback, and
+durable-effect scenarios. The profile now has machine-readable row/test/
+evidence traceability, but uncovered rows remain explicitly pending. Implement
+and exercise every required case before treating a successful run as a per-
+capability T2 report.
 
 Failure diagnostics are retained in the artifact directory printed by the
 job. They contain redacted exchanges, the effective oracle configuration,

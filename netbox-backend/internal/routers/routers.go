@@ -14,15 +14,6 @@ import (
 	"netbox-go/internal/config"
 )
 
-type routeFns = []func(r *gin.Engine, groupPathMiddlewares map[string][]gin.HandlerFunc, singlePathMiddlewares map[string][]gin.HandlerFunc)
-
-var (
-	// all route functions
-	allRouteFns = make(routeFns, 0)
-	// all middleware functions
-	allMiddlewareFns = []func(c *middlewareConfig){}
-)
-
 // NewRouter create a new router
 func NewRouter() *gin.Engine { //nolint
 	return newRouter()
@@ -107,63 +98,8 @@ func newRouter() *gin.Engine { //nolint
 	r.GET("/ping", handlerfunc.Ping)
 	r.GET("/ready", handlerfunc.CheckHealth)
 
-	c := newMiddlewareConfig()
-
-	// set up all middlewares
-	for _, fn := range allMiddlewareFns {
-		fn(c)
-	}
-
 	// serve embedded Vue.js frontend (SPA) if the dist directory exists
 	registerFrontendStatic(r)
 
 	return r
-}
-
-type middlewareConfig struct {
-	groupPathMiddlewares  map[string][]gin.HandlerFunc // middleware functions corresponding to route group
-	singlePathMiddlewares map[string][]gin.HandlerFunc // middleware functions corresponding to a single route
-}
-
-func newMiddlewareConfig() *middlewareConfig {
-	return &middlewareConfig{
-		groupPathMiddlewares:  make(map[string][]gin.HandlerFunc),
-		singlePathMiddlewares: make(map[string][]gin.HandlerFunc),
-	}
-}
-
-func (c *middlewareConfig) setGroupPath(groupPath string, handlers ...gin.HandlerFunc) { //nolint
-	if groupPath == "" {
-		return
-	}
-	if groupPath[0] != '/' {
-		groupPath = "/" + groupPath
-	}
-
-	handlerFns, ok := c.groupPathMiddlewares[groupPath]
-	if !ok {
-		c.groupPathMiddlewares[groupPath] = handlers
-		return
-	}
-
-	c.groupPathMiddlewares[groupPath] = append(handlerFns, handlers...)
-}
-
-func (c *middlewareConfig) setSinglePath(method string, singlePath string, handlers ...gin.HandlerFunc) { //nolint
-	if method == "" || singlePath == "" {
-		return
-	}
-
-	key := getSinglePathKey(method, singlePath)
-	handlerFns, ok := c.singlePathMiddlewares[key]
-	if !ok {
-		c.singlePathMiddlewares[key] = handlers
-		return
-	}
-
-	c.singlePathMiddlewares[key] = append(handlerFns, handlers...)
-}
-
-func getSinglePathKey(method string, singlePath string) string { //nolint
-	return strings.ToUpper(method) + "->" + singlePath
 }

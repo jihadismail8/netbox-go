@@ -6,28 +6,36 @@ release gates. Source files and test harnesses are linked from
 
 ## Current ledger
 
-As of 2026-08-01, repository V0 and a recovery-scoped real-PostgreSQL replay
-are retained in the
+The [2026-08-03 post-cleanup V0](2026-08-03-post-cleanup-v0.md) used the
+superseded mode-blind v1 source digest and is now historical. The 2026-08-01
+repository V0 and recovery-scoped PostgreSQL replay also remain historical in
+the
 [Core Workflow recovery artifact](2026-08-01-core-workflow-v1-v0.md). V1-V6
-and the external T2/T3/T4 boundaries remain pending, so the first Capability
-Profile remains T1 and pre-publication.
+Profile remains T1 and pre-publication. A fresh committed `source-v2` V0 run is
+required before feature increments resume.
 
-| Evidence                 | Required command or boundary                                  | Current state                                                         |
-| ------------------------ | ------------------------------------------------------------- | --------------------------------------------------------------------- |
-| Repository quality       | Revised `make check` including non-mutating backend coverage  | [Passed on retained tested digest](2026-08-01-core-workflow-v1-v0.md) |
-| Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                               |
-| gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                                 |
-| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | Recovery replay passed; complete V3 bundle pending                    |
-| Standalone deployment    | `make deployment-smoke`                                       | Harness present; current result pending                               |
-| Browser workflow         | `make browser-e2e`                                            | Harness present; current result pending                               |
+| Evidence                 | Required command or boundary                                  | Current state                                      |
+| ------------------------ | ------------------------------------------------------------- | -------------------------------------------------- |
+| Repository quality       | Revised `make check` including non-mutating backend coverage  | source-v2 rerun/retention pending                  |
+| Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending            |
+| gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending              |
+| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | Recovery replay passed; complete V3 bundle pending |
+| Standalone deployment    | `make deployment-smoke`                                       | Harness present; current result pending            |
+| Browser workflow         | `make browser-e2e`                                            | Harness present; current result pending            |
+
+GitHub CI currently runs V0 only. Real PostgreSQL, deployment, differential
+oracle, gRPC promotion, and browser gates remain operator-run until durable,
+connected CI jobs retain their credential-free artifacts.
 
 ## Required artifact shape
 
 A result may be cited from [Project status](../STATUS.md) only when it records:
 
-- the exact source revision or immutable source digest (`make source-digest`
-  covers owned source when repository Git metadata is unavailable; the oracle
-  remains identified separately by its pinned Git SHA);
+- the full reachable tested Git revision and its exact versioned
+  `make source-digest` value; retained source-v2 claims are unavailable when
+  repository Git metadata is unavailable, and the oracle remains identified
+  separately by its pinned Git SHA; all authoritative historical-object reads
+  disable local Git replacement refs and grafts;
 - command, toolchain, and relevant non-secret configuration;
 - start/end time and pass/fail status;
 - the pinned oracle SHA/configuration for differential runs;
@@ -46,7 +54,8 @@ gone.
 1. Retain the successful current artifact.
 2. Link it from this ledger and the affected Capability Profile/report.
 3. Review that the comparator used only committed normalizers.
-4. Promote only the capabilities actually covered by the artifact.
+4. Bind evidence to only the exact rows exercised. Promote a tier-owning
+   resource only after every applicable row it owns closes that tier boundary.
 5. Keep the contract pre-publication until every first-profile exit condition
    is satisfied together.
 
@@ -72,3 +81,19 @@ two-digest protocol in
 
 Anything outside that claim-only boundary invalidates the affected evidence and
 requires a fresh external run.
+
+Retained claims use `source-v2:sha256:<hex>` and
+`netbox-go-evidence-v2`. The tested revision must be a commit reachable from
+the claimed `HEAD`; its complete owned-source manifest is reconstructed from
+the Git tree. File mode (`100644`/`100755`), byte size/hash, and closed relative
+symlinks are part of that manifest. Two-digest claims retain the tested
+manifest and must match it to the Git tree entry for entry.
+
+Result payload SHA-256 commitments cover exact raw non-marker bytes before any
+decoding; the whole artifact must be valid UTF-8 and marker lines must be ASCII.
+The marker's claim digest covers the complete verification/evidence references
+and each exact consumer row's full assessment, applicability, and proof
+assignment/object. These checks prove structural integrity and prevent claim
+rebinding. They cannot prove a command ran or its output/environment was
+truthful, so durable runner provenance and designated human evidence acceptance
+remain mandatory.

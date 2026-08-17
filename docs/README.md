@@ -19,7 +19,8 @@ checked-in NetBox source at commit
 | [Project status](STATUS.md)                                | Dated, conservative implementation and evidence ledger                                                 |
 | [Testing](TESTING.md)                                      | Commands, boundary of each suite, and verification checkpoints                                         |
 | [Evidence](evidence/README.md)                             | Durable artifact policy and current result ledger                                                      |
-| [Roadmap](ROADMAP.md)                                      | Ordered delivery gates after the first profile                                                         |
+| [Roadmap](ROADMAP.md)                                      | Stable goal IDs, dependencies, checklists, gate ordering, and implementation handoff                   |
+| [Implementation handoffs](increments/README.md)            | Bounded, code-aware execution packets for implementation agents                                        |
 | [ADRs](adr/README.md)                                      | Accepted hard-to-reverse decisions                                                                     |
 
 When documents disagree, accepted ADRs govern hard-to-reverse decisions; the
@@ -59,10 +60,12 @@ not generated outputs, when contract content changes.
 ## Reference analysis
 
 - [Business logic](business-logic/README.md) records upstream behavior
-  discovered during analysis. Recheck it against the pinned source and strict
-  oracle before treating it as current behavior.
+  discovered during analysis. It is partial and contains known stale material;
+  recheck every claim against the pinned source and accepted profile before
+  using it as implementation input.
 - [Entity inventory](entities/README.md) and [CRUD paradigm](CRUD_PARADIGM.md)
-  are analysis aids, not implementation status or public scope.
+  are partial analysis aids with known inaccuracies, not implementation status,
+  accepted business rules, or public scope.
 
 ## Historical planning
 
@@ -85,5 +88,6 @@ counts, checklists, and completion language are superseded:
 3. Keep implementation structure separate from executed evidence.
 4. Keep current observations separate from normative target decisions.
 5. Link claims to code, contracts, tests, or retained artifacts.
-6. Never convert artifact counts into progress percentages.
+6. Never collapse artifact counts into one progress percentage. Any ratio must
+   name its accepted denominator and evidence tier.
 7. Do not cite temporary `/tmp` output as durable evidence.

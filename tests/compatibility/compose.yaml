@@ -57,12 +57,13 @@ services:
     volumes:
       # Python is an oracle-job dependency only. The deployed Go/Vue image has
       # no mount or dependency on this checkout.
-      - ../../netbox/netbox:/opt/netbox/netbox:ro
+      - ${NETBOX_ORACLE_SOURCE_DIR:?run.sh must export the pinned tracked-only oracle source}:/opt/netbox/netbox:ro
       - ./oracle_configuration.py:/opt/netbox/netbox/netbox/configuration_example.py:ro
     ports:
       - "127.0.0.1:${NETBOX_ORACLE_HTTP_PORT:-18080}:8080"
     healthcheck:
-      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8080/login/"]
+      test:
+        ["CMD", "curl", "--fail", "--silent", "http://localhost:8080/login/"]
       interval: 3s
       timeout: 5s
       retries: 60

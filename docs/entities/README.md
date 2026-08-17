@@ -1,35 +1,57 @@
-# NetBox Go - Entity Implementation Documentation
+# Derived NetBox entity reference
 
-> **Generated/reference inventory, not implementation status.** These documents are derived from the pinned post-4.4.6 source snapshot; checklist boxes and status labels inside them do not prove that behavior is implemented or compatible. Use the canonical [status](../STATUS.md), [compatibility contract](../COMPATIBILITY.md), and [roadmap](../ROADMAP.md).
+> **Partial generated discovery material, not implementation documentation or
+> status.** The 104 entity pages in this directory were derived from the pinned
+> post-4.4.6 Python source, but they do not cover the 132-resource baseline
+> one-to-one and contain known stale paths and relationship errors.
 
-This directory contains implementation documentation for all NetBox entities, derived from the Python Django source code.
+## Coverage
 
-## Modules
+| Module         | Derived entity pages |
+| -------------- | -------------------: |
+| Circuits       |                    6 |
+| Core           |                    5 |
+| DCIM           |                   45 |
+| Extras         |                    8 |
+| IPAM           |                   18 |
+| Tenancy        |                    6 |
+| Users          |                    3 |
+| Virtualization |                    5 |
+| VPN            |                    5 |
+| Wireless       |                    3 |
+| **Total**      |              **104** |
 
-- [DCIM](./dcim/README.md) - Data Center Infrastructure Management (40+ models)
-- [IPAM](./ipam/README.md) - IP Address Management (18 models)
-- [Tenancy](./tenancy/) - Tenants & Contacts (6 models)
-- [Circuits](./circuits/) - Circuits & Providers (6 models)
-- [Virtualization](./virtualization/) - VMs & Clusters (5 models)
-- [VPN](./vpn/) - Tunnels & L2VPN (5 models)
-- [Wireless](./wireless/) - Wireless LANs & Links (3 models)
-- [Extras](./extras/) - Tags, Custom Fields, Config Contexts (8 models)
-- [Users](./users/) - Users, Groups, Tokens (3 models)
-- [Core](./core/) - Object Changes, Jobs, Data (5 models)
+The baseline inventory separately contains 132 resources and 23 custom
+actions. Some resources have no page, some pages are not public REST resources,
+and actions are not represented consistently. Never derive a completion ratio
+or public scope from this directory.
 
-## Documentation Format
+## What a page may help discover
 
-Each entity doc includes:
-- Metadata (module, table, Python class, source file)
-- Inheritance hierarchy
-- REST URL
-- Implementation status checklist (26 items)
-- Django model fields from Python source (FK, O2O, M2M, regular, inherited)
-- Constraints
-- Dependencies
-- Referenced-by relationships
-- Implementation notes
+- candidate upstream fields and inheritance;
+- candidate relationships and constraints;
+- likely dependencies and reverse references; and
+- source files that deserve direct review.
 
-## Source
+Each item must be rechecked against the exact pinned source and upstream tests.
+Known inaccuracies include contradictory `CASCADE`, `SET_NULL`, and `PROTECT`
+claims, invented relationships, incorrect nullability, and references to
+retired generated Go paths. The embedded implementation checklists are stale;
+zero checked boxes or many unchecked boxes say nothing about current Go/Vue
+status.
 
-All field data is extracted from the Python NetBox source in `/netbox/netbox/` (Django models).
+## Required workflow
+
+1. Start from the authoritative baseline inventory and selected Capability
+   Profile, not from this directory's file list.
+2. Verify field, relationship, deletion, validation, permission, and side-effect
+   behavior against pinned source and oracle.
+3. Record accepted behavior in resource/scenario metadata and the traceability
+   matrix.
+4. Implement through the typed domain/application/adapters architecture.
+5. Use [Status](../STATUS.md) and retained [Evidence](../evidence/README.md) for
+   completion claims.
+
+See [Business-logic discovery](../business-logic/README.md),
+[Compatibility](../COMPATIBILITY.md), and
+[Coding standards](../CODING_STANDARDS.md) for the governing boundaries.

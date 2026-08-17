@@ -1,7 +1,7 @@
 # Core Workflow Implementation Plan
 
 - Status: active execution plan
-- Updated: 2026-08-01
+- Updated: 2026-08-03
 
 This plan implements the first named [Capability Profile](../CONTEXT.md) for the standalone NetBox Go rewrite. It is ordered by dependency and exit evidence rather than time estimates. A listed file or phase is planned work, not implementation evidence; [Project status](STATUS.md) remains authoritative for what exists today.
 
@@ -20,19 +20,25 @@ The phase sections below remain the required design and exit gates. This table
 records present implementation without converting partial work into a passed
 gate; [Project status](STATUS.md) contains the detailed evidence ledger.
 
-| Phase                               | Current state                                                                                                                                                                                                                                         | Remaining before exit                                                                                                          |
-| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| 0 — unsafe-runtime containment      | Legacy business surfaces, public configuration output, demo auth, and undeclared Vue routes are not registered. The canonical router has no dedicated `GET /ping` or `/ping` SPA bypass; frozen runtime-disabled ADR 0004 wiring remains source only. | Keep canonical containment assertions green and retain them through V0.                                                        |
-| 1 — V0 quality baseline             | Deterministic backend/frontend/contract/documentation gates and the owned legacy-test exclusion exist. Backend and frontend coverage are non-mutating parts of `make check`, with an exact reviewed backend package/count baseline.                   | Keep the gate green; retained status is governed by the current Status and evidence ledger.                                    |
-| 2 — profile and canonical contracts | Implemented: 13-resource profile, resource/scenario metadata, OpenAPI, versioned protobufs, generated docs, and authoritative inventories. Contract remains pre-publication and all resources remain T1.                                              | Do not publish or promote without the required evidence.                                                                       |
-| 3 — PostgreSQL/bootstrap            | Implemented: missing-table-only bootstrap, 198-entry startup registry, 13 typed profile tables, typed object-change table, constraints/locking/concurrency tests, and Compose harness.                                                                | Retain current real-PostgreSQL and deployment-smoke artifacts.                                                                 |
-| 4 — shared Site skeleton            | Shared transaction/authorization/change abstractions and typed per-resource application services exist. REST, gRPC, and parity fixtures use the same typed service for each resource; generic workflow packages are retired and prohibited.           | Retain negative dual-adapter/PostgreSQL proof.                                                                                 |
-| 5 — identity/RBAC                   | Go-owned users, groups, memberships, direct/group/global/object grants, sessions, tokens, REST/gRPC identity adapters, bearer auth, and administrator CLI are persisted and tested in focused suites.                                                 | Retain the complete cross-transport security, visibility, token-order, CSRF/CORS/throttling, session, and CLI evidence matrix. |
-| 6 — compatibility/parity harness    | Implemented: pinned SHA/config-refusing oracle, strict comparator, explicit normalizers, durable-state checks, deliberate-divergence self-test, and full-resource gRPC lifecycle/error/rollback/assignment suites.                                    | Run the post-hardening jobs and retain reviewed reports.                                                                       |
-| 7 — DCIM chain                      | Ten DCIM resources have canonical REST/gRPC adapters, typed application/domain contracts, typed per-table persistence, typed Vue adapters, workflow tests, and no remaining first-profile legacy stacks.                                              | Complete strict oracle, real-PostgreSQL, parity, and browser evidence before T2/T3/T4.                                         |
-| 8 — IPAM/assignment                 | VRF, Prefix, IPAddress, assign/unassign, typed persistence/Vue adapters, normalization, concurrency tests, and rollback/parity scenarios are implemented.                                                                                             | Retain complete IPv4/IPv6, hierarchy, uniqueness, assignment, differential REST, gRPC, and browser evidence.                   |
-| 9 — Vue workflows                   | Profile-only routes and typed DTO/form/filter adapters are implemented. A real-Chrome/CDP clean-deployment harness exists.                                                                                                                            | Run and retain the complete declared browser workflows and negative cases before T4.                                           |
-| 10 — retirement/sign-off            | The 13 displaced legacy stacks were physically removed before ADR 0004's intended completion order; this historical deviation is not precedent. Inventories now show only deferred frozen stacks, and the typed application exception is closed.      | Retain V0–V5 green together, link evidence, sign off, and require ADR-compliant ordering for future retirement.                |
+| Phase                               | Present foundation                                                                                                                                                                                                                                    | Missing implementation and evidence before exit                                                                                                          |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0 — unsafe-runtime containment      | Legacy business surfaces, public configuration output, demo auth, and undeclared Vue routes are not registered. The canonical router has no dedicated `GET /ping` or `/ping` SPA bypass; frozen runtime-disabled ADR 0004 wiring remains source only. | Keep containment assertions green and retain them through the exact current V0.                                                                          |
+| 1 — V0 quality baseline             | Deterministic backend/frontend/contract/documentation gates and an owned legacy-test exclusion exist. Coverage is a non-mutating part of `make check`; current post-wrapper-cleanup V0 is retained.                                                   | Keep V0 green on every behavioral, contract, test, security, or toolchain change.                                                                        |
+| 2 — profile and canonical contracts | The 13-resource profile, resource/scenario metadata, OpenAPI, versioned protobufs, generated docs, and inventories exist. The contract remains pre-publication and T1.                                                                                | Add rule-to-test/evidence traceability; do not publish or promote without the required evidence.                                                         |
+| 3 — PostgreSQL/bootstrap            | Missing-table-only bootstrap, a 198-entry persistence registry, 13 typed profile tables, typed object changes, focused constraints/concurrency tests, and a Compose harness exist.                                                                    | Implement dependency-aware HTTP/gRPC readiness, dependency loss/recovery, and missing locking cases; retain PostgreSQL/deployment artifacts.             |
+| 4 — shared Site skeleton            | Shared transaction/authorization/change abstractions and typed per-resource application services exist. REST, gRPC, and parity fixtures use the same service; generic workflow packages are retired and prohibited.                                   | Trace and retain negative dual-adapter/PostgreSQL behavior for every declared rule.                                                                      |
+| 5 — identity/RBAC                   | Users, groups, memberships, direct/group/global/object grants, sessions, tokens, REST/gRPC adapters, bearer auth, and administrator CLI are persisted with focused tests.                                                                             | Implement explicit trusted-origin CORS and complete the cross-transport credential, RBAC, token-order, CSRF/throttling, session, CLI, and secret matrix. |
+| 6 — compatibility/parity harness    | Pinned-SHA/config refusal, a strict comparator, explicit normalizers, state checks, a sensitivity test, and broad resource/parity suites exist.                                                                                                       | Add every missing presence, permission, conflict, invariant, rollback, and side-effect scenario; then retain T2 and corresponding T3 reports.            |
+| 7 — DCIM chain                      | Ten DCIM resources have typed shared services, persistence, REST/gRPC/Vue adapters, focused tests, and no remaining first-profile legacy stacks.                                                                                                      | Complete traceability and missing hierarchy, propagation, placement, uniqueness, template, permission, rollback, PostgreSQL, oracle, and browser cases.  |
+| 8 — IPAM/assignment                 | VRF, Prefix, IPAddress, assign/unassign, typed persistence/Vue adapters, normalization, concurrency tests, and focused rollback/parity cases exist.                                                                                                   | Complete traceability and IPv4/IPv6, hierarchy, presence, uniqueness, invalid-pair, reassignment, rollback, oracle, gRPC, and browser matrices.          |
+| 9 — Vue workflows                   | Profile-only routes, typed DTO/form/filter adapters, and a real-Chrome/CDP clean-deployment harness exist.                                                                                                                                            | Add session refresh, edit/list/filter, late template rollback, explicit null, reassignment rollback, conflict, not-found, and exact-state cases.         |
+| 10 — retirement/sign-off            | The 13 displaced legacy stacks were removed early; ADR 0005 separately removed 118 dormant handler/router wrapper pairs without changing inventory or tier.                                                                                           | Retain V0–V5 together, freeze the protobuf baseline, obtain V6 sign-off, and enforce ADR 0004/CP-13 for later retirement.                                |
+
+This plan closes only the first profile. Project-wide accepted scope is 153
+resource/action entries: 13 are T1 and 140 remain T0. After V6, the playbook
+still contains 19 candidate profiles, 10 module-closeout passes, and seven
+production-readiness programs. See [Project status](STATUS.md) for the exact
+module and evidence ledger.
 
 ## Intended outcome
 
@@ -74,7 +80,59 @@ Passing this profile does not make all of DCIM or IPAM complete.
 
 The committed machine-readable profile described in Phase 2 becomes authoritative for exact defaults, nullability, nested shapes, errors, filters, permissions, and side effects. The tables below fix the intended boundary that the profile must encode.
 
+Stable behavioral rules in this section carry semantic `plan.*` labels. These
+labels are traceability identifiers, not implementation or evidence claims.
+Adding, removing, splitting, or changing an accepted behavioral rule requires
+updating its machine-readable traceability row in the same increment. Resource
+fields, filters, choices, relationships, and operations remain enumerated by
+the linked profile/resource metadata rather than being copied into rule IDs.
+The traceability validator independently pins reviewed row semantics and
+applicability plus each reference set's exact capability ownership, pinned
+source, upstream tests, and dimension-specific test inventory. Retained
+verification must cite a canonical result artifact whose non-attestation
+raw-byte hash is committed by the owned matrix. The complete artifact must be
+valid UTF-8, its marker line must be ASCII, and no decoding or newline
+normalization occurs before hashing. Its versioned strict RFC 8259 JSON
+attestation is bound to the active profile, Compatibility Baseline,
+classification and tier or extension axes, covered proof dimensions, a full
+reachable Git `tested_revision`, versioned tested/current source digests, and
+successful result. An exact claim digest covers the complete verification set
+and evidence references plus every sorted consumer's full row, assessment,
+applicability, and proof assignment/object; those claims cannot be rebound
+behind an unchanged artifact.
+
+The validator reconstructs tested owned source from the reachable commit. A
+same-digest claim must equal that committed tree exactly. When source digests
+differ, the owned verification set also commits the raw-byte SHA-256 of a
+complete tested-source manifest which must match the Git tree entry for entry.
+Versioned `source-v2` entries include file executable mode, byte size, content
+hash, and closed relative symlinks to independently hashed owned content. The
+validator compares full tested/current path and kind sets, derives every mode
+or content change, and requires the attestation's claim manifest to match that
+derived claim-only diff exactly. Added, deleted, type-changed, or symlink-
+retargeted entries require a new evidence run. These checks establish source
+and claim integrity; they do not prove a command ran or its result/environment
+was truthful. Durable runner provenance and human evidence review remain
+mandatory, including semantic review of every mechanically allowed claim-only
+change. A row's primary `capability` is its sole tier owner;
+`affected_capabilities` records dependencies and observable effects without
+granting or capping a secondary capability's tier. A source file, test file,
+evidence ledger, unrelated historical pass, or self-asserted digest is never
+retained boundary evidence by itself.
+
+- **Rule `plan.profile.surface.manifest-exact`.** The supported runtime surface equals the validated profile plus explicitly classified system and identity entries.
+- **Rule `plan.profile.surface.deferred-rejected-absent`.** A deferred route, RPC, field, filter, relationship, or UI capability is rejected or absent rather than silently accepted.
+- **Rule `plan.profile.transport.shared-application-use-case`.** REST and corresponding gRPC operations invoke the same typed application use case.
+- **Rule `plan.profile.transport.central-error-mapping`.** Transport adapters map the shared stable error taxonomy without exposing internal causes.
+- **Rule `plan.profile.oracle.pin-sha-configuration`.** Differential evidence is valid only against the exact pinned source SHA and effective oracle configuration. The oracle source is materialized by replacement- and graft-disabled direct committed-tree/blob reads which bypass repository-local export attributes; live untracked, ignored, modified, Git-metadata-substituted, or attribute-filtered content is never mounted.
+- **Rule `plan.profile.mutation.single-transaction`.** One public mutation owns one application-level transaction including authorization, validation, persistence, derived state, object changes, and required durable event intent.
+- **Rule `plan.profile.authorization.authenticate-default`.** Every Managed Object read and mutation authenticates by default unless the profile explicitly classifies a public system/credential endpoint.
+- **Rule `plan.profile.authorization.permission-parity`.** REST and gRPC resolve the same Principal and view/add/change/delete/object-visibility decisions.
+- **Rule `plan.profile.evidence.no-tier-without-boundary`.** A compatibility tier changes only after its required current external boundary is retained and reviewed.
+
 ### Included resources and paths
+
+**Rule `plan.common.resource.six-single-object-operations`.** Each included resource exposes the declared `list`, `get`, `create`, `replace`, `update`, and `delete` operations as independently traceable operations. The resource remains the tier-owning capability.
 
 | Module | Resource          | Baseline REST path               |
 | ------ | ----------------- | -------------------------------- |
@@ -92,9 +150,21 @@ The committed machine-readable profile described in Phase 2 becomes authoritativ
 | IPAM   | Prefix            | `/api/ipam/prefixes/`            |
 | IPAM   | IPAddress         | `/api/ipam/ip-addresses/`        |
 
-All resources include the applicable baseline response envelope (`id`, URLs, display fields, `created`, and `last_updated`), nested/brief representations needed by included relationships, safe pagination, object visibility, and relevant read-only counts. Those fields are never accepted as writable merely because they are returned.
+**Rule `plan.common.response.standard-envelope`.** All resources include the applicable baseline response envelope (`id`, URLs, display fields, `created`, and `last_updated`).
 
-Collection `POST` accepts exactly one JSON object. Array payloads and every other bulk mutation shape are deferred.
+**Rule `plan.common.response.nested-relationships`.** Responses include the nested/brief representations needed by included relationships.
+
+**Rule `plan.common.response.safe-pagination`.** Collection responses use safe pagination.
+
+**Rule `plan.common.response.object-visibility`.** Read responses apply object visibility.
+
+**Rule `plan.common.response.read-only-counts`.** Responses include only the relevant declared read-only counts.
+
+**Rule `plan.common.response.reject-read-only-writes`.** Response fields are never accepted as writable merely because they are returned.
+
+**Rule `plan.common.collection.single-object-post`.** Collection `POST` accepts exactly one JSON object.
+
+**Rule `plan.common.collection.reject-bulk`.** Array payloads and every other bulk mutation shape are deferred.
 
 The response-only projection is fixed as follows; all other serializer counters are deferred:
 
@@ -114,7 +184,7 @@ The response-only projection is fixed as follows; all other serializer counters 
 
 ### Identity and system contract
 
-Identity is a prerequisite contract, not an implied middleware detail. The profile declares:
+**Rule `plan.identity.interfaces.explicit-contract`.** Identity is a prerequisite contract, not an implied middleware detail. The profile declares:
 
 | Interface                             | Included operations                                                                                                                                                                                                                 |
 | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -123,11 +193,72 @@ Identity is a prerequisite contract, not an implied middleware detail. The profi
 | gRPC `IdentityService`                | `GetCurrentUser`, `ListAPITokens`, `CreateAPIToken`, `RevokeAPIToken`, `ChangePassword` using bearer metadata where authentication is required                                                                                      |
 | Administrator CLI                     | One-time bootstrap, protected `reset-password`, authenticated `create-user`, and authenticated `grant-permission`; passwords stay on protected stdin and no REST/RPC bootstrap, recovery, or anonymous provisioning endpoint exists |
 
-Browser session creation/revocation and CSRF are transport-specific credential mechanics, so they do not require a cookie-shaped gRPC equivalent. Network-exposed user/group/permission administration is deferred to a later identity profile. The protected local CLI may create a non-superuser and grant one global model permission by username for development, deployment, and recovery workflows; group administration and object-scoped CLI grants remain deferred. Shared RBAC enforcement is not deferred.
+The identity contract above decomposes into these independently traceable
+security assertions:
 
-The authenticated `/api/auth/tokens/` management surface is an intentional security extension paired with `IdentityService`: a server-generated secret is returned once at creation and never by list/get. The pinned baseline's `/api/users/tokens/` serializer hides a generated key under the default `ALLOW_TOKEN_RETRIEVAL=false`, while `/api/users/tokens/provision/` accepts a username and password anonymously. Both baseline management routes are deferred and the anonymous provision action is explicitly rejected by this profile. This divergence is recorded in the manifest and is never normalized into a T2 compatibility pass; only use of a resulting token as a REST credential is claimed baseline-compatible. For a recognized token key, the baseline persists `last_used` at most once per minute before it rejects expiry, inactive-user, or allowed-IP conditions; an unknown key produces no write. The profile pins maintenance mode off and preserves this ordering through the shared identity path rather than transport middleware.
+- **Rule `plan.identity.session.csrf-bootstrap-cookie-body`.** CSRF bootstrap returns the documented readable SameSite cookie and matching response-body value.
+- **Rule `plan.identity.session.current-principal`.** The authenticated session endpoint returns the current Principal without exposing reusable credential material.
+- **Rule `plan.identity.session.login-rotation`.** Login rotates any presented session identifier and does not accept caller-chosen session material.
+- **Rule `plan.identity.session.hardened-cookie-flags`.** Browser session cookies use the documented hardened flags.
+- **Rule `plan.identity.session.mutation-requires-csrf`.** Cookie-authenticated mutations require the matching CSRF cookie/header pair.
+- **Rule `plan.identity.session.logout-revokes`.** Logout revokes the current browser session.
+- **Rule `plan.identity.session.expiry-fails-closed`.** Expired browser sessions fail closed at the authentication boundary.
+- **Rule `plan.identity.token.owner-only-management`.** A principal may list and revoke only its own API tokens.
+- **Rule `plan.identity.token.rest-token-scheme`.** REST automation accepts only the documented `Authorization: Token` credential path.
+- **Rule `plan.identity.token.grpc-bearer`.** gRPC accepts token credentials only through bearer metadata.
+- **Rule `plan.identity.token.fail-closed-conditions`.** Unknown, expired, revoked, write-disabled, disallowed-IP, and inactive-user token conditions fail closed as applicable.
+- **Rule `plan.identity.token.create-throttled`.** Token creation uses the declared bounded throttle without logging submitted credential material.
+- **Rule `plan.identity.token.revoke-immediate`.** A revoked token is rejected on its next use.
+- **Rule `plan.identity.password.change-invalidates-sessions`.** Password change verifies the current credential and invalidates sessions according to the declared policy.
+- **Rule `plan.identity.rbac.direct-group-global-object`.** Effective authorization combines direct, group, global-model, and object-scoped grants.
+- **Rule `plan.identity.rbac.visibility-before-pagination`.** Object visibility is applied before count, ordering, and pagination.
+- **Rule `plan.identity.rbac.authorization-before-write`.** Mutation authorization completes before persistence begins.
+- **Rule `plan.identity.admin.bootstrap-empty-store-once`.** Administrator bootstrap succeeds only against an empty identity store and refuses later calls.
+- **Rule `plan.identity.admin.reset-local-recovery-only`.** Password reset is a protected local administrator recovery boundary, not a network endpoint.
+- **Rule `plan.identity.admin.create-user-active-superuser`.** Local non-superuser creation requires an existing active superuser.
+- **Rule `plan.identity.admin.grant-global-model-permission`.** Local permission administration grants only the declared global model permission by username.
+- **Rule `plan.identity.admin.password-protected-stdin`.** Every administrator password is read from protected stdin and stays out of argv, output, logs, and evidence.
+- **Rule `plan.identity.admin.no-network-provisioning`.** No anonymous HTTP or gRPC bootstrap, reset, user-creation, permission-grant, or token-provisioning surface exists.
+
+**Rule `plan.identity.browser.session-csrf`.** Browser session creation/revocation and CSRF are transport-specific credential mechanics.
+
+**Rule `plan.identity.grpc.no-cookie-equivalent`.** Those browser mechanics do not require a cookie-shaped gRPC equivalent.
+
+**Rule `plan.identity.admin.defer-network-management`.** Network-exposed user/group/permission administration is deferred to a later identity profile.
+
+**Rule `plan.identity.cli.protected-administration`.** The protected local CLI may create a non-superuser and grant one global model permission by username for development, deployment, and recovery workflows.
+
+**Rule `plan.identity.cli.defer-group-object-grants`.** Group administration and object-scoped CLI grants remain deferred.
+
+**Rule `plan.identity.authorization.shared-rbac`.** Shared RBAC enforcement is not deferred.
+
+**Rule `plan.identity.token.authenticated-extension`.** The authenticated `/api/auth/tokens/` management surface is an intentional security extension paired with `IdentityService`.
+
+**Rule `plan.identity.token.one-time-secret`.** A server-generated secret is returned once at creation and never by list/get.
+
+**Rule `plan.identity.token.defer-baseline-crud`.** The pinned baseline's `/api/users/tokens/` serializer hides a generated key under the default `ALLOW_TOKEN_RETRIEVAL=false`; baseline token CRUD remains deferred.
+
+**Rule `plan.identity.token.reject-anonymous-provision`.** The baseline `/api/users/tokens/provision/` action accepts a username and password anonymously, and this profile explicitly rejects that action.
+
+**Rule `plan.identity.token.extension-not-t2`.** The divergence is recorded in the manifest and is never normalized into a T2 compatibility pass.
+
+**Rule `plan.identity.token.credential-use-baseline`.** Only use of a resulting token as a REST credential is claimed baseline-compatible.
+
+**Rule `plan.identity.token.last-used-rate`.** For a recognized token key, the baseline persists `last_used` at most once per minute.
+
+**Rule `plan.identity.token.last-used-before-restrictions`.** The recognized-key update occurs before expiry, inactive-user, or allowed-IP rejection.
+
+**Rule `plan.identity.token.unknown-key-no-write`.** An unknown key produces no write.
+
+**Rule `plan.identity.token.maintenance-off`.** The profile pins maintenance mode off.
+
+**Rule `plan.identity.token.shared-authentication-path`.** The shared identity path, rather than transport middleware, preserves token ordering semantics.
 
 ### Writable field boundary
+
+**Rule `plan.common.fields.presence-states`.** When the contract distinguishes them, commands preserve absent, explicit null, zero, empty, and concrete values without collapsing one state into another.
+
+**Rule `plan.common.fields.operation-specific-nullability`.** Create, PUT, and PATCH enforce the pinned field-specific required, blank, and null semantics for that operation rather than inferring writability or nullability from a response schema.
 
 | Resource          | Included writable fields                                                                                                                                                                     | Explicitly deferred fields/relationships                                                                                                     |
 | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -145,11 +276,21 @@ The authenticated `/api/auth/tokens/` management surface is an intentional secur
 | Prefix            | `prefix`, `vrf`, `status`, `is_pool`, `mark_utilized`, `description`, `comments`                                                                                                             | scope, tenant, VLAN, role, automatic allocation, tags, custom fields                                                                         |
 | IPAddress         | `address`, `vrf`, `status`, `role`, `dns_name`, `description`, `comments`, Interface assignment fields                                                                                       | tenant, NAT, primary/OOB designation, VM/FHRP assignment, tags, custom fields                                                                |
 
-An omitted field is deferred, not silently ignored. REST rejects or reports it according to the committed profile rather than writing arbitrary columns. Promoting a deferred field requires its domain rules, both adapters, PostgreSQL behavior, and tests in one reviewed increment.
+**Rule `plan.common.fields.reject-undeclared`.** An omitted field is deferred, not silently ignored. REST rejects or reports it according to the committed profile rather than writing arbitrary columns.
+
+**Rule `plan.common.fields.promote-vertically`.** Promoting a deferred field requires its domain rules, both adapters, PostgreSQL behavior, and tests in one reviewed increment.
 
 ### Required list behavior
 
-Every collection supports verified baseline behavior for `id`, search (`q` where the baseline provides it), `limit`, `offset`, and an explicit ordering allowlist. The first profile also includes these filter groups:
+**Rule `plan.common.list.id-filter`.** Every collection supports verified baseline behavior for `id`.
+
+**Rule `plan.common.list.search`.** Every collection supports search (`q`) where the baseline provides it.
+
+**Rule `plan.common.list.bounded-pagination`.** Every collection supports bounded `limit` and `offset` behavior.
+
+**Rule `plan.common.list.ordering-allowlist`.** Every collection uses an explicit ordering allowlist.
+
+The first profile also includes these filter groups:
 
 | Resource          | Required filters                                                                                                |
 | ----------------- | --------------------------------------------------------------------------------------------------------------- |
@@ -167,67 +308,154 @@ Every collection supports verified baseline behavior for `id`, search (`q` where
 | Prefix            | VRF ID/route distinguisher, prefix, family, status, `within`, `within_include`, `contains`                      |
 | IPAddress         | VRF ID/route distinguisher, address, family, parent prefix, status, assigned state, Interface/device assignment |
 
-Filter spellings and edge semantics are copied from the pinned oracle into the profile and differential scenarios. gRPC list requests use typed fields, never generic table columns/operators.
+**Rule `plan.common.list.oracle-filter-semantics`.** Filter spellings and edge semantics are copied from the pinned oracle into the profile and differential scenarios.
+
+**Rule `plan.common.list.grpc-typed-fields`.** gRPC list requests use typed fields, never generic table columns/operators.
 
 ### Assignment semantics
 
 REST preserves the baseline contract: assignment occurs through `PATCH /api/ipam/ip-addresses/{id}/` with `assigned_object_type` and `assigned_object_id`. The adapter applies field presence to the current assignment and validates the resulting pair:
 
-- Both explicitly `null`: unassign.
-- Both omitted: preserve the current assignment.
-- Assigning an unassigned IPAddress requires a complete non-null type/ID pair.
-- For an already assigned IPAddress, an ID-only patch retains the existing content type and may reassign it to another Interface; a type-only patch retains the current ID if the resulting Interface target is valid.
-- One null and one non-null value, a missing target, or a non-Interface type is a validation error.
-- Assignment plus other IPAddress changes is one atomic application update, not two commits.
+- **Rule `plan.ipam.assignment.both-null-unassign`.** Both explicitly `null`: unassign.
+- **Rule `plan.ipam.assignment.both-omitted-preserve`.** Both omitted: preserve the current assignment.
+- **Rule `plan.ipam.assignment.unassigned-requires-pair`.** Assigning an unassigned IPAddress requires a complete non-null type/ID pair.
+- **Rule `plan.ipam.assignment.partial-reassignment`.** For an already assigned IPAddress, an ID-only patch retains the existing content type and may reassign it to another Interface; a type-only patch retains the current ID if the resulting Interface target is valid.
+- **Rule `plan.ipam.assignment.invalid-pairs-reject`.** One null and one non-null value, a missing target, or a non-Interface type is a validation error.
+- **Rule `plan.ipam.assignment.atomic-update`.** Assignment plus other IPAddress changes is one atomic application update, not two commits.
 
-gRPC exposes `AssignIPAddress` and `UnassignIPAddress`. `UpdateIPAddress` may express the same transition with presence-aware assignment fields, but all forms invoke the same application operation. The first profile permits only `dcim.interface` targets.
+**Rule `plan.ipam.assignment.grpc-actions`.** gRPC exposes `AssignIPAddress` and `UnassignIPAddress`.
+
+**Rule `plan.ipam.assignment.grpc-update-presence`.** `UpdateIPAddress` may express the same transition with presence-aware assignment fields.
+
+**Rule `plan.ipam.assignment.shared-transport-use-case`.** REST PATCH and all gRPC assignment forms invoke the same application operation.
+
+**Rule `plan.ipam.assignment.interface-only-target`.** The first profile permits only `dcim.interface` targets.
 
 ### InterfaceTemplate semantics
 
 `CreateDevice` owns instantiation; there is no public “instantiate interfaces” action.
 
-1. Authorize and load the DeviceType and related objects.
-2. Validate Device state and rack placement.
-3. Snapshot the DeviceType's InterfaceTemplates.
-4. Persist the Device.
-5. Create one Interface per template, copying `name`, `label`, `type`, `enabled`, and `mgmt_only`. The baseline does not copy the template description to the Interface.
-6. Record required Device and Interface changes.
-7. Commit everything, or roll everything back.
+1. **Rule `plan.dcim.device-create.authorize-load`.** Authorize and load the DeviceType and related objects.
+2. **Rule `plan.dcim.device-create.validate-placement`.** Validate Device state and rack placement.
+3. **Rule `plan.dcim.device-create.snapshot-templates`.** Snapshot the DeviceType's InterfaceTemplates.
+4. **Rule `plan.dcim.device-create.persist-device`.** Persist the Device.
+5. **Rule `plan.dcim.device-create.copy-template-fields`.** Create one Interface per template, copying `name`, `label`, `type`, `enabled`, and `mgmt_only`.
+6. **Rule `plan.dcim.device-create.record-changes`.** Record required Device and Interface changes.
+7. **Rule `plan.dcim.device-create.atomic-commit`.** Commit everything, or roll everything back.
 
-Template changes are not retroactive. Existing Interfaces remain independently editable. Other template families remain deferred even though the full baseline instantiates them.
+**Rule `plan.dcim.device-create.omit-template-description`.** The baseline does not copy the template description to the Interface.
 
-Because template bridges are deferred, the Device-create compatibility claim is limited to DeviceTypes whose InterfaceTemplates have no bridge. Bridge-template creation and post-instantiation bridge resolution are named deferred scenarios, not silently ignored behavior.
+**Rule `plan.dcim.interface-template.non-retroactive`.** Template changes are not retroactive.
+
+**Rule `plan.dcim.interface.independently-editable`.** Existing Interfaces remain independently editable.
+
+**Rule `plan.dcim.device-create.defer-other-template-families`.** Other template families remain deferred even though the full baseline instantiates them.
+
+**Rule `plan.dcim.interface-template.bridge-deferred`.** Bridge-template creation and post-instantiation bridge resolution are named deferred scenarios, not silently ignored behavior.
+
+**Rule `plan.dcim.device-create.bridge-free-scope`.** The Device-create compatibility claim is limited to DeviceTypes whose InterfaceTemplates have no bridge.
 
 ### Deferred operations
 
-- Bulk create, edit, rename, import, and delete.
-- Rack elevation JSON and SVG actions and the current Vue elevation tab.
-- Prefix `available-prefixes` and `available-ips`, next-available address selection, and automatic allocation RPCs.
-- Baseline `/api/users/tokens/` CRUD and anonymous `/api/users/tokens/provision/`; the secure authenticated identity extension above is used instead.
-- Cable tracing/connections and physical cabling.
-- Arbitrary lookup operators, generic SQL-shaped filters, and unbounded result sets.
-- GraphQL, Python scripts/reports, and in-process Python plugins.
+- **Rule `plan.deferred.bulk-mutations`.** Bulk create, edit, rename, import, and delete.
+- **Rule `plan.deferred.rack-elevation`.** Rack elevation JSON and SVG actions and the upstream rack elevation UI.
+- **Rule `plan.deferred.automatic-ipam-allocation`.** Prefix `available-prefixes` and `available-ips`, next-available address selection, and automatic allocation RPCs.
+- **Rule `plan.deferred.baseline-token-management`.** Baseline `/api/users/tokens/` CRUD and anonymous `/api/users/tokens/provision/`; the secure authenticated identity extension above is used instead.
+- **Rule `plan.deferred.physical-cabling`.** Cable tracing/connections and physical cabling.
+- **Rule `plan.deferred.generic-query-operators`.** Arbitrary lookup operators and generic SQL-shaped filters.
+- **Rule `plan.deferred.unbounded-results`.** Unbounded result sets.
+- **Rule `plan.deferred.graphql`.** GraphQL.
+- **Rule `plan.deferred.python-runtime`.** Python scripts/reports and in-process Python plugins.
 
-Manual rack position, prefix, and IP address input remains included, with full validation and conflict handling.
+**Rule `plan.dcim.rack.manual-position`.** Manual rack position input remains included, with full validation and conflict handling.
+
+**Rule `plan.ipam.prefix.manual-input`.** Manual prefix input remains included, with full validation and conflict handling.
+
+**Rule `plan.ipam.ip-address.manual-input`.** Manual IP address input remains included, with full validation and conflict handling.
 
 ### Baseline invariants that must not be simplified
 
 These rules are easy to “clean up” into incompatible behavior and therefore receive explicit scenarios before implementation:
 
-- Prefix containment is derived from network values within a VRF. IPAddress has no `prefix_id`, may exist without a containing Prefix, and preserves its host address plus mask. Prefix input with host bits is rejected with the canonical network suggestion, and accepted Prefixes are stored canonically.
-- Interface VRF is deferred, and IPAddress assignment must not invent a VRF-equality rule. When Interface VRF is promoted later, it remains independent from IPAddress VRF as in the baseline.
-- The oracle profile fixes `ENFORCE_GLOBAL_UNIQUE=true`, matching the pinned baseline default. VRF `enforce_unique` also affects Prefix/IP uniqueness; IP uniqueness compares hosts rather than masks and preserves baseline role exceptions.
-- Prefix and IPAddress reject `/0`. IP assignment rejects ordinary network/broadcast addresses while preserving the baseline IPv4 `/31`/`/32` and IPv6 `/127`/`/128` exceptions. SLAAC is IPv6-only, and DNS names are normalized to lowercase.
-- Site, Manufacturer, and RackRole name/slug constraints are global. RackType slug is global and `(manufacturer, model)` is unique; DeviceType model/slug is scoped to Manufacturer. A non-null VRF route distinguisher is globally unique, while VRF name is not.
-- Rack name and facility-ID uniqueness is scoped to Location, not Site. Because Location is deferred and null in this profile, duplicate names or facility IDs in one Site must not be rejected unless the pinned baseline rejects the exact scenario.
-- Assigning or directly updating a Rack runs Rack validation and protects mounted Devices. Source inspection indicates that RackType updates propagate attributes by saving each Rack without the same full validation; preserve that behavior provisionally and lock the result with a differential oracle scenario rather than silently strengthening REST compatibility.
-- DeviceRole hierarchy rejects self/descendant cycles, enforces name/slug uniqueness among siblings and separately at the top level, and cascades parent deletion through descendants unless a Device `PROTECT` reference blocks the operation.
-- DeviceType `u_height` is zero or a multiple of 0.5. Increasing it must fit every positioned instance, and changing it to 0 is rejected while any instance remains positioned.
-- Prefix `is_pool` and `mark_utilized` retain their baseline defaults, validation, serialization, and effects on any included usable-range/utilization projection. Their presence does not promote automatic allocation actions.
-- Device name is nullable. In this tenantless profile, a non-null name is case-insensitively unique per Site. Rack must belong to Device Site; face and position require a Rack; position requires a face, is between 1.0 and 100.5 in 0.5 increments, and must fit rack bounds/occupancy; a 0U DeviceType cannot be positioned.
-- Device inherits DeviceType airflow when blank. Device creation plus all instantiated Interfaces and required changes is atomic, but later template edits do not modify existing Interfaces.
-- Interface name is unique per Device and an Interface cannot move to another Device. InterfaceTemplate name is unique per DeviceType and a template cannot move to another DeviceType.
-- Rack deletion is protected while any Device references it. Referenced Site/RackType/RackRole/Manufacturer/DeviceType/DeviceRole deletion is protected according to the baseline. VRF deletion is protected by included Prefix/IPAddress references; a future Interface VRF reference uses `SET_NULL`. Device deletion cascades its Interfaces, DeviceType deletion cascades its templates, and DeviceRole parent deletion cascades descendants subject to Device protection. The baseline Interface `GenericRelation` also cascades assigned IPAddresses when an Interface is deleted; preserve this surprising behavior and prove the resulting IP/change effects with an oracle scenario.
+- **Rule `plan.ipam.prefix.network-derived-containment`.** Prefix containment is derived from network values within a VRF.
+- **Rule `plan.ipam.ip-address.no-prefix-id`.** IPAddress has no `prefix_id`.
+- **Rule `plan.ipam.ip-address.no-containing-prefix-required`.** IPAddress may exist without a containing Prefix.
+- **Rule `plan.ipam.ip-address.preserve-host-mask`.** IPAddress preserves its host address plus mask.
+- **Rule `plan.ipam.prefix.reject-host-bits-with-suggestion`.** Prefix input with host bits is rejected with the canonical network suggestion.
+- **Rule `plan.ipam.prefix.store-canonical-network`.** Accepted Prefixes are stored canonically.
+- **Rule `plan.ipam.interface-vrf.deferred`.** Interface VRF is deferred.
+- **Rule `plan.ipam.assignment.no-interface-vrf-equality`.** IPAddress assignment must not invent a VRF-equality rule; when Interface VRF is promoted later, it remains independent from IPAddress VRF as in the baseline.
+- **Rule `plan.ipam.uniqueness.global-default`.** The oracle profile fixes `ENFORCE_GLOBAL_UNIQUE=true`, matching the pinned baseline default.
+- **Rule `plan.ipam.uniqueness.vrf-enforce-unique`.** VRF `enforce_unique` affects Prefix and IPAddress uniqueness.
+- **Rule `plan.ipam.ip-address.uniqueness-host-not-mask`.** IPAddress uniqueness compares hosts rather than masks.
+- **Rule `plan.ipam.ip-address.duplicate-role-exceptions`.** IPAddress uniqueness preserves the baseline role exceptions.
+- **Rule `plan.ipam.prefix.reject-slash-zero`.** Prefix rejects `/0`.
+- **Rule `plan.ipam.ip-address.reject-slash-zero`.** IPAddress rejects `/0`.
+- **Rule `plan.ipam.assignment.reject-network-broadcast`.** IP assignment rejects ordinary network and broadcast addresses.
+- **Rule `plan.ipam.assignment.edge-prefix-exceptions`.** IP assignment preserves the baseline IPv4 `/31`/`/32` and IPv6 `/127`/`/128` exceptions.
+- **Rule `plan.ipam.ip-address.slaac-ipv6-only`.** SLAAC is IPv6-only.
+- **Rule `plan.ipam.ip-address.dns-lowercase`.** DNS names are normalized to lowercase.
+- **Rule `plan.dcim.site.name-global`.** Site name is globally unique.
+- **Rule `plan.dcim.site.slug-global`.** Site slug is globally unique.
+- **Rule `plan.dcim.manufacturer.name-global`.** Manufacturer name is globally unique.
+- **Rule `plan.dcim.manufacturer.slug-global`.** Manufacturer slug is globally unique.
+- **Rule `plan.dcim.rack-role.name-global`.** RackRole name is globally unique.
+- **Rule `plan.dcim.rack-role.slug-global`.** RackRole slug is globally unique.
+- **Rule `plan.dcim.rack-type.slug-global`.** RackType slug is globally unique.
+- **Rule `plan.dcim.rack-type.manufacturer-model-unique`.** RackType `(manufacturer, model)` is unique.
+- **Rule `plan.dcim.device-type.manufacturer-model-unique`.** DeviceType model is unique within its Manufacturer.
+- **Rule `plan.dcim.device-type.manufacturer-slug-unique`.** DeviceType slug is unique within its Manufacturer.
+- **Rule `plan.ipam.vrf.rd-global-unique`.** A non-null VRF route distinguisher is globally unique.
+- **Rule `plan.ipam.vrf.name-repeatable`.** VRF name is not globally unique.
+- **Rule `plan.dcim.rack.name-location-scoped`.** Rack name uniqueness is scoped to Location, not Site.
+- **Rule `plan.dcim.rack.facility-location-scoped`.** Rack facility-ID uniqueness is scoped to Location, not Site.
+- **Rule `plan.dcim.rack.null-location-duplicates`.** Because Location is deferred and null in this profile, duplicate Rack names or facility IDs in one Site must not be rejected unless the pinned baseline rejects the exact scenario.
+- **Rule `plan.dcim.rack.direct-save-full-validation`.** Assigning or directly updating a Rack runs Rack validation.
+- **Rule `plan.dcim.rack.direct-save-mounted-device-protection`.** Direct Rack changes protect mounted Devices.
+- **Rule `plan.dcim.rack-type.propagates-rack-physical-fields`.** RackType updates propagate owned physical attributes by saving each Rack.
+- **Rule `plan.dcim.rack-type.propagation-skips-rack-full-validation`.** RackType propagation does not run the same full Rack validation; preserve that behavior provisionally and lock it with a differential oracle scenario rather than silently strengthening REST compatibility.
+- **Rule `plan.dcim.device-role.reject-self-descendant-cycle`.** DeviceRole hierarchy rejects self and descendant cycles.
+- **Rule `plan.dcim.device-role.name-sibling-root-unique`.** DeviceRole name is unique among siblings and separately at the top level.
+- **Rule `plan.dcim.device-role.slug-sibling-root-unique`.** DeviceRole slug is unique among siblings and separately at the top level.
+- **Rule `plan.dcim.device-role.delete-descendant-cascade`.** DeviceRole parent deletion cascades through descendants.
+- **Rule `plan.dcim.device-role.delete-device-protection`.** A Device `PROTECT` reference blocks DeviceRole deletion.
+- **Rule `plan.dcim.device-type.height-half-unit`.** DeviceType `u_height` is zero or a multiple of 0.5.
+- **Rule `plan.dcim.device-type.height-increase-fit`.** Increasing DeviceType height must fit every positioned instance.
+- **Rule `plan.dcim.device-type.height-zero-position-protection`.** Changing DeviceType height to zero is rejected while any instance remains positioned.
+- **Rule `plan.ipam.prefix.is-pool-contract`.** Prefix `is_pool` retains its baseline default, validation, serialization, and effect on included projections.
+- **Rule `plan.ipam.prefix.mark-utilized-contract`.** Prefix `mark_utilized` retains its baseline default, validation, serialization, and effect on included projections.
+- **Rule `plan.ipam.prefix.flags-no-auto-allocation`.** Utilization flags do not promote automatic allocation actions.
+- **Rule `plan.dcim.device.name-nullable`.** Device name is nullable.
+- **Rule `plan.dcim.device.name-case-insensitive-site-unique`.** In this tenantless profile, a non-null Device name is case-insensitively unique per Site.
+- **Rule `plan.dcim.device.rack-site-consistency`.** Rack must belong to Device Site.
+- **Rule `plan.dcim.device.face-requires-rack`.** Device face requires a Rack.
+- **Rule `plan.dcim.device.position-requires-rack`.** Device position requires a Rack.
+- **Rule `plan.dcim.device.position-requires-face`.** Device position requires a face.
+- **Rule `plan.dcim.device.position-range`.** Device position is between 1.0 and 100.5.
+- **Rule `plan.dcim.device.position-half-unit`.** Device position uses 0.5-unit increments.
+- **Rule `plan.dcim.device.position-rack-bounds`.** Device placement must fit Rack bounds.
+- **Rule `plan.dcim.device.position-occupancy`.** Device placement must not overlap occupied Rack space.
+- **Rule `plan.dcim.device.zero-u-unpositioned`.** A zero-U DeviceType cannot be positioned.
+- **Rule `plan.dcim.device.airflow-create-inheritance`.** Device inherits DeviceType airflow when blank at creation.
+- **Rule `plan.dcim.device-create.interfaces-and-changes-atomic`.** Device creation, instantiated Interfaces, and required changes are atomic.
+- **Rule `plan.dcim.interface-template.edits-do-not-modify-interfaces`.** Later InterfaceTemplate edits do not modify existing Interfaces.
+- **Rule `plan.dcim.interface.name-device-unique`.** Interface name is unique per Device.
+- **Rule `plan.dcim.interface.owner-immutable`.** An Interface cannot move to another Device.
+- **Rule `plan.dcim.interface-template.name-device-type-unique`.** InterfaceTemplate name is unique per DeviceType.
+- **Rule `plan.dcim.interface-template.owner-immutable`.** An InterfaceTemplate cannot move to another DeviceType.
+- **Rule `plan.dcim.delete.rack-protected`.** Rack deletion is protected while any Device references it.
+- **Rule `plan.dcim.delete.site-protected`.** Referenced Site deletion is protected.
+- **Rule `plan.dcim.delete.rack-type-protected`.** Referenced RackType deletion is protected.
+- **Rule `plan.dcim.delete.rack-role-protected`.** Referenced RackRole deletion is protected.
+- **Rule `plan.dcim.delete.manufacturer-protected`.** Referenced Manufacturer deletion is protected.
+- **Rule `plan.dcim.delete.device-type-protected`.** Referenced DeviceType deletion is protected.
+- **Rule `plan.dcim.delete.device-role-protected`.** Referenced DeviceRole deletion is protected.
+- **Rule `plan.ipam.delete.vrf-protected`.** VRF deletion is protected by included Prefix and IPAddress references.
+- **Rule `plan.ipam.interface-vrf.future-set-null`.** A future Interface VRF reference uses `SET_NULL`.
+- **Rule `plan.dcim.delete.device-cascades-interfaces`.** Device deletion cascades its Interfaces.
+- **Rule `plan.dcim.delete.device-type-cascades-templates`.** DeviceType deletion cascades its templates.
+- **Rule `plan.dcim.delete.interface-cascades-ip-addresses`.** The baseline Interface `GenericRelation` cascades assigned IPAddresses when an Interface is deleted.
+- **Rule `plan.dcim.delete.interface-cascade-change-effects`.** Preserve and prove the resulting IPAddress and object-change effects with an oracle scenario.
 
 ## Target source layout
 
@@ -292,7 +520,15 @@ Primary changes:
 
 Only health, readiness, login, and CSRF endpoints may be public where their protocol requires it. Administrator bootstrap is CLI-only and no provisioning endpoint is public. It is acceptable for unfinished functionality to become unavailable; it is not acceptable for it to remain anonymously mutable.
 
-The root composition/security files named above are hand-owned transitional wiring under ADR 0004; per-resource generated handlers, routers, registries, and services remain immutable. If ownership discovery identifies a named file as reproducible output, make the containment change in its owned source/template and regenerate instead of patching the output.
+The root composition/security files named above are hand-owned transitional
+wiring under ADR 0004. Per-resource generated registries, services, and other
+retained outputs remain immutable. ADR 0005 later authorized removal, not
+editing, of exactly 118 untouched, runtime-dormant Sponge handler delegates and
+their 118 matching top-level router wrappers. It retained `auth.go`, canonical
+adapter handlers, hand-owned router code, the separate direct-GORM DRF
+registry, and every lower generated stack. If ownership discovery identifies a
+retained named file as reproducible output, make the containment change in its
+owned source/template and regenerate instead of patching the output.
 
 Exit evidence:
 
@@ -371,7 +607,25 @@ netbox-backend/{buf.yaml,buf.gen.yaml,buf.lock}
 scripts/{validate_contract_inventory,validate_capability_profile,generate_contract_docs}.mjs
 ```
 
-The versioned inventory classifies every baseline route/custom action and every current REST, gRPC, and Vue entry as `in_profile`, `extension`, `deferred`, or `out_of_scope`, with an owner. Baseline capabilities carry a current T0–T4 tier. Extensions use `tier: not_applicable` plus separate `contract`, `parity`, and `security` verification statuses, so an extension can never appear to have earned T2 against the oracle. First-profile resources then carry the detailed methods, fields, filters, permissions, mappings, scenarios, and evidence links. After first-profile retirement, this reconciles 102 frozen REST resources, 176 frozen generated gRPC services, 13 canonical REST/Vue resources, three canonical gRPC services, and eight identity REST extension operations without pretending that disabled legacy artifacts are implemented capabilities.
+The versioned inventory classifies every baseline route/custom action and every
+current REST, gRPC, and Vue entry as `in_profile`, `extension`, `deferred`, or
+`out_of_scope`, with an owner. `baseline-rest.yaml` is the immutable catalogue
+view and therefore records entries at T0; current promoted tiers come from the
+Capability Profile, current-interface inventories, Status, and retained
+evidence. Extensions use `tier: not_applicable` plus separate `contract`,
+`parity`, and `security` verification statuses, so an extension can never
+appear to have earned T2 against the oracle. First-profile resources carry the
+detailed methods, fields, filters, permissions, mappings, scenarios, and
+evidence links. This reconciles 102 frozen REST resources, 176 frozen generated
+gRPC services, 13 canonical REST/Vue resources, three canonical gRPC services,
+and eight identity REST extension operations without pretending that disabled
+legacy artifacts are implemented capabilities.
+
+Those counts are unaffected by ADR 0005's later source-hygiene deletion of
+118 dormant Sponge handler/route wrapper pairs. The 102 frozen REST entries
+belong to the separate retained DRF registry, and the 176 generated gRPC
+services remain frozen with their model, DAO, cache, service, and protobuf
+source. Wrapper-file removal is not inventory or compatibility evidence.
 
 Use three capability services: `IdentityService`, `DCIMService`, and `IPAMService`. Do not generate a service per table. Use `int64` IDs, typed pagination, protobuf timestamps, enum zero values named `*_UNSPECIFIED`, field presence plus `FieldMask`, and reserved names/numbers on removal. Omit `google.api.http` annotations because REST is a separate adapter. The `netbox.types.v1` package contains pagination messages and protobuf wire details mapped from canonical application errors; it must not define a second error taxonomy.
 
@@ -709,9 +963,21 @@ internal/{model,dao,cache,service,handler,routers}/
 ```
 
 The obsolete DRF and legacy API-document generators were retired with those
-outputs. The bootstrap and generated inventories now contain only the 102 REST
-and 176 gRPC deferred legacy entries plus the canonical surfaces. Apply the
-same owned-source rule to later profiles; do not hand-edit generated output.
+outputs. The interface inventories separately retain 102 deferred REST
+configurations and 176 deferred gRPC services alongside canonical surfaces.
+The startup persistence registry is a different 198-table inventory: 176
+legacy rows, 8 identity rows, 13 profile rows, and 1 object-change row. Apply
+the same owned-source rule to later profiles; do not hand-edit generated
+output.
+
+Separately, ADR 0005 removed exactly 118 untouched, runtime-dormant Sponge
+per-resource handler delegates and their 118 matching top-level route wrappers
+as source hygiene. That bounded cleanup did not remove or alter the separate
+102 direct-GORM DRF configurations, the 176 generated gRPC services, or their
+frozen models, DAOs, caches, services, and protobufs, which remain available
+for controlled reuse or reference but stay runtime-disabled and unpublished.
+It earns no tier or capability-completion claim. Every future stack retirement
+still requires capability completion under ADR 0004 and CP-13.
 
 The displaced frontend routes/pages and the legacy Swagger/OpenAPI bundle are
 retired. Canonical OpenAPI and contract documentation are generated from the

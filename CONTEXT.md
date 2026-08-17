@@ -36,6 +36,10 @@ _Avoid_: Pixel parity, visual clone
 A reviewed declaration of the operations, fields, relationships, and actions included in one staged compatibility claim. Completing a Capability Profile does not imply that its entire API resource or module is complete.
 _Avoid_: Partial model, mostly complete resource
 
+**Complete In-Scope Replacement**:
+A Standalone Runtime in which every accepted in-scope baseline capability has the required REST, gRPC, and applicable browser evidence, while exclusions remain explicit. It does not include Python-runtime compatibility or every upstream extension surface.
+_Avoid_: Full clone, file-for-file rewrite, all NetBox
+
 **Extension Service**:
 An independently deployed capability that augments the Source of Truth through its supported public contracts. It remains outside the Standalone Runtime and cannot redefine core Managed Object behavior.
 _Avoid_: Python plugin, in-process plugin
@@ -46,7 +50,7 @@ _Avoid_: Python plugin, in-process plugin
 Historically used for a domain concept, database table, generated Go type, API resource, and frontend registry entry. Use **Managed Object** for the domain concept; technical documentation must name the concrete artifact instead of using “model” without qualification.
 
 **Complete**:
-Historically used when files or generic routes existed. A capability is complete only for its declared Capability Profile when it satisfies the Compatibility Baseline through both public interfaces and passes its acceptance tests; omitted behavior remains explicitly incomplete.
+Historically used when files or generic routes existed. A capability is complete only for its declared Capability Profile when it satisfies the Compatibility Baseline through both public interfaces and passes its acceptance tests; omitted behavior remains explicitly incomplete. Unqualified project-wide “full rewrite” means **Complete In-Scope Replacement**, not reproduction of excluded Python runtime behavior.
 
 **Drop-in**:
 Applies to the declared in-scope core REST contract of the Compatibility Baseline. gRPC is an added interface with semantic parity over the same core, not an upstream replacement surface. Drop-in does not include GraphQL or binary/runtime compatibility with the upstream Python plugin, custom-script, or report ecosystem.

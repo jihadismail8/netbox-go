@@ -43,9 +43,17 @@ importing them from production or test code.
 The former frontend exception is also closed: all 13 promoted resources use
 typed DTO/form/filter adapters under `src/features/core`. The first-profile
 legacy model/DAO/cache/service/handler/router/protobuf stacks have also been
-physically removed. Frozen generated source for deferred resources remains
-immutable and runtime-disabled under ADR 0004; it is not an exception for new
-work. Any future exception must satisfy the narrow ownership and removal
+physically removed. [ADR 0005](adr/0005-retire-dormant-sponge-http-wrappers.md)
+also permits the completed source-hygiene removal of exactly 118 untouched,
+runtime-dormant Sponge per-resource handler delegates and their 118 matching
+top-level route wrappers. That cleanup did not retire the underlying deferred
+stacks: the separate 102 direct-GORM REST configurations, 176 generated gRPC
+services, and their frozen model, DAO, cache, service, and protobuf source
+remain runtime-disabled for reuse or reference. It did not complete or promote
+any capability. All other frozen generated source remains immutable under
+[ADR 0004](adr/0004-generated-scaffolding-is-immutable-and-transitional.md),
+and future stack retirement still requires its capability-completion gate and
+CP-13. Any future exception must satisfy the narrow ownership and removal
 requirements above before affected code is merged.
 
 ## Go

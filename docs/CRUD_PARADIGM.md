@@ -1,8 +1,8 @@
 # NetBox CRUD Paradigm & Interdependency Map
 
-> **Reference analysis, not accepted architecture.** This document mixes upstream behavior analysis with earlier implementation proposals; it does not describe the current Go execution path or prove compatibility. Its source baseline is the post-4.4.6 snapshot at commit `fbb948d30e79ce657fac62994a22aca72c1770a9`. Verify decisions against the canonical [architecture](ARCHITECTURE.md) and [compatibility contract](COMPATIBILITY.md).
+> **Quarantined historical analysis, not accepted architecture or business rules.** This document mixes upstream observations with obsolete proposals for GORM hooks, generic post-hooks, Redis events, caches, and one-to-one model translation. Do not implement from those proposals. Its source baseline is the post-4.4.6 snapshot at commit `fbb948d30e79ce657fac62994a22aca72c1770a9`; every behavior must be reconciled through an accepted Capability Profile and the canonical [architecture](ARCHITECTURE.md), [coding standards](CODING_STANDARDS.md), and [compatibility contract](COMPATIBILITY.md).
 
-> **Purpose:** This document defines the system-wide behavior patterns that govern every entity in NetBox during Create, Read, Update, and Delete operations. Each entity's documentation file (`docs/entities/<module>/<entity>.md`) contains a **CRUD Behavior** section that references these shared patterns plus any entity-specific overrides.
+> **Historical purpose:** Earlier entity pages reference these candidate patterns. Those references are discovery pointers only; this file does not define current Go behavior, accepted scope, or completion.
 
 ---
 
@@ -47,17 +47,17 @@ NetBox is a Django monolith with three behavioral layers on every model:
 
 ### Go Rewrite Implications
 
-| Python Mechanism | Go Equivalent |
-|---|---|
-| `model.save()` | Service-layer `Create()`/`Update()` hooks |
-| `model.delete()` | Service-layer `Delete()` hooks |
-| `model.clean()` | Service-layer `Validate()` / DAO constraints |
-| Django signals (`post_save`, etc.) | Service-layer post-hooks or event bus |
-| `ChangeLoggingMixin` | GORM hooks (`AfterCreate`, `AfterUpdate`, `AfterDelete`) |
-| `EventRulesMixin` | Async job queue (Redis pub/sub) |
-| Denormalized caches (`_site`, `_rack`) | Explicit cache-refresh calls in service layer |
-| `CounterCacheField` | Counter-refresh function after create/delete |
-| GenericForeignKey | `content_type_id` + `object_id` columns with join helper |
+| Python Mechanism                       | Go Equivalent                                            |
+| -------------------------------------- | -------------------------------------------------------- |
+| `model.save()`                         | Service-layer `Create()`/`Update()` hooks                |
+| `model.delete()`                       | Service-layer `Delete()` hooks                           |
+| `model.clean()`                        | Service-layer `Validate()` / DAO constraints             |
+| Django signals (`post_save`, etc.)     | Service-layer post-hooks or event bus                    |
+| `ChangeLoggingMixin`                   | GORM hooks (`AfterCreate`, `AfterUpdate`, `AfterDelete`) |
+| `EventRulesMixin`                      | Async job queue (Redis pub/sub)                          |
+| Denormalized caches (`_site`, `_rack`) | Explicit cache-refresh calls in service layer            |
+| `CounterCacheField`                    | Counter-refresh function after create/delete             |
+| GenericForeignKey                      | `content_type_id` + `object_id` columns with join helper |
 
 ---
 
@@ -79,11 +79,11 @@ models.Model
 
 ### Shared CRUD behavior for ALL NetBoxModel subclasses:
 
-| Operation | Behavior |
-|---|---|
-| **CREATE** | 1. `snapshot()` stores pre-change state (empty for create). 2. `clean()` validates GFK fields. 3. GORM save. 4. `post_save` signal fires. 5. Event queued. |
+| Operation  | Behavior                                                                                                                                                                                     |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **CREATE** | 1. `snapshot()` stores pre-change state (empty for create). 2. `clean()` validates GFK fields. 3. GORM save. 4. `post_save` signal fires. 5. Event queued.                                   |
 | **UPDATE** | 1. `snapshot()` stores pre-change state for diff. 2. `clean()` re-validates. 3. GORM save. 4. `post_save` signal fires. 5. ChangeLoggedMixin creates `ObjectChange` record. 6. Event queued. |
-| **DELETE** | 1. `snapshot()` stores pre-change state. 2. `pre_delete` signal fires (cleanup child objects). 3. GORM delete. 4. `post_delete` signal fires (counter decrements). 5. Event queued. |
+| **DELETE** | 1. `snapshot()` stores pre-change state. 2. `pre_delete` signal fires (cleanup child objects). 3. GORM delete. 4. `post_delete` signal fires (counter decrements). 5. Event queued.          |
 
 ---
 
@@ -105,11 +105,11 @@ def event_tracking(request):
 
 ### Event Types
 
-| Constant | Trigger |
-|---|---|
-| `OBJECT_CREATED` | post_save (created=True) |
+| Constant         | Trigger                   |
+| ---------------- | ------------------------- |
+| `OBJECT_CREATED` | post_save (created=True)  |
 | `OBJECT_UPDATED` | post_save (created=False) |
-| `OBJECT_DELETED` | post_delete |
+| `OBJECT_DELETED` | post_delete               |
 
 ### Go Rewrite: Use Redis pub/sub or a goroutine-based event queue flushed at end of request.
 
@@ -119,17 +119,17 @@ def event_tracking(request):
 
 Every create/update/delete on a `NetBoxModel` produces an `ObjectChange` record:
 
-| Field | Source |
-|---|---|
-| `user` | From request context |
-| `user_name` | Denormalized |
-| `request_id` | UUID per request |
-| `action` | `create` / `update` / `delete` |
-| `changed_object_type` | ContentType of the model |
-| `changed_object_id` | PK |
-| `object_repr` | `str(instance)` |
-| `prechange_data` | JSON snapshot before save |
-| `postchange_data` | JSON snapshot after save |
+| Field                 | Source                         |
+| --------------------- | ------------------------------ |
+| `user`                | From request context           |
+| `user_name`           | Denormalized                   |
+| `request_id`          | UUID per request               |
+| `action`              | `create` / `update` / `delete` |
+| `changed_object_type` | ContentType of the model       |
+| `changed_object_id`   | PK                             |
+| `object_repr`         | `str(instance)`                |
+| `prechange_data`      | JSON snapshot before save      |
+| `postchange_data`     | JSON snapshot after save       |
 
 ### Go Rewrite: GORM `AfterCreate`/`AfterUpdate`/`AfterDelete` hooks write to `object_changes` table.
 
@@ -139,25 +139,25 @@ Every create/update/delete on a `NetBoxModel` produces an `ObjectChange` record:
 
 Several models cache FK references in `_` prefixed fields for query performance:
 
-| Cached Field | Source | Found On |
-|---|---|---|
-| `_site` | Device's `site` | All ComponentModels, CableTermination, CircuitTermination |
-| `_location` | Device's `location` | All ComponentModels, CableTermination |
-| `_rack` | Device's `rack` | All ComponentModels, CableTermination |
-| `_region` | Scope's region (if scope is a Site/Location) | Prefix, VLAN, Cluster |
-| `_site_group` | Scope's site_group (if scope is a Site) | Prefix, VLAN, Cluster |
-| `_cluster` | VirtualMachine's cluster | VM Interface |
-| `_device` | Interface's device | IPAddress (primary IP), Cable path |
-| `_tenant` | Scoped object's tenant | Prefix |
+| Cached Field  | Source                                       | Found On                                                  |
+| ------------- | -------------------------------------------- | --------------------------------------------------------- |
+| `_site`       | Device's `site`                              | All ComponentModels, CableTermination, CircuitTermination |
+| `_location`   | Device's `location`                          | All ComponentModels, CableTermination                     |
+| `_rack`       | Device's `rack`                              | All ComponentModels, CableTermination                     |
+| `_region`     | Scope's region (if scope is a Site/Location) | Prefix, VLAN, Cluster                                     |
+| `_site_group` | Scope's site_group (if scope is a Site)      | Prefix, VLAN, Cluster                                     |
+| `_cluster`    | VirtualMachine's cluster                     | VM Interface                                              |
+| `_device`     | Interface's device                           | IPAddress (primary IP), Cable path                        |
+| `_tenant`     | Scoped object's tenant                       | Prefix                                                    |
 
 ### When caches update:
 
-| Trigger | What Updates |
-|---|---|
-| **Device.save()** (site/location/rack changed) | All child components' `_site`, `_location`, `_rack` re-cached |
-| **Interface.save()** (device changed — not allowed except InventoryItem) | `_site`, `_location`, `_rack` re-cached |
-| **VirtualMachine.save()** (cluster changed) | All VM interfaces' `_cluster` re-cached |
-| **Prefix/VLAN/Cluster.save()** (scope changed) | `_region`, `_site_group` re-cached from new scope |
+| Trigger                                                                  | What Updates                                                  |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------- |
+| **Device.save()** (site/location/rack changed)                           | All child components' `_site`, `_location`, `_rack` re-cached |
+| **Interface.save()** (device changed — not allowed except InventoryItem) | `_site`, `_location`, `_rack` re-cached                       |
+| **VirtualMachine.save()** (cluster changed)                              | All VM interfaces' `_cluster` re-cached                       |
+| **Prefix/VLAN/Cluster.save()** (scope changed)                           | `_region`, `_site_group` re-cached from new scope             |
 
 ### Go Rewrite: Service layer must call `refresh_cached_scopes(obj)` after every relevant update.
 
@@ -167,16 +167,16 @@ Several models cache FK references in `_` prefixed fields for query performance:
 
 Many parent models store denormalized counts of children:
 
-| Parent Model | Counter Fields |
-|---|---|
-| **DeviceType** | `console_port_template_count`, `console_server_port_template_count`, `power_port_template_count`, `power_outlet_template_count`, `interface_template_count`, `front_port_template_count`, `rear_port_template_count`, `device_bay_template_count`, `module_bay_template_count`, `inventory_item_template_count` |
-| **Device** | `console_port_count`, `console_server_port_count`, `power_port_count`, `power_outlet_count`, `interface_count`, `front_port_count`, `rear_port_count`, `device_bay_count`, `module_bay_count`, `inventory_item_count` |
-| **Site** | `rack_count`, `device_count`, `prefix_count`, `vlan_count`, `circuit_count`, `virtual_machine_count` |
-| **Rack** | `device_count` |
-| **VRF** | `prefix_count`, `ipaddress_count` |
-| **VLANGroup** | `vlan_count` |
-| **Tenant** | `circuit_count`, `site_count`, `rack_count`, `device_count`, `vrf_count`, `prefix_count`, `ipaddress_count`, `vlan_count`, `cluster_count`, `virtual_machine_count` |
-| **Manufacturer** | `device_type_count` |
+| Parent Model     | Counter Fields                                                                                                                                                                                                                                                                                                  |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **DeviceType**   | `console_port_template_count`, `console_server_port_template_count`, `power_port_template_count`, `power_outlet_template_count`, `interface_template_count`, `front_port_template_count`, `rear_port_template_count`, `device_bay_template_count`, `module_bay_template_count`, `inventory_item_template_count` |
+| **Device**       | `console_port_count`, `console_server_port_count`, `power_port_count`, `power_outlet_count`, `interface_count`, `front_port_count`, `rear_port_count`, `device_bay_count`, `module_bay_count`, `inventory_item_count`                                                                                           |
+| **Site**         | `rack_count`, `device_count`, `prefix_count`, `vlan_count`, `circuit_count`, `virtual_machine_count`                                                                                                                                                                                                            |
+| **Rack**         | `device_count`                                                                                                                                                                                                                                                                                                  |
+| **VRF**          | `prefix_count`, `ipaddress_count`                                                                                                                                                                                                                                                                               |
+| **VLANGroup**    | `vlan_count`                                                                                                                                                                                                                                                                                                    |
+| **Tenant**       | `circuit_count`, `site_count`, `rack_count`, `device_count`, `vrf_count`, `prefix_count`, `ipaddress_count`, `vlan_count`, `cluster_count`, `virtual_machine_count`                                                                                                                                             |
+| **Manufacturer** | `device_type_count`                                                                                                                                                                                                                                                                                             |
 
 ### When counters update:
 
@@ -190,51 +190,51 @@ Triggered by signal on child create/delete. E.g., creating an Interface on a Dev
 
 ### CASCADE (parent deletion deletes children)
 
-| Parent | Children Deleted |
-|---|---|
-| **Region** | Sub-regions, Locations (CASCADE via parent FK) |
-| **SiteGroup** | Sub-groups, Sites (SET_NULL for sites) |
-| **Site** | Locations, Racks (CASCADE), PowerPanels, CablePaths starting here |
-| **Location** | Sub-locations, Racks |
-| **Rack** | RackReservations, Devices (SET_NULL for device.rack) |
-| **Device** | ALL components (ConsolePort, ConsoleServerPort, PowerPort, PowerOutlet, Interface, FrontPort, RearPort, DeviceBay, ModuleBay, InventoryItem), ConsolePort/PowerPort templates (no), cables attached to its endpoints |
-| **ModuleType** | Modules |
-| **Manufacturer** | DeviceTypes (PROTECT), Platforms (PROTECT) |
-| **DeviceType** | Component templates (ConsolePortTemplate, etc.) |
-| **VRF** | Prefixes (SET_NULL), IPAddresses (SET_NULL) |
-| **VLANGroup** | VLANs (SET_NULL), child VLANGroups |
-| **RIR** | Aggregates (SET_NULL) |
-| **Cluster** | VirtualMachines (SET_NULL), child clusters |
-| **ClusterType** | Clusters (CASCADE), VirtualMachines (SET_NULL for cluster) |
-| **ClusterGroup** | Clusters (SET_NULL) |
-| **VirtualMachine** | VM Interfaces (CASCADE), Services (SET_NULL for VM) |
+| Parent             | Children Deleted                                                                                                                                                                                                     |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Region**         | Sub-regions, Locations (CASCADE via parent FK)                                                                                                                                                                       |
+| **SiteGroup**      | Sub-groups, Sites (SET_NULL for sites)                                                                                                                                                                               |
+| **Site**           | Locations, Racks (CASCADE), PowerPanels, CablePaths starting here                                                                                                                                                    |
+| **Location**       | Sub-locations, Racks                                                                                                                                                                                                 |
+| **Rack**           | RackReservations, Devices (SET_NULL for device.rack)                                                                                                                                                                 |
+| **Device**         | ALL components (ConsolePort, ConsoleServerPort, PowerPort, PowerOutlet, Interface, FrontPort, RearPort, DeviceBay, ModuleBay, InventoryItem), ConsolePort/PowerPort templates (no), cables attached to its endpoints |
+| **ModuleType**     | Modules                                                                                                                                                                                                              |
+| **Manufacturer**   | DeviceTypes (PROTECT), Platforms (PROTECT)                                                                                                                                                                           |
+| **DeviceType**     | Component templates (ConsolePortTemplate, etc.)                                                                                                                                                                      |
+| **VRF**            | Prefixes (SET_NULL), IPAddresses (SET_NULL)                                                                                                                                                                          |
+| **VLANGroup**      | VLANs (SET_NULL), child VLANGroups                                                                                                                                                                                   |
+| **RIR**            | Aggregates (SET_NULL)                                                                                                                                                                                                |
+| **Cluster**        | VirtualMachines (SET_NULL), child clusters                                                                                                                                                                           |
+| **ClusterType**    | Clusters (CASCADE), VirtualMachines (SET_NULL for cluster)                                                                                                                                                           |
+| **ClusterGroup**   | Clusters (SET_NULL)                                                                                                                                                                                                  |
+| **VirtualMachine** | VM Interfaces (CASCADE), Services (SET_NULL for VM)                                                                                                                                                                  |
 
 ### PROTECT (parent cannot be deleted if children exist)
 
-| Parent | Protected By |
-|---|---|
-| **Manufacturer** | DeviceType FK, Platform FK |
-| **DeviceType** | Device FK |
-| **DeviceRole** | Device FK, VirtualMachine FK |
-| **Platform** | Device FK, VirtualMachine FK |
-| **Tenant** | Most models with `tenant` FK |
-| **VLAN** | Interface (assigned_vlan), Prefix (vlan) — PROTECT |
-| **RIR** | Aggregate (SET_NULL, so NOT protected) |
-| **Tag** | All tagged items (M2M through, auto-removed) |
+| Parent           | Protected By                                       |
+| ---------------- | -------------------------------------------------- |
+| **Manufacturer** | DeviceType FK, Platform FK                         |
+| **DeviceType**   | Device FK                                          |
+| **DeviceRole**   | Device FK, VirtualMachine FK                       |
+| **Platform**     | Device FK, VirtualMachine FK                       |
+| **Tenant**       | Most models with `tenant` FK                       |
+| **VLAN**         | Interface (assigned_vlan), Prefix (vlan) — PROTECT |
+| **RIR**          | Aggregate (SET_NULL, so NOT protected)             |
+| **Tag**          | All tagged items (M2M through, auto-removed)       |
 
 ### SET_NULL (parent deletion nullifies the FK)
 
-| Parent | Children Updated |
-|---|---|
-| **Region** | Sites (`site.region = null`) |
-| **SiteGroup** | Sites (`site.group = null`) |
-| **Rack** | Devices (`device.rack = null`), PowerFeed (PROTECT) |
-| **VRF** | Prefixes (`prefix.vrf = null`), IPAddresses (`ipaddress.vrf = null`) |
-| **VLANGroup** | VLANs (`vlan.group = null`) |
-| **Cluster** | VirtualMachines (`vm.cluster = null`) |
-| **ClusterGroup** | Clusters (`cluster.group = null`) |
-| **RIR** | Aggregates (`aggregate.rir = null`) |
-| **Site** (cached) | Components (`_site = null`) — these are denormalized caches |
+| Parent            | Children Updated                                                     |
+| ----------------- | -------------------------------------------------------------------- |
+| **Region**        | Sites (`site.region = null`)                                         |
+| **SiteGroup**     | Sites (`site.group = null`)                                          |
+| **Rack**          | Devices (`device.rack = null`), PowerFeed (PROTECT)                  |
+| **VRF**           | Prefixes (`prefix.vrf = null`), IPAddresses (`ipaddress.vrf = null`) |
+| **VLANGroup**     | VLANs (`vlan.group = null`)                                          |
+| **Cluster**       | VirtualMachines (`vm.cluster = null`)                                |
+| **ClusterGroup**  | Clusters (`cluster.group = null`)                                    |
+| **RIR**           | Aggregates (`aggregate.rir = null`)                                  |
+| **Site** (cached) | Components (`_site = null`) — these are denormalized caches          |
 
 ---
 
@@ -252,16 +252,16 @@ def clean(self):
 
 ### Uniqueness constraints (beyond DB-level)
 
-| Model | Constraint |
-|---|---|
-| **Prefix** | No duplicate (prefix, vrf, site/scope) — only if `is_pool=False` |
-| **IPAddress** | No duplicate (address, vrf, tenant) — only if `role != 'anycast'` |
-| **VLAN** | Unique (group, vid) within group |
-| **VLANGroup** | Unique scope (site, location, etc.) if scope_id_vars set |
-| **Rack** | Unique (site, location, name), (site, location, facility_id) |
-| **Device** | Unique (site, tenant, serial), (virtual_chassis, vc_position) |
-| **Interface** | Unique (device, name), (virtual_machine, name) |
-| **Cable** | Unique set of termination A+B (no duplicate cable between same endpoints) |
+| Model         | Constraint                                                                |
+| ------------- | ------------------------------------------------------------------------- |
+| **Prefix**    | No duplicate (prefix, vrf, site/scope) — only if `is_pool=False`          |
+| **IPAddress** | No duplicate (address, vrf, tenant) — only if `role != 'anycast'`         |
+| **VLAN**      | Unique (group, vid) within group                                          |
+| **VLANGroup** | Unique scope (site, location, etc.) if scope_id_vars set                  |
+| **Rack**      | Unique (site, location, name), (site, location, facility_id)              |
+| **Device**    | Unique (site, tenant, serial), (virtual_chassis, vc_position)             |
+| **Interface** | Unique (device, name), (virtual_machine, name)                            |
+| **Cable**     | Unique set of termination A+B (no duplicate cable between same endpoints) |
 
 ### Scope validation (CachedScopeMixin)
 
@@ -282,12 +282,14 @@ def clean(self):
 A Cable connects two termination points (each is a GenericFK to Interface, ConsolePort, etc.).
 
 **CREATE cable:**
+
 1. Validate termination A and B are different.
 2. Validate both terminations are not already connected.
 3. Save cable.
 4. Signal `update_connected_endpoints()` sets `cable` FK on each termination and marks `path_endpoints`.
 
 **DELETE cable:**
+
 1. `pre_delete` signal fires.
 2. For each termination: set `termination.cable = None` (disconnects).
 3. Delete CablePath entries that traverse this cable.
@@ -296,13 +298,13 @@ A Cable connects two termination points (each is a GenericFK to Interface, Conso
 
 NetBox auto-generates `CablePath` records tracing connectivity:
 
-| Field | Purpose |
-|---|---|
-| `origin_type` / `origin_id` | GenericFK — where the path starts |
+| Field                                 | Purpose                                        |
+| ------------------------------------- | ---------------------------------------------- |
+| `origin_type` / `origin_id`           | GenericFK — where the path starts              |
 | `destination_type` / `destination_id` | GenericFK — where it ends (null if incomplete) |
-| `path` | Ordered array of node GenericFKs |
-| `is_active` | True if all cables in path are `connected` |
-| `is_split` | True if path forks |
+| `path`                                | Ordered array of node GenericFKs               |
+| `is_active`                           | True if all cables in path are `connected`     |
+| `is_split`                            | True if path forks                             |
 
 **When a Cable is created/deleted/updated:** `update_cablepaths()` recomputes all affected paths via DFS/BFS.
 
@@ -316,9 +318,9 @@ NetBox auto-generates `CablePath` records tracing connectivity:
 
 Prefixes store denormalized hierarchy fields for fast lookups:
 
-| Field | Purpose |
-|---|---|
-| `_depth` | How many parent prefixes exist above this one |
+| Field       | Purpose                                           |
+| ----------- | ------------------------------------------------- |
+| `_depth`    | How many parent prefixes exist above this one     |
 | `_children` | Count of child prefixes directly beneath this one |
 
 **On Prefix CREATE/UPDATE/DELETE:** signal `cache_prefix_hierarchy()` recomputes `_depth` and `_children` for all prefixes in the same VRF+scope.
@@ -341,23 +343,23 @@ When `IPAddress.assigned` is set (via `interface` or `vminterface` FK):
 
 ### Global signals (connected in `netbox/signals.py` and module `apps.py`)
 
-| Signal | Handler | Effect |
-|---|---|---|
-| `post_save` (NetBoxModel) | `change_log_event` | Creates `ObjectChange` record |
-| `post_save` (NetBoxModel) | `process_event_rules` | Fires webhooks, scripts, notifications |
-| `post_delete` (NetBoxModel) | `change_log_event` | Creates `ObjectChange` (action=delete) |
-| `pre_delete` (Cable) | `nullify_connected_endpoints` | Disconnects endpoints |
-| `post_save` (Cable) | `update_connected_endpoints` | Connects endpoints |
-| `post_save` (Cable) | `update_cablepaths` | Recomputes CablePath graph |
-| `post_delete` (Cable) | `update_cablepaths` | Recomputes CablePath graph |
-| `post_save` (Prefix) | `cache_prefix_hierarchy` | Updates `_depth`, `_children` |
-| `post_delete` (Prefix) | `cache_prefix_hierarchy` | Updates `_depth`, `_children` |
-| `post_save` (IPAddress) | `update_assigned_object` | Sets GFK from `assigned_object_*` |
-| `post_save` (Device) | `update_component_caches` | Refreshes `_site`/`_location`/`_rack` on children |
-| `post_save` (Interface) | `update_connected_endpoints` | Re-cable path tracing |
-| `post_save` (VMInterface) | `update_connected_endpoints` | Re-cable path tracing |
-| `m2m_changed` (tags) | `serialize_tags` | Updates tag relationship cache |
-| `m2m_changed` (CustomField) | `update_custom_field_data` | Syncs custom field values |
+| Signal                      | Handler                       | Effect                                            |
+| --------------------------- | ----------------------------- | ------------------------------------------------- |
+| `post_save` (NetBoxModel)   | `change_log_event`            | Creates `ObjectChange` record                     |
+| `post_save` (NetBoxModel)   | `process_event_rules`         | Fires webhooks, scripts, notifications            |
+| `post_delete` (NetBoxModel) | `change_log_event`            | Creates `ObjectChange` (action=delete)            |
+| `pre_delete` (Cable)        | `nullify_connected_endpoints` | Disconnects endpoints                             |
+| `post_save` (Cable)         | `update_connected_endpoints`  | Connects endpoints                                |
+| `post_save` (Cable)         | `update_cablepaths`           | Recomputes CablePath graph                        |
+| `post_delete` (Cable)       | `update_cablepaths`           | Recomputes CablePath graph                        |
+| `post_save` (Prefix)        | `cache_prefix_hierarchy`      | Updates `_depth`, `_children`                     |
+| `post_delete` (Prefix)      | `cache_prefix_hierarchy`      | Updates `_depth`, `_children`                     |
+| `post_save` (IPAddress)     | `update_assigned_object`      | Sets GFK from `assigned_object_*`                 |
+| `post_save` (Device)        | `update_component_caches`     | Refreshes `_site`/`_location`/`_rack` on children |
+| `post_save` (Interface)     | `update_connected_endpoints`  | Re-cable path tracing                             |
+| `post_save` (VMInterface)   | `update_connected_endpoints`  | Re-cable path tracing                             |
+| `m2m_changed` (tags)        | `serialize_tags`              | Updates tag relationship cache                    |
+| `m2m_changed` (CustomField) | `update_custom_field_data`    | Syncs custom field values                         |
 
 ---
 
@@ -452,3 +454,4 @@ Each entity falls into one or more behavioral categories. Its doc file reference
 6. EventRulesMixin: delete event queued
 7. Response returned
 8. Event queue flushed
+```

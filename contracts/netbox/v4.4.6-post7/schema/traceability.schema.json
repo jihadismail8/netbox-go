@@ -1,0 +1,514 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://netbox-go.local/schemas/traceability-v1.json",
+  "title": "NetBox Go capability traceability matrix",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "profile",
+    "compatibility_baseline",
+    "implementation_plan",
+    "operation_catalog",
+    "proof_dimensions",
+    "applicability_sets",
+    "reference_sets",
+    "assessment_sets",
+    "verification_sets",
+    "proof_sets",
+    "row_proofs",
+    "row_applicability",
+    "rows"
+  ],
+  "properties": {
+    "$schema": { "const": "../schema/traceability.schema.json" },
+    "schema_version": { "const": 1 },
+    "profile": { "const": "core-workflow-v1" },
+    "compatibility_baseline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "git_sha"],
+      "properties": {
+        "id": { "const": "netbox-v4.4.6-post7" },
+        "git_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" }
+      }
+    },
+    "implementation_plan": { "const": "docs/IMPLEMENTATION_PLAN.md" },
+    "operation_catalog": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9_-]*$" }
+    },
+    "proof_dimensions": {
+      "const": [
+        "domain",
+        "application",
+        "postgresql",
+        "rest_differential",
+        "grpc_parity",
+        "browser",
+        "rest_extension_contract",
+        "cli_security"
+      ]
+    },
+    "applicability_sets": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/applicability_set" }
+    },
+    "reference_sets": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/reference_set" }
+    },
+    "assessment_sets": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/assessment_set" }
+    },
+    "verification_sets": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/verification_set" }
+    },
+    "proof_sets": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/proof_set" }
+    },
+    "row_proofs": {
+      "type": "object",
+      "additionalProperties": { "type": "string", "minLength": 1 }
+    },
+    "row_applicability": {
+      "type": "object",
+      "additionalProperties": { "type": "string", "minLength": 1 }
+    },
+    "rows": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/row" }
+    }
+  },
+  "$defs": {
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "anchor"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "anchor": { "type": "string", "minLength": 1 }
+      }
+    },
+    "evidence_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "anchor", "payload_sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "anchor": { "type": "string", "minLength": 1 },
+        "payload_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      }
+    },
+    "tested_source_manifest_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      }
+    },
+    "link_group": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "references"],
+          "properties": {
+            "status": { "const": "linked" },
+            "references": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "$ref": "#/$defs/reference" }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "reason", "references"],
+          "properties": {
+            "status": { "const": "not_applicable" },
+            "reason": { "type": "string", "minLength": 1 },
+            "references": { "const": [] }
+          }
+        }
+      ]
+    },
+    "proof": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "references"],
+      "properties": {
+        "status": {
+          "enum": ["covered", "partial", "pending", "not_applicable"]
+        },
+        "references": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/reference" }
+        },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    },
+    "proof_dimensions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain",
+        "application",
+        "postgresql",
+        "rest_differential",
+        "grpc_parity",
+        "browser",
+        "rest_extension_contract",
+        "cli_security"
+      ],
+      "properties": {
+        "domain": { "$ref": "#/$defs/proof" },
+        "application": { "$ref": "#/$defs/proof" },
+        "postgresql": { "$ref": "#/$defs/proof" },
+        "rest_differential": { "$ref": "#/$defs/proof" },
+        "grpc_parity": { "$ref": "#/$defs/proof" },
+        "browser": { "$ref": "#/$defs/proof" },
+        "rest_extension_contract": { "$ref": "#/$defs/proof" },
+        "cli_security": { "$ref": "#/$defs/proof" }
+      }
+    },
+    "applicability": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status"],
+          "properties": { "status": { "const": "applicable" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "reason"],
+          "properties": {
+            "status": { "const": "not_applicable" },
+            "reason": { "type": "string", "minLength": 1 }
+          }
+        }
+      ]
+    },
+    "applicability_dimensions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain",
+        "application",
+        "postgresql",
+        "rest_differential",
+        "grpc_parity",
+        "browser",
+        "rest_extension_contract",
+        "cli_security"
+      ],
+      "properties": {
+        "domain": { "$ref": "#/$defs/applicability" },
+        "application": { "$ref": "#/$defs/applicability" },
+        "postgresql": { "$ref": "#/$defs/applicability" },
+        "rest_differential": { "$ref": "#/$defs/applicability" },
+        "grpc_parity": { "$ref": "#/$defs/applicability" },
+        "browser": { "$ref": "#/$defs/applicability" },
+        "rest_extension_contract": { "$ref": "#/$defs/applicability" },
+        "cli_security": { "$ref": "#/$defs/applicability" }
+      }
+    },
+    "applicability_set": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "dimensions"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "dimensions": { "$ref": "#/$defs/applicability_dimensions" }
+      }
+    },
+    "profile_ref": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "key"],
+          "properties": {
+            "kind": { "const": "resource" },
+            "key": { "type": "string", "pattern": "^(dcim|ipam)\\.[A-Za-z]+$" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": { "kind": { "const": "identity_extension" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": { "kind": { "const": "profile" } }
+        }
+      ]
+    },
+    "metadata_ref": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "key"],
+          "properties": {
+            "kind": { "const": "resource" },
+            "key": { "type": "string", "pattern": "^(dcim|ipam)\\.[A-Za-z]+$" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": { "kind": { "const": "identity" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "reason"],
+          "properties": {
+            "kind": { "const": "not_applicable" },
+            "reason": { "type": "string", "minLength": 1 }
+          }
+        }
+      ]
+    },
+    "reference_set": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "classification",
+        "capabilities",
+        "profile_ref",
+        "metadata_ref",
+        "pinned_source",
+        "upstream_tests",
+        "test_inventory"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "classification": { "enum": ["baseline", "extension", "project"] },
+        "reference_note": { "type": "string", "minLength": 1 },
+        "capabilities": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "profile_ref": { "$ref": "#/$defs/profile_ref" },
+        "metadata_ref": { "$ref": "#/$defs/metadata_ref" },
+        "pinned_source": { "$ref": "#/$defs/link_group" },
+        "upstream_tests": { "$ref": "#/$defs/link_group" },
+        "test_inventory": { "$ref": "#/$defs/proof_dimensions" }
+      }
+    },
+    "assessment_set": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "status"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "status": {
+          "enum": ["confirmed", "contradicted", "unresolved", "not_applicable"]
+        },
+        "reason": { "type": "string", "minLength": 1 },
+        "resolution_goal": { "type": "string", "minLength": 1 },
+        "conflict_references": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/reference" }
+        }
+      }
+    },
+    "verification_set": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "classification", "tier", "state", "evidence"],
+          "properties": {
+            "id": { "type": "string", "minLength": 1 },
+            "classification": { "const": "baseline" },
+            "tier": { "enum": ["T0", "T1", "T2", "T3", "T4"] },
+            "state": { "enum": ["pending", "retained"] },
+            "tested_digest": {
+              "type": "string",
+              "pattern": "^source-v2:sha256:[0-9a-f]{64}$"
+            },
+            "tested_revision": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "tested_source_manifest": {
+              "$ref": "#/$defs/tested_source_manifest_reference"
+            },
+            "evidence": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/evidence_reference" }
+            },
+            "pending_reason": { "type": "string", "minLength": 1 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "classification",
+            "tier",
+            "state",
+            "evidence",
+            "extension_verification"
+          ],
+          "properties": {
+            "id": { "type": "string", "minLength": 1 },
+            "classification": { "const": "extension" },
+            "tier": { "const": "not_applicable" },
+            "state": { "enum": ["pending", "retained"] },
+            "tested_digest": {
+              "type": "string",
+              "pattern": "^source-v2:sha256:[0-9a-f]{64}$"
+            },
+            "tested_revision": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "tested_source_manifest": {
+              "$ref": "#/$defs/tested_source_manifest_reference"
+            },
+            "evidence": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/evidence_reference" }
+            },
+            "pending_reason": { "type": "string", "minLength": 1 },
+            "extension_verification": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["contract", "parity", "security"],
+              "properties": {
+                "contract": { "enum": ["partial", "complete"] },
+                "parity": { "enum": ["partial", "complete"] },
+                "security": { "enum": ["partial", "complete"] }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "classification", "tier", "state", "evidence"],
+          "properties": {
+            "id": { "type": "string", "minLength": 1 },
+            "classification": { "const": "project" },
+            "tier": { "const": "not_applicable" },
+            "state": { "enum": ["pending", "retained"] },
+            "tested_digest": {
+              "type": "string",
+              "pattern": "^source-v2:sha256:[0-9a-f]{64}$"
+            },
+            "tested_revision": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "tested_source_manifest": {
+              "$ref": "#/$defs/tested_source_manifest_reference"
+            },
+            "evidence": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/evidence_reference" }
+            },
+            "pending_reason": { "type": "string", "minLength": 1 }
+          }
+        }
+      ]
+    },
+    "proof_set": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "proofs"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "proofs": { "$ref": "#/$defs/proof_dimensions" }
+      }
+    },
+    "row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "source_id",
+        "capability",
+        "operation",
+        "reference_set",
+        "assessment_set",
+        "verification_set"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": {
+          "enum": [
+            "scenario",
+            "resource_operation",
+            "resource_contract",
+            "plan_rule"
+          ]
+        },
+        "source_id": { "type": "string", "minLength": 1 },
+        "capability": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Sole owner of this row's compatibility-tier claim."
+        },
+        "operation": { "type": "string", "minLength": 1 },
+        "affected_capabilities": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "Exhaustive dependency and observable-impact footprint; secondary entries do not inherit or cap the owner's tier.",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "covered_operations": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "reference_set": { "type": "string", "minLength": 1 },
+        "related_reference_sets": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "assessment_set": { "type": "string", "minLength": 1 },
+        "verification_set": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

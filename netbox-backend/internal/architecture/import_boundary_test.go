@@ -110,6 +110,63 @@ func TestGenericWorkflowPackagesAreRetired(t *testing.T) {
 	}
 }
 
+// TestSpongeHTTPScaffoldingIsRetired prevents the generated per-resource HTTP
+// handlers and route wrappers from returning after their explicit retirement.
+// The transitional authentication implementation is the only hand-owned code
+// that remains in internal/handler.
+func TestSpongeHTTPScaffoldingIsRetired(t *testing.T) {
+	t.Parallel()
+
+	_, filename, _, ok := runtime.Caller(0)
+	if !ok {
+		t.Fatal("resolve architecture test location")
+	}
+	internalRoot := filepath.Dir(filepath.Dir(filename))
+
+	handlerRoot := filepath.Join(internalRoot, "handler")
+	entries, err := os.ReadDir(handlerRoot)
+	if err != nil {
+		t.Fatalf("read handler directory: %v", err)
+	}
+	allowedHandlers := map[string]bool{
+		"auth.go":      false,
+		"auth_test.go": false,
+	}
+	for _, entry := range entries {
+		name := entry.Name()
+		if _, allowed := allowedHandlers[name]; !allowed {
+			t.Errorf("unexpected top-level internal/handler entry %q", name)
+			continue
+		}
+		info, infoErr := entry.Info()
+		if infoErr != nil {
+			t.Errorf("inspect internal/handler/%s: %v", name, infoErr)
+			continue
+		}
+		if !info.Mode().IsRegular() {
+			t.Errorf("internal/handler/%s is not a regular file", name)
+			continue
+		}
+		allowedHandlers[name] = true
+	}
+	for name, found := range allowedHandlers {
+		if !found {
+			t.Errorf("required hand-owned handler internal/handler/%s is missing", name)
+		}
+	}
+
+	routerRoot := filepath.Join(internalRoot, "routers")
+	entries, err = os.ReadDir(routerRoot)
+	if err != nil {
+		t.Fatalf("read router directory: %v", err)
+	}
+	for _, entry := range entries {
+		if !entry.IsDir() && strings.HasSuffix(entry.Name(), "_router.go") {
+			t.Errorf("retired top-level Sponge route wrapper returned: internal/routers/%s", entry.Name())
+		}
+	}
+}
+
 func checkImports(t *testing.T, layer, path string) {
 	t.Helper()
 	parsed, err := parser.ParseFile(token.NewFileSet(), path, nil, parser.ImportsOnly)

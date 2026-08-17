@@ -37,6 +37,24 @@ The Vue application uses REST and targets Workflow Parity, not pixel parity.
   [Coding standards](docs/CODING_STANDARDS.md), and the
   [ADRs](docs/adr/README.md) govern implementation choices.
 
+## Quantitative status at 2026-08-03
+
+There is deliberately no single “percent rewritten.” The independent measures
+are:
+
+- catalogue: all 155 baseline resource/action entries are recorded;
+- accepted scope: 153 entries after two explicit exclusions;
+- implementation breadth: 13 of 153 entries are promoted to T1 structure
+  (8.50%); 140 remain T0 (91.50%);
+- verified compatibility: 0 entries have retained T2 REST, T3 gRPC, or T4
+  browser evidence; and
+- production readiness: none of PROD-1 through PROD-7 is signed off.
+
+The remaining accepted breadth is 118 resources and 22 custom actions, grouped
+into 19 candidate Capability Profiles and followed by 10 module-closeout
+passes. The exact module ledger, first-profile gaps, and proof status are in
+[Project status](docs/STATUS.md).
+
 ## Current first-profile boundary
 
 ```text
@@ -52,10 +70,12 @@ per-table PostgreSQL persistence, persisted groups/RBAC, typed Vue adapters,
 canonical REST/gRPC adapters, and physical retirement of the 13 displaced
 legacy stacks.
 
-The profile remains T1 and pre-publication because the latest strict oracle,
-real-PostgreSQL, deployment, gRPC parity, and browser executions are not yet
-retained as durable evidence. No whole-module or production-readiness claim is
-made.
+The profile remains T1 and pre-publication. This is not merely an execution
+backlog: the 2026-08-03 audit found missing CORS allowlist behavior,
+dependency-aware readiness, scenario-to-test traceability, differential
+business-rule cases, and browser negative cases. These must be implemented and
+then retained at their required external boundaries. No whole-module or
+production-readiness claim is made.
 
 ## Development database decision
 

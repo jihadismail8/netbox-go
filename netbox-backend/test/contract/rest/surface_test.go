@@ -38,6 +38,7 @@ func TestRuntimeRoutesConformToGeneratedOpenAPI(t *testing.T) {
 		core.Identity,
 		core.Sites,
 		false,
+		nil,
 		workflowhttp.WithOrganizationServices(core.Manufacturers, core.RackRoles),
 		workflowhttp.WithRackTypeService(core.RackTypes),
 		workflowhttp.WithRackService(core.Racks),

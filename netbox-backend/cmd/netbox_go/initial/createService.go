@@ -6,11 +6,12 @@ import (
 	"github.com/go-dev-frame/sponge/pkg/app"
 
 	"netbox-go/internal/config"
+	runtimeconfig "netbox-go/internal/platform/config"
 	"netbox-go/internal/server"
 )
 
 // CreateServices create services
-func CreateServices() []app.IServer {
+func CreateServices(httpRuntime runtimeconfig.HTTPRuntime) []app.IServer {
 	var cfg = config.Get()
 	var servers []app.IServer
 	var httpAddr = ":" + strconv.Itoa(cfg.HTTP.Port)
@@ -20,6 +21,7 @@ func CreateServices() []app.IServer {
 	httpServer := server.NewHTTPServer(httpAddr,
 		server.WithHTTPIsProd(cfg.App.Env == "prod"),
 		server.WithHTTPTLS(cfg.HTTP.TLS),
+		server.WithHTTPCORSAllowedOrigins(httpRuntime.CORSAllowedOrigins()),
 	)
 	grpcServer := server.NewGRPCServer(grpcAddr)
 

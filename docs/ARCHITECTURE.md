@@ -8,6 +8,7 @@ The terminology and compatibility boundary are defined in [CONTEXT.md](../CONTEX
 - [ADR 0002: Out-of-process extension services](./adr/0002-replace-python-plugins-with-extension-services.md)
 - [ADR 0003: Unified authentication and authorization](./adr/0003-unified-authentication-and-authorization.md)
 - [ADR 0004: Immutable transitional generated scaffolding](./adr/0004-generated-scaffolding-is-immutable-and-transitional.md)
+- [ADR 0005: Retire dormant Sponge HTTP wrappers before capability completion](./adr/0005-retire-dormant-sponge-http-wrappers.md)
 
 ## Architectural objective
 
@@ -127,6 +128,16 @@ Generated files are immutable outputs, not extension points. Business rules, aut
 
 The existing Sponge-generated per-table contracts and execution paths are transitional and have no backward-compatibility guarantee. New public `.proto` files are handwritten, versioned contract sources in packages such as `netbox.dcim.v1` and `netbox.ipam.v1`; the corresponding generated Go code is reproducible output. A new contract becomes a compatibility commitment only when it is explicitly declared published. New persistence mappings and adapters for a promoted capability are handwritten unless and until a deterministic generator has an explicitly owned input and output boundary. Required generated source may remain committed, but generation must use pinned tools, produce standard generated-file markers, and be cleanly reproducible in CI.
 
+[ADR 0005](adr/0005-retire-dormant-sponge-http-wrappers.md) records one
+narrow source-hygiene exception: 118 untouched, template-identical Sponge
+handler delegates and their 118 matching top-level route wrappers were removed
+after proving they were runtime-dormant and had no hand-owned behavior. This
+did not retire any deferred capability or alter the inventories. The separate
+102 direct-GORM REST configurations, 176 table-oriented gRPC services, and the
+frozen models, DAOs, caches, services, and protobufs remain runtime-disabled
+for later reuse or reference. Their future retirement remains governed by ADR
+0004 and CP-13 after capability completion.
+
 ## Interface parity
 
 For each supported operation, REST and gRPC must reach the same use case and produce equivalent domain outcomes:
@@ -222,9 +233,10 @@ PostgreSQL persistence, and typed Vue adapters. Production construction uses
 authorization without changing the service graph. The generic domain,
 application, and PostgreSQL workflow packages and their transitional
 constructors have been retired, and an architecture test prohibits their
-recreation or import. The strict compatibility, PostgreSQL, and browser
-harnesses exist, but a current post-hardening retained artifact is not yet
-recorded, so the profile remains T1.
+recreation or import. The compatibility, PostgreSQL, and browser harness
+foundations exist. Their current matrices do not yet cover every required
+profile rule, and no current post-cleanup artifact is retained, so the profile
+remains T1.
 
 > **Current operational boundary:** Managed Object requests fail closed and the
 > prior generic users/configuration exposure is not registered by the default
@@ -236,12 +248,12 @@ recorded, so the profile remains T1.
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Process           | [`http.go`](../netbox-backend/internal/server/http.go) and [`grpc.go`](../netbox-backend/internal/server/grpc.go) compose one Go-owned core in one process and expose separate HTTP and gRPC listeners.                                                                                                                                                                                                 | Correct modular-monolith deployment shape.                                                                                                                  |
 | REST runtime      | [`NewRuntimeRouter`](../netbox-backend/internal/adapters/rest/netbox/router/router.go) registers Go-owned identity, the 13 profile resources, and authenticated schema access. REST maps the six declared operations into typed per-resource application services.                                                                                                                                      | Exact-in-profile REST is the intended boundary; T2 still requires a current successful strict oracle artifact.                                              |
-| Frozen REST       | The current inventory contains 102 frozen, runtime-disabled direct-GORM resource configurations. The displaced stacks for all 13 promoted resources have been physically removed.                                                                                                                                                                                                                       | Remaining legacy source is deferred inventory, not public behavior or compatibility evidence.                                                               |
+| Frozen REST       | The current inventory contains 102 frozen, runtime-disabled direct-GORM resource configurations. The displaced stacks for all 13 promoted resources have been physically removed; ADR 0005 separately removed 118 dormant Sponge handler/route wrapper pairs without changing this inventory.                                                                                                           | Remaining legacy source is deferred inventory, not public behavior or compatibility evidence. Wrapper removal is source hygiene, not capability completion. |
 | gRPC runtime      | `registerCanonicalServices` registers only versioned Identity, DCIM, and IPAM services. DCIM/IPAM adapters and all parity fixtures invoke the same typed per-resource services as REST; focused lifecycle, error, RBAC, rollback, and assignment parity diagnostics pass.                                                                                                                               | Correct production dual-adapter shape; corresponding REST T2 and a current retained parity run are still required before T3.                                |
 | Shared core       | Typed DCIM/IPAM services own authorization, validation, transactions, relationships, projections, and change recording. `composition.Core` exposes only Identity and the 13 typed resource services; the production constructor selects the fail-closed permission authorizer.                                                                                                                          | The shared path is typed. The retired generic packages and constructors are protected by a total architecture prohibition.                                  |
 | Persistence       | [`dcim/row/rows.go`](../netbox-backend/internal/adapters/postgres/dcim/row/rows.go), [`ipam/row/rows.go`](../netbox-backend/internal/adapters/postgres/ipam/row/rows.go), and [`changelog/row.go`](../netbox-backend/internal/adapters/postgres/changelog/row.go) own the 10 DCIM, 3 IPAM, and 1 append-only change row respectively, with explicit mappings, foreign keys, indexes, and locking tests. | The obsolete JSON-table design is gone. Real-PostgreSQL suites exist; their latest post-hardening execution remains pending in the durable evidence ledger. |
 | Identity and RBAC | Go-owned users, groups, group memberships, direct/group model grants, object-scoped grants, sessions, tokens, bearer authentication, CLI bootstrap/reset/non-superuser creation/global permission grant, and shared authorization are persisted.                                                                                                                                                        | The common principal/RBAC path is implemented. Current full security and cross-transport execution evidence is still pending.                               |
-| Diagnostics       | The canonical router publishes health, readiness, identity, profile resources, authenticated schema, and the SPA. It registers no dedicated `GET /ping`; when the SPA is enabled, `/ping` is merely an ordinary history-fallback path. Frozen ADR 0004 legacy wiring still contains a runtime-disabled `/ping` route.                                                                                   | Configuration and the canonical process-probe surface are contained. Production observability still needs a protected design.                               |
+| Diagnostics       | The canonical router publishes health and readiness paths, but both currently use the same static Sponge health response; gRPC health also has no dependency state. It registers no dedicated `GET /ping`; when the SPA is enabled, `/ping` is merely an ordinary history-fallback path. Frozen ADR 0004 legacy wiring still contains a runtime-disabled `/ping` route.                                 | Route containment is correct. Dependency-aware readiness, loss/recovery proof, and production observability are still required.                             |
 | Vue runtime       | The profile registry publishes only 13 resources. [`adapters.ts`](../netbox-frontend/src/features/core/adapters.ts) supplies typed DTO/form/filter adapters consumed by the profile pages; authentication uses session/CSRF and stores no credential in `localStorage`.                                                                                                                                 | Typed transport boundaries and a real-Chrome harness exist. T4 remains unearned until a successful current browser artifact is retained.                    |
 | Schema            | Startup registers 198 tables: 176 deferred legacy rows, 8 Go-owned identity rows, 13 typed profile rows, and 1 typed object-change row. Missing tables are created individually; existing table shapes are untouched.                                                                                                                                                                                   | Correct for disposable development, not a production upgrade system. A current real-PostgreSQL/Compose artifact is still required for sign-off.             |
 
@@ -255,9 +267,12 @@ gRPC adapter --+                                  -> transaction/ports -> Postgr
 
 The first-profile typed-boundary migration is closed: composition, parity
 fixtures, transport mapping, application/domain contracts, and PostgreSQL row
-ownership now have precise typed owners. Remaining work is retained V0 and
-V1-V6 evidence; this structural recovery does not promote a compatibility
-tier.
+ownership now have precise typed owners. V0 is retained for the current
+post-wrapper-cleanup source. V1-V5 still require implementation work—CORS
+policy, dependency-aware readiness, rule traceability, missing oracle/parity
+cases, and missing browser outcomes—before their external evidence can be
+retained and V6 reviewed. This structural recovery does not promote a
+compatibility tier.
 
 ## Migration direction
 
@@ -265,6 +280,9 @@ Migration proceeds as a strangler refactor inside the Go application. The
 first-profile legacy stacks were removed earlier than ADR 0004's intended
 completion order; that historical deviation is not precedent. Deferred
 resources remain frozen until a later reviewed Capability Profile completes.
+ADR 0005's completed removal of 118 dormant Sponge handler/route wrapper pairs
+is a narrow source-hygiene exception, not permission to retire any retained
+model, DAO, cache, service, protobuf, DRF configuration, or gRPC service.
 
 1. **Introduce transport-neutral boundaries.** Define the principal, typed errors, transaction runner, repository ports, and application contracts needed by a selected workflow. Keep Gin, protobuf, and GORM types outside those contracts.
 2. **Implement a vertical slice.** For later profiles, select the next
@@ -277,7 +295,8 @@ resources remain frozen until a later reviewed Capability Profile completes.
 5. **Prove parity.** Run baseline REST compatibility scenarios and equivalent gRPC scenarios against the same fixtures and expected persisted effects. Exercise the operator workflow through Vue over REST.
 6. **Retire displaced scaffolding.** The first-profile stacks were already
    removed as the historical deviation above. Retire each later displaced path
-   only after capability completion under ADR 0004.
+   only after capability completion under ADR 0004 and CP-13; the completed
+   ADR 0005 wrapper cleanup does not relax that rule.
 7. **Expand by workflow.** Repeat for the next coherent vertical slice rather than declaring broad completion from generated CRUD coverage.
 
 Deferred scaffolding may remain in source while later workflows are replaced

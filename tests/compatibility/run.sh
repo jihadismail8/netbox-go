@@ -3,6 +3,7 @@ set -Eeuo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 COMPOSE_FILE="$ROOT/tests/compatibility/compose.yaml"
+ORACLE_SOURCE_MATERIALIZER="$ROOT/tests/compatibility/materialize_oracle_source.sh"
 PINNED_SHA="fbb948d30e79ce657fac62994a22aca72c1770a9"
 PINNED_RELEASE="4.4.6"
 PROFILE_BASELINE="netbox-v4.4.6-post7"
@@ -52,16 +53,13 @@ for command in docker git go node curl; do
   fi
 done
 
-if [[ "$(git -C "$ROOT/netbox" rev-parse HEAD)" != "$PINNED_SHA" ]]; then
-  printf 'oracle source pin mismatch: expected %s, found %s\n' \
-    "$PINNED_SHA" "$(git -C "$ROOT/netbox" rev-parse HEAD)" >&2
-  exit 1
-fi
-if [[ -n "$(git -C "$ROOT/netbox" status --porcelain --untracked-files=no)" ]]; then
-  printf 'oracle source has tracked modifications; refusing a non-reproducible comparison\n' >&2
-  exit 1
-fi
-if ! grep -qx "version: \"$PINNED_RELEASE\"" "$ROOT/netbox/netbox/release.yaml"; then
+"$ORACLE_SOURCE_MATERIALIZER" \
+  "$ROOT/netbox" \
+  "$PINNED_SHA" \
+  netbox \
+  "$BUILD_DIR/oracle"
+export NETBOX_ORACLE_SOURCE_DIR="$BUILD_DIR/oracle/netbox"
+if ! grep -qx "version: \"$PINNED_RELEASE\"" "$NETBOX_ORACLE_SOURCE_DIR/release.yaml"; then
   printf 'oracle release metadata is not NetBox %s\n' "$PINNED_RELEASE" >&2
   exit 1
 fi

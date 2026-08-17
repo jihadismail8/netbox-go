@@ -10,10 +10,11 @@ import (
 type HTTPOption func(*httpOptions)
 
 type httpOptions struct {
-	isProd    bool
-	instance  *registry.ServiceInstance
-	iRegistry registry.Registry
-	tls       config.TLS
+	isProd             bool
+	instance           *registry.ServiceInstance
+	iRegistry          registry.Registry
+	tls                config.TLS
+	corsAllowedOrigins []string
 }
 
 func defaultHTTPOptions() *httpOptions {
@@ -49,5 +50,13 @@ func WithHTTPRegistry(iRegistry registry.Registry, instance *registry.ServiceIns
 func WithHTTPTLS(tls config.TLS) HTTPOption {
 	return func(o *httpOptions) {
 		o.tls = tls
+	}
+}
+
+// WithHTTPCORSAllowedOrigins supplies the validated exact-origin CORS policy.
+func WithHTTPCORSAllowedOrigins(origins []string) HTTPOption {
+	ownedOrigins := append([]string(nil), origins...)
+	return func(o *httpOptions) {
+		o.corsAllowedOrigins = append([]string(nil), ownedOrigins...)
 	}
 }

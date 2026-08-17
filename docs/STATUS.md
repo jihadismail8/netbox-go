@@ -1,14 +1,15 @@
 # Project status
 
-Updated: 2026-08-01
+Updated: 2026-08-17
 
 Compatibility baseline: checked-in NetBox source snapshot at commit
 `fbb948d30e79ce657fac62994a22aca72c1770a9`
 (`v4.4.6-7-gfbb948d30`).
 
-This is an evidence ledger, not a percentage estimate. Source code and test
-harnesses show what can be exercised; a gate is passed only by a retained
-artifact from the current revision. The tier definitions in
+This is an evidence ledger, not a single percentage estimate. It includes
+bounded ratios only where the denominator and tier are explicit. Source code
+and test harnesses show what can be exercised; a gate is passed only by a
+retained artifact from the current revision. The tier definitions in
 [Compatibility](COMPATIBILITY.md) remain authoritative.
 
 ## Summary
@@ -27,15 +28,116 @@ groups, memberships, model grants, and object-scoped grants are persisted by
 the Go-owned identity implementation. The displaced legacy stacks for all 13
 resources have been physically removed.
 
-The profile nevertheless remains **T1 and pre-publication**. Repository V0 and
-the recovery PostgreSQL replay are now retained, but the complete V1-V5
-security, behavior, differential REST, corresponding gRPC, deployment, and
-real-browser boundaries are not. No T2, T3, T4, V6 sign-off, or publication is
-claimed.
+The profile nevertheless remains **T1 and pre-publication**. The source-digest
+algorithm is now versioned `source-v2` and includes executable mode plus closed
+owned symlinks. That deliberate hardening supersedes the mode-blind digest used
+by the 2026-08-03 V0 artifact, so both existing V0 artifacts are historical and
+a fresh committed source-v2 `CW1-G00` run must be retained before feature work
+resumes. The 293-row `CW1-V2-01` structural authority has human acceptance,
+while its 275 unresolved and 18 contradicted behavior rows remain open. V1-V5
+contain implementation and evidence gaps. No T2, T3, T4, V6
+sign-off, or publication is claimed until corresponding current artifacts are
+retained.
 
 > **Operational boundary:** this is a development build for disposable data.
 > Production TLS, schema upgrades, backup/restore, operational hardening, and
 > V1-V6 evidence are not complete. Do not expose it as a production service.
+
+## Quantitative rewrite audit
+
+There is no defensible single completion percentage. Catalogue breadth,
+implemented structure, verified behavior, and production readiness are
+different dimensions and must remain separate.
+
+| Dimension                     | Accepted denominator                    | Current state                                             | Remaining                                              |
+| ----------------------------- | --------------------------------------- | --------------------------------------------------------- | ------------------------------------------------------ |
+| High-level baseline catalogue | 155 resource/action entries             | 155 catalogued (100%)                                     | No route/action discovery entries                      |
+| Accepted in-scope baseline    | 153 entries                             | 13 T1 entries (8.50%)                                     | 140 T0 entries (91.50%)                                |
+| In-scope resources            | 131 resources                           | 13 T1 resources (9.92%)                                   | 118 T0 resources                                       |
+| In-scope custom actions       | 22 actions                              | 0 promoted actions                                        | 22 T0 actions                                          |
+| REST compatibility            | Every promoted in-scope capability      | 0 retained T2 capabilities                                | All accepted capabilities as their profiles are opened |
+| gRPC semantic parity          | Every corresponding promoted capability | 0 retained T3 capabilities                                | All corresponding accepted capabilities                |
+| Browser Workflow Parity       | Every declared browser workflow         | 0 retained T4 workflows                                   | First-profile and all later applicable workflows       |
+| Production readiness          | PROD-1 through PROD-7                   | 0 signed-off programs; foundations exist in several areas | All seven exit programs                                |
+
+The catalogue's 100% is discovery at resource/action level, not business-rule
+coverage. Frozen generated artifacts are not counted as implementation. The
+two explicit exclusions are `/api/extras/scripts/` and anonymous
+`/api/users/tokens/provision/`; GraphQL and Python plugin/script/report runtime
+compatibility are also outside the accepted runtime boundary.
+
+### Remaining breadth by module
+
+Counts below combine resources and custom actions because those are the units
+in the authoritative 155-entry baseline inventory.
+
+| Module         | In-scope entries | T1 now | T0 remaining |
+| -------------- | ---------------: | -----: | -----------: |
+| Circuits       |               11 |      0 |           11 |
+| Core           |               13 |      0 |           13 |
+| DCIM           |               54 |     10 |           44 |
+| Extras         |               22 |      0 |           22 |
+| IPAM           |               23 |      3 |           20 |
+| Tenancy        |                6 |      0 |            6 |
+| Users/Identity |                5 |      0 |            5 |
+| Virtualization |                6 |      0 |            6 |
+| VPN            |               10 |      0 |           10 |
+| Wireless       |                3 |      0 |            3 |
+| **Total**      |          **153** | **13** |      **140** |
+
+The 140 deferred entries break down as 102 frozen runtime-disabled REST
+configurations, 16 in-scope resources with no current REST configuration, and
+22 custom actions absent from the current REST inventory. Generated
+counterparts do not advance a tier.
+
+No module is complete. Passing `core-workflow-v1` will verify only its declared
+slice; it will still leave 44 DCIM and 20 IPAM entries for later profiles and
+module closeout.
+
+### Business-logic coverage
+
+The first profile has accepted metadata for 13 resources: 78 CRUD
+resource/operation combinations, 2 gRPC assignment actions, 107 writable
+fields, 84 response-only fields, 65 filters, 81 ordering fields, 15
+relationships, 19 choice fields, and 17 coarse scenarios. Those are declared
+scope, not pass evidence. None of the 17 scenario IDs currently maps through a
+complete traceability chain from pinned source to Go test, differential/parity
+case, applicable browser case or explicit not-applicable classification, and
+retained artifact.
+
+The other 140 in-scope entries still need profile-ready field, presence,
+filter, ordering, relationship, validation, permission, transaction, error,
+side-effect, and workflow discovery. The narrative files under
+[`business-logic/`](business-logic/), [`entities/`](entities/), and
+[`CRUD_PARADIGM.md`](CRUD_PARADIGM.md) are partial derived references with
+known stale paths and inaccurate relationship/delete claims; they are not an
+accepted specification. A precise field/rule-level completion percentage is
+therefore not yet measurable and cannot be inferred from the 8.50% T1 breadth
+ratio.
+
+### Technical-logic coverage
+
+The 13 first-profile resources have typed domain/application contracts,
+application services, private PostgreSQL rows/repositories, canonical REST and
+gRPC adapters, and typed Vue adapters. REST and gRPC share the same use cases;
+the generic raw-map workflow boundary is retired. This is strong structure for
+the first slice, not whole-system completion.
+
+Cross-cutting first-profile work still includes review and retained evidence
+for the implemented explicit CORS allowlist, dependency-aware HTTP/gRPC
+readiness, rule/test/evidence traceability, missing PostgreSQL concurrency
+cases, durable external-gate retention, and protobuf publication controls.
+Outside the first slice, 102 direct-GORM REST
+configurations, 176 generated table-oriented gRPC services, and their retained
+model/DAO/cache/service/protobuf layers are frozen and runtime-disabled. They
+may be reused only through reviewed typed replacements and are retired only
+after capability completion.
+
+Production technical logic is earlier still: there is no versioned upgrade
+engine or import/cutover system, production-safe TLS refusal and secret/CORS
+program is incomplete, probes are not dependency-truthful, and the required
+operability, performance, backup/restore, supply-chain, and release controls
+have not passed their programs.
 
 ## Current execution recovery
 
@@ -56,12 +158,16 @@ have been structurally recovered. Current implementation observations are:
 - backend coverage is non-mutating, records an exact package/count baseline,
   rejects regression or exclusion drift, and is part of `make check`.
 
-The retained V0 result covers tested digest
+The historical V0 result covers tested digest
 `sha256:a55fab792cea1100e5fd2cc641fad02345189dd27d0b28c3b7ed2b1e1dcc22e1`
 and is recorded in the
-[recovery artifact](evidence/2026-08-01-core-workflow-v1-v0.md). Its
-claim-attestation mapping is authoritative in [Evidence](evidence/README.md).
-V1-V6 remain separate first-profile evidence work.
+[recovery artifact](evidence/2026-08-01-core-workflow-v1-v0.md). Because the
+current source includes non-claim-only implementation and test changes, the
+old claim-attestation mapping was not carried forward. The later
+[post-cleanup V0 artifact](evidence/2026-08-03-post-cleanup-v0.md) recorded a
+fresh exact-digest pass under the superseded v1 algorithm. It remains useful
+historical evidence but cannot attest a source-v2 revision. V1-V6 remain
+separate first-profile work, and source-v2 V0 retention is pending.
 
 ## Current surface inventory
 
@@ -150,45 +256,79 @@ Those counts describe artifacts, not compatible capabilities.
   [`tests/browser/`](../tests/browser/), but its current successful execution is
   pending evidence and therefore does not earn T4.
 
-### Physical legacy retirement
+### Physical legacy retirement and wrapper cleanup
 
 The first-profile model, DAO, cache, service, handler, router, and legacy
 protobuf/generated stacks are removed. This retirement happened historically
 while the profile was still T1, earlier than ADR 0004's capability-completion
 condition. Do not restore those paths solely to recreate the intended ordering,
-and do not use this deviation as precedent: no additional displaced stack may
-be deleted before its replacement completes the governing gate. The remaining
-102 REST configurations and 176 gRPC services correspond only to deferred
-resources and stay frozen, runtime-disabled, and unpublished.
+and do not use this deviation as precedent.
+
+[ADR 0005](adr/0005-retire-dormant-sponge-http-wrappers.md) separately
+authorized a narrow source-hygiene cleanup: exactly 118 untouched,
+runtime-dormant Sponge per-resource handler delegates and their 118 matching
+top-level route wrappers were removed. They contained no hand-owned behavior,
+were absent from production composition, and did not define the authoritative
+REST inventory. Their removal changes no capability classification, tier,
+completion, or publication claim.
+
+The separate 102 direct-GORM REST configurations and 176 generated gRPC
+services still correspond only to deferred resources. Their models, DAOs,
+caches, services, and protobufs also remain frozen and runtime-disabled for
+reuse or reference. No additional displaced stack may be deleted before its
+replacement completes ADR 0004's governing gate and CP-13.
 
 ## Evidence status
 
-| Checkpoint               | Implementation present                                                            | Current durable result                                                        | Status                    |
-| ------------------------ | --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------- |
-| V0 repository gate       | Backend/frontend quality gates, coverage policy, and deterministic checks exist   | [2026-08-01 recovery artifact](evidence/2026-08-01-core-workflow-v1-v0.md)    | Passed on retained digest |
-| V1 identity/RBAC         | Persisted groups, memberships, grants, object visibility, CLI/session/token tests | No retained full security run                                                 | Pending                   |
-| V2 domain behavior       | Shared validation/workflows and focused positive/negative tests                   | No complete profile evidence bundle                                           | Pending                   |
-| V3 PostgreSQL/deployment | Typed schema, concurrency/bootstrap suites, Compose smoke harness                 | Recovery PostgreSQL replay retained; no complete PostgreSQL/Compose V3 bundle | Pending                   |
-| V4 REST/gRPC             | Strict fail-closed oracle comparator and all-resource gRPC parity suites          | No retained current oracle/parity run                                         | T1; pending               |
-| V5 Vue                   | Typed adapters and real-browser harness                                           | No retained current browser run                                               | T1; pending               |
-| V6 sign-off              | First-profile legacy stacks physically retired                                    | V0-V5 have not been retained green together                                   | Not earned                |
+| Checkpoint               | Present foundation                                                                              | Missing before exit                                                                                             | Status                                           |
+| ------------------------ | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| V0 repository gate       | Backend/frontend quality gates, coverage policy, deterministic checks                           | Fresh committed source-v2 `make check` artifact and human evidence review                                       | Historical v1 pass; source-v2 pending            |
+| V1 identity/RBAC         | Persisted groups, memberships, grants, CLI, session/token paths, and trusted-origin CORS source | Fresh V0, CORS review/evidence, and the complete two-transport credential/RBAC/admin/secret matrix              | CORS evidence and broader implementation pending |
+| V2 domain behavior       | Typed shared services, broad focused tests, and reviewed machine-readable 293-row traceability  | Uncovered presence, invariant, rollback, side-effect, and concurrency cases                                     | V2-01 done; behavior/evidence pending            |
+| V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, and Compose harness                                       | Dependency-aware HTTP/gRPC readiness, dependency loss/recovery, remaining locking cases, retained external run  | Implementation and evidence pending              |
+| V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                     | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report      | T1; implementation/evidence pending              |
+| V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                 | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes | T1; implementation/evidence pending              |
+| V6 sign-off              | First-profile legacy stacks physically retired                                                  | V0-V5 retained green together, per-capability review, protobuf freeze/breaking baseline, joint sign-off         | Not earned                                       |
 
 See [Evidence](evidence/README.md) for the artifact policy and commands.
 
 ## Remaining first-profile work
 
-- Keep V0 green and retain every result against the exact source digest with
-  the pinned Go/Node/npm toolchains.
-- Run the strict differential oracle after comparator hardening and retain its
-  report. The comparator must not collapse 401/403, validation reasons,
-  trailing slashes, missing/extra fields, state, or side effects.
-- Run and retain the complete real-PostgreSQL bootstrap, constraint,
-  concurrency, rollback, and deployment-smoke results.
-- Run and retain the complete gRPC lifecycle/error/RBAC/rollback/assignment
-  parity set.
-- Run and retain the clean-database real-browser DCIM/IPAM workflows and their
-  permission, rollback, validation, assignment, and delete-warning cases.
-- Keep the profile pre-publication and at T1 until the evidence above is
-  complete and reviewed.
+1. Keep `CW1-G00` green with pinned Go, Node, and npm.
+2. Complete `CW1-V1-01` through `CW1-V1-04`: close CORS and the full
+   identity/security matrix, then retain V1.
+3. Complete `CW1-V2-02` through `CW1-V2-08`: use the accepted traceability for
+   every profile scenario and plan rule;
+   implement every uncovered domain, presence, rollback, object-change, and
+   PostgreSQL case.
+4. Complete `CW1-V3-01` through `CW1-V3-05`: make HTTP and gRPC readiness
+   dependency-aware, add loss/recovery and missing concurrency cases, then
+   retain the real-PostgreSQL and deployment V3 bundle.
+5. Complete `CW1-V4-01` through `CW1-V4-06`: expand the strict REST oracle from
+   broad CRUD/filter coverage to every
+   declared positive and negative rule; earn per-capability T2, then prove the
+   same outcomes through gRPC for T3.
+6. Complete `CW1-V5-01` through `CW1-V5-05`: expand the browser suite to all V5
+   outcomes, wire durable artifact retention, and earn T4 only for the
+   workflows actually exercised.
+7. Complete `CW1-V6-01` through `CW1-V6-03`: review V0-V5 together, freeze the
+   published protobuf baseline, record V6, and only then open the next
+   Capability Profile.
+
+## Remaining complete-replacement program
+
+After first-profile V6, the accepted queue still contains 19 candidate
+Capability Profiles covering 118 resources and 22 custom actions. Each must
+pass discovery, typed implementation, REST T2, corresponding gRPC T3,
+applicable browser T4, evidence retention, and safe legacy displacement. Ten
+module-closeout passes must then reconcile every deferred field, action, bulk
+shape, cross-module relation, nested projection, and exclusion before any
+module is complete.
+
+Production release is a separate final program. PROD-1 through PROD-7 cover
+versioned schema lifecycle, data migration/cutover, security, operability,
+reliability/performance, supply chain/deployment, and release/cutover. All
+seven remain unsigned; current `AutoMigrate` bootstrap is only a disposable
+development convenience.
 
 Passing the first profile will not make all of DCIM, IPAM, or NetBox complete.

@@ -15,6 +15,7 @@ import (
 	"netbox-go/internal/config"
 	"netbox-go/internal/contenttype"
 	"netbox-go/internal/database"
+	runtimeconfig "netbox-go/internal/platform/config"
 )
 
 var (
@@ -22,9 +23,14 @@ var (
 	configFile string
 )
 
-// InitApp initial app configuration
-func InitApp() {
-	initConfig()
+// InitApp initializes the application and returns its validated HTTP runtime
+// configuration for explicit service composition.
+func InitApp() runtimeconfig.HTTPRuntime {
+	return initApp(database.InitDB)
+}
+
+func initApp(initDatabase func()) runtimeconfig.HTTPRuntime {
+	httpRuntime := initConfig()
 	cfg := config.Get()
 
 	// initializing log
@@ -69,7 +75,7 @@ func InitApp() {
 	}
 
 	// initializing database
-	database.InitDB()
+	initDatabase()
 	logger.Infof("[%s] was initialized", cfg.Database.Driver)
 
 	// auto-migrate all models (creates tables if they don't exist)
@@ -90,22 +96,26 @@ func InitApp() {
 	if cfg.App.CacheType != "" {
 		logger.Infof("[%s] was initialized", cfg.App.CacheType)
 	}
+
+	return httpRuntime
 }
 
-func initConfig() {
+func initConfig() runtimeconfig.HTTPRuntime {
 	flag.StringVar(&version, "version", "", "service Version Number")
 	flag.StringVar(&configFile, "c", "", "configuration file")
 	flag.Parse()
 
-	getConfigFromLocal()
+	httpRuntime := getConfigFromLocal()
 
 	if version != "" {
 		config.Get().App.Version = version
 	}
+
+	return httpRuntime
 }
 
 // get configuration from local configuration file
-func getConfigFromLocal() {
+func getConfigFromLocal() runtimeconfig.HTTPRuntime {
 	if configFile == "" {
 		configFile = configs.Location("netbox_go.yml")
 	}
@@ -116,4 +126,10 @@ func getConfigFromLocal() {
 	if err := config.ApplyEnvironmentOverrides(); err != nil {
 		panic("invalid environment configuration: " + err.Error())
 	}
+
+	httpRuntime, err := runtimeconfig.LoadHTTPRuntimeFromEnvironment()
+	if err != nil {
+		panic("invalid environment configuration: " + err.Error())
+	}
+	return httpRuntime
 }

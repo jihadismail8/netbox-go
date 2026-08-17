@@ -1,0 +1,47 @@
+# Implementation handoffs
+
+This directory contains bounded execution packets for implementation agents.
+The canonical goal state and dependency graph remain in the
+[roadmap](../ROADMAP.md); these packets refine one ready goal into exact code,
+test, evidence, and review boundaries. They do not prove that the described
+implementation exists.
+
+## Rules
+
+1. One packet owns one reviewable outcome and one roadmap goal or an explicitly
+   named portion of it.
+2. The executor records the starting source digest and existing dirty paths
+   before editing. Existing user work is never reset, regenerated, or rewritten
+   wholesale.
+3. The packet's permitted-file list is closed. A needed file outside it is a
+   stop condition until the packet is reviewed and amended.
+4. The packet's forbidden scope, authoritative inputs, wire behavior, scenario
+   matrix, command ladder, and exit evidence are requirements, not suggestions.
+5. The executor fixes a failure at the lowest responsible layer. Tests,
+   comparators, normalizers, security controls, coverage floors, inventories,
+   and generation checks are never weakened to obtain a pass.
+6. Implementation evidence and compatibility-tier promotion are separate.
+   Passing a bounded increment closes only the named goal; it does not imply
+   T2, T3, T4, profile completion, module completion, or production readiness.
+7. A claim-changing source edit uses the reviewed two-digest attestation
+   protocol in the
+   [execution playbook](../IMPLEMENTATION_EXECUTION_PLAYBOOK.md#two-digest-claim-attestation).
+8. Completion reports contain no password, password/credential hash, cookie,
+   CSRF value, bearer/API token, DSN, raw credential-bearing header, or
+   complete configuration. Source and content digests required for evidence
+   remain valid.
+
+## Packets
+
+| Goal        | State      | Intended executor | Packet                                        |
+| ----------- | ---------- | ----------------- | --------------------------------------------- |
+| `CW1-V1-01` | `evidence` | Codex GPT-5.6 Sol | [Trusted-origin CORS](CW1-V1-01.md)           |
+| `CW1-V2-01` | `done`     | Codex GPT-5.6 Sol | [Machine-readable traceability](CW1-V2-01.md) |
+
+`evidence` means the implementation candidate is present, but its committed
+source-v2 run and human acceptance are still pending. It does not close V1 or
+promote a compatibility tier.
+
+`done` for `CW1-V2-01` records accepted structural authority only. Its pending
+and contradicted behavior remains open, it retains no V0 artifact, and it does
+not promote a compatibility tier.

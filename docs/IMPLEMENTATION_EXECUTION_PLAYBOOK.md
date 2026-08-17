@@ -1,17 +1,18 @@
 # Whole-project implementation execution playbook
 
 - Status: canonical operational companion
-- Audience: implementation agents (primary handoff: GPT-5.6 Luna), reviewers,
+- Audience: implementation agents (active executor: Codex GPT-5.6 Sol), reviewers,
   and release operators
 - Compatibility Baseline:
   `fbb948d30e79ce657fac62994a22aca72c1770a9`
   (`v4.4.6-7-gfbb948d30`)
-- Updated: 2026-08-01
+- Updated: 2026-08-03
 
 This playbook turns the accepted architecture, compatibility contract, coding
 standards, and roadmap into an executable sequence. It does not replace those
-documents or make new product decisions. Its immediate purpose is to recover
-the partially completed first Capability Profile without guessing; its
+documents or make new product decisions. The typed-boundary recovery is now
+structurally closed; its immediate purpose is to finish the first Capability
+Profile's identified implementation and evidence gaps without guessing. Its
 long-term purpose is to give each later profile the same repeatable path from
 discovery to retained evidence.
 
@@ -37,7 +38,7 @@ completed structural step is still not retained compatibility-tier evidence.
 14. [Production readiness](#14-production-readiness-program)
 15. [Verification command ladder](#15-verification-command-ladder)
 16. [Evidence procedure](#16-evidence-procedure)
-17. [GPT-5.6 Luna increment specification](#17-increment-specification-for-gpt-56-luna)
+17. [Implementation-agent increment specification](#17-increment-specification-for-implementation-agents)
 18. [Definition of done](#18-definition-of-done)
 19. [Forbidden shortcuts](#19-forbidden-shortcuts-and-hard-stop-review-findings)
 20. [Implementation blueprints](#20-implementation-blueprints)
@@ -61,7 +62,8 @@ Read these sources before changing code:
 7. [Project status](STATUS.md) governs what may currently be claimed.
 8. [Implementation plan](IMPLEMENTATION_PLAN.md) governs the first profile's
    accepted behavior and sequence.
-9. [Roadmap](ROADMAP.md) governs delivery gates after the first profile.
+9. [Roadmap](ROADMAP.md) governs stable goal IDs, dependencies, and delivery
+   gates across the remaining program.
 10. This playbook governs day-to-day execution order and handoff format.
 
 If two sources conflict:
@@ -75,7 +77,8 @@ If two sources conflict:
 - stop and record a real unresolved hard-to-reverse decision rather than
   silently choosing a new architecture.
 
-Two existing contradictions have settled operational interpretations:
+Two existing contradictions and one bounded exception have settled operational
+interpretations:
 
 1. ADR 0004 allows displaced legacy artifacts to be retired only after their
    replacement satisfies capability completion. The first-profile legacy
@@ -89,6 +92,12 @@ Two existing contradictions have settled operational interpretations:
    response-body value; and a generated API-token secret may be returned only
    once in its documented creation response. Password hashes, reusable token
    material after creation, DSNs, and full configuration are never serialized.
+3. ADR 0005 authorizes only the completed removal of 118 untouched,
+   runtime-dormant Sponge handler delegates and their 118 matching top-level
+   route wrappers. It does not retire the separate 102 direct-GORM DRF
+   configurations, 176 generated gRPC services, or their model, DAO, cache,
+   service, and protobuf source; it earns no tier or completion claim and may
+   not be generalized to another early deletion.
 
 Baseline compatibility tiers apply to baseline capabilities. Secure identity
 extensions cannot earn REST T2 against an upstream operation they intentionally
@@ -100,7 +109,8 @@ The project has three nested outcomes:
 
 ### Outcome A — close the first Core Workflow Profile
 
-- [ ] Restore and retain a green V0 repository gate.
+- [x] Restore and retain a green V0 repository gate for the 2026-08-03 audited
+      source.
 - [x] Close the dynamic/raw-map application-boundary exception.
 - [ ] Retain the V1 identity and authorization matrix.
 - [ ] Prove every declared first-profile invariant and rollback path at V2.
@@ -121,8 +131,15 @@ The project has three nested outcomes:
       Workflow Parity.
 - [ ] Keep every omitted operation visibly T0/deferred.
 - [ ] Retire displaced frozen scaffolding only after the governing capability
-      completion gate.
+      completion gate. ADR 0005's completed wrapper cleanup is the sole bounded
+      exception and does not relax this rule for retained stacks.
 - [ ] Never call an entire module complete from route or file counts.
+
+The accepted denominator is 153 entries after two explicit exclusions. At the
+2026-08-03 audit, 13 resources are T1 and 140 entries remain T0; no capability
+has retained T2, T3, or T4 evidence. The later queue contains 19 candidate
+profiles covering 118 resources and 22 actions, followed by 10 module-closeout
+passes. These are planning units, not earned progress.
 
 ### Outcome C — production readiness
 
@@ -177,8 +194,8 @@ Services.
 
 ## 4. Executor operating contract
 
-GPT-5.6 Luna, or any replacement executor, must follow this contract for every
-increment.
+The active implementation agent, including Codex GPT-5.6 Sol, must follow this
+contract for every increment.
 
 ### Before editing
 
@@ -209,7 +226,9 @@ increment.
       machine has a different version.
 - [ ] Do not mix unrelated formatting, renaming, cleanup, dependency updates,
       or new capabilities into the increment.
-- [ ] Do not delete legacy code before ADR 0004's completion condition.
+- [ ] Do not delete legacy code before ADR 0004's completion condition. The
+      fixed ADR 0005 wrapper set is already retired and may not be restored or
+      broadened.
 - [ ] Re-run a focused test after each logical edit, then climb the gate ladder.
 
 ### Before reporting completion
@@ -249,7 +268,9 @@ canonical documents remain authoritative if this summary ever drifts.
 
 - **GOV-001 — Fixed oracle.** Baseline behavior means the checked-in source at
   `fbb948d30e79ce657fac62994a22aca72c1770a9`, never a tag, latest release, or
-  remembered NetBox behavior.
+  remembered NetBox behavior. Materialize that exact committed tree through
+  direct tree/blob reads with Git replacement objects and grafts disabled and
+  local export attributes bypassed; never mount live worktree-only content.
 - **GOV-002 — Standalone runtime.** Python/Django and the upstream tree may be
   used only for pinned-source discovery and the differential development
   oracle, never in the delivered build, migration, startup, deployment, or
@@ -327,7 +348,9 @@ canonical documents remain authoritative if this summary ever drifts.
   reason, authorization, missing/extra fields, state, or side effects.
 - **COMP-004 — Verified oracle configuration.** Differential jobs refuse the
   wrong SHA, database, timezone, authentication policy, plugin state, fixture,
-  or effective configuration.
+  or effective configuration. The source materializer also refuses tracked
+  dirt, ignores local replacement refs, grafts, and export attributes, excludes
+  untracked/ignored files, and fails closed on unsupported Git entry types.
 - **COMP-005 — Bound identifiers.** Scenario-generated IDs bind to named
   objects. An unbound or ambiguously rebound ID is a comparator failure.
 - **COMP-006 — Tier order.** T0 catalogue → T1 implementation/scaffolding → T2
@@ -532,10 +555,16 @@ canonical documents remain authoritative if this summary ever drifts.
 - **TEST-009 — Evidence is current.** Behavioral contract, comparator, fixture,
   implementation, or security changes invalidate affected prior artifacts.
   Claim-only tier/link/status metadata follows the two-digest attestation.
+  Every retained tested state is a full reachable Git revision whose
+  `source-v2` manifest is reconstructed from the commit tree; an asserted
+  historical digest or manifest is not authority. Historical-object reads
+  disable local Git replacement refs and grafts.
 - **TEST-010 — Evidence is durable and clean.** Record source digest/revision,
   command, toolchain, non-secret config, timestamps, result, scenario totals,
   state/effect checks, and a durable credential-free location. `/tmp` is
-  diagnostic only.
+  diagnostic only. Machine validation proves source/claim integrity, not that
+  a run occurred or its environment/result was truthful; durable runner
+  provenance and designated human acceptance remain required.
 - **OPS-001 — Production claims wait.** Missing-table-only AutoMigrate and DB
   resets are development conveniences, not an upgrade strategy.
 - **OPS-002 — Observable ownership.** Every production service, alert,
@@ -602,10 +631,14 @@ The prior implementation thread was interrupted by an execution usage limit
 and later context-window failures. It was not waiting on an unresolved product
 or architecture decision.
 
-## 7. Immediate recovery sequence
+## 7. Repeatable V0 recovery procedure
 
-Do R0-R8 in order. Do not start a later profile, add first-profile scope, or
-change public behavior during recovery.
+R0-R8 are closed for the current audited source and remain here as the
+repeatable recovery procedure. If V0 becomes red or its evidence is invalidated,
+run R0-R8 in order before resuming feature work. While recovering, do not start
+a later profile, add first-profile scope, or change public behavior. When V0 is
+green and current—as it is in the 2026-08-03 ledger—continue with section 8;
+do not treat this historical procedure as the active backlog.
 
 ### Recovery execution status
 
@@ -615,7 +648,7 @@ checklists below remain the repeatable audit procedure.
 | Steps   | Current execution state                                                                                                                                                                                                       |
 | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | R0-R5.6 | Structurally complete: typed composition/parity, canonical `/ping` containment, precise row ownership, generic-package retirement, disposable-PostgreSQL verification, and non-mutating coverage enforcement are implemented. |
-| R6-R8   | Closure is governed by the retained V0 artifact and exact digest linked from Status/Evidence. The checklists remain the repeatable procedure and do not themselves make a current claim.                                      |
+| R6-R8   | Structurally closed and retained by the 2026-08-03 exact-digest V0 artifact. The checklists remain the repeatable recovery procedure and do not themselves make later claims.                                                 |
 
 ### R0 — re-establish the observed baseline
 
@@ -624,7 +657,7 @@ work.
 
 **Checklist**
 
-- [ ] Read `CONTEXT.md`, the four ADRs, Compatibility, Standards, Testing,
+- [ ] Read `CONTEXT.md`, the five ADRs, Compatibility, Standards, Testing,
       Status, and the first-profile manifest.
 - [ ] Record `go version`, `node --version`, `npm --version`, and pinned
       versions without changing pins.
@@ -938,7 +971,25 @@ durably retained and linked. Only then may profile completion work resume.
 
 V0 is a prerequisite, not a substitute for the following boundaries.
 
+The 2026-08-03 audit found real completion work in every open boundary, not
+only missing executions:
+
+| Boundary | Confirmed gap before its retained run                                                                                                  |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| V1       | Explicit trusted-origin CORS behavior and complete cross-transport security traceability                                               |
+| V2       | Scenario/rule-to-test/evidence matrix plus uncovered presence, invariant, rollback, object-change, and concurrency cases               |
+| V3       | Dependency-aware HTTP/gRPC readiness, dependency loss/recovery, and remaining PostgreSQL locking proof                                 |
+| V4       | Missing permission, presence, conflict, invariant, rollback, and durable-effect differential/parity cases                              |
+| V5       | Missing session refresh, edit/filter, late rollback, explicit-null, reassignment, conflict/not-found, and exact-state browser outcomes |
+| V6       | Same-digest V0-V5 review, protobuf freeze/breaking baseline, and joint sign-off                                                        |
+
 ### V1 — identity, session, token, CLI, and RBAC evidence
+
+Before executing the matrix, add an explicit trusted-origin allowlist to owned
+configuration and the canonical HTTP adapter. Credentialed requests must never
+use `*`; missing, malformed, or untrusted origins receive no CORS grant, while
+an allowed origin receives only the declared methods and headers. Test both
+preflight and actual requests without weakening CSRF.
 
 **Credential matrix**
 
@@ -990,7 +1041,19 @@ Identity operations remain classified as extensions where applicable.
 ### V2 — domain and application evidence
 
 Create a traceability row for every manifest scenario and every rule in
-`IMPLEMENTATION_PLAN.md`. At minimum cover:
+`IMPLEMENTATION_PLAN.md`. Store the machine-readable matrix under the pinned
+contract tree and validate it in `contracts-check`. Each row must name:
+
+- stable rule/scenario ID and capability/operation;
+- exact pinned source and upstream-test references;
+- accepted profile/resource-metadata reference;
+- domain/application/PostgreSQL test references;
+- REST differential and corresponding gRPC case references;
+- applicable browser case; and
+- current tier plus retained evidence link, or an explicit pending reason.
+
+Validation must reject an accepted scenario with no row, a stale test path, a
+tier above retained evidence, or an unclassified rule. At minimum cover:
 
 - [ ] all 13 resources' create/get/list/PUT/PATCH/delete positive paths;
 - [ ] defaults, read-only fields, nullability, absent/null/zero/value updates;
@@ -1017,7 +1080,12 @@ multi-object mutation proves atomic rollback.
 
 ### V3 — real PostgreSQL and standalone deployment
 
-Run the DSN-enabled suites listed in Testing, then deployment smoke.
+Replace the current static HTTP `/ready` and default gRPC health state with
+dependency-aware readiness owned by platform composition. Liveness may report
+the process alive; readiness must fail when required PostgreSQL connectivity is
+lost and recover after the dependency does. Run the DSN-enabled suites listed
+in Testing only after these behaviors and their loss/recovery tests exist, then
+run deployment smoke.
 
 **PostgreSQL checklist**
 
@@ -1068,6 +1136,12 @@ go test ./test/parity -count=1
 - [ ] Only committed normalizers were used.
 - [ ] Secure identity divergence is excluded from baseline T2 and reported in
       its own matrix.
+- [ ] The audit gaps are exercised: DeviceRole hierarchy; RackType/Rack
+      propagation and placement; DeviceType height transitions; Device naming;
+      Interface immovability and template non-retroactivity; IP assignment
+      invalid-pair/rollback matrices; limited-user authorization; systematic
+      absent/null/zero/empty/value behavior; protected deletes; and exact
+      object-change/state outcomes.
 
 **gRPC T3 review**
 
@@ -1443,7 +1517,9 @@ tested digest.
 2. Link artifacts from the ledger and profile report using the two-digest
    attestation procedure in section 16.
 3. Review normalizers and scenario coverage.
-4. Promote only the exact capability rows exercised.
+4. Retain evidence only against the exact rows exercised. Promote only a
+   tier-owning resource capability whose complete applicable owner-row
+   boundary is closed; rows are proof units, not independent tier owners.
 5. Keep the profile pre-publication until all of its exit conditions pass
    together.
 6. Update Status conservatively and run `make check` on the final attestation
@@ -1452,6 +1528,10 @@ tested digest.
 ### CP-13 — retire displaced scaffolding
 
 This step occurs only after capability completion under ADR 0004.
+ADR 0005's already-completed removal of the fixed 118 dormant handler/router
+wrapper pairs is a source-hygiene exception, not a CP-13 precedent; the
+separate DRF registry, generated gRPC services, and lower frozen stacks remain
+subject to every step below.
 
 - [ ] Enumerate the exact generated model/DAO/cache/service/handler/router/proto
       artifacts displaced by the completed capability.
@@ -1764,7 +1844,7 @@ integrity, SSRF/path/archive defenses, crash recovery, and object changes.
 **Human-reviewed ADR prerequisite:** before CP-02, accept the durable
 queue/worker state machine, lease and cancellation model, retry/idempotency
 boundary, and Extension Service split for behavior formerly supplied by
-Python. Luna must not choose these cross-cutting contracts inside an
+Python. The implementation agent must not choose these cross-cutting contracts inside an
 implementation increment. Do not pretend a Go stub is script compatibility.
 
 ### Profile 17 — `extras-metadata-v1`
@@ -1785,7 +1865,7 @@ precedence/merge, template sandboxing, injection defenses, and visibility.
 **Human-reviewed ADR prerequisite:** before CP-02, accept the closed
 cross-module object registry and the template language/sandbox/resource-limit
 contract that can satisfy the verified render behavior without embedding
-Python. Luna must not select a rendering engine ad hoc.
+Python. The implementation agent must not select a rendering engine ad hoc.
 
 ### Profile 18 — `extras-productivity-v1`
 
@@ -1804,7 +1884,7 @@ schema, table-config bounds, export authorization, and no unsafe HTML.
 
 **Human-reviewed ADR prerequisite:** before CP-02, accept attachment blob
 storage, integrity, retention/deletion, backup, and serving policy plus the
-safe export-rendering boundary. Luna must not introduce a storage provider or
+safe export-rendering boundary. The implementation agent must not introduce a storage provider or
 template engine inside a feature increment.
 
 ### Profile 19 — `extras-automation-v1`
@@ -1822,7 +1902,7 @@ ownership.
 
 **Human-reviewed ADR prerequisite:** before CP-02, accept stable domain-event
 versioning, transactional outbox ownership, delivery guarantees, replay/dead
-letter behavior, and Extension Service contracts. Luna must not invent these
+letter behavior, and Extension Service contracts. The implementation agent must not invent these
 cross-cutting guarantees while implementing a resource.
 
 ### Inventory arithmetic check
@@ -2176,8 +2256,12 @@ Evidence promotion necessarily edits Status/profile metadata, and
 `make source-digest` includes those files. Avoid an endless
 run → document → changed digest → rerun loop as follows:
 
-1. Compute `tested_digest`, run every required gate without changing owned
-   source, and confirm the digest is unchanged afterward.
+1. Commit the exact intended tested state, record its full Git
+   `tested_revision`, compute its versioned `source-v2` `tested_digest`, run
+   every required gate without changing owned source, and confirm the digest
+   is unchanged afterward. The validator must reconstruct the same complete
+   owned-source manifest from that reachable commit with Git replacement
+   objects and grafts disabled.
 2. Retain the external artifacts against `tested_digest`.
 3. Make only reviewed claim-only edits:
    - evidence summaries/ledger links under `docs/evidence/`;
@@ -2186,22 +2270,33 @@ run → document → changed digest → rerun loop as follows:
    - generated inventory/contract documentation resulting solely from that
      metadata; and
    - conservative claim text in `docs/STATUS.md`.
-4. Produce a file-and-content-hash manifest of that post-test diff. Human review
-   must confirm it changes no route, field behavior, schema, code, scenario,
-   fixture, comparator, normalizer, permission/security rule, or toolchain.
+4. Retain the complete tested `make source-manifest` output, then produce the
+   exact derived post-test diff. `source-v2` includes normalized executable
+   mode, byte size/content hash, and closed relative symlink targets. Human
+   review must confirm the diff changes no route, field behavior, schema, code,
+   scenario, fixture, comparator, normalizer, permission/security rule, or
+   toolchain.
 5. Compute `attestation_digest`, run `make check`, and record its result.
-6. Write a credential-free attestation under `docs/evidence/` mapping
-   `attestation_digest` to `tested_digest`, the reviewed diff manifest, and
-   the external artifact locations.
+6. Write a credential-free `netbox-go-evidence-v2` attestation under
+   `docs/evidence/` mapping the attestation digest to tested revision/digest,
+   exact claim diff, external artifacts, and a claim digest over the complete
+   verification set plus every consumer row's full assessment, applicability,
+   and proof assignment/object. Result payload commitments hash exact raw
+   non-marker bytes; the artifact must decode as valid UTF-8 and marker lines
+   must be ASCII.
 
 The released/claimed revision is `attestation_digest`; behavioral external
-results attest `tested_digest` through that reviewed mapping. Any edit outside
+results attest `tested_digest` through that reviewed mapping. Git reachability
+and machine validation establish internal integrity only; the retained runner
+receipt/provenance and explicit human evidence review establish that the run
+and result are authentic. Any edit outside
 the claim-only list, or any ambiguity about its effect, requires rerunning the
 affected external gates.
 
 ### Before a retained run
 
-- [ ] Start from the exact intended source digest/revision.
+- [ ] Start from a committed full Git revision and record its exact
+      `source-v2` digest/manifest.
 - [ ] Use the pinned toolchain and record versions.
 - [ ] Use an owned disposable process/database/project with deterministic
       fixtures.
@@ -2226,8 +2321,10 @@ affected external gates.
       never solely under `/tmp`.
 - [ ] Link source digest, command, toolchain, config class, scenario coverage,
       and location from the evidence ledger.
-- [ ] Link the result to exact capability/profile rows.
-- [ ] Promote only covered rows and keep failures/deferred work visible.
+- [ ] Link the result to exact capability/profile rows, assessments,
+      applicability, proofs, and evidence references through the claim digest.
+- [ ] Retain only exercised rows. Promote a resource tier only after all of its
+      applicable owner rows close; keep partial/failing rows visible.
 - [ ] Have a reviewer verify normalizers and artifact integrity.
 - [ ] When claim metadata changes the digest, retain the two-digest attestation
       and final `make check` result.
@@ -2236,7 +2333,7 @@ Recommended concise summary name:
 `docs/evidence/YYYY-MM-DD-<profile>-<gate>.md`. Large raw logs belong in
 durable CI storage with a stable credential-free link and retention policy.
 
-## 17. Increment specification for GPT-5.6 Luna
+## 17. Increment specification for implementation agents
 
 Give the executor one block in this form. Do not hand it “implement the next
 module” without a bounded acceptance unit.
@@ -2320,6 +2417,8 @@ Place these constraints at the top of every implementation prompt:
   AutoMigrate.
 - Never promote status without current durable boundary evidence.
 - Do not delete more legacy scaffolding before ADR 0004's completion gate.
+- ADR 0005's fixed handler/router wrapper cleanup is complete; never restore,
+  regenerate, broaden, or use it to justify another early deletion.
 - Stop and report if a new exception or hard-to-reverse decision is required.
 
 ## 18. Definition of done
@@ -2351,7 +2450,8 @@ Place these constraints at the top of every implementation prompt:
 - [ ] Applicable operator workflows are T4.
 - [ ] Extensions/divergences have separate accepted evidence.
 - [ ] Every omission is explicit.
-- [ ] Displaced legacy artifacts are retired only after completion.
+- [ ] Displaced legacy artifacts are retired only after completion; ADR 0005's
+      fixed, completed wrapper cleanup creates no broader exception.
 - [ ] All earlier profiles remain green on the tested digest and are mapped to
       the final claim revision by the reviewed attestation protocol.
 
@@ -2422,7 +2522,8 @@ Reject an increment that does any of the following:
 - marks a capability T2/T3/T4 without the correct retained external boundary;
 - starts Gate 5 while first-profile V6 is open;
 - calls a module complete while cross-module behavior is still deferred; or
-- deletes displaced legacy artifacts before ADR 0004 permits retirement.
+- deletes displaced legacy artifacts before ADR 0004 permits retirement, other
+  than the exact wrapper set already retired and closed by ADR 0005.
 
 When one appears, stop that increment, cite the rule ID, restore the narrow
 accepted path without discarding unrelated work, and rerun the lowest test that

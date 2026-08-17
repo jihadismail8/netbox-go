@@ -1,116 +1,85 @@
-# Business Logic Reference — Python NetBox → Go Port
+# Business-logic discovery reference
 
-> **Reference analysis, not an accepted or complete specification.** These notes were extracted from the post-4.4.6 NetBox snapshot at commit `fbb948d30e79ce657fac62994a22aca72c1770a9`; they may omit behavior and do not establish what the current Go code implements. Verify implementation decisions against the canonical [architecture](../ARCHITECTURE.md) and [compatibility contract](../COMPATIBILITY.md).
+> **Partial upstream analysis, not an accepted specification or implementation
+> guide.** These notes were derived from the pinned post-4.4.6 source snapshot
+> at commit `fbb948d30e79ce657fac62994a22aca72c1770a9`. They contain known gaps
+> and stale claims. The pinned source, accepted Capability Profile, and
+> executable compatibility evidence remain authoritative.
 
-> These documents extract non-trivial business rules from Python/Django NetBox
-> that may need to be reproduced in the Go backend. They are a discovery aid for
-> validation logic, computed fields, and custom endpoints; the pinned source and
-> executable compatibility tests remain authoritative.
+## Contents and known coverage
 
----
+| Document                        | Discovery value                                                           | Known limitation                                                                          |
+| ------------------------------- | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| [DCIM models](dcim-models.md)   | Candidate DCIM fields, relationships, validation, and computed behavior   | Not reconciled to every current first-profile rule or later DCIM resource                 |
+| [IPAM models](ipam-models.md)   | Candidate IPAM fields, network rules, hierarchy, and utilization behavior | Not a complete source-linked rule matrix                                                  |
+| [API patterns](api-patterns.md) | Historical serializer/action/bulk observations                            | Does not reconcile to all 23 authoritative actions; bulk is deferred in the first profile |
+| [FilterSets](filtersets.md)     | Partial record of upstream lookup syntax and selected filters             | Covers only part of the baseline and must not drive a generic SQL parser                  |
 
-## Document Index
+The separate [`entities/`](../entities/) inventory has 104 derived entity
+pages, while the baseline REST catalogue has 132 resources. These sets are not
+one-to-one. Entity checkboxes, generated paths, and status labels must never be
+used as progress evidence.
 
-| Document | Description | Key Models |
-|----------|-------------|------------|
-| **[dcim-models.md](dcim-models.md)** | DCIM model fields, relationships, clean() rules, and computed properties | Device, DeviceType, Interface, Rack, Cable, Site, Region, Location, Manufacturer, ConsolePort, PowerPort, FrontPort, RearPort, etc. |
-| **[ipam-models.md](ipam-models.md)** | IPAM model fields, IP/CIDR validation, overlap detection, utilization calculations | Prefix, IPAddress, IPRange, VLAN, VRF, Aggregate, ASN, FHRPGroup, Service |
-| **[api-patterns.md](api-patterns.md)** | REST API serialization formats, response shapes, custom @action endpoints, bulk operations, count annotations | All modules — response format reference for handlers |
-| **[filtersets.md](filtersets.md)** | Dynamic lookup expression system (__ic, __n, __gte), per-model filter field catalog | Site, Device, Rack, Prefix, IPAddress, VLAN, Circuit, VM, VMInterface |
+## Required use
 
----
+For each Capability Profile:
 
-## How to Use These Documents
+1. Start from the authoritative baseline inventory and select a coherent
+   operator or automation outcome.
+2. Trace every candidate field, relationship, filter, action, validation,
+   permission, transaction, error, deletion rule, and durable side effect to
+   the pinned source and upstream tests.
+3. Record the accepted subset in the machine-readable profile, resource
+   metadata, and scenario metadata before implementation.
+4. Maintain traceability from accepted rule to source reference, Go test,
+   differential REST case, corresponding gRPC case, applicable browser case,
+   and retained evidence.
+5. Keep every omitted behavior explicitly deferred or excluded. A derived
+   note never silently broadens a profile.
 
-### When implementing a Go model (GORM struct)
-1. Check **dcim-models.md** or **ipam-models.md** for the model's field list and constraints
-2. Implement `clean()` rules as a `Validate()` method on the model or in the service layer
-3. Implement computed properties as Go methods (e.g., `func (p Prefix) GetUtilization() float64`)
-4. Add `BeforeSave` / `BeforeCreate` / `BeforeUpdate` GORM hooks for save() behaviors (e.g., CIDR normalization)
+Before first-profile V2, the relationship/delete claims for all 13 resources
+must be reconciled directly to the pinned source. The current derived material
+has known `CASCADE`/`SET_NULL`/`PROTECT` errors and stale references to retired
+generated paths.
 
-### When implementing a REST handler
-1. Check **api-patterns.md** for the expected JSON response format
-2. Implement nested serializers for FK fields (id, url, display, name)
-3. Add count annotations via GORM subqueries or preload counts
-4. Implement custom action endpoints (available-ips, trace, elevation, etc.) as separate routes
+## Translation rules
 
-### When implementing filtering
-1. Check **filtersets.md** for the model's supported filter fields
-2. Use the dynamic lookup expression parser to auto-generate __ic, __n, __gte variants
-3. Implement custom method filters as separate handler functions
-4. Support comma-separated multi-value → SQL IN clause
+- Python inheritance describes upstream behavior; it does not prescribe Go
+  struct embedding or one Go type per Django class.
+- Domain packages own pure Managed Object invariants and typed policies. They
+  do not import GORM, Gin, protobuf, SQL drivers, or database handles.
+- Application services own authorization, cross-object orchestration,
+  transaction boundaries, object-change intent, and required durable effects.
+- PostgreSQL adapters own private row types, GORM mappings, constraints,
+  locking, and explicit parameterized queries.
+- REST and gRPC adapters translate exact transport contracts into the same
+  application use cases. They do not make independent business decisions.
+- Vue implements presentation and operator workflow over REST; it does not
+  duplicate backend authorization or validation.
+- `BeforeSave`/`AfterSave` hooks, generic post-hooks, or generic CRUD event
+  pipelines must not become hidden business-logic centers.
+- IDs and presence semantics use the accepted typed contracts. Do not infer
+  `uint`, nullability, or zero-value behavior from old generated structs.
 
----
+## Filtering rule
 
-## Cross-Cutting Concerns
+Each profile declares an exact allowlist of accepted filter and ordering keys.
+The REST adapter rejects undeclared keys, parses declared values into a typed
+list query, and passes them to explicit repository predicates. Shared syntax
+helpers may be introduced only behind the allowlist; an arbitrary query key
+must never become a column name, GORM clause, or SQL fragment.
 
-### Model Inheritance Hierarchy (Python → Go)
+## Authority order
 
-```
-NetBoxModel (abstract)
-  ├─ created (DateTimeField, auto_now_add)
-  ├─ last_updated (DateTimeField, auto_now)
-  ├─ tags (JSONField)
-  ├─ custom_field_data (JSONField)
-  │
-  ├─ PrimaryModel(NetBoxModel)
-  │    ├─ description (CharField, blank)
-  │    └─ comments (TextField, blank)
-  │
-  └─ OrganizationalModel(NetBoxModel)
-       └─ slug (SlugField)
-```
+When this directory disagrees with another source, use:
 
-**Go mapping:** Embed a `BaseModel` struct in every GORM model:
+1. accepted ADRs and [project language](../../CONTEXT.md);
+2. the machine-readable Capability Profile for declared scope;
+3. [Compatibility](../COMPATIBILITY.md) for proof and tier claims;
+4. the pinned upstream source and strict oracle for baseline behavior;
+5. [Architecture](../ARCHITECTURE.md) and
+   [Coding standards](../CODING_STANDARDS.md) for implementation boundaries;
+6. [Status](../STATUS.md) for current claims.
 
-```go
-type BaseModel struct {
-    ID              uint       `gorm:"primaryKey"`
-    Created         time.Time  `gorm:"autoCreateTime"`
-    LastUpdated     time.Time  `gorm:"autoUpdateTime"`
-    Tags            datatypes.JSON
-    CustomFieldData datatypes.JSON
-}
-
-type PrimaryModel struct {
-    BaseModel
-    Description string
-    Comments    string
-}
-
-type OrganizationalModel struct {
-    BaseModel
-    Slug string `gorm:"uniqueIndex"`
-}
-```
-
-### Validation Pattern (Python clean() → Go Validate())
-
-Python's `clean()` method runs field-level and cross-field validation before save.
-In Go, implement this as a `Validate()` method called from the service layer:
-
-```go
-func (p *Prefix) Validate(db *gorm.DB) error {
-    // No /0 mask
-    if p.PrefixLen == 0 {
-        return errors.New("cannot create prefix with /0 mask")
-    }
-    // Reject host-bit input at the public boundary; retain canonical storage.
-    // Overlap detection
-    // Unique enforcement
-    return nil
-}
-```
-
-### PostgreSQL-Specific Features Requiring Go Equivalents
-
-| Python/Django Feature | Go Equivalent |
-|----------------------|---------------|
-| `IPNetworkField` (netaddr) | `netip.Prefix` (stdlib) + GORM serializer |
-| `IPAddressField` (netaddr) | `netip.Addr` (stdlib) + GORM serializer |
-| GIST index with `inet_ops` | Raw SQL migration `CREATE INDEX ... USING gist (...)` |
-| `Host()` function | `netip.Addr.Next()` or custom SQL `HOST()` |
-| `ArrayField(IntegerField)` | `datatypes.JSON` or `pq.Int64Array` |
-| `GenericForeignKey` | Polymorphic association: `ObjectType string` + `ObjectID uint` + resolver |
-| `F()` expressions for ordering | Explicit ORDER BY with NULLS FIRST |
-| `django.contrib.postgres.search` | PostgreSQL full-text search via `gorm.io/gorm/fulltext` or raw SQL |
+Do not implement directly from this reference directory without completing
+the source reconciliation and accepted-profile steps above.

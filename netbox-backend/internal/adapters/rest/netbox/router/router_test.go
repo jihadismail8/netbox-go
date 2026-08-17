@@ -19,6 +19,7 @@ import (
 
 	identitypostgres "netbox-go/internal/adapters/postgres/identity"
 	workflowhttp "netbox-go/internal/adapters/rest/netbox/workflow"
+	identityapp "netbox-go/internal/application/identity"
 	"netbox-go/internal/config"
 	"netbox-go/internal/platform/composition"
 )
@@ -30,7 +31,7 @@ func TestBaselineAndIdentityAuthenticationStatusesRemainDistinct(t *testing.T) {
 		t.Fatal(err)
 	}
 	core := composition.NewCore(db)
-	router := New(core.Identity, core.Sites, false, runtimeWorkflowOptions(core)...)
+	router := New(core.Identity, core.Sites, false, nil, runtimeWorkflowOptions(core)...)
 
 	for _, test := range []struct {
 		path string
@@ -54,7 +55,7 @@ func TestRuntimePublicProbeBoundary(t *testing.T) {
 	db, err := gorm.Open(sqlite.Open("file:runtime_public_probes?mode=memory&cache=shared"), &gorm.Config{})
 	require.NoError(t, err)
 	core := composition.NewCore(db)
-	runtime := New(core.Identity, core.Sites, false, runtimeWorkflowOptions(core)...)
+	runtime := New(core.Identity, core.Sites, false, nil, runtimeWorkflowOptions(core)...)
 
 	routes := make(map[string]struct{}, len(runtime.Routes()))
 	for _, route := range runtime.Routes() {
@@ -90,7 +91,7 @@ func TestRuntimeRouterServesSPAHistoryFallback(t *testing.T) {
 	}
 	core := composition.NewCore(db)
 	recorder := httptest.NewRecorder()
-	New(core.Identity, core.Sites, false, runtimeWorkflowOptions(core)...).ServeHTTP(
+	New(core.Identity, core.Sites, false, nil, runtimeWorkflowOptions(core)...).ServeHTTP(
 		recorder,
 		httptest.NewRequest(http.MethodGet, "/dcim/sites/", nil),
 	)
@@ -116,6 +117,7 @@ func TestRuntimeAccessLogDoesNotRecordIdentitySecrets(t *testing.T) {
 		core.Identity,
 		core.Sites,
 		false,
+		nil,
 		zap.New(logCore),
 		runtimeWorkflowOptions(core)...,
 	)
@@ -247,6 +249,207 @@ func TestSPAServesAssetsAndFallsBackWithoutInterceptingAPI(t *testing.T) {
 			t.Fatalf("GET %s = %d %q, want 200 %q", test.path, recorder.Code, recorder.Body.String(), test.body)
 		}
 	}
+}
+
+func TestRuntimeCORSCSRFAndToken(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	t.Setenv("NETBOX_WEB_ASSETS_PATH", filepath.Join(t.TempDir(), "missing"))
+	config.Set(&config.Config{})
+	db, err := gorm.Open(sqlite.Open("file:runtime_cors_identity?mode=memory&cache=shared"), &gorm.Config{})
+	require.NoError(t, err)
+	require.NoError(t, db.AutoMigrate(identitypostgres.Models()...))
+	core := composition.NewCore(db)
+	administrator, err := core.Identity.BootstrapAdministrator(t.Context(), "cors-admin", "", "CORS-Admin-Password-2026!")
+	require.NoError(t, err)
+	readOnlyToken, err := core.Identity.CreateToken(t.Context(), administrator.Principal(), identityapp.CreateTokenInput{Description: "CORS read only"})
+	require.NoError(t, err)
+	writeToken, err := core.Identity.CreateToken(t.Context(), administrator.Principal(), identityapp.CreateTokenInput{Description: "CORS write", WriteEnabled: true})
+	require.NoError(t, err)
+
+	runtime := New(core.Identity, core.Sites, false, []string{corsTestTrustedOrigin}, runtimeWorkflowOptions(core)...)
+
+	csrfResponse := runtimeRequest(
+		runtime,
+		http.MethodGet,
+		"/api/auth/csrf/",
+		nil,
+		map[string]string{"Origin": corsTestTrustedOrigin},
+	)
+	require.Equal(t, http.StatusOK, csrfResponse.Code)
+	requireTrustedCORS(t, csrfResponse.Header(), corsTestTrustedOrigin)
+	initialCSRF := responseCookie(csrfResponse.Result(), "csrftoken")
+	require.NotNil(t, initialCSRF)
+
+	loginBody, err := json.Marshal(map[string]string{
+		"username": "cors-admin",
+		"password": "CORS-Admin-Password-2026!",
+	})
+	require.NoError(t, err)
+	loginResponse := runtimeRequest(
+		runtime,
+		http.MethodPost,
+		"/api/auth/login/",
+		loginBody,
+		map[string]string{
+			"Content-Type": "application/json",
+			"Cookie":       initialCSRF.String(),
+			"Origin":       corsTestTrustedOrigin,
+			"X-CSRFToken":  initialCSRF.Value,
+		},
+	)
+	require.Equal(t, http.StatusOK, loginResponse.Code)
+	requireTrustedCORS(t, loginResponse.Header(), corsTestTrustedOrigin)
+	session := responseCookie(loginResponse.Result(), "netbox_session")
+	rotatedCSRF := responseCookie(loginResponse.Result(), "csrftoken")
+	require.NotNil(t, session)
+	require.NotNil(t, rotatedCSRF)
+	authCookies := session.String() + "; " + rotatedCSRF.String()
+
+	csrfMutationCases := []struct {
+		name      string
+		csrfToken string
+		want      int
+	}{
+		{name: "missing CSRF", want: http.StatusForbidden},
+		{name: "wrong CSRF", csrfToken: "wrong-csrf-value", want: http.StatusForbidden},
+		{name: "matching CSRF", csrfToken: rotatedCSRF.Value, want: http.StatusCreated},
+	}
+	for _, test := range csrfMutationCases {
+		t.Run(test.name, func(t *testing.T) {
+			headers := map[string]string{
+				"Content-Type": "application/json",
+				"Cookie":       authCookies,
+				"Origin":       corsTestTrustedOrigin,
+			}
+			if test.csrfToken != "" {
+				headers["X-CSRFToken"] = test.csrfToken
+			}
+			response := runtimeRequest(
+				runtime,
+				http.MethodPost,
+				"/api/auth/tokens/",
+				[]byte(`{"description":"CORS CSRF regression","write_enabled":true}`),
+				headers,
+			)
+			require.Equal(t, test.want, response.Code, test.name)
+			requireTrustedCORS(t, response.Header(), corsTestTrustedOrigin)
+		})
+	}
+
+	tokenCases := []struct {
+		name   string
+		method string
+		path   string
+		body   []byte
+		token  string
+		want   int
+	}{
+		{name: "read-only token safe request", method: http.MethodGet, path: "/api/auth/session/", token: readOnlyToken.Secret, want: http.StatusOK},
+		{name: "read-only token unsafe request", method: http.MethodPost, path: "/api/auth/tokens/", body: []byte(`{"description":"read-only denial"}`), token: readOnlyToken.Secret, want: http.StatusForbidden},
+		{name: "write token needs no CSRF", method: http.MethodPost, path: "/api/auth/tokens/", body: []byte(`{"description":"write-token success"}`), token: writeToken.Secret, want: http.StatusCreated},
+	}
+	for _, test := range tokenCases {
+		t.Run(test.name, func(t *testing.T) {
+			response := runtimeRequest(
+				runtime,
+				test.method,
+				test.path,
+				test.body,
+				map[string]string{
+					"Authorization": "Token " + test.token,
+					"Content-Type":  "application/json",
+					"Origin":        corsTestTrustedOrigin,
+				},
+			)
+			require.Equal(t, test.want, response.Code, test.name)
+			requireTrustedCORS(t, response.Header(), corsTestTrustedOrigin)
+		})
+	}
+
+	noOriginResponse := runtimeRequest(runtime, http.MethodGet, "/api/auth/session/", nil, nil)
+	untrustedResponse := runtimeRequest(
+		runtime,
+		http.MethodGet,
+		"/api/auth/session/",
+		nil,
+		map[string]string{"Origin": "https://untrusted.example.test"},
+	)
+	require.Equal(t, noOriginResponse.Code, untrustedResponse.Code)
+	require.Equal(t, noOriginResponse.Body.String(), untrustedResponse.Body.String())
+	requireNoCORSGrant(t, noOriginResponse.Header())
+	requireNoCORSGrant(t, untrustedResponse.Header())
+	requireVaryTokenCount(t, noOriginResponse.Header(), "Origin", 1)
+	requireVaryTokenCount(t, untrustedResponse.Header(), "Origin", 1)
+
+	emptyRuntime := New(core.Identity, core.Sites, false, nil, runtimeWorkflowOptions(core)...)
+	emptyPolicyResponse := runtimeRequest(
+		emptyRuntime,
+		http.MethodGet,
+		"/api/auth/session/",
+		nil,
+		map[string]string{"X-Request-Id": "empty-cors-policy"},
+	)
+	trustedPolicySameOriginResponse := runtimeRequest(
+		runtime,
+		http.MethodGet,
+		"/api/auth/session/",
+		nil,
+		map[string]string{"X-Request-Id": "empty-cors-policy"},
+	)
+	require.Equal(t, trustedPolicySameOriginResponse.Code, emptyPolicyResponse.Code)
+	require.Equal(t, trustedPolicySameOriginResponse.Body.String(), emptyPolicyResponse.Body.String())
+	require.Equal(t, trustedPolicySameOriginResponse.Header(), emptyPolicyResponse.Header())
+	requireNoCORSGrant(t, emptyPolicyResponse.Header())
+}
+
+func TestRuntimeCORSRouteInventory(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	t.Setenv("NETBOX_WEB_ASSETS_PATH", filepath.Join(t.TempDir(), "missing"))
+	config.Set(&config.Config{})
+	db, err := gorm.Open(sqlite.Open("file:runtime_cors_inventory?mode=memory&cache=shared"), &gorm.Config{})
+	require.NoError(t, err)
+	core := composition.NewCore(db)
+
+	emptyRuntime := New(core.Identity, core.Sites, false, nil, runtimeWorkflowOptions(core)...)
+	allowedOrigins := []string{corsTestTrustedOrigin}
+	corsRuntime := New(core.Identity, core.Sites, false, allowedOrigins, runtimeWorkflowOptions(core)...)
+	allowedOrigins[0] = "https://mutated.example.test"
+
+	require.Equal(t, semanticRouteInventory(emptyRuntime), semanticRouteInventory(corsRuntime))
+	for _, route := range corsRuntime.Routes() {
+		require.NotEqual(t, http.MethodOptions, route.Method, "%s unexpectedly registered OPTIONS", route.Path)
+		require.NotEqual(t, "/ping", route.Path)
+	}
+
+	requestMethod := http.MethodPost
+	preflight := performCORSRequest(
+		corsRuntime,
+		http.MethodOptions,
+		"/api/auth/login/",
+		[]string{corsTestTrustedOrigin},
+		&requestMethod,
+		nil,
+	)
+	require.Equal(t, http.StatusOK, preflight.Code)
+	requireTrustedCORS(t, preflight.Header(), corsTestTrustedOrigin)
+	requireFixedCORSOptions(t, preflight.Header())
+
+	trusted := runtimeRequest(corsRuntime, http.MethodGet, "/health", nil, map[string]string{"Origin": corsTestTrustedOrigin})
+	require.Equal(t, http.StatusOK, trusted.Code)
+	requireTrustedCORS(t, trusted.Header(), corsTestTrustedOrigin)
+
+	mutated := runtimeRequest(corsRuntime, http.MethodGet, "/health", nil, map[string]string{"Origin": "https://mutated.example.test"})
+	require.Equal(t, http.StatusOK, mutated.Code)
+	requireNoCORSGrant(t, mutated.Header())
+}
+
+func semanticRouteInventory(runtime *gin.Engine) []string {
+	routes := runtime.Routes()
+	inventory := make([]string, 0, len(routes))
+	for _, route := range routes {
+		inventory = append(inventory, route.Method+" "+route.Path+" "+route.Handler)
+	}
+	return inventory
 }
 
 // Keep the package test focused on the middleware by building the smallest

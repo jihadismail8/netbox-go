@@ -15,3 +15,14 @@ The current Sponge-generated per-resource models, DAOs, caches, services, handle
 - Existing generated paths may remain temporarily while a vertical slice is replaced, but they are not extension points or evidence of compatibility.
 - Retire each displaced REST route, gRPC service, DAO, model, and cache path only after its replacement satisfies the capability completion gate.
 - Transitional process composition and custom security files (`internal/handler/auth.go`, `internal/routers/routers.go`, `internal/server/grpc.go`, and `cmd/netbox_go/initial/initApp.go`) are hand-owned wiring, not per-resource generated outputs. They may receive narrow containment changes before replacement. Generated per-resource files and registries remain immutable; if later ownership discovery identifies any named composition file as reproducible output, its source/template must be changed and regenerated instead.
+
+## Narrow wrapper-retirement amendment
+
+[ADR 0005](0005-retire-dormant-sponge-http-wrappers.md) accepts one bounded
+exception to the capability-completion ordering above: the 118
+template-identical, runtime-dormant per-resource HTTP handler wrappers and their
+118 matching Sponge router wrappers may be removed early. Their canonical
+handlers, authentication wiring, lower generated stacks, protobufs, and the
+separate frozen DRF registry are not part of that exception. The removal earns
+no compatibility or completion claim, must be protected against regeneration,
+and does not relax any other consequence of this decision.

@@ -3,6 +3,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { validateTraceability } from "./validate_traceability.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const profilePath = path.resolve(
@@ -13,6 +14,8 @@ const profilePath = path.resolve(
 const baseDir = path.dirname(profilePath);
 const contractRoot = path.dirname(baseDir);
 const failures = [];
+let traceabilityCounts = null;
+const IDENTITY_VERIFICATION_STATES = new Set(["partial", "complete"]);
 
 function readJSON(filePath) {
   try {
@@ -180,6 +183,25 @@ if (profile && baseline && oracle && schema) {
   );
   const identity = readJSON(identityPath);
   assert(
+    JSON.stringify(Object.keys(profile.identity_extension).sort()) ===
+      JSON.stringify(
+        [
+          "classification",
+          "owner",
+          "resource_metadata",
+          "tier",
+          "verification",
+        ].sort(),
+      ),
+    "identity: extension contains missing or unsupported properties",
+  );
+  assert(
+    JSON.stringify(
+      Object.keys(profile.identity_extension.verification ?? {}).sort(),
+    ) === JSON.stringify(["contract", "parity", "security"]),
+    "identity: verification contains missing or unsupported properties",
+  );
+  assert(
     profile.identity_extension.classification === "extension",
     "identity: must be an extension",
   );
@@ -193,12 +215,19 @@ if (profile && baseline && oracle && schema) {
   );
   for (const status of ["contract", "parity", "security"]) {
     assert(
-      profile.identity_extension.verification?.[status],
-      `identity: missing ${status} verification`,
+      IDENTITY_VERIFICATION_STATES.has(
+        profile.identity_extension.verification?.[status],
+      ),
+      `identity: ${status} verification must be partial or complete`,
     );
     assert(
-      identity?.verification?.[status],
-      `identity metadata: missing ${status} verification`,
+      IDENTITY_VERIFICATION_STATES.has(identity?.verification?.[status]),
+      `identity metadata: ${status} verification must be partial or complete`,
+    );
+    assert(
+      profile.identity_extension.verification?.[status] ===
+        identity?.verification?.[status],
+      `identity metadata: ${status} verification differs from the active profile`,
     );
   }
   assert(
@@ -251,9 +280,28 @@ if (profile && baseline && oracle && schema) {
     "profile schema: resources definition is missing",
   );
   assert(
+    schema.properties?.traceability,
+    "profile schema: traceability definition is missing",
+  );
+  assert(
+    typeof profile.traceability === "string" && profile.traceability.length > 0,
+    "profile: traceability matrix reference is missing",
+  );
+  assert(
     profile.deferred.some((item) => item === "GraphQL"),
     "profile: GraphQL must be explicitly deferred",
   );
+}
+
+if (profile) {
+  const traceability = validateTraceability({
+    root: ROOT,
+    profilePath,
+  });
+  traceabilityCounts = traceability.counts;
+  for (const failure of traceability.failures) {
+    failures.push(`traceability [${failure.code}]: ${failure.message}`);
+  }
 }
 
 if (failures.length > 0) {
@@ -265,6 +313,6 @@ if (failures.length > 0) {
   const interfaceCount = Object.keys(profile.interfaces ?? {}).length;
   const scenarioCount = profile.scenarios?.length ?? 0;
   console.log(
-    `Capability profile valid: ${resourceCount} resources, ${interfaceCount} interfaces, ${scenarioCount} scenarios`,
+    `Capability profile valid: ${resourceCount} resources, ${interfaceCount} interfaces, ${scenarioCount} scenarios, ${traceabilityCounts?.rows ?? 0} traceability rows`,
   );
 }

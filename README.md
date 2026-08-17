@@ -2,7 +2,17 @@
 
 NetBox Go is an early-stage, standalone rewrite of NetBox using a Go backend and a Vue 3 frontend. The compatibility target is the core behavior of the pinned post-4.4.6 NetBox source submodule at commit `fbb948d30e79ce657fac62994a22aca72c1770a9` (`git describe --tags`: `v4.4.6-7-gfbb948d30`).
 
-The supported runtime is intentionally smaller than NetBox: it publishes the named `core-workflow-v1` profile (13 DCIM/IPAM resources plus Go-owned identity), while the broad generated scaffold is disabled and transitional. It is **not yet a drop-in replacement**; [current status](docs/STATUS.md) records evidence by compatibility tier and does not infer completion from generated files.
+The supported runtime is intentionally smaller than NetBox: it exposes the
+pre-publication `core-workflow-v1` profile (13 DCIM/IPAM resources plus Go-owned
+identity), while the broad generated scaffold is disabled and transitional. It
+is **not yet a drop-in replacement**; [current status](docs/STATUS.md) records
+evidence by compatibility tier and does not infer completion from generated
+files.
+
+As of the 2026-08-03 audit, 13 of 153 accepted baseline resource/action
+entries are T1 (8.50%), 140 remain T0, and none has retained T2 REST, T3 gRPC,
+or T4 browser evidence. The first profile still has implementation gaps before
+those external gates; this is not simply a backlog of test executions.
 
 This remains a development build. The supported REST and gRPC routes fail closed, do not expose generic user rows, and no longer register the generated direct-GORM business surfaces, but production hardening and full NetBox coverage are not complete. Bind development ports to loopback, use disposable data, and do not treat deferred resources as supported.
 
@@ -28,7 +38,7 @@ The canonical REST and gRPC adapters share one application layer for identity, a
 | [Contributing](CONTRIBUTING.md)                                 | Change workflow and review checklist                                              |
 | [Implementation plan](docs/IMPLEMENTATION_PLAN.md)              | First Capability Profile, file-level execution order, and exit evidence           |
 | [Execution playbook](docs/IMPLEMENTATION_EXECUTION_PLAYBOOK.md) | Agent-ready recovery sequence, stable rules, later profiles, and production gates |
-| [Roadmap](docs/ROADMAP.md)                                      | Outcome-gated implementation sequence                                             |
+| [Roadmap](docs/ROADMAP.md)                                      | Stable goals, dependencies, checklists, and outcome-gated implementation sequence |
 | [Testing](docs/TESTING.md)                                      | Current test results and required compatibility strategy                          |
 | [Project language](CONTEXT.md)                                  | Agreed terms and scope boundaries                                                 |
 | [ADRs](docs/adr/README.md)                                      | Accepted architectural decisions                                                  |
@@ -66,7 +76,7 @@ make check
 
 PostgreSQL, deployment, differential-oracle, and real-browser suites are separately owned integration gates; see [Testing](docs/TESTING.md). Do not use raw test counts as a compatibility metric.
 
-To start local development, provide PostgreSQL and review [`netbox_go.yml`](netbox-backend/configs/netbox_go.yml) before running the backend. Environment variables such as `NETBOX_DATABASE_DSN`, `NETBOX_HTTP_PORT`, and `NETBOX_GRPC_PORT` override checked-in development values.
+To start local development, provide PostgreSQL and review [`netbox_go.yml`](netbox-backend/configs/netbox_go.yml) before running the backend. Environment variables such as `NETBOX_DATABASE_DSN`, `NETBOX_HTTP_PORT`, and `NETBOX_GRPC_PORT` override checked-in development values. When a browser frontend runs on a different origin, set the backend's `NETBOX_CORS_ALLOWED_ORIGINS` to a comma-separated list of exact HTTP(S) origins. It defaults to empty, which grants no cross-origin access; wildcard and regular-expression origins are rejected.
 
 ```bash
 cd netbox-backend

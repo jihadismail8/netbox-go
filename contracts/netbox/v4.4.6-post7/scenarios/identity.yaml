@@ -15,9 +15,9 @@
     },
     {
       "id": "identity.token-lifecycle",
-      "given": ["authenticated principal with token-management permission"],
+      "given": ["authenticated active principal managing its own API tokens"],
       "when": ["create token", "use token in REST and gRPC", "list tokens", "revoke token"],
-      "then": ["secret returned once", "list omits secret", "both transports resolve the same principal", "revoked token is rejected"]
+      "then": ["secret returned once", "list omits secret", "another principal cannot list or revoke the token", "both transports resolve the same principal", "revoked token is rejected"]
     },
     {
       "id": "identity.permission-matrix",

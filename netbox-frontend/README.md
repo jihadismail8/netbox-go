@@ -16,8 +16,11 @@ npm run dev
 
 Vite listens on `http://localhost:3000` and proxies `/api` to the Go backend at
 `http://localhost:8080`. Set `VITE_API_BASE_URL` only when the API is hosted at
-a different origin; credentialed deployments must configure that origin on the
-backend as well.
+a different origin. For that cross-origin deployment, the backend's
+`NETBOX_CORS_ALLOWED_ORIGINS` must include the frontend page origin in its
+comma-separated list of exact HTTP(S) origins. The setting defaults to empty,
+which grants no cross-origin access; wildcard and regular-expression origins
+are rejected.
 
 The browser authenticates with the Go-owned HttpOnly session cookie and a CSRF
 cookie/header pair. Passwords, session credentials, API tokens, and permissions

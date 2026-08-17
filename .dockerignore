@@ -25,9 +25,6 @@ netbox-backend/netbox_go
 netbox-backend/*.test
 netbox-backend/cover.out
 
-# Test-run artifacts
-tests/deployment/.artifacts/
-
 # IDE
 .vscode
 .idea

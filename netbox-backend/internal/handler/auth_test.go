@@ -7,8 +7,12 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-dev-frame/sponge/pkg/sgorm"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
+	"netbox-go/internal/model"
 )
 
 func init() {
@@ -52,6 +56,40 @@ func TestValidateJWT_BadSecret(t *testing.T) {
 
 	uid, _, _, _ := validateJWT(tokenStr, cfg)
 	assert.Equal(t, uint64(0), uid, "should fail with wrong secret")
+}
+
+func TestValidateJWT_RejectsUnexpectedSigningMethod(t *testing.T) {
+	cfg := DefaultJWTConfig("shared-secret")
+	token := jwt.NewWithClaims(jwt.SigningMethodHS384, NetBoxClaims{
+		UserID:   1,
+		Username: "user",
+	})
+	tokenStr, err := token.SignedString([]byte(cfg.SecretKey))
+	require.NoError(t, err)
+
+	uid, _, _, _ := validateJWT(tokenStr, cfg)
+	assert.Zero(t, uid)
+}
+
+func TestGenerateJWT_PreservesUserClaims(t *testing.T) {
+	superuser := sgorm.Bool(true)
+	staff := sgorm.Bool(true)
+	user := &model.UsersUser{
+		ID:          73,
+		Username:    "generated-user",
+		IsSuperuser: &superuser,
+		IsStaff:     &staff,
+	}
+	cfg := DefaultJWTConfig("generate-secret")
+
+	tokenStr, err := GenerateJWT(user, cfg)
+	require.NoError(t, err)
+	uid, username, isSuperuser, writeEnabled := validateJWT(tokenStr, cfg)
+
+	assert.Equal(t, user.ID, uid)
+	assert.Equal(t, user.Username, username)
+	assert.True(t, isSuperuser)
+	assert.True(t, writeEnabled)
 }
 
 func TestNetBoxAuthMiddleware_NoAuth(t *testing.T) {
@@ -182,6 +220,75 @@ func TestRequireAuth(t *testing.T) {
 	assert.Equal(t, 401, w.Code)
 }
 
+func TestRequireAuth_AllowsAuthenticatedUser(t *testing.T) {
+	r := gin.New()
+	r.Use(func(c *gin.Context) {
+		c.Set(string(CtxKeyUserID), uint64(1))
+		c.Next()
+	})
+	r.Use(RequireAuth())
+	r.GET("/protected", func(c *gin.Context) {
+		c.Status(http.StatusNoContent)
+	})
+
+	w := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/protected", nil)
+	r.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusNoContent, w.Code)
+}
+
+func TestCurrentUserAccessors_DefaultForMissingOrWrongValues(t *testing.T) {
+	c, _ := gin.CreateTestContext(httptest.NewRecorder())
+	assert.Zero(t, CurrentUserID(c))
+	assert.Empty(t, CurrentUsername(c))
+
+	c.Set(string(CtxKeyUserID), "not-an-id")
+	c.Set(string(CtxKeyUsername), uint64(9))
+	assert.Zero(t, CurrentUserID(c))
+	assert.Empty(t, CurrentUsername(c))
+}
+
+func TestRequireWriteEnabled(t *testing.T) {
+	tests := []struct {
+		name       string
+		value      any
+		setValue   bool
+		wantStatus int
+		wantCalled bool
+	}{
+		{name: "read only", value: false, setValue: true, wantStatus: http.StatusForbidden},
+		{name: "write enabled", value: true, setValue: true, wantStatus: http.StatusNoContent, wantCalled: true},
+		{name: "missing claim", wantStatus: http.StatusNoContent, wantCalled: true},
+		{name: "wrong claim type", value: "false", setValue: true, wantStatus: http.StatusNoContent, wantCalled: true},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			r := gin.New()
+			if test.setValue {
+				r.Use(func(c *gin.Context) {
+					c.Set(string(CtxKeyTokenWrite), test.value)
+					c.Next()
+				})
+			}
+			r.Use(RequireWriteEnabled())
+			handlerCalled := false
+			r.POST("/write", func(c *gin.Context) {
+				handlerCalled = true
+				c.Status(http.StatusNoContent)
+			})
+
+			w := httptest.NewRecorder()
+			req := httptest.NewRequest(http.MethodPost, "/write", nil)
+			r.ServeHTTP(w, req)
+
+			assert.Equal(t, test.wantStatus, w.Code)
+			assert.Equal(t, test.wantCalled, handlerCalled)
+		})
+	}
+}
+
 func TestRequireSuperuser_NotSuperuser(t *testing.T) {
 	r := gin.New()
 	r.Use(func(c *gin.Context) {
@@ -199,4 +306,22 @@ func TestRequireSuperuser_NotSuperuser(t *testing.T) {
 	r.ServeHTTP(w, req)
 
 	assert.Equal(t, 403, w.Code)
+}
+
+func TestRequireSuperuser_AllowsSuperuser(t *testing.T) {
+	r := gin.New()
+	r.Use(func(c *gin.Context) {
+		c.Set(string(CtxKeyIsSuperuser), true)
+		c.Next()
+	})
+	r.Use(RequireSuperuser())
+	r.GET("/admin", func(c *gin.Context) {
+		c.Status(http.StatusNoContent)
+	})
+
+	w := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/admin", nil)
+	r.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusNoContent, w.Code)
 }

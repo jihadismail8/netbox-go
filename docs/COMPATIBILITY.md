@@ -121,26 +121,47 @@ A capability is complete only when:
 A module is complete only when every in-scope capability in its authoritative
 inventory satisfies this definition.
 
+The [Complete In-Scope Replacement](../CONTEXT.md) is reached only when all 153
+accepted resource/action entries have passed this definition through their
+profiles, all 10 module-closeout passes are complete, displaced legacy runtime
+ownership is gone, and exclusions remain explicit. It is separate from
+production release, which additionally requires PROD-1 through PROD-7.
+
 ## Current classification
 
 The generated inventories currently contain:
 
-- baseline REST: 155 entries;
+- baseline REST: 155 entries—132 resources and 23 custom actions;
 - current REST: 123 entries—102 frozen legacy, 13 canonical profile, and 8
   identity extension operations;
 - current gRPC: 179 entries—176 frozen legacy and 3 canonical services; and
 - current Vue: 13 profile resources.
 
-The 13 baseline resources remain **T1**. Repository V0 and the recovery-scoped
-PostgreSQL replay are retained under [Evidence](evidence/README.md), while typed
-per-table persistence, persisted RBAC, typed Vue adapters, gRPC parity tests, a
-strict oracle comparator, and a real-browser harness also exist. No complete
-T2, T3, or T4 boundary bundle is retained, so none of those implementation
-facts advances a capability tier and the contract remains pre-publication.
+`baseline-rest.yaml` is the immutable catalogue view and records every entry at
+T0. It does not override a capability's current tier; the active Capability
+Profile, current-interface inventories, Status, and retained evidence own tier
+promotion.
+
+Two entries are explicitly excluded: `/api/extras/scripts/` and anonymous
+`/api/users/tokens/provision/`. Of the remaining 153 in-scope entries, 13
+resources are **T1** (8.50%) and 140 entries remain T0 (91.50%). The retained
+2026-08-03 V0 attests the post-ADR-0005 tree; the older recovery artifact is
+historical. Typed persistence, RBAC, Vue adapters, comparator orchestration,
+parity tests, and browser harness code exist, but no capability has a retained
+T2, T3, or T4 boundary bundle. The contract remains pre-publication.
 
 The first-profile legacy model/DAO/cache/service/handler/router/protobuf stacks
 have been physically removed. This reduces ambiguity and maintenance burden;
 it does not substitute for differential or browser evidence.
+
+[ADR 0005](adr/0005-retire-dormant-sponge-http-wrappers.md) additionally
+removed exactly 118 untouched, runtime-dormant Sponge handler delegates and
+their 118 matching route wrappers as source hygiene. The authoritative counts
+above are unchanged: the separate 102 frozen REST configurations, 176 frozen
+generated gRPC services, and their model/DAO/cache/service/protobuf source
+remain runtime-disabled for reuse or reference. Wrapper removal is neither
+compatibility evidence nor a capability-completion or tier claim; future stack
+retirement remains subject to ADR 0004 and CP-13.
 
 ## Differential proof
 
@@ -165,8 +186,12 @@ through the shared core. OpenAPI equality, route enumeration, compilation,
 single-implementation snapshots, and happy-path CRUD are supporting checks
 only.
 
-The harness is implemented. Its latest post-hardening real execution is pending
-and no pass is claimed until its report is retained and reviewed.
+The comparator and orchestration are implemented, together with broad CRUD,
+filter, and ordering coverage. The 2026-08-03 audit found that the current
+scenario matrix does not yet exercise every required permission, presence,
+conflict, invariant, rollback, and durable-effect case. Those cases must be
+added and traced to profile rules before a real execution can award T2. No pass
+is claimed until a complete per-capability report is retained and reviewed.
 
 ## Development database policy
 
@@ -196,5 +221,7 @@ strategy.
 
 See [ADR 0001](adr/0001-netbox-compatibility-and-interface-parity.md),
 [ADR 0002](adr/0002-replace-python-plugins-with-extension-services.md),
-[ADR 0003](adr/0003-unified-authentication-and-authorization.md), and
-[ADR 0004](adr/0004-generated-scaffolding-is-immutable-and-transitional.md).
+[ADR 0003](adr/0003-unified-authentication-and-authorization.md),
+[ADR 0004](adr/0004-generated-scaffolding-is-immutable-and-transitional.md),
+and
+[ADR 0005](adr/0005-retire-dormant-sponge-http-wrappers.md).

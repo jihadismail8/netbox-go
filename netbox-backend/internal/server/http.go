@@ -102,6 +102,7 @@ func NewHTTPServer(addr string, opts ...HTTPOption) app.IServer {
 		core.Identity,
 		core.Sites,
 		secureCookies,
+		o.corsAllowedOrigins,
 		workflowhttp.WithOrganizationServices(core.Manufacturers, core.RackRoles),
 		workflowhttp.WithRackTypeService(core.RackTypes),
 		workflowhttp.WithRackService(core.Racks),

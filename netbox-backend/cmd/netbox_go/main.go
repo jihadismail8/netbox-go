@@ -8,8 +8,8 @@ import (
 )
 
 func main() {
-	initial.InitApp()
-	services := initial.CreateServices()
+	httpRuntime := initial.InitApp()
+	services := initial.CreateServices(httpRuntime)
 	closes := initial.Close(services)
 
 	a := app.New(services, closes)
