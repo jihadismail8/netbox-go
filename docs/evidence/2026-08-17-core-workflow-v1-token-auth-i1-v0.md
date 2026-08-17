@@ -277,6 +277,68 @@ Every setup, repository-gate, post, and completion step reported success.
 
 None of these skipped boundaries is implied by the local or CI results.
 
+## Human closeout attestation
+
+The project owner accepted this bounded result in the project thread on
+2026-08-17. The acceptance changes only the state of `CW1-V1-02-I1` from
+`evidence` to `done`; it does not close `CW1-V1-02`, change a traceability row,
+complete an identity verification axis, or promote V1, T2, T3, T4, the
+Capability Profile, publication, deployment, or production readiness.
+
+- Tested implementation revision:
+  `38485b08c67e11f115a5fbda5a20a1072040c5cd`.
+- Tested implementation digest:
+  `source-v2:sha256:e3ec8eb91d6e035863c63d7bf60c614dd2bf4e6967ca77add2a931ae8f514c7e`
+  with 2,998 entries.
+- Pre-closeout evidence revision:
+  `58c2972df11e19ecda7f2800ed42cf80289d65cd`; its source digest remained the
+  tested implementation digest.
+- Accepted closeout revision:
+  `d8dbfb57f8c5b5c78487ab9cfea4c929405e2842`.
+- Accepted closeout digest:
+  `source-v2:sha256:5436074edcab428e3b3068ec84c8d5504fc15e2c8bd8c2a1bdff49b9885c018c`
+  with 2,998 entries.
+- Exact-commit local result: `make check` passed with the same backend
+  12.4053% coverage, 28 frontend files and 125 tests, 96 traceability-validator
+  tests, 13 resources, 3 interfaces, 17 scenarios, 293 rows, and unchanged
+  inventories/OpenAPI.
+- Exact-commit independent result: repository-gate
+  [run 32033354522](https://github.com/jihadismail8/netbox-go/actions/runs/32033354522),
+  [job 95398093460](https://github.com/jihadismail8/netbox-go/actions/runs/32033354522/job/95398093460),
+  started `2026-08-17T13:07:27Z`, completed `2026-08-17T13:19:36Z`, and
+  reported success for every step at the accepted closeout SHA.
+
+Replacement- and graft-disabled Git reads reconstructed the reachable before
+and after trees. Every changed entry retained mode `100644`. The exact
+`58c2972d` to `d8dbfb57` file mapping is below; hashes are SHA-256 over the raw
+blob bytes.
+
+| Path                                                            | Before bytes | Before SHA-256                                                     | After bytes | After SHA-256                                                      |
+| --------------------------------------------------------------- | -----------: | ------------------------------------------------------------------ | ----------: | ------------------------------------------------------------------ |
+| `AGENTS.md`                                                     |        5,011 | `751394acc55d61297e691cdc553ce1f56ca55effb5ed214aa071ad8c23d3160b` |       5,011 | `fd72f2bb6ced48898dce8dafeaa58c242100da3b8972e9933bcb3c0c5b9d6d0c` |
+| `docs/IMPLEMENTATION_PLAN.md`                                   |       84,923 | `62c4b3b49b75fb478a3a42c48a92280d4b1726496a377d6d21fd43131148d6b3` |      84,923 | `6ce97f2ad587cd823c0ee3b3a06d95fdf1e0adec2069cea805fe11b212721d73` |
+| `docs/ROADMAP.md`                                               |       74,922 | `8bb08b5b74bae950380dd224603da9f2b21774218a15754ded96b86c402d31eb` |      75,020 | `0f2130216c53e9e19038c47ef9263a8c5ebc2179a64e8ccb2c834ba23b8a019a` |
+| `docs/STATUS.md`                                                |       21,934 | `67dcec0614c5e427fadc1513fca3a2ffe1db8b4b98bfc9fe0293e175d617f09f` |      21,943 | `a7a694a48f4e3a8e3dc166ebd4249c32b220980513e78c96a2c5d5471660c849` |
+| `docs/TESTING.md`                                               |       12,550 | `3d712923581f925489549e68349ee494cd5785b0f46ee5a92b602a9179db55b0` |      12,559 | `b98c843f9ceec5b426953f880e3820a6986cf6bc44d6e74fa6635818f5bfbd8a` |
+| `docs/increments/CW1-V1-02.md`                                  |       35,497 | `c31b00ee47caa517cee848d411f1ac771760dd41a4bdcf66955c9e320c6b8633` |      35,588 | `80865b1ce57c386706c25e7f6734897d4322d87f6f227f6532c17b6b6b65f9ef` |
+| `docs/increments/README.md`                                     |        2,938 | `f9250a5b698094780d32c725d6aa9f2d7148c29557fb22ab66b97371377b768a` |       2,918 | `cd92b8366b29d6b7d405c3e96b9e5be8da81c9934350355674f47acdf41c57ce` |
+| `docs/evidence/README.md`                                       |        6,369 | `623922bbeb990f968002e6c938649ad2954bea737656470f3dc6ac8c7381e8d8` |       6,309 | `d2d58495c3a3a0f4761d8f0219a66249658f0095448b3777671fd84207972af4` |
+| `docs/evidence/2026-08-17-core-workflow-v1-token-auth-i1-v0.md` |       13,390 | `0887a2ccdb8d3795f4ca21c96c1561f50700bbe63dcf8ed61bdf3cb5eb381d3a` |      13,910 | `095ecf4933c25194b70870b55365afd233ca6f3ce187d2aebe62bdef5a60d73c` |
+
+The first seven rows are source-v2 inputs and constitute the complete
+claim-only source diff. The final two rows are excluded evidence paths. No
+entry was added, removed, renamed, retargeted, or made executable, and no
+other byte changed.
+
+The artifact still intentionally carries no `netbox-go-evidence-v2` marker.
+The current marker schema requires a retained traceability consumer, while
+this bounded non-tier acceptance promotes no verification set. Adding a
+marker or changing traceability solely to satisfy that schema would fabricate
+a compatibility or extension claim. Integrity is instead retained through the
+two reachable revisions, exact source-v2 digests/counts, complete changed-file
+mapping above, full local V0, independent exact-SHA CI, and explicit human
+acceptance.
+
 ## Residual work and review state
 
 - The full REST and gRPC credential-header/metadata shape and outcome matrix is
