@@ -120,7 +120,7 @@ production release through PROD-1 and PROD-2.
 | ---- | ----------------------------------- | --------------------------------------- | ---------------------------------------------------- |
 | 0    | Stable language and decisions       | CONTEXT plus ADR 0001–0005              | `done`                                               |
 | 1    | Repository/shared-core baseline     | `CW1-G00`                               | `continuous`                                         |
-| 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01/I1 `done`; I2 `evidence`; parent active        |
+| 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01/I1/I2 `done`; parent active                    |
 | 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01 `done`; remainder `blocked`                    |
 | 4    | First Core Workflow Profile         | `CW1-V1-*` through `CW1-V6-*`           | T1; active program                                   |
 | 5    | In-scope feature expansion          | `CP-P01`–`CP-P19`, then `MC-01`–`MC-10` | `blocked`                                            |
@@ -159,12 +159,12 @@ CW1-G00 (continuous V0)
 
 The starting `CW1-V1-01` and `CW1-V2-01` outcomes are accepted. Bounded
 `CW1-V1-02-I1` is accepted and done for the token credential foundation while
-the `CW1-V1-02` parent remains active. `CW1-V1-02-I2` has bounded evidence for
-REST token grammar/outcomes and unary gRPC bearer/method safety and awaits
-project-owner review. It and ready `CW1-V3-01` may run in parallel only when
-their packets declare non-overlapping files and owners; otherwise serialize
-them. All merges serialize through `CW1-G00`. Production foundations may
-proceed in parallel only when they do not destabilize profile work or claim
+the `CW1-V1-02` parent remains active. `CW1-V1-02-I2` is accepted and done for
+REST token grammar/outcomes and unary gRPC bearer/method safety. The next
+separately reviewed `CW1-V1-02` child and ready `CW1-V3-01` may run in parallel
+only when their packets declare non-overlapping files and owners; otherwise
+serialize them. All merges serialize through `CW1-G00`. Production foundations
+may proceed in parallel only when they do not destabilize profile work or claim
 production readiness early.
 
 ## Current execution board
@@ -258,14 +258,13 @@ weakening CSRF.
 
 Entry: `CW1-V1-01` is merged and `CW1-G00` is green.
 
-Completed bounded packet: [CW1-V1-02-I1 token credential
-foundation](increments/CW1-V1-02.md). The parent checklist remains open until
-every later transport/session/throttle row is proved. Bounded evidence packet:
-[CW1-V1-02-I2 token transport and unary RPC safety](increments/CW1-V1-02-I2.md).
-It proves the direct-peer token transport slice but does not cover browser
-sessions, CSRF, throttles, trusted-proxy source resolution, simultaneous
-credential precedence, or gRPC streams. The aggregate token and all-transport
-rows therefore remain open.
+Completed bounded packets: [CW1-V1-02-I1 token credential
+foundation](increments/CW1-V1-02.md) and [CW1-V1-02-I2 token transport and unary
+RPC safety](increments/CW1-V1-02-I2.md). The parent checklist remains open until
+every later transport/session/throttle row is proved. I2 proves the direct-peer
+token transport slice but does not cover browser sessions, CSRF, throttles,
+trusted-proxy source resolution, simultaneous credential precedence, or gRPC
+streams. The aggregate token and all-transport rows therefore remain open.
 
 - [ ] Test missing, malformed, unknown, expired, revoked, write-disabled, and
       IP-restricted API tokens.

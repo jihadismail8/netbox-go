@@ -30,9 +30,9 @@ has made the older V0 artifacts historical. The exact source-v2 entry revision
 has a retained `CW1-G00` result, `CW1-V1-01` is human-reviewed and done, and
 `CW1-V2-01` is structurally accepted. `CW1-V1-02-I1` is accepted and done for
 token lookup classification, strict touch ordering, and durable PostgreSQL
-touch semantics. `CW1-V1-02-I2` is active only for baseline REST token
-grammar/outcomes and unary gRPC bearer/method safety and has bounded evidence
-awaiting project-owner review; the `CW1-V1-02` parent and its session, CSRF,
+touch semantics. `CW1-V1-02-I2` is accepted and done only for baseline REST
+token grammar/outcomes and unary gRPC bearer/method safety; the `CW1-V1-02`
+parent and its session, CSRF,
 throttle, trusted-proxy, simultaneous-credential, and streaming rows remain
 open. Do not begin or merge another Capability Profile while V0 is red or
 before `CW1-V6-03`. Once those gates are durably closed, follow the next

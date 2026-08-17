@@ -51,7 +51,7 @@ must refresh that continuous gate. Accepted bounded `CW1-V1-02-I1` evidence
 separately proves token lookup classification, strict `last_used` ordering, affected local
 REST/gRPC mapping, and actual-update behavior on an owned disposable
 PostgreSQL schema. It does not complete the parent credential matrix or promote
-T2/T3. Bounded `CW1-V1-02-I2` evidence adds the exact baseline REST Token
+T2/T3. Accepted bounded `CW1-V1-02-I2` evidence adds the exact baseline REST Token
 grammar and details, typed credential-state causes, strict unary gRPC Bearer
 grammar, an explicit 28-read/57-write method classification over 85 protected
 RPCs, malformed-input zero-lookup containment, and cross-transport
@@ -197,7 +197,7 @@ and exact change-state outcomes remain to be added and retained.
 | Checkpoint               | Implementation state                                                  | Exit condition                                                                 | Current status                                           |
 | ------------------------ | --------------------------------------------------------------------- | ------------------------------------------------------------------------------ | -------------------------------------------------------- |
 | V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage  | `make check` retained green on each exact relevant source digest               | Entry source-v2 retained; active-source refresh required |
-| V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests | Complete principal/visibility/CLI/session/token matrix                         | CORS/I1 retained; I2 token transport evidence            |
+| V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests | Complete principal/visibility/CLI/session/token matrix                         | CORS/I1/I2 retained; parent open                         |
 | V2 profile behavior      | Shared 13-resource service and broad positive/negative tests          | Trace every declared invariant, field/filter/relationship, error, and rollback | Implementation/evidence gap                              |
 | V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness            | Truthful readiness, loss/recovery, real PostgreSQL and deployment artifacts    | Implementation/evidence gap                              |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites       | Complete T2 scenario report, then equivalent T3 report                         | T1; implementation gap                                   |

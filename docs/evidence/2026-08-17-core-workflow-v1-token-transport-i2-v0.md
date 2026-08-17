@@ -5,9 +5,10 @@
 - Goal: `CW1-V1-02`.
 - Increment: `CW1-V1-02-I2`.
 - Executor: Codex GPT-5.6 Sol.
-- State: `evidence`; project-owner review is required after the evidence-only
-  receipt CI.
-- Result: **candidate source passed for the exact revision and digest below**.
+- State: `done`; the project owner accepted this bounded result at
+  `2026-08-17T17:19:53Z`.
+- Result: **accepted bounded source passed for the exact revision and digest
+  below**.
 - Capability Profile: `core-workflow-v1`, still T1 and pre-publication.
 
 This artifact proves only the bounded token-transport and unary-method safety
@@ -20,8 +21,8 @@ deployment, or claim production readiness.
 The artifact intentionally carries no `netbox-go-evidence-v2` marker. I2
 promotes no compatibility or extension verification set, and fabricating a
 tier marker or traceability change would exceed the reviewed increment. The
-bounded source result remains subject to a separate project-owner review and a
-later claim-only `done` attestation.
+project owner accepted only this bounded result; the claim-only `done`
+attestation does not promote a tier or complete the parent.
 
 ## Entry and tested source
 
@@ -245,6 +246,24 @@ Independent candidate result:
 
 Every setup, repository-gate, post, and completion step reported success.
 
+Evidence-receipt result before project-owner acceptance:
+
+- Workflow: `repository-gate`.
+- Evidence-receipt revision:
+  `37f5fb2d78b431cf308812b2100a47064709e7a6` on `main`.
+- Source digest:
+  `source-v2:sha256:2c1579e228024d1573489a1cf05978d6cd85a8c0f41fdc1f2db61f34e7515e4c`.
+- Owned entries: 3,002.
+- Run:
+  [32044758176](https://github.com/jihadismail8/netbox-go/actions/runs/32044758176).
+- Job:
+  [95430159051](https://github.com/jihadismail8/netbox-go/actions/runs/32044758176/job/95430159051).
+- Head SHA: `37f5fb2d78b431cf308812b2100a47064709e7a6`.
+- Job start: `2026-08-17T16:14:26Z`.
+- Job completion: `2026-08-17T16:27:06Z`.
+- Run completion: `2026-08-17T16:27:07Z`.
+- Conclusion: **success**; every job step succeeded.
+
 ## Gate disposition
 
 - L0-L3: passed locally on the exact tested digest; repository CI passed on
@@ -277,9 +296,8 @@ No skipped boundary is implied by the local or CI results.
 - Test fixtures use synthetic opaque values; their values do not appear in
   test names, failure messages, logs retained here, or evidence links.
 - The post-candidate artifact and ledger are excluded from `source-v2`. Their
-  evidence-only commit must leave the tested digest and entry count unchanged
-  and pass its own exact-SHA repository CI before this receipt is treated as
-  retained.
+  evidence-only commit left the tested digest and entry count unchanged and
+  passed its exact-SHA repository CI before project-owner acceptance.
 
 ## Residual work and risk
 
@@ -300,6 +318,6 @@ advisories. They predate I2 and were not changed or waived; dependency changes
 were outside this increment.
 
 The parent `CW1-V1-02`, V1, T2/T3/T4, Capability Profile publication, full
-rewrite, deployment, and production-readiness claims all remain open. I2 stays
-at `evidence` through its evidence-only receipt CI and until a separate
-project-owner review and claim-only closeout.
+rewrite, deployment, and production-readiness claims all remain open. The
+project owner accepted the bounded I2 result, so I2 is `done`; no broader claim
+changes.
