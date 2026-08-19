@@ -14,25 +14,24 @@ runs. The
 [bounded token-transport and unary-safety result](2026-08-17-core-workflow-v1-token-transport-i2-v0.md)
 also passed its exact committed local boundary, independent candidate CI, and
 evidence-receipt CI. The
-[bounded browser-session and CSRF candidate](2026-08-17-core-workflow-v1-browser-session-i3-v0.md)
-passed its exact committed local, real-PostgreSQL, and independent candidate CI
-boundaries; its digest-excluded receipt still requires exact-SHA CI and then
-project-owner review. The project owner reviewed and retained the entry V0,
-CORS, bounded token I1, and bounded token I2 results. The
+[bounded browser-session and CSRF result](2026-08-17-core-workflow-v1-browser-session-i3-v0.md)
+passed its exact committed local, real-PostgreSQL, independent candidate CI,
+and evidence-receipt CI boundaries. The project owner reviewed and retained the
+entry V0, CORS, bounded token I1, bounded token I2, and bounded browser-session
+I3 results. The
 [2026-08-03 post-cleanup V0](2026-08-03-post-cleanup-v0.md) used the superseded
 mode-blind v1 source digest and is now historical. The 2026-08-01
 repository V0 and recovery-scoped PostgreSQL replay also remain historical in
 the
 [Core Workflow recovery artifact](2026-08-01-core-workflow-v1-v0.md). The
 Profile remains T1 and pre-publication; V1-V6 remain open. `CW1-G00` is current
-for the exact I3 candidate source; `CW1-V1-01`, `CW1-V1-02-I1`, and
-`CW1-V1-02-I2` are done; and `CW1-V1-02-I3` is evidence pending review. The
-parent credential/session matrix remains open. Feature work must re-establish
-V0 after its next owned-source change.
+for the exact I3 source; `CW1-V1-01`, `CW1-V1-02-I1`, `CW1-V1-02-I2`, and
+`CW1-V1-02-I3` are done. The parent credential/session matrix remains open.
+Feature work must re-establish V0 after its next owned-source change.
 
 | Evidence                 | Required command or boundary                                  | Current state                                           |
 | ------------------------ | ------------------------------------------------------------- | ------------------------------------------------------- |
-| Repository quality       | Revised `make check` including non-mutating backend coverage  | Exact I3 source passed; receipt CI/review pending       |
+| Repository quality       | Revised `make check` including non-mutating backend coverage  | Accepted bounded I3 result; parent remains open         |
 | Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                 |
 | gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                   |
 | Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | Token I1 and session I3 slices passed; V1/V3 incomplete |

@@ -5,10 +5,9 @@
 - Goal: `CW1-V1-02`.
 - Increment: `CW1-V1-02-I3`.
 - Executor: Codex GPT-5.6 Sol.
-- State: `evidence`; the candidate source and independent candidate CI passed.
-  This receipt still requires its own exact-SHA CI and then explicit
-  project-owner review.
-- Result: **bounded browser-session and CSRF candidate source passed for the
+- State: `done`; the project owner accepted this bounded result at
+  `2026-08-19T12:31:02Z`.
+- Result: **accepted bounded browser-session and CSRF source passed for the
   exact revision and digest below**.
 - Capability Profile: `core-workflow-v1`, still T1 and pre-publication.
 
@@ -19,9 +18,10 @@ Profile, the rewrite, deployment, or production readiness.
 
 The artifact intentionally carries no `netbox-go-evidence-v2` marker. I3
 promotes no compatibility tier or identity-extension verification set, and no
-profile, scenario, or traceability source changed. The browser-session behavior
-remains a classified secure identity extension except for the explicitly
-pinned REST authenticator-order and cookie-name alignment.
+profile, scenario, or traceability source changed. The project owner accepted
+only this bounded result; the browser-session behavior remains a classified
+secure identity extension except for the explicitly pinned REST
+authenticator-order and cookie-name alignment.
 
 ## Entry and tested source
 
@@ -311,6 +311,24 @@ Independent candidate result:
 - Conclusion: **success**; every setup, repository-gate, post, and completion
   step succeeded.
 
+Evidence-receipt result before project-owner acceptance:
+
+- Workflow: `repository-gate`.
+- Evidence-receipt revision:
+  `a30a60b2cbc2445173fcd92ecbcd8b40f5370674` on `main`.
+- Source digest:
+  `source-v2:sha256:bcb4ef437cd6373abb56cb93980df61234b1a6d9cf10f610fb02ad0f8c9c2f97`.
+- Owned entries: 3,007.
+- Run:
+  [32225681378](https://github.com/jihadismail8/netbox-go/actions/runs/32225681378).
+- Job:
+  [96064318118](https://github.com/jihadismail8/netbox-go/actions/runs/32225681378/job/96064318118).
+- Head SHA: `a30a60b2cbc2445173fcd92ecbcd8b40f5370674`.
+- Job start: `2026-08-19T12:16:36Z`.
+- Job completion: `2026-08-19T12:30:00Z`.
+- Run completion: `2026-08-19T12:30:01Z`.
+- Conclusion: **success**; every job step succeeded.
+
 ## Gate disposition
 
 - L0-L3: passed locally on the exact tested digest; repository CI passed on
@@ -345,8 +363,8 @@ No skipped boundary is implied by the local or CI results.
   constant-time or boolean helpers with generic diagnostics, and no reusable
   value appears in test names, logs retained here, or evidence links.
 - This artifact and its ledger link are excluded from `source-v2`; their
-  evidence-only commit must preserve the tested digest, entry count, and
-  manifest and pass its own exact-SHA repository CI before owner review.
+  evidence-only commit preserved the tested digest, entry count, and manifest
+  and passed its exact-SHA repository CI before project-owner acceptance.
 
 ## Residual work and risk
 
@@ -367,6 +385,6 @@ advisories. They predate I3 and were not changed or waived; dependency changes
 were outside this increment.
 
 The parent `CW1-V1-02`, V1, T2/T3/T4, Capability Profile publication, full
-rewrite, deployment, and production-readiness claims all remain open. I3 stays
-at `evidence` until this receipt's exact-SHA CI is green and the project owner
-explicitly accepts only the bounded result.
+rewrite, deployment, and production-readiness claims all remain open. The
+project owner accepted the bounded I3 result, so I3 is `done`; no broader claim
+changes.
