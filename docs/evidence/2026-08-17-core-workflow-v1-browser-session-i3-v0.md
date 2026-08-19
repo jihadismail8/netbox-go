@@ -366,6 +366,92 @@ No skipped boundary is implied by the local or CI results.
   evidence-only commit preserved the tested digest, entry count, and manifest
   and passed its exact-SHA repository CI before project-owner acceptance.
 
+## Human closeout attestation
+
+The project owner accepted this bounded result in the project thread at
+`2026-08-19T12:31:02Z`, after the evidence-receipt exact-SHA CI completed
+successfully. The acceptance changes only the state of `CW1-V1-02-I3` from
+`evidence` to `done`; it does not close `CW1-V1-02`, change a traceability row,
+complete an identity verification axis, or promote V1, T2, T3, T4, the
+Capability Profile, publication, deployment, or production readiness.
+
+- Tested implementation revision:
+  `d84717cb09c02aa43dcd79a5f0dc98c0a0b826d1`.
+- Tested implementation digest:
+  `source-v2:sha256:bcb4ef437cd6373abb56cb93980df61234b1a6d9cf10f610fb02ad0f8c9c2f97`
+  with 3,007 entries.
+- Pre-closeout evidence revision:
+  `a30a60b2cbc2445173fcd92ecbcd8b40f5370674`; its source digest remained the
+  tested implementation digest.
+- Accepted closeout revision:
+  `0a4043e3381fc34d3a226c624c8e0b02df73f45c`.
+- Accepted closeout digest:
+  `source-v2:sha256:f98db5a0e1beb0590ad8eac6be5dbdcc0c6a962c85f592a005bfe8d448848b6d`
+  with 3,007 entries.
+- Accepted closeout manifest-output SHA-256:
+  `fbc906a3f82a9dd5ae8b8bc1337aadd95e156fc73dbdc9b9b05186bad9422421`.
+- Exact-commit local result: the pinned-environment `make check` ran from
+  `2026-08-19T12:49:07Z` through `2026-08-19T12:51:13Z` at exit 0. Backend
+  coverage was 12.4997% (36,338/290,712) against the retained 12.4001%
+  (36,013/290,425) floor; 28 frontend files and 125 tests passed at 61.72%
+  statement coverage; 96 traceability-validator tests passed; the active
+  profile remained 13 resources, 3 interfaces, 17 scenarios, and 293 rows;
+  inventories remained 155 baseline REST, 123 current REST, 179 current gRPC,
+  and 13 current Vue entries; OpenAPI remained 33 paths and 86 operations; and
+  all local links were valid across 156 Markdown files.
+- Exact-commit independent result: repository-gate
+  [run 32254507381](https://github.com/jihadismail8/netbox-go/actions/runs/32254507381),
+  [job 96072971766](https://github.com/jihadismail8/netbox-go/actions/runs/32254507381/job/96072971766),
+  started `2026-08-19T12:47:33Z`, completed
+  `2026-08-19T13:01:01Z`, and reported success for every step at the accepted
+  closeout SHA.
+
+The exact local command was:
+
+```bash
+env \
+  PATH=/home/jihad/.nvm/versions/node/v24.18.0/bin:/home/jihad/.local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
+  make check
+```
+
+Replacement- and graft-disabled Git reads reconstructed the reachable before
+and after trees. Every changed entry retained mode `100644`. The exact
+`a30a60b2` to `0a4043e3` file mapping is below; hashes are SHA-256 over the raw
+blob bytes.
+
+| Path                                                                 | Before bytes | Before SHA-256                                                     | After bytes | After SHA-256                                                      |
+| -------------------------------------------------------------------- | -----------: | ------------------------------------------------------------------ | ----------: | ------------------------------------------------------------------ |
+| `AGENTS.md`                                                          |        5,452 | `7406aaffcd87e876dfb9098e63b533ec317ffd01db1a2125be362862d81d2ecb` |       5,427 | `5356667f45c88ee1f5fc0556f04c93de55b3ee74c02e1366cca564ef69839971` |
+| `docs/IMPLEMENTATION_PLAN.md`                                        |       85,313 | `54efa05c63b0ffbe6bf45d741ffeaeb6458058e95ba7c5f3f08239a578e615ee` |      85,430 | `854c60ead34f0182749a83449c2b4c69bf3f3244dcb168a356a42cdb8b17acb3` |
+| `docs/ROADMAP.md`                                                    |       75,693 | `afd97037bd3dc8eab53e09b38e39d714318a2d397f2049833d2611a8833fd4b7` |      75,664 | `4e1e14b47b0c54b9fef55f25d12a38390e4e215341e298b9f8bce4ba26e43787` |
+| `docs/STATUS.md`                                                     |       22,781 | `9e7b59f28b5c46da945886fb9e4351311684f9919ce5309e0eba49712a630af9` |      22,364 | `7241eeca929d3b53baac02635b4b603a488247bb83e5c638a54fff375211c2f1` |
+| `docs/TESTING.md`                                                    |       13,509 | `b60b4be513b19123bef2a58dfe036b947fb7e1ae03259c0de0d55f1ea25a1666` |      13,518 | `a4f1d051643f50d136b199cf91a322042595f576f974b2bd4ae9819b8bd057fb` |
+| `docs/increments/CW1-V1-02-I3.md`                                    |       37,678 | `39354cf861f2909364241ab873088f3b360c1bea0c866e14413b775d90d3c930` |      37,995 | `47f3402ec90cda4dc82d0d331e2d17eb47a805ebdd0981024d52afe90f1d85ed` |
+| `docs/increments/README.md`                                          |        3,208 | `e1d7f07a8947ed4cd86a2204e9c6d7dd82d9278402d17cee61c4da7b1fb06301` |       3,180 | `36920c8a4b60bb942d9b2fc371de31e4d16d2d789555ab840a803cbc1c86d788` |
+| `docs/evidence/2026-08-17-core-workflow-v1-browser-session-i3-v0.md` |       17,436 | `3946219e68ca949671138dedc47bd38d424d5062710bca2993f229b78d5e241e` |      18,109 | `688855711a61167b02e074eb4c216aef370a1ab0cc345b5fafff89fec0321b44` |
+| `docs/evidence/README.md`                                            |        6,884 | `a53d568d7356f78aae0c3a705d40ab01bcfd39de7cbebaf5acae5128e57909d4` |       6,802 | `4d123afaaff28da26bb4e0ffaa37917da072009ae666f7988989b3d591d96a4c` |
+
+The first seven rows are source-v2 inputs and constitute the complete
+claim-only source diff. The final two rows are excluded evidence paths. No
+entry was added, removed, renamed, retargeted, or made executable, and no
+other byte changed. The complete manifests retained 3,007 entries before and
+after the claim. The pre-closeout manifest-output SHA-256 was
+`dc0f0454d76959957cde961db46a0fca5413211368c21563c71a00af37d2c7ce`.
+
+The claim-only transition changed no application behavior, route, schema,
+migration, security rule, scenario, fixture, comparator, normalizer,
+dependency, toolchain, coverage policy, verification set, or parent-goal
+state. This artifact still intentionally carries no `netbox-go-evidence-v2`
+marker because I3 promotes no traceability consumer or extension verification
+set. The evidence-only receipt containing this attestation is excluded from
+`source-v2`; it must preserve the accepted closeout digest and pass its own
+exact-SHA repository CI.
+
+Human reviewer: project owner.
+
+Human decision: accepted only `CW1-V1-02-I3` in the project thread at
+`2026-08-19T12:31:02Z`; the parent goal remains open.
+
 ## Residual work and risk
 
 The following `CW1-V1-02` work remains open and unclaimed:
