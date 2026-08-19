@@ -76,7 +76,7 @@ func (tx *passwordChangePostgresFaultTransaction) DeleteSessionsForUser(
 	userID int64,
 ) error {
 	tx.trace.deleteAttempts.Add(1)
-	user, hash, err := tx.Store.UserByID(ctx, userID)
+	user, hash, err := tx.UserByID(ctx, userID)
 	if err != nil {
 		return err
 	}

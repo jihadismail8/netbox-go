@@ -86,7 +86,7 @@ func (store *i4GRPCStore) UserByID(_ context.Context, id int64) (domain.User, st
 	return user, store.hashes[id], nil
 }
 
-func (store *i4GRPCStore) UpdatePassword(_ context.Context, id int64, hash string) error {
+func (store *i4GRPCStore) UpdatePassword(_ context.Context, id int64, hash string, _ time.Time) error {
 	store.updates++
 	if store.updateErr != nil {
 		return store.updateErr

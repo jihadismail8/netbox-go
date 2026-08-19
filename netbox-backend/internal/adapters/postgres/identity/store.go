@@ -100,8 +100,11 @@ func (s *Store) UserByID(ctx context.Context, id int64) (domain.User, string, er
 	user, err := s.userFromRow(ctx, row)
 	return user, row.PasswordHash, err
 }
-func (s *Store) UpdatePassword(ctx context.Context, id int64, hash string) error {
-	result := s.db.WithContext(ctx).Model(&UserRow{}).Where("id = ?", id).Updates(map[string]any{"password_hash": hash, "updated": time.Now().UTC()})
+func (s *Store) UpdatePassword(ctx context.Context, id int64, hash string, changedAt time.Time) error {
+	result := s.db.WithContext(ctx).
+		Model(&UserRow{}).
+		Where("id = ?", id).
+		Updates(map[string]any{"password_hash": hash, "updated": changedAt.UTC()})
 	if result.Error != nil {
 		return result.Error
 	}

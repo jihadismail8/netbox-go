@@ -24,13 +24,27 @@ import (
 )
 
 const (
-	sessionCookie               = "sessionid"
-	csrfCookie                  = "csrftoken"
-	logoutCredentialsContextKey = "netbox-go.identity.logout-credentials"
-	cookieMaxAgeSeconds         = int(application.BrowserSessionLifetime / time.Second)
+	sessionCookie                      = "sessionid"
+	csrfCookie                         = "csrftoken"
+	logoutCredentialsContextKey        = "netbox-go.identity.logout-credentials"
+	passwordChangeCredentialContextKey = "netbox-go.identity.password-change-credential"
+	cookieMaxAgeSeconds                = int(application.BrowserSessionLifetime / time.Second)
 )
 
 type logoutCredentials struct {
+	sessionSecret string
+	csrf          string
+}
+
+type passwordChangeCredentialKind uint8
+
+const (
+	passwordChangeCredentialBrowserSession passwordChangeCredentialKind = iota + 1
+	passwordChangeCredentialAPIToken
+)
+
+type passwordChangeCredentials struct {
+	kind          passwordChangeCredentialKind
 	sessionSecret string
 	csrf          string
 }
@@ -235,6 +249,7 @@ func (h *Handler) middleware(unauthenticatedStatus int) gin.HandlerFunc {
 		if sessionPresent && sessionSecret != "" {
 			user, err := h.service.AuthenticateSession(ctx, sessionSecret)
 			if err == nil {
+				var passwordCredentials passwordChangeCredentials
 				if !sessionCSRFSafe(c.Request.Method) {
 					csrf, accepted := exactCSRFPair(c.Request)
 					if !accepted {
@@ -247,6 +262,14 @@ func (h *Handler) middleware(unauthenticatedStatus int) gin.HandlerFunc {
 						c.Abort()
 						return
 					}
+					passwordCredentials = passwordChangeCredentials{
+						kind:          passwordChangeCredentialBrowserSession,
+						sessionSecret: sessionSecret,
+						csrf:          csrf,
+					}
+				}
+				if passwordCredentials.kind != 0 {
+					c.Set(passwordChangeCredentialContextKey, passwordCredentials)
 				}
 				setPrincipal(c, user)
 				c.Next()
@@ -275,6 +298,9 @@ func (h *Handler) middleware(unauthenticatedStatus int) gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+		c.Set(passwordChangeCredentialContextKey, passwordChangeCredentials{
+			kind: passwordChangeCredentialAPIToken,
+		})
 		setPrincipal(c, user)
 		c.Next()
 	}
@@ -408,6 +434,35 @@ func (h *Handler) logout(c *gin.Context) {
 	c.Status(http.StatusNoContent)
 }
 func (h *Handler) changePassword(c *gin.Context) {
+	value, exists := c.Get(passwordChangeCredentialContextKey)
+	credentials, accepted := value.(passwordChangeCredentials)
+	if !exists || !accepted {
+		writePasswordChangeAdapterError(c)
+		return
+	}
+
+	var credential application.PasswordChangeCredential
+	switch credentials.kind {
+	case passwordChangeCredentialBrowserSession:
+		if credentials.sessionSecret == "" || credentials.csrf == "" {
+			writePasswordChangeAdapterError(c)
+			return
+		}
+		credential = application.BrowserSessionPasswordChangeCredential(
+			credentials.sessionSecret,
+			credentials.csrf,
+		)
+	case passwordChangeCredentialAPIToken:
+		if credentials.sessionSecret != "" || credentials.csrf != "" {
+			writePasswordChangeAdapterError(c)
+			return
+		}
+		credential = application.APITokenPasswordChangeCredential()
+	default:
+		writePasswordChangeAdapterError(c)
+		return
+	}
+
 	principal, _ := workflowhttp.Principal(c)
 	var input struct {
 		Current string `json:"current_password"`
@@ -420,8 +475,7 @@ func (h *Handler) changePassword(c *gin.Context) {
 		))
 		return
 	}
-	var credential application.PasswordChangeCredential
-	_, err := h.service.ChangePassword(
+	result, err := h.service.ChangePassword(
 		c.Request.Context(),
 		principal,
 		application.NewPasswordChangeInput(input.Current, input.Next, credential),
@@ -430,9 +484,34 @@ func (h *Handler) changePassword(c *gin.Context) {
 		writeError(c, err)
 		return
 	}
+	if result == nil {
+		writePasswordChangeAdapterError(c)
+		return
+	}
+	browserSession, hasBrowserSession := result.BrowserSession()
+	switch credentials.kind {
+	case passwordChangeCredentialBrowserSession:
+		if !hasBrowserSession {
+			writePasswordChangeAdapterError(c)
+			return
+		}
+		h.setSessionCookie(c, browserSession.Secret, browserSession.Expires)
+		h.setCSRFCookie(c, browserSession.CSRFToken)
+	case passwordChangeCredentialAPIToken:
+		if hasBrowserSession {
+			writePasswordChangeAdapterError(c)
+			return
+		}
+	}
 	logger.Info("identity password changed", logger.Int64("userID", principal.ID))
-	h.clearCookies(c)
 	c.Status(http.StatusNoContent)
+}
+
+func writePasswordChangeAdapterError(c *gin.Context) {
+	writeError(c, shared.NewError(
+		shared.ErrorReasonInternal,
+		"An internal error occurred.",
+	))
 }
 func (h *Handler) listTokens(c *gin.Context) {
 	principal, _ := workflowhttp.Principal(c)

@@ -54,7 +54,7 @@ type Store interface {
 	GrantPermissionToGroup(context.Context, int64, int64) error
 	UserByUsername(context.Context, string) (domain.User, string, error)
 	UserByID(context.Context, int64) (domain.User, string, error)
-	UpdatePassword(context.Context, int64, string) error
+	UpdatePassword(context.Context, int64, string, time.Time) error
 	CreateSession(context.Context, SessionRecord) error
 	SessionByHash(context.Context, []byte) (SessionRecord, error)
 	UpdateSessionCSRF(ctx context.Context, sessionHash, csrfHash []byte) error
@@ -406,19 +406,12 @@ func (s *Service) Logout(ctx context.Context, secret, csrf string) error {
 }
 
 func (s *Service) activeSession(ctx context.Context, store Store, secret string) (SessionRecord, domain.User, []byte, error) {
-	if secret == "" {
-		return SessionRecord{}, domain.User{}, nil, sessionCredentialError(SessionCredentialFailureMissing)
-	}
-	sessionHash := digest(secret)
-	record, err := store.SessionByHash(ctx, sessionHash)
-	if errors.Is(err, ErrNotFound) {
-		return SessionRecord{}, domain.User{}, nil, sessionCredentialError(SessionCredentialFailureUnknown)
-	}
+	record, sessionHash, err := loadSessionRecord(ctx, store, secret)
 	if err != nil {
-		return SessionRecord{}, domain.User{}, nil, internal(err)
+		return SessionRecord{}, domain.User{}, nil, err
 	}
-	if !record.Expires.After(s.clock.Now().UTC()) {
-		return SessionRecord{}, domain.User{}, nil, sessionCredentialError(SessionCredentialFailureExpired)
+	if err := validateSessionExpiryAt(record, s.clock.Now().UTC()); err != nil {
+		return SessionRecord{}, domain.User{}, nil, err
 	}
 	user, _, err := store.UserByID(ctx, record.UserID)
 	if err != nil {
@@ -428,6 +421,28 @@ func (s *Service) activeSession(ctx context.Context, store Store, secret string)
 		return SessionRecord{}, domain.User{}, nil, sessionCredentialError(SessionCredentialFailureInactiveOwner)
 	}
 	return record, user, sessionHash, nil
+}
+
+func loadSessionRecord(ctx context.Context, store Store, secret string) (SessionRecord, []byte, error) {
+	if secret == "" {
+		return SessionRecord{}, nil, sessionCredentialError(SessionCredentialFailureMissing)
+	}
+	sessionHash := digest(secret)
+	record, err := store.SessionByHash(ctx, sessionHash)
+	if errors.Is(err, ErrNotFound) {
+		return SessionRecord{}, nil, sessionCredentialError(SessionCredentialFailureUnknown)
+	}
+	if err != nil {
+		return SessionRecord{}, nil, internal(err)
+	}
+	return record, sessionHash, nil
+}
+
+func validateSessionExpiryAt(record SessionRecord, now time.Time) error {
+	if !record.Expires.After(now) {
+		return sessionCredentialError(SessionCredentialFailureExpired)
+	}
+	return nil
 }
 
 func (s *Service) AuthenticateToken(ctx context.Context, secret, remoteAddress string, write bool) (domain.User, error) {
@@ -568,11 +583,128 @@ func (s *Service) RevokeToken(ctx context.Context, principal domain.Principal, i
 	return nil
 }
 func (s *Service) ChangePassword(
-	context.Context,
-	domain.Principal,
-	ChangePasswordInput,
+	ctx context.Context,
+	principal domain.Principal,
+	input ChangePasswordInput,
 ) (ChangePasswordResult, error) {
-	return nil, internal(errors.New("password change implementation is pending"))
+	request, ok := input.(*passwordChangeInput)
+	if !ok || request == nil {
+		return nil, internal(errors.New("invalid password-change input"))
+	}
+
+	credential, ok := request.credential.(*passwordChangeCredential)
+	validCredential := ok && credential != nil &&
+		(credential.kind == passwordChangeCredentialBrowserSession ||
+			(credential.kind == passwordChangeCredentialAPIToken &&
+				credential.sessionSecret == "" && credential.csrf == ""))
+	if !principal.Authenticated() || !validCredential {
+		return nil, unauthenticated()
+	}
+
+	verifiedUser, verifiedHash, err := s.store.UserByID(ctx, principal.ID)
+	if err != nil {
+		return nil, internal(err)
+	}
+	compareErr := bcrypt.CompareHashAndPassword([]byte(verifiedHash), []byte(request.currentPassword))
+	if compareErr != nil && !errors.Is(compareErr, bcrypt.ErrMismatchedHashAndPassword) {
+		return nil, internal(compareErr)
+	}
+	if verifiedUser.ID != principal.ID {
+		return nil, internal(errors.New("password-change identity mismatch"))
+	}
+	if !verifiedUser.IsActive {
+		return nil, unauthenticated()
+	}
+	if compareErr != nil {
+		return nil, invalid("current_password", "Current password is incorrect.")
+	}
+
+	nextHash, err := HashPassword(request.newPassword)
+	if err != nil {
+		return nil, err
+	}
+
+	var replacement *domain.BrowserSession
+	err = s.store.Transaction(ctx, func(store Store) error {
+		now := s.clock.Now().UTC()
+		user, currentHash, lookupErr := store.UserByID(ctx, principal.ID)
+		if lookupErr != nil {
+			return internal(lookupErr)
+		}
+		if user.ID != principal.ID {
+			return internal(errors.New("password-change transactional identity mismatch"))
+		}
+		sameHash := constantTimeTextEqual(currentHash, verifiedHash)
+		if !user.IsActive {
+			return unauthenticated()
+		}
+		if !sameHash {
+			return invalid("current_password", "Current password is incorrect.")
+		}
+
+		var replacementRecord SessionRecord
+		if credential.kind == passwordChangeCredentialBrowserSession {
+			record, _, sessionErr := loadSessionRecord(ctx, store, credential.sessionSecret)
+			if sessionErr != nil {
+				return sessionErr
+			}
+			if expiryErr := validateSessionExpiryAt(record, now); expiryErr != nil {
+				return expiryErr
+			}
+			if record.UserID != user.ID {
+				return unauthenticated()
+			}
+			if credential.csrf == "" || !constantTimeBytesEqual(digest(credential.csrf), record.CSRFHash) {
+				return forbidden()
+			}
+
+			material := make([]byte, 32)
+			if _, entropyErr := io.ReadFull(s.passwordChangeEntropy, material); entropyErr != nil {
+				return internal(entropyErr)
+			}
+			secret := base64.RawURLEncoding.EncodeToString(material)
+			csrf := deriveSessionCSRF(secret)
+			secretHash := digest(secret)
+			existing, collisionErr := store.SessionByHash(ctx, secretHash)
+			switch {
+			case collisionErr == nil && existing.UserID == user.ID:
+				return internal(errors.New("password-change replacement session collision"))
+			case collisionErr != nil && !errors.Is(collisionErr, ErrNotFound):
+				return internal(collisionErr)
+			}
+			replacementRecord = SessionRecord{
+				SecretHash: secretHash,
+				CSRFHash:   digest(csrf),
+				UserID:     user.ID,
+				Created:    now,
+				Expires:    now.Add(BrowserSessionLifetime),
+				LastSeen:   now,
+			}
+			replacement = &domain.BrowserSession{
+				User:      user,
+				Secret:    secret,
+				CSRFToken: csrf,
+				Expires:   replacementRecord.Expires,
+			}
+		}
+
+		if updateErr := store.UpdatePassword(ctx, user.ID, nextHash, now); updateErr != nil {
+			return internal(updateErr)
+		}
+		if deleteErr := store.DeleteSessionsForUser(ctx, user.ID); deleteErr != nil {
+			return internal(deleteErr)
+		}
+		if credential.kind == passwordChangeCredentialBrowserSession {
+			if createErr := store.CreateSession(ctx, replacementRecord); createErr != nil {
+				return internal(createErr)
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, applicationOrInternal(err)
+	}
+	return &changePasswordResult{browserSession: replacement}, nil
 }
 
 func (s *Service) BootstrapAdministrator(ctx context.Context, username, email, password string) (domain.User, error) {
@@ -615,8 +747,9 @@ func (s *Service) ResetAdministratorPassword(ctx context.Context, username, pass
 	if err != nil {
 		return err
 	}
+	changedAt := s.clock.Now().UTC()
 	return s.store.Transaction(ctx, func(store Store) error {
-		if err := store.UpdatePassword(ctx, user.ID, hash); err != nil {
+		if err := store.UpdatePassword(ctx, user.ID, hash, changedAt); err != nil {
 			return err
 		}
 		return store.DeleteSessionsForUser(ctx, user.ID)

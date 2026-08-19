@@ -51,14 +51,15 @@ type passwordChangeMatrixStore struct {
 	sessions     map[string]SessionRecord
 	tokenMarker  int
 
-	userResults      []passwordChangeMatrixUserResult
-	userResultCursor int
-	sessionLookupErr error
-	updateErr        error
-	deleteAllErr     error
-	createErr        error
-	finalizeErr      error
-	commitErr        error
+	userResults       []passwordChangeMatrixUserResult
+	userResultCursor  int
+	sessionLookupErr  error
+	sessionLookupErrs map[int]error
+	updateErr         error
+	deleteAllErr      error
+	createErr         error
+	finalizeErr       error
+	commitErr         error
 
 	events            []string
 	transactionCalls  int
@@ -123,6 +124,9 @@ func (store *passwordChangeMatrixStore) UserByID(context.Context, int64) (domain
 func (store *passwordChangeMatrixStore) SessionByHash(_ context.Context, sessionHash []byte) (SessionRecord, error) {
 	store.sessionLookups++
 	store.events = append(store.events, "session.by_hash")
+	if lookupErr, ok := store.sessionLookupErrs[store.sessionLookups]; ok {
+		return SessionRecord{}, lookupErr
+	}
 	if store.sessionLookupErr != nil {
 		return SessionRecord{}, store.sessionLookupErr
 	}
@@ -133,17 +137,16 @@ func (store *passwordChangeMatrixStore) SessionByHash(_ context.Context, session
 	return clonePasswordChangeMatrixSession(record), nil
 }
 
-// This signature intentionally matches the red-shell Store port. The I4 port
-// shape assertion below stays red until production adds the application-owned
-// timestamp, at which point this fake is migrated mechanically with the port.
-func (store *passwordChangeMatrixStore) UpdatePassword(_ context.Context, id int64, hash string) error {
+func (store *passwordChangeMatrixStore) UpdatePassword(_ context.Context, id int64, hash string, changedAt time.Time) error {
 	store.updateCalls++
 	store.events = append(store.events, "password.update")
+	store.updatedAt = changedAt
 	if store.transactionDepth == 0 {
 		store.mutationOutsideTx = true
 	}
 	if id == store.user.ID {
 		store.passwordHash = hash
+		store.user.Updated = changedAt
 	}
 	if store.updateErr != nil {
 		return store.updateErr
@@ -1528,6 +1531,7 @@ func TestPasswordChangeTransactionRollbackAndStateRevalidation(t *testing.T) {
 			"user.by_id",
 			"session.by_hash",
 			"entropy.read",
+			"session.by_hash",
 			"password.update",
 			"sessions.delete_all",
 			"session.create",
@@ -1695,6 +1699,72 @@ func TestPasswordChangeTransactionRollbackAndStateRevalidation(t *testing.T) {
 				}
 				if !reflect.DeepEqual(store.events, wantEvents) {
 					t.Error("entropy failure crossed the wrong transaction event boundary")
+				}
+			})
+		}
+	})
+
+	t.Run("same-user replacement collisions and probe failures precede every write", func(t *testing.T) {
+		probeFailure := errors.New("replacement collision probe unavailable")
+		cases := []struct {
+			name       string
+			material   []byte
+			probeError error
+		}{
+			{
+				name:     "originating session collision",
+				material: passwordChangeMatrixEntropyMaterial(0x15),
+			},
+			{
+				name:     "sibling session collision",
+				material: passwordChangeMatrixEntropyMaterial(0x35),
+			},
+			{
+				name:       "collision probe infrastructure",
+				material:   passwordChangeMatrixEntropyMaterial(0xe1),
+				probeError: probeFailure,
+			},
+		}
+
+		for _, test := range cases {
+			t.Run(test.name, func(t *testing.T) {
+				store := newBrowserStore()
+				if test.probeError != nil {
+					store.sessionLookupErrs = map[int]error{2: test.probeError}
+				}
+				before := store.snapshot()
+				clock := &passwordChangeMatrixClock{now: now, events: &store.events}
+				entropy := &passwordChangeMatrixEntropy{
+					material: test.material,
+					events:   &store.events,
+				}
+				service := NewService(store, clock, WithPasswordChangeEntropy(entropy))
+
+				result, err, panicked := passwordChangeMatrixCall(t.Context(), service, user.Principal(), newBrowserInput())
+
+				if panicked {
+					t.Error("replacement collision handling caused a panic")
+				}
+				assertPasswordChangeMatrixNilResult(t, result)
+				assertPasswordChangeMatrixReason(t, err, shared.ErrorReasonInternal, test.probeError)
+				assertPasswordChangeMatrixStateEqual(t, before, store)
+				assertPasswordChangeMatrixNoMutation(t, store)
+				if store.userLookups != 2 || store.sessionLookups != 2 || store.transactionCalls != 1 ||
+					clock.calls != 1 || entropy.calls != 1 {
+					t.Error("replacement collision was not checked at the final pre-write boundary")
+				}
+				wantEvents := []string{
+					"user.by_id",
+					"transaction.begin",
+					"clock.now",
+					"user.by_id",
+					"session.by_hash",
+					"entropy.read",
+					"session.by_hash",
+					"transaction.rollback",
+				}
+				if !reflect.DeepEqual(store.events, wantEvents) {
+					t.Error("replacement collision crossed the wrong transaction event boundary")
 				}
 			})
 		}

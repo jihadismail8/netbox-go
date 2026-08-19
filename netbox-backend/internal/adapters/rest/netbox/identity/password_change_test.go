@@ -142,7 +142,7 @@ func (store *i4RESTStore) TouchToken(context.Context, int64, time.Time) error {
 	return nil
 }
 
-func (store *i4RESTStore) UpdatePassword(_ context.Context, id int64, hash string) error {
+func (store *i4RESTStore) UpdatePassword(_ context.Context, id int64, hash string, changedAt time.Time) error {
 	store.updates++
 	store.updatedUsers = append(store.updatedUsers, id)
 	if store.updateErr != nil {
@@ -152,6 +152,9 @@ func (store *i4RESTStore) UpdatePassword(_ context.Context, id int64, hash strin
 		return application.ErrNotFound
 	}
 	store.hashes[id] = hash
+	user := store.users[id]
+	user.Updated = changedAt
+	store.users[id] = user
 	return nil
 }
 
