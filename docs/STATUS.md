@@ -1,6 +1,6 @@
 # Project status
 
-Updated: 2026-08-17
+Updated: 2026-08-19
 
 Compatibility baseline: checked-in NetBox source snapshot at commit
 `fbb948d30e79ce657fac62994a22aca72c1770a9`
@@ -46,6 +46,12 @@ open. The 293-row
 and 18 contradicted behavior rows remain open. V1-V5 contain implementation and
 evidence gaps. No T2, T3, T4, V6 sign-off, or publication is claimed until
 corresponding current artifacts are retained.
+
+`CW1-V2-02-I1` is now the active rewrite increment. It owns a bounded
+IPAddress scalar write-presence correction across typed entity/application
+behavior, generated OpenAPI, REST/gRPC mapping, Vue validation/serialization,
+and focused tests. This is an active-scope/ownership claim only: no result, retained
+evidence, parent completion, or tier promotion exists yet.
 
 > **Operational boundary:** this is a development build for disposable data.
 > Production TLS, schema upgrades, backup/restore, operational hardening, and
@@ -291,15 +297,15 @@ replacement completes ADR 0004's governing gate and CP-13.
 
 ## Evidence status
 
-| Checkpoint               | Present foundation                                                                             | Missing before exit                                                                                             | Status                                |
-| ------------------------ | ---------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
-| V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                        | Refresh for the active source and every later relevant merged digest                                            | Continuous; entry source retained     |
-| V1 identity/RBAC         | Persisted identity, retained CORS, and accepted bounded I1/I2/I3 credential/session evidence   | Complete password/throttle/proxy/streaming plus RBAC/admin/secret work                                          | V1-01/I1/I2/I3 done; parent active    |
-| V2 domain behavior       | Typed shared services, broad focused tests, and reviewed machine-readable 293-row traceability | Uncovered presence, invariant, rollback, side-effect, and concurrency cases                                     | V2-01 done; behavior/evidence pending |
-| V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, and Compose harness                                      | Dependency-aware HTTP/gRPC readiness, dependency loss/recovery, remaining locking cases, retained external run  | Implementation and evidence pending   |
-| V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                    | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report      | T1; implementation/evidence pending   |
-| V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes | T1; implementation/evidence pending   |
-| V6 sign-off              | First-profile legacy stacks physically retired                                                 | V0-V5 retained green together, per-capability review, protobuf freeze/breaking baseline, joint sign-off         | Not earned                            |
+| Checkpoint               | Present foundation                                                                             | Missing before exit                                                                                                           | Status                              |
+| ------------------------ | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                        | Refresh for the active source and every later relevant merged digest                                                          | Continuous; entry source retained   |
+| V1 identity/RBAC         | Persisted identity, retained CORS, and accepted bounded I1/I2/I3 credential/session evidence   | Complete password/throttle/proxy/streaming plus RBAC/admin/secret work                                                        | V1-01/I1/I2/I3 done; parent active  |
+| V2 domain behavior       | Typed shared services, broad focused tests, and reviewed machine-readable 293-row traceability | Execute active IPAddress scalar-presence I1, then remaining presence, invariant, rollback, side-effect, and concurrency cases | V2-01 done; V2-02-I1 active         |
+| V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, and Compose harness                                      | Dependency-aware HTTP/gRPC readiness, dependency loss/recovery, remaining locking cases, retained external run                | Implementation and evidence pending |
+| V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                    | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report                    | T1; implementation/evidence pending |
+| V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes               | T1; implementation/evidence pending |
+| V6 sign-off              | First-profile legacy stacks physically retired                                                 | V0-V5 retained green together, per-capability review, protobuf freeze/breaking baseline, joint sign-off                       | Not earned                          |
 
 See [Evidence](evidence/README.md) for the artifact policy and commands.
 

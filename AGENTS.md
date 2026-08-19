@@ -23,7 +23,7 @@ behavioral precedent.
 
 ## Current operating mode
 
-At the 2026-08-17 audit, `core-workflow-v1` is T1 and pre-publication. The
+At the 2026-08-19 audit, `core-workflow-v1` is T1 and pre-publication. The
 interrupted typed-boundary recovery is structurally closed, ADR 0005's
 dormant-wrapper cleanup is complete, and the new mode-aware `source-v2` digest
 has made the older V0 artifacts historical. The exact source-v2 entry revision
@@ -37,7 +37,11 @@ valid-session-first REST arbitration, exact CSRF pairing, transactional
 login/logout, active-session CSRF recovery, and session-cookie shape. The
 `CW1-V1-02` parent and its password, throttle,
 trusted-proxy, gRPC streaming, Django Origin/Referer/masking, and aggregate
-rows remain open. Do not begin or merge another
+rows remain open. `CW1-V2-02-I1` is the active rewrite increment and owns only
+IPAddress scalar create/PUT/PATCH presence, operation-specific generated API
+contracts, matching REST/gRPC semantics, Vue form serialization/validation,
+and their focused tests. It does not close the 13-resource parent or promote a
+compatibility tier. Do not begin or merge another
 Capability Profile while V0 is red or before `CW1-V6-03`. Once those gates are
 durably closed, follow the next accepted profile in the roadmap and playbook
 rather than this dated snapshot.

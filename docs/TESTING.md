@@ -67,6 +67,13 @@ REST T2, gRPC T3, or browser T4 work. GitHub CI currently runs the V0 command
 only. The owned PostgreSQL, deployment, differential, gRPC-promotion, and
 browser gates remain manual until connected jobs retain durable artifacts.
 
+Active `CW1-V2-02-I1` adds a red-first IPAddress scalar-presence matrix at the
+domain, application, REST, gRPC, real-PostgreSQL, parity, generated-contract,
+and Vue adapter/form boundaries. Until those tests pass on one retained source
+digest, this paragraph records planned scope only. Local transport and Vue
+tests cannot substitute for the pinned REST oracle, nor can they promote T2,
+T3, or T4.
+
 ## Owned external gates
 
 ### Differential REST oracle
