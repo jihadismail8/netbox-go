@@ -24,9 +24,16 @@ import (
 )
 
 const (
-	sessionCookie = "netbox_session"
-	csrfCookie    = "csrftoken"
+	sessionCookie               = "sessionid"
+	csrfCookie                  = "csrftoken"
+	logoutCredentialsContextKey = "netbox-go.identity.logout-credentials"
+	cookieMaxAgeSeconds         = int(application.BrowserSessionLifetime / time.Second)
 )
+
+type logoutCredentials struct {
+	sessionSecret string
+	csrf          string
+}
 
 type Handler struct {
 	service       *application.Service
@@ -47,7 +54,7 @@ func (h *Handler) Register(r gin.IRoutes) {
 	r.POST("/api/auth/login/", h.login)
 	auth := h.Middleware()
 	r.GET("/api/auth/session/", auth, h.session)
-	r.POST("/api/auth/logout/", auth, h.logout)
+	r.POST("/api/auth/logout/", h.logoutMiddleware(), h.logout)
 	r.POST("/api/auth/password/change/", auth, h.changePassword)
 	r.GET("/api/auth/tokens/", auth, h.listTokens)
 	r.POST("/api/auth/tokens/", auth, h.createToken)
@@ -66,10 +73,41 @@ func (h *Handler) Middleware() gin.HandlerFunc {
 func (h *Handler) BaselineMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx := c.Request.Context()
+		sessionSecret, sessionPresent, duplicateSession := uniqueCookieValue(c.Request, sessionCookie)
+		if duplicateSession {
+			writeBaselineTokenDetail(c, "Authentication credentials were not provided.")
+			c.Abort()
+			return
+		}
+		if sessionPresent && sessionSecret != "" {
+			user, err := h.service.AuthenticateSession(ctx, sessionSecret)
+			if err == nil {
+				if !sessionCSRFSafe(c.Request.Method) {
+					csrf, accepted := exactCSRFPair(c.Request)
+					if !accepted {
+						writeCSRFRejected(c)
+						c.Abort()
+						return
+					}
+					if err := h.service.VerifyCSRF(ctx, sessionSecret, csrf); err != nil {
+						writeErrorStatus(c, err, http.StatusForbidden)
+						c.Abort()
+						return
+					}
+				}
+				setPrincipal(c, user)
+				c.Next()
+				return
+			}
+			if !application.SessionCredentialAllowsTokenFallback(err) {
+				writeErrorStatus(c, err, http.StatusForbidden)
+				c.Abort()
+				return
+			}
+		}
+
 		var user domain.User
 		var err error
-		sessionAuthenticated := false
-
 		authorizationValues := c.Request.Header.Values("Authorization")
 		hasAuthorization := len(authorizationValues) > 1 ||
 			(len(authorizationValues) == 1 && authorizationValues[0] != "")
@@ -84,11 +122,8 @@ func (h *Handler) BaselineMiddleware() gin.HandlerFunc {
 				ctx,
 				secret,
 				c.Request.RemoteAddr,
-				unsafe(c.Request.Method),
+				tokenWrite(c.Request.Method),
 			)
-		} else if secret, cookieErr := c.Cookie(sessionCookie); cookieErr == nil {
-			user, err = h.service.AuthenticateSession(ctx, secret)
-			sessionAuthenticated = err == nil
 		} else {
 			err = unauthenticatedError()
 		}
@@ -98,17 +133,7 @@ func (h *Handler) BaselineMiddleware() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		if sessionAuthenticated && unsafe(c.Request.Method) {
-			secret, _ := c.Cookie(sessionCookie)
-			csrf := c.GetHeader("X-CSRFToken")
-			if err := h.service.VerifyCSRF(ctx, secret, csrf); err != nil {
-				writeError(c, err)
-				c.Abort()
-				return
-			}
-		}
-		workflowhttp.SetPrincipal(c, user.Principal())
-		c.Request = c.Request.WithContext(domain.WithPrincipal(ctx, user.Principal()))
+		setPrincipal(c, user)
 		c.Next()
 	}
 }
@@ -201,19 +226,47 @@ func writeBaselineTokenDetail(c *gin.Context, detail string) {
 func (h *Handler) middleware(unauthenticatedStatus int) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx := c.Request.Context()
+		sessionSecret, sessionPresent, duplicateSession := uniqueCookieValue(c.Request, sessionCookie)
+		if duplicateSession {
+			writeErrorStatus(c, unauthenticatedError(), unauthenticatedStatus)
+			c.Abort()
+			return
+		}
+		if sessionPresent && sessionSecret != "" {
+			user, err := h.service.AuthenticateSession(ctx, sessionSecret)
+			if err == nil {
+				if !sessionCSRFSafe(c.Request.Method) {
+					csrf, accepted := exactCSRFPair(c.Request)
+					if !accepted {
+						writeCSRFRejected(c)
+						c.Abort()
+						return
+					}
+					if err := h.service.VerifyCSRF(ctx, sessionSecret, csrf); err != nil {
+						writeErrorStatus(c, err, http.StatusForbidden)
+						c.Abort()
+						return
+					}
+				}
+				setPrincipal(c, user)
+				c.Next()
+				return
+			}
+			if !application.SessionCredentialAllowsTokenFallback(err) {
+				writeErrorStatus(c, err, unauthenticatedStatus)
+				c.Abort()
+				return
+			}
+		}
+
 		var user domain.User
 		var err error
-		sessionAuthenticated := false
 		if authorization := c.GetHeader("Authorization"); strings.HasPrefix(authorization, "Token ") {
-			write := c.Request.Method != http.MethodGet && c.Request.Method != http.MethodHead && c.Request.Method != http.MethodOptions
-			user, err = h.service.AuthenticateToken(ctx, strings.TrimSpace(strings.TrimPrefix(authorization, "Token ")), c.Request.RemoteAddr, write)
+			user, err = h.service.AuthenticateToken(ctx, strings.TrimSpace(strings.TrimPrefix(authorization, "Token ")), c.Request.RemoteAddr, tokenWrite(c.Request.Method))
 		} else if authorization != "" {
 			writeErrorStatus(c, unauthenticatedError(), unauthenticatedStatus)
 			c.Abort()
 			return
-		} else if secret, cookieErr := c.Cookie(sessionCookie); cookieErr == nil {
-			user, err = h.service.AuthenticateSession(ctx, secret)
-			sessionAuthenticated = err == nil
 		} else {
 			err = unauthenticatedError()
 		}
@@ -222,22 +275,29 @@ func (h *Handler) middleware(unauthenticatedStatus int) gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		if sessionAuthenticated && unsafe(c.Request.Method) {
-			secret, _ := c.Cookie(sessionCookie)
-			csrf := c.GetHeader("X-CSRFToken")
-			if err := h.service.VerifyCSRF(ctx, secret, csrf); err != nil {
-				writeError(c, err)
-				c.Abort()
-				return
-			}
-		}
-		workflowhttp.SetPrincipal(c, user.Principal())
-		c.Request = c.Request.WithContext(domain.WithPrincipal(ctx, user.Principal()))
+		setPrincipal(c, user)
 		c.Next()
 	}
 }
 
 func (h *Handler) csrf(c *gin.Context) {
+	sessionSecret, sessionPresent, duplicateSession := uniqueCookieValue(c.Request, sessionCookie)
+	if duplicateSession {
+		writeCSRFRejected(c)
+		return
+	}
+	if sessionPresent && sessionSecret != "" {
+		token, err := h.service.CSRFForSession(c.Request.Context(), sessionSecret)
+		if err == nil {
+			h.writeCSRFBootstrap(c, token)
+			return
+		}
+		if !application.SessionCredentialAllowsTokenFallback(err) {
+			writeError(c, err)
+			return
+		}
+	}
+
 	token, err := randomToken()
 	if err != nil {
 		writeError(c, shared.NewError(
@@ -246,17 +306,25 @@ func (h *Handler) csrf(c *gin.Context) {
 		))
 		return
 	}
+	h.writeCSRFBootstrap(c, token)
+}
+
+func (h *Handler) writeCSRFBootstrap(c *gin.Context, token string) {
 	h.setCSRFCookie(c, token)
 	c.JSON(http.StatusOK, gin.H{"csrf_token": token})
 }
+
 func (h *Handler) login(c *gin.Context) {
-	cookie, cookieErr := c.Cookie(csrfCookie)
-	header := c.GetHeader("X-CSRFToken")
-	if cookieErr != nil || cookie == "" || header == "" || subtle.ConstantTimeCompare([]byte(cookie), []byte(header)) != 1 {
-		writeError(c, shared.NewError(
-			shared.ErrorReasonForbidden,
-			"You do not have permission to perform this action.",
-		))
+	existingSession, sessionPresent, duplicateSession := uniqueCookieValue(c.Request, sessionCookie)
+	if duplicateSession {
+		writeCSRFRejected(c)
+		return
+	}
+	if !sessionPresent {
+		existingSession = ""
+	}
+	if _, accepted := exactCSRFPair(c.Request); !accepted {
+		writeCSRFRejected(c)
 		return
 	}
 	var input struct {
@@ -272,7 +340,6 @@ func (h *Handler) login(c *gin.Context) {
 		c.JSON(http.StatusTooManyRequests, gin.H{"detail": "Too many login attempts. Try again later."})
 		return
 	}
-	existingSession, _ := c.Cookie(sessionCookie)
 	session, err := h.service.LoginReplacing(c.Request.Context(), input.Username, input.Password, existingSession)
 	if err != nil {
 		logger.Warn("identity login rejected", logger.String("remote", c.Request.RemoteAddr))
@@ -285,6 +352,38 @@ func (h *Handler) login(c *gin.Context) {
 	h.setCSRFCookie(c, session.CSRFToken)
 	c.JSON(http.StatusOK, sessionResponse(session.User))
 }
+
+func (h *Handler) logoutMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		sessionSecret, sessionPresent, duplicateSession := uniqueCookieValue(c.Request, sessionCookie)
+		if duplicateSession || !sessionPresent || sessionSecret == "" {
+			writeErrorStatus(c, unauthenticatedError(), http.StatusUnauthorized)
+			c.Abort()
+			return
+		}
+
+		user, err := h.service.AuthenticateSession(c.Request.Context(), sessionSecret)
+		if err != nil {
+			writeErrorStatus(c, err, http.StatusUnauthorized)
+			c.Abort()
+			return
+		}
+		csrf, accepted := exactCSRFPair(c.Request)
+		if !accepted {
+			writeCSRFRejected(c)
+			c.Abort()
+			return
+		}
+
+		c.Set(logoutCredentialsContextKey, logoutCredentials{
+			sessionSecret: sessionSecret,
+			csrf:          csrf,
+		})
+		setPrincipal(c, user)
+		c.Next()
+	}
+}
+
 func (h *Handler) session(c *gin.Context) {
 	principal, _ := workflowhttp.Principal(c)
 	user, err := h.service.CurrentUser(c.Request.Context(), principal)
@@ -295,8 +394,13 @@ func (h *Handler) session(c *gin.Context) {
 	c.JSON(http.StatusOK, sessionResponse(user))
 }
 func (h *Handler) logout(c *gin.Context) {
-	secret, _ := c.Cookie(sessionCookie)
-	if err := h.service.Logout(c.Request.Context(), secret); err != nil {
+	value, exists := c.Get(logoutCredentialsContextKey)
+	credentials, accepted := value.(logoutCredentials)
+	if !exists || !accepted {
+		writeErrorStatus(c, unauthenticatedError(), http.StatusUnauthorized)
+		return
+	}
+	if err := h.service.Logout(c.Request.Context(), credentials.sessionSecret, credentials.csrf); err != nil {
 		writeError(c, err)
 		return
 	}
@@ -390,9 +494,63 @@ func parsePage(c *gin.Context) (int, int) {
 	offset, _ := strconv.Atoi(c.DefaultQuery("offset", "0"))
 	return limit, offset
 }
-func unsafe(method string) bool {
-	return method != http.MethodGet && method != http.MethodHead && method != http.MethodOptions
+
+func sessionCSRFSafe(method string) bool {
+	switch method {
+	case http.MethodGet, http.MethodHead, http.MethodOptions, http.MethodTrace:
+		return true
+	default:
+		return false
+	}
 }
+
+func tokenWrite(method string) bool {
+	switch method {
+	case http.MethodGet, http.MethodHead, http.MethodOptions:
+		return false
+	default:
+		return true
+	}
+}
+
+func uniqueCookieValue(request *http.Request, name string) (value string, present, duplicate bool) {
+	for _, cookie := range request.Cookies() {
+		if cookie.Name != name {
+			continue
+		}
+		if present {
+			return "", true, true
+		}
+		value = cookie.Value
+		present = true
+	}
+	return value, present, false
+}
+
+func exactCSRFPair(request *http.Request) (string, bool) {
+	cookie, present, duplicate := uniqueCookieValue(request, csrfCookie)
+	headers := request.Header.Values("X-CSRFToken")
+	if duplicate || !present || cookie == "" || len(headers) != 1 || headers[0] == "" {
+		return "", false
+	}
+	if subtle.ConstantTimeCompare([]byte(cookie), []byte(headers[0])) != 1 {
+		return "", false
+	}
+	return headers[0], true
+}
+
+func setPrincipal(c *gin.Context, user domain.User) {
+	principal := user.Principal()
+	workflowhttp.SetPrincipal(c, principal)
+	c.Request = c.Request.WithContext(domain.WithPrincipal(c.Request.Context(), principal))
+}
+
+func writeCSRFRejected(c *gin.Context) {
+	c.JSON(http.StatusForbidden, gin.H{
+		"detail": "You do not have permission to perform this action.",
+	})
+}
+
 func randomToken() (string, error) {
 	bytes := make([]byte, 32)
 	if _, err := rand.Read(bytes); err != nil {
@@ -401,17 +559,16 @@ func randomToken() (string, error) {
 	return base64.RawURLEncoding.EncodeToString(bytes), nil
 }
 func (h *Handler) setSessionCookie(c *gin.Context, value string, expires time.Time) {
-	http.SetCookie(c.Writer, &http.Cookie{Name: sessionCookie, Value: value, Path: "/", HttpOnly: true, Secure: h.secureCookies, SameSite: http.SameSiteLaxMode, Expires: expires, MaxAge: int(time.Until(expires).Seconds())})
+	http.SetCookie(c.Writer, &http.Cookie{Name: sessionCookie, Value: value, Path: "/", HttpOnly: true, Secure: h.secureCookies, SameSite: http.SameSiteLaxMode, Expires: expires, MaxAge: cookieMaxAgeSeconds})
 }
 func (h *Handler) setCSRFCookie(c *gin.Context, value string) {
-	http.SetCookie(c.Writer, &http.Cookie{Name: csrfCookie, Value: value, Path: "/", HttpOnly: false, Secure: h.secureCookies, SameSite: http.SameSiteLaxMode, MaxAge: int(sessionTTL().Seconds())})
+	http.SetCookie(c.Writer, &http.Cookie{Name: csrfCookie, Value: value, Path: "/", HttpOnly: false, Secure: h.secureCookies, SameSite: http.SameSiteLaxMode, MaxAge: cookieMaxAgeSeconds})
 }
 func (h *Handler) clearCookies(c *gin.Context) {
 	for _, name := range []string{sessionCookie, csrfCookie} {
 		http.SetCookie(c.Writer, &http.Cookie{Name: name, Value: "", Path: "/", HttpOnly: name == sessionCookie, Secure: h.secureCookies, SameSite: http.SameSiteLaxMode, MaxAge: -1, Expires: time.Unix(1, 0)})
 	}
 }
-func sessionTTL() time.Duration { return 12 * time.Hour }
 func remoteHost(address string) string {
 	if host, _, err := net.SplitHostPort(address); err == nil {
 		return host

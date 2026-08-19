@@ -1,6 +1,7 @@
 package identity
 
 import (
+	"crypto/subtle"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -52,7 +53,9 @@ func TestBrowserSessionCSRFAndTokenSecretLifecycle(t *testing.T) {
 	require.NotEmpty(t, createdBody["secret"])
 	listed := perform(router, http.MethodGet, "/api/auth/tokens/", nil, map[string]string{"Cookie": authCookies})
 	require.Equal(t, http.StatusOK, listed.Code)
-	require.NotContains(t, listed.Body.String(), createdBody["secret"].(string))
+	if strings.Contains(listed.Body.String(), createdBody["secret"].(string)) {
+		t.Error("listed token response exposed one-time credential material")
+	}
 }
 
 func TestLoginThrottleAndProductionCookieFlags(t *testing.T) {
@@ -121,7 +124,9 @@ func TestLoginRotatesPresentedSessionAndNeverAcceptsFixedMaterial(t *testing.T) 
 	require.Equal(t, http.StatusOK, secondLogin.Code)
 	secondSession := cookie(secondLogin.Result(), sessionCookie)
 	require.NotNil(t, secondSession)
-	require.NotEqual(t, firstSession.Value, secondSession.Value)
+	if subtle.ConstantTimeCompare([]byte(firstSession.Value), []byte(secondSession.Value)) == 1 {
+		t.Error("session rotation reused the prior credential")
+	}
 	require.Equal(t, http.StatusUnauthorized, perform(router, http.MethodGet, "/api/auth/session/", nil, map[string]string{"Cookie": firstSession.String()}).Code)
 	require.Equal(t, http.StatusOK, perform(router, http.MethodGet, "/api/auth/session/", nil, map[string]string{"Cookie": secondSession.String()}).Code)
 
@@ -135,7 +140,9 @@ func TestLoginRotatesPresentedSessionAndNeverAcceptsFixedMaterial(t *testing.T) 
 		"Cookie": fixed.String() + "; " + freshCSRF.String(),
 	})
 	require.Equal(t, http.StatusOK, fixedLogin.Code)
-	require.NotEqual(t, fixed.Value, cookie(fixedLogin.Result(), sessionCookie).Value)
+	if subtle.ConstantTimeCompare([]byte(fixed.Value), []byte(cookie(fixedLogin.Result(), sessionCookie).Value)) == 1 {
+		t.Error("login reused the presented session credential")
+	}
 }
 
 func TestAuthenticationAndCSRFSecurityMatrix(t *testing.T) {

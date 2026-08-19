@@ -2,6 +2,8 @@ package identity_test
 
 import (
 	"context"
+	"crypto/subtle"
+	"strings"
 	"testing"
 	"time"
 
@@ -46,7 +48,9 @@ func TestStandaloneIdentityLifecycle(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, int64(1), count)
 	require.Equal(t, "automation", tokens[0].Description)
-	require.NotContains(t, tokens[0].Display, created.Secret)
+	if strings.Contains(tokens[0].Display, created.Secret) {
+		t.Error("token display exposed one-time credential material")
+	}
 	_, err = service.AuthenticateToken(ctx, created.Secret, "127.0.0.1:1234", true)
 	require.NoError(t, err)
 	_, err = service.AuthenticateToken(ctx, created.Secret, "192.0.2.1:1234", false)
@@ -162,8 +166,12 @@ func TestSessionRotationAndAdministratorResetInvalidateExistingSessions(t *testi
 	require.NoError(t, err)
 	rotated, err := service.LoginReplacing(t.Context(), "admin", "Correct-Horse-2026!", first.Secret)
 	require.NoError(t, err)
-	require.NotEqual(t, first.Secret, rotated.Secret)
-	require.NotEqual(t, first.CSRFToken, rotated.CSRFToken)
+	if subtle.ConstantTimeCompare([]byte(first.Secret), []byte(rotated.Secret)) == 1 {
+		t.Error("session rotation reused the prior credential")
+	}
+	if subtle.ConstantTimeCompare([]byte(first.CSRFToken), []byte(rotated.CSRFToken)) == 1 {
+		t.Error("session rotation reused the prior CSRF value")
+	}
 	_, err = service.AuthenticateSession(t.Context(), first.Secret)
 	require.Error(t, err, "the session presented during re-authentication must be invalidated")
 	_, err = service.AuthenticateSession(t.Context(), rotated.Secret)

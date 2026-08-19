@@ -126,6 +126,19 @@ func (s *Store) SessionByHash(ctx context.Context, hash []byte) (application.Ses
 	}
 	return application.SessionRecord{SecretHash: row.SecretHash, CSRFHash: row.CSRFHash, UserID: row.UserID, Created: row.Created, Expires: row.Expires, LastSeen: row.LastSeen}, nil
 }
+func (s *Store) UpdateSessionCSRF(ctx context.Context, sessionHash, csrfHash []byte) error {
+	result := s.db.WithContext(ctx).
+		Model(&SessionRow{}).
+		Where("secret_hash = ?", sessionHash).
+		Update("csrf_hash", csrfHash)
+	if result.Error != nil {
+		return result.Error
+	}
+	if result.RowsAffected == 0 {
+		return application.ErrNotFound
+	}
+	return nil
+}
 func (s *Store) DeleteSession(ctx context.Context, hash []byte) error {
 	result := s.db.WithContext(ctx).Where("secret_hash = ?", hash).Delete(&SessionRow{})
 	if result.Error != nil {

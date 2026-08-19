@@ -4,6 +4,7 @@ package identity
 
 import (
 	"context"
+	"crypto/hmac"
 	"crypto/rand"
 	"crypto/sha256"
 	"crypto/subtle"
@@ -22,8 +23,11 @@ import (
 )
 
 const (
-	passwordCost = 12
-	sessionTTL   = 12 * time.Hour
+	passwordCost         = 12
+	browserCSRFDomainTag = "netbox-go/browser-csrf/v1"
+	// BrowserSessionLifetime is the fixed, non-sliding lifetime shared by the
+	// application session record and its transport cookie.
+	BrowserSessionLifetime = 12 * time.Hour
 )
 
 var ErrNotFound = errors.New("identity record not found")
@@ -52,6 +56,7 @@ type Store interface {
 	UpdatePassword(context.Context, int64, string) error
 	CreateSession(context.Context, SessionRecord) error
 	SessionByHash(context.Context, []byte) (SessionRecord, error)
+	UpdateSessionCSRF(ctx context.Context, sessionHash, csrfHash []byte) error
 	DeleteSession(context.Context, []byte) error
 	DeleteSessionsForUser(context.Context, int64) error
 	CreateToken(context.Context, TokenRecord) (domain.APIToken, error)
@@ -102,19 +107,32 @@ type PermissionGrantInput struct {
 	ObjectID                      *int64
 }
 
-func (s *Service) AuthenticatePassword(ctx context.Context, username, password string) (domain.User, error) {
+func (s *Service) authenticatePassword(ctx context.Context, username, password string) (domain.User, string, error) {
 	if username == "" || password == "" {
-		return domain.User{}, unauthenticated()
+		return domain.User{}, "", unauthenticated()
 	}
 	user, hash, err := s.store.UserByUsername(ctx, username)
-	if err != nil { // use a fixed hash to reduce username timing disclosure
+	if errors.Is(err, ErrNotFound) {
+		// Use a fixed hash to reduce username-existence timing disclosure.
 		_ = bcrypt.CompareHashAndPassword([]byte("$2a$12$8D3PZc7R7r6BfZtH1SgTSuU72fHoLXCB8xlQ9jJ3TQ0K9h3wCw0kW"), []byte(password))
-		return domain.User{}, unauthenticated()
+		return domain.User{}, "", unauthenticated()
 	}
-	if !user.IsActive || bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)) != nil {
-		return domain.User{}, unauthenticated()
+	if err != nil {
+		return domain.User{}, "", internal(err)
 	}
-	return user, nil
+	compareErr := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	if compareErr != nil && !errors.Is(compareErr, bcrypt.ErrMismatchedHashAndPassword) {
+		return domain.User{}, "", internal(compareErr)
+	}
+	if compareErr != nil || !user.IsActive {
+		return domain.User{}, "", unauthenticated()
+	}
+	return user, hash, nil
+}
+
+func (s *Service) AuthenticatePassword(ctx context.Context, username, password string) (domain.User, error) {
+	user, _, err := s.authenticatePassword(ctx, username, password)
+	return user, err
 }
 
 func (s *Service) Login(ctx context.Context, username, password string) (domain.BrowserSession, error) {
@@ -125,72 +143,153 @@ func (s *Service) Login(ctx context.Context, username, password string) (domain.
 // any session presented during re-authentication in the same transaction. It
 // is the browser adapter's session-fixation boundary.
 func (s *Service) LoginReplacing(ctx context.Context, username, password, existingSecret string) (domain.BrowserSession, error) {
-	user, err := s.AuthenticatePassword(ctx, username, password)
+	verifiedUser, verifiedHash, err := s.authenticatePassword(ctx, username, password)
 	if err != nil {
 		return domain.BrowserSession{}, err
 	}
-	secret, secretHash, err := newSecret()
-	if err != nil {
-		return domain.BrowserSession{}, internal(err)
-	}
-	csrf, csrfHash, err := newSecret()
-	if err != nil {
-		return domain.BrowserSession{}, internal(err)
-	}
-	now := s.clock.Now()
-	session := SessionRecord{SecretHash: secretHash, CSRFHash: csrfHash, UserID: user.ID, Created: now, LastSeen: now, Expires: now.Add(sessionTTL)}
-	persist := func(store Store) error {
+
+	var created domain.BrowserSession
+	err = s.store.Transaction(ctx, func(store Store) error {
+		user, currentHash, lookupErr := store.UserByUsername(ctx, username)
+		if errors.Is(lookupErr, ErrNotFound) {
+			return unauthenticated()
+		}
+		if lookupErr != nil {
+			return lookupErr
+		}
+		sameHash := constantTimeTextEqual(currentHash, verifiedHash)
+		if user.ID != verifiedUser.ID || !user.IsActive || !sameHash {
+			return unauthenticated()
+		}
+
+		secret, secretHash, secretErr := newSecret()
+		if secretErr != nil {
+			return secretErr
+		}
+		csrf := deriveSessionCSRF(secret)
+		now := s.clock.Now().UTC()
+		record := SessionRecord{
+			SecretHash: secretHash,
+			CSRFHash:   digest(csrf),
+			UserID:     user.ID,
+			Created:    now,
+			Expires:    now.Add(BrowserSessionLifetime),
+			LastSeen:   now,
+		}
 		if existingSecret != "" {
 			if deleteErr := store.DeleteSession(ctx, digest(existingSecret)); deleteErr != nil && !errors.Is(deleteErr, ErrNotFound) {
 				return deleteErr
 			}
 		}
-		return store.CreateSession(ctx, session)
-	}
-	if existingSecret == "" {
-		err = persist(s.store)
-	} else {
-		err = s.store.Transaction(ctx, persist)
-	}
+		if createErr := store.CreateSession(ctx, record); createErr != nil {
+			return createErr
+		}
+		created = domain.BrowserSession{
+			User:      user,
+			Secret:    secret,
+			CSRFToken: csrf,
+			Expires:   record.Expires,
+		}
+		return nil
+	})
 	if err != nil {
-		return domain.BrowserSession{}, internal(err)
+		return domain.BrowserSession{}, applicationOrInternal(err)
 	}
-	return domain.BrowserSession{User: user, Secret: secret, CSRFToken: csrf, Expires: session.Expires}, nil
+	return created, nil
 }
 
 func (s *Service) AuthenticateSession(ctx context.Context, secret string) (domain.User, error) {
-	if secret == "" {
-		return domain.User{}, unauthenticated()
-	}
-	record, err := s.store.SessionByHash(ctx, digest(secret))
-	if err != nil || !record.Expires.After(s.clock.Now()) {
-		return domain.User{}, unauthenticated()
-	}
-	user, _, err := s.store.UserByID(ctx, record.UserID)
-	if err != nil || !user.IsActive {
-		return domain.User{}, unauthenticated()
-	}
-	return user, nil
+	_, user, _, err := s.activeSession(ctx, s.store, secret)
+	return user, err
 }
+
 func (s *Service) VerifyCSRF(ctx context.Context, sessionSecret, csrf string) error {
-	record, err := s.store.SessionByHash(ctx, digest(sessionSecret))
-	if err != nil || !record.Expires.After(s.clock.Now()) {
-		return unauthenticated()
+	record, _, _, err := s.activeSession(ctx, s.store, sessionSecret)
+	if err != nil {
+		return err
 	}
-	candidate := digest(csrf)
-	if subtle.ConstantTimeCompare(candidate, record.CSRFHash) != 1 {
+	if csrf == "" || !constantTimeBytesEqual(digest(csrf), record.CSRFHash) {
 		return forbidden()
 	}
 	return nil
 }
-func (s *Service) Logout(ctx context.Context, secret string) error {
-	if secret == "" {
+
+// CSRFForSession returns the deterministic public CSRF value bound to an
+// active browser session and atomically heals a legacy stored digest.
+func (s *Service) CSRFForSession(ctx context.Context, secret string) (string, error) {
+	var csrf string
+	err := s.store.Transaction(ctx, func(store Store) error {
+		record, _, sessionHash, loadErr := s.activeSession(ctx, store, secret)
+		if loadErr != nil {
+			return loadErr
+		}
+		candidate := deriveSessionCSRF(secret)
+		candidateHash := digest(candidate)
+		if !constantTimeBytesEqual(candidateHash, record.CSRFHash) {
+			if updateErr := store.UpdateSessionCSRF(ctx, sessionHash, candidateHash); updateErr != nil {
+				if errors.Is(updateErr, ErrNotFound) {
+					return sessionCredentialError(SessionCredentialFailureUnknown)
+				}
+				return updateErr
+			}
+		}
+		csrf = candidate
 		return nil
+	})
+	if err != nil {
+		return "", applicationOrInternal(err)
 	}
-	if err := s.store.DeleteSession(ctx, digest(secret)); err != nil && !errors.Is(err, ErrNotFound) {
-		return internal(err)
+	return csrf, nil
+}
+
+// Logout revalidates and revokes one browser session in a single application
+// transaction. The supplied CSRF value must match that exact session row.
+func (s *Service) Logout(ctx context.Context, secret, csrf string) error {
+	err := s.store.Transaction(ctx, func(store Store) error {
+		record, _, sessionHash, loadErr := s.activeSession(ctx, store, secret)
+		if loadErr != nil {
+			return loadErr
+		}
+		if csrf == "" || !constantTimeBytesEqual(digest(csrf), record.CSRFHash) {
+			return forbidden()
+		}
+		if deleteErr := store.DeleteSession(ctx, sessionHash); deleteErr != nil {
+			if errors.Is(deleteErr, ErrNotFound) {
+				return sessionCredentialError(SessionCredentialFailureUnknown)
+			}
+			return deleteErr
+		}
+		return nil
+	})
+	if err != nil {
+		return applicationOrInternal(err)
 	}
 	return nil
+}
+
+func (s *Service) activeSession(ctx context.Context, store Store, secret string) (SessionRecord, domain.User, []byte, error) {
+	if secret == "" {
+		return SessionRecord{}, domain.User{}, nil, sessionCredentialError(SessionCredentialFailureMissing)
+	}
+	sessionHash := digest(secret)
+	record, err := store.SessionByHash(ctx, sessionHash)
+	if errors.Is(err, ErrNotFound) {
+		return SessionRecord{}, domain.User{}, nil, sessionCredentialError(SessionCredentialFailureUnknown)
+	}
+	if err != nil {
+		return SessionRecord{}, domain.User{}, nil, internal(err)
+	}
+	if !record.Expires.After(s.clock.Now().UTC()) {
+		return SessionRecord{}, domain.User{}, nil, sessionCredentialError(SessionCredentialFailureExpired)
+	}
+	user, _, err := store.UserByID(ctx, record.UserID)
+	if err != nil {
+		return SessionRecord{}, domain.User{}, nil, internal(err)
+	}
+	if !user.IsActive {
+		return SessionRecord{}, domain.User{}, nil, sessionCredentialError(SessionCredentialFailureInactiveOwner)
+	}
+	return record, user, sessionHash, nil
 }
 
 func (s *Service) AuthenticateToken(ctx context.Context, secret, remoteAddress string, write bool) (domain.User, error) {
@@ -245,6 +344,9 @@ func (s *Service) CurrentUser(ctx context.Context, principal domain.Principal) (
 	}
 	user, _, err := s.store.UserByID(ctx, principal.ID)
 	if err != nil {
+		return domain.User{}, internal(err)
+	}
+	if !user.IsActive {
 		return domain.User{}, unauthenticated()
 	}
 	return user, nil
@@ -597,6 +699,23 @@ func newSecret() (string, []byte, error) {
 	secret := base64.RawURLEncoding.EncodeToString(bytes)
 	return secret, digest(secret), nil
 }
+
+func deriveSessionCSRF(sessionSecret string) string {
+	mac := hmac.New(sha256.New, []byte(sessionSecret))
+	_, _ = mac.Write([]byte(browserCSRFDomainTag))
+	return base64.RawURLEncoding.EncodeToString(mac.Sum(nil))
+}
+
+func constantTimeBytesEqual(left, right []byte) bool {
+	return len(left) == len(right) && subtle.ConstantTimeCompare(left, right) == 1
+}
+
+func constantTimeTextEqual(left, right string) bool {
+	leftHash := sha256.Sum256([]byte(left))
+	rightHash := sha256.Sum256([]byte(right))
+	return subtle.ConstantTimeCompare(leftHash[:], rightHash[:]) == 1
+}
+
 func digest(value string) []byte { sum := sha256.Sum256([]byte(value)); return sum[:] }
 func parseDirectPeer(remote string) (netip.Addr, bool) {
 	if address, err := netip.ParseAddr(remote); err == nil {
@@ -655,6 +774,14 @@ func notFoundIdentity(resource string, id int64) error {
 
 func conflict(message string) error {
 	return shared.NewError(shared.ErrorReasonConflict, message)
+}
+
+func applicationOrInternal(err error) error {
+	var applicationError *shared.Error
+	if errors.As(err, &applicationError) {
+		return err
+	}
+	return internal(err)
 }
 
 func internal(err error) error {

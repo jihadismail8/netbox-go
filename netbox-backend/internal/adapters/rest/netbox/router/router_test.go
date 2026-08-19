@@ -2,6 +2,7 @@ package router
 
 import (
 	"bytes"
+	"crypto/subtle"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -254,7 +255,9 @@ func TestRuntimeAccessLogDoesNotRecordIdentitySecrets(t *testing.T) {
 	require.NotEmpty(t, csrfBody.Token)
 	initialCSRF := responseCookie(csrfResponse.Result(), "csrftoken")
 	require.NotNil(t, initialCSRF)
-	require.Equal(t, csrfBody.Token, initialCSRF.Value)
+	if subtle.ConstantTimeCompare([]byte(csrfBody.Token), []byte(initialCSRF.Value)) != 1 {
+		t.Fatal("CSRF response body and cookie did not match")
+	}
 
 	loginBody, err := json.Marshal(map[string]string{"username": "audit-admin", "password": password})
 	require.NoError(t, err)
@@ -271,7 +274,7 @@ func TestRuntimeAccessLogDoesNotRecordIdentitySecrets(t *testing.T) {
 		},
 	)
 	require.Equal(t, http.StatusOK, loginResponse.Code)
-	session := responseCookie(loginResponse.Result(), "netbox_session")
+	session := responseCookie(loginResponse.Result(), "sessionid")
 	rotatedCSRF := responseCookie(loginResponse.Result(), "csrftoken")
 	require.NotNil(t, session)
 	require.NotNil(t, rotatedCSRF)
@@ -414,7 +417,7 @@ func TestRuntimeCORSCSRFAndToken(t *testing.T) {
 	)
 	require.Equal(t, http.StatusOK, loginResponse.Code)
 	requireTrustedCORS(t, loginResponse.Header(), corsTestTrustedOrigin)
-	session := responseCookie(loginResponse.Result(), "netbox_session")
+	session := responseCookie(loginResponse.Result(), "sessionid")
 	rotatedCSRF := responseCookie(loginResponse.Result(), "csrftoken")
 	require.NotNil(t, session)
 	require.NotNil(t, rotatedCSRF)

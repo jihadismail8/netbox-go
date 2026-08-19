@@ -57,9 +57,15 @@ grammar, an explicit 28-read/57-write method classification over 85 protected
 RPCs, malformed-input zero-lookup containment, and cross-transport
 principal/cause/effect parity. It remains direct-peer-only and does not close
 session, CSRF, throttle, trusted-proxy, simultaneous-credential, or streaming
-rows. GitHub CI currently runs the V0 command only. The owned PostgreSQL,
-deployment, differential, gRPC-promotion, and browser gates remain manual until
-connected jobs retain durable artifacts.
+rows. Bounded `CW1-V1-02-I3` evidence adds typed browser-session outcomes,
+valid-session-first REST arbitration, exact double-submit CSRF pairing,
+transactional login/logout, deterministic active-session CSRF recovery, fixed
+session-cookie shape, and real-PostgreSQL rollback/advisory-lock/concurrency
+proof. It remains a classified browser-identity extension and does not close
+password-session, throttle, trusted-proxy, streaming, aggregate all-transport,
+REST T2, gRPC T3, or browser T4 work. GitHub CI currently runs the V0 command
+only. The owned PostgreSQL, deployment, differential, gRPC-promotion, and
+browser gates remain manual until connected jobs retain durable artifacts.
 
 ## Owned external gates
 
@@ -197,7 +203,7 @@ and exact change-state outcomes remain to be added and retained.
 | Checkpoint               | Implementation state                                                  | Exit condition                                                                 | Current status                                           |
 | ------------------------ | --------------------------------------------------------------------- | ------------------------------------------------------------------------------ | -------------------------------------------------------- |
 | V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage  | `make check` retained green on each exact relevant source digest               | Entry source-v2 retained; active-source refresh required |
-| V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests | Complete principal/visibility/CLI/session/token matrix                         | CORS/I1/I2 retained; parent open                         |
+| V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests | Complete principal/visibility/CLI/session/token matrix                         | CORS/I1/I2 retained; I3 evidence; parent open            |
 | V2 profile behavior      | Shared 13-resource service and broad positive/negative tests          | Trace every declared invariant, field/filter/relationship, error, and rollback | Implementation/evidence gap                              |
 | V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness            | Truthful readiness, loss/recovery, real PostgreSQL and deployment artifacts    | Implementation/evidence gap                              |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites       | Complete T2 scenario report, then equivalent T3 report                         | T1; implementation gap                                   |

@@ -613,7 +613,7 @@ async function createGoToken() {
   if (!session.cookies.has("csrftoken")) throw new Error("Go CSRF endpoint did not set csrftoken");
   const login = await session.request("POST", "/api/auth/login/", { username: goUsername, password: goPassword });
   expectStatus("Go session login", login, [200]);
-  if (!session.cookies.has("netbox_session") || !session.cookies.has("csrftoken")) {
+  if (!session.cookies.has("sessionid") || !session.cookies.has("csrftoken")) {
     throw new Error("Go login did not establish the required session and CSRF cookies");
   }
   const current = await session.request("GET", "/api/auth/session/");
