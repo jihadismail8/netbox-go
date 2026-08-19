@@ -23,7 +23,7 @@ behavioral precedent.
 
 ## Current operating mode
 
-At the 2026-08-19 activation, `core-workflow-v1` is T1 and pre-publication. The
+At the 2026-08-23 audit, `core-workflow-v1` is T1 and pre-publication. The
 interrupted typed-boundary recovery is structurally closed, ADR 0005's
 dormant-wrapper cleanup is complete, and the new mode-aware `source-v2` digest
 has made the older V0 artifacts historical. The exact source-v2 entry revision
@@ -35,18 +35,22 @@ token grammar/outcomes and unary gRPC bearer/method safety.
 `CW1-V1-02-I3` is accepted and done only for browser-session classification,
 valid-session-first REST arbitration, exact CSRF pairing, transactional
 login/logout, active-session CSRF recovery, and session-cookie shape.
-`CW1-V1-02-I4` is the sole active identity child. Its tested candidate at
+`CW1-V1-02-I4` has retained evidence. Its tested candidate at
 `c4b1ce1f00cb255b684fb9d795e4e5c7a578907f` passed the accepted-I3-based
 red-first proof, focused and race suites, real-PostgreSQL matrices and complete
 L4, the pinned repository gate, feature-candidate CI, and main exact-SHA CI on
 unchanged source digest
 `source-v2:sha256:3f37417bb791ac6bc97ac4a0d23c5f928062feecf81a0f8a4fb9e57445d53670`.
-The current nine-path claim-only revision conditionally moves I4 to `evidence`:
-that state becomes effective only after this exact revision passes repository
-CI. Its digest-excluded receipt and project-owner review then remain. The
+The nine-path claim-only revision and digest-excluded receipt both passed
+their exact-SHA repository CI boundaries. Project-owner review remains before
+the separate `evidence` to `done` transition. The
 `CW1-V1-02` parent and its password-policy, throttle,
 trusted-proxy, gRPC streaming, Django Origin/Referer/masking, and aggregate
-rows remain open. Do not begin or merge another
+rows remain open. `CW1-V2-02-I1` is the active rewrite increment and owns only
+IPAddress scalar create/PUT/PATCH presence, operation-specific generated API
+contracts, matching REST/gRPC semantics, Vue form serialization/validation,
+and their focused tests. It does not close the 13-resource parent or promote a
+compatibility tier. Do not begin or merge another
 Capability Profile while V0 is red or before `CW1-V6-03`. Once those gates are
 durably closed, follow the next accepted profile in the roadmap and playbook
 rather than this dated snapshot.

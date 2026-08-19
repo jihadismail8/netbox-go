@@ -116,16 +116,16 @@ production release through PROD-1 and PROD-2.
 
 ## Gate-to-goal map
 
-| Gate | Outcome                             | Goals                                   | Current state                                                     |
-| ---- | ----------------------------------- | --------------------------------------- | ----------------------------------------------------------------- |
-| 0    | Stable language and decisions       | CONTEXT plus ADR 0001–0005              | `done`                                                            |
-| 1    | Repository/shared-core baseline     | `CW1-G00`                               | `continuous`                                                      |
-| 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01/I1/I2/I3 `done`; I4 evidence claim conditional; parent open |
-| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01 `done`; remainder `blocked`                                 |
-| 4    | First Core Workflow Profile         | `CW1-V1-*` through `CW1-V6-*`           | T1; active program                                                |
-| 5    | In-scope feature expansion          | `CP-P01`–`CP-P19`, then `MC-01`–`MC-10` | `blocked`                                                         |
-| 6    | Extension Service contracts         | `EXT-01`                                | `blocked` on a named inventory                                    |
-| 7    | Production release                  | `PROD-1`–`PROD-7`                       | `blocked` on replacement and applicable EXT closeout              |
+| Gate | Outcome                             | Goals                                   | Current state                                                |
+| ---- | ----------------------------------- | --------------------------------------- | ------------------------------------------------------------ |
+| 0    | Stable language and decisions       | CONTEXT plus ADR 0001–0005              | `done`                                                       |
+| 1    | Repository/shared-core baseline     | `CW1-G00`                               | `continuous`                                                 |
+| 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01/I1/I2/I3 `done`; I4 `evidence`; parent open            |
+| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01 `done`; V2-02-I1 active; later goals blocked           |
+| 4    | First Core Workflow Profile         | `CW1-V1-*` through `CW1-V6-*`           | T1; active program                                           |
+| 5    | In-scope feature expansion          | `CP-P01`–`CP-P19`, then `MC-01`–`MC-10` | `blocked`                                                    |
+| 6    | Extension Service contracts         | `EXT-01`                                | `blocked` on a named inventory                               |
+| 7    | Production release                  | `PROD-1`–`PROD-7`                       | `blocked` on replacement and applicable EXT closeout         |
 
 ## Dependency map
 
@@ -167,11 +167,9 @@ password-change/session child. Its exact tested candidate is
 `c4b1ce1f00cb255b684fb9d795e4e5c7a578907f` at
 `source-v2:sha256:3f37417bb791ac6bc97ac4a0d23c5f928062feecf81a0f8a4fb9e57445d53670`
 with 3,013 owned entries. Its accepted-I3-based red-first, focused, race,
-real-PostgreSQL, complete L4, pinned repository, feature-candidate CI, and main
-exact-SHA CI boundaries are green. The current nine-path claim-only transition
-records I4 as `evidence` only if this exact attestation revision passes
-repository CI; its digest-excluded receipt and project-owner review then
-remain. I4 and ready
+real-PostgreSQL, complete L4, pinned repository, feature-candidate CI, main,
+claim, and receipt exact-SHA CI boundaries are green. I4 has retained
+`evidence`; project-owner review remains before `done`. I4 and ready
 `CW1-V3-01` may run in parallel only when
 their packets declare non-overlapping files and owners; otherwise serialize
 them. All merges serialize through `CW1-G00`. Production foundations may
@@ -180,32 +178,29 @@ production readiness early.
 
 ## Current execution board
 
-| Goal                | State         | Immediate outcome                                                                | Hard dependency                        |
-| ------------------- | ------------- | -------------------------------------------------------------------------------- | -------------------------------------- |
-| `CW1-G00`           | `continuous`  | Keep source-v2 V0 current                                                        | Every relevant merged source           |
-| `CW1-V1-01`         | `done`        | Trusted-origin CORS retained                                                     | Retained entry-source `CW1-G00`        |
-| `CW1-V1-02`         | `in-progress` | Complete I4, then later bounded identity children                                | `CW1-V1-01` and current `CW1-G00`      |
-| `CW1-V1-02-I4`      | `evidence`*   | Pass this exact claim revision's CI, retain its receipt, and obtain owner review | Accepted/done I3 and current `CW1-G00` |
-| `CW1-V1-03`–`V1-04` | `blocked`     | Complete and retain remaining identity/security                                  | Preceding V1 goal                      |
-| `CW1-V2-01`         | `done`        | Accepted structural rule/scenario traceability                                   | Fresh source-v2 V0 follows this gate   |
-| `CW1-V2-02`–`V2-08` | `blocked`     | Close typed business behavior                                                    | V2-01 and named lane dependencies      |
-| `CW1-V3-01`         | `ready`       | Make HTTP/gRPC readiness dependency-aware                                        | `CW1-G00`                              |
-| `CW1-V3-02`–`V3-05` | `blocked`     | Close PostgreSQL/deployment evidence                                             | Named V2/V3 dependencies               |
-| `CW1-V4-01`–`V4-03` | `blocked`     | Earn complete first-profile REST T2                                              | V1–V3 as declared                      |
-| `CW1-V4-04`         | `blocked`     | Retain the identity extension report                                             | `CW1-V1-04`                            |
-| `CW1-V4-05`         | `blocked`     | Earn corresponding gRPC T3 per capability                                        | Retained T2 for that capability        |
-| `CW1-V4-06`         | `blocked`     | Retain the complete first-profile T2/T3 boundary                                 | All V4 lanes                           |
-| `CW1-V5-01`–`V5-04` | `blocked`     | Author complete browser scenarios                                                | Stable named V1/V2/REST contracts      |
-| `CW1-V5-05`         | `blocked`     | Retain T4 for exercised workflows                                                | Corresponding T2/T3 and V5 authoring   |
-| `CW1-V6-*`          | `blocked`     | Converge evidence and sign off the first profile                                 | V1–V5                                  |
-| `CP-P01`–`CP-P19`   | `blocked`     | Expand accepted feature breadth                                                  | `CW1-V6-03`                            |
+| Goal                | State         | Immediate outcome                                   | Hard dependency                      |
+| ------------------- | ------------- | --------------------------------------------------- | ------------------------------------ |
+| `CW1-G00`           | `continuous`  | Keep source-v2 V0 current                           | Every relevant merged source         |
+| `CW1-V1-01`         | `done`        | Trusted-origin CORS retained                        | Retained entry-source `CW1-G00`      |
+| `CW1-V1-02`         | `in-progress` | Review I4, then continue bounded identity children  | `CW1-V1-01` and current `CW1-G00`    |
+| `CW1-V1-02-I4`      | `evidence`    | Obtain project-owner review                         | Accepted/done I3 and current `CW1-G00` |
+| `CW1-V1-03`–`V1-04` | `blocked`     | Complete and retain remaining identity/security     | Preceding V1 goal                    |
+| `CW1-V2-01`         | `done`        | Accepted structural rule/scenario traceability      | Fresh source-v2 V0 follows this gate |
+| `CW1-V2-02`         | `in-progress` | Execute the bounded IPAddress scalar-presence child | Accepted V2-01 and current `CW1-G00` |
+| `CW1-V2-03`–`V2-08` | `blocked`     | Close later typed business behavior                 | V2-02 and named lane dependencies    |
+| `CW1-V3-01`         | `ready`       | Make HTTP/gRPC readiness dependency-aware           | `CW1-G00`                            |
+| `CW1-V3-02`–`V3-05` | `blocked`     | Close PostgreSQL/deployment evidence                | Named V2/V3 dependencies             |
+| `CW1-V4-01`–`V4-03` | `blocked`     | Earn complete first-profile REST T2                 | V1–V3 as declared                    |
+| `CW1-V4-04`         | `blocked`     | Retain the identity extension report                | `CW1-V1-04`                          |
+| `CW1-V4-05`         | `blocked`     | Earn corresponding gRPC T3 per capability           | Retained T2 for that capability      |
+| `CW1-V4-06`         | `blocked`     | Retain the complete first-profile T2/T3 boundary    | All V4 lanes                         |
+| `CW1-V5-01`–`V5-04` | `blocked`     | Author complete browser scenarios                   | Stable named V1/V2/REST contracts    |
+| `CW1-V5-05`         | `blocked`     | Retain T4 for exercised workflows                   | Corresponding T2/T3 and V5 authoring |
+| `CW1-V6-*`          | `blocked`     | Converge evidence and sign off the first profile    | V1–V5                                |
+| `CP-P01`–`CP-P19`   | `blocked`     | Expand accepted feature breadth                     | `CW1-V6-03`                          |
 
 No owner is assigned merely because a goal is `ready`. An executor claims one
 goal by recording its increment specification before editing code.
-
-\* I4's `evidence` row is conditional claim text: it becomes effective only
-after the exact revision carrying this transition passes repository CI. Until
-that boundary, I4 remains `in-progress`.
 
 # Phase A — finish `core-workflow-v1`
 
@@ -365,6 +360,13 @@ visibly pending rather than falsely green.
 ### `CW1-V2-02` — common CRUD and presence semantics
 
 Entry: `CW1-V2-01` is green.
+
+Active bounded child:
+
+- [`CW1-V2-02-I1`](increments/CW1-V2-02-I1.md) owns only IPAddress
+  scalar create/PUT/PATCH presence, generated request/response nullability,
+  REST/gRPC mapping, Vue form serialization/validation, and the named durable
+  regressions. It does not close this parent or any compatibility tier.
 
 - [ ] Represent all 13 resources × list/get/create/PUT/PATCH/delete.
 - [ ] Cover defaults, read-only fields, and nullability.
