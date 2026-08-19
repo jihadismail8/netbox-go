@@ -33,13 +33,14 @@ implementation exists.
 
 ## Packets
 
-| Goal           | State  | Intended executor | Packet                                                  |
-| -------------- | ------ | ----------------- | ------------------------------------------------------- |
-| `CW1-V1-01`    | `done` | Codex GPT-5.6 Sol | [Trusted-origin CORS](CW1-V1-01.md)                     |
-| `CW1-V1-02-I1` | `done` | Codex GPT-5.6 Sol | [Token credential foundation](CW1-V1-02.md)             |
-| `CW1-V1-02-I2` | `done` | Codex GPT-5.6 Sol | [Token transport and unary RPC safety](CW1-V1-02-I2.md) |
-| `CW1-V1-02-I3` | `done` | Codex GPT-5.6 Sol | [Browser session and CSRF lifecycle](CW1-V1-02-I3.md)   |
-| `CW1-V2-01`    | `done` | Codex GPT-5.6 Sol | [Machine-readable traceability](CW1-V2-01.md)           |
+| Goal           | State         | Intended executor | Packet                                                  |
+| -------------- | ------------- | ----------------- | ------------------------------------------------------- |
+| `CW1-V1-01`    | `done`        | Codex GPT-5.6 Sol | [Trusted-origin CORS](CW1-V1-01.md)                     |
+| `CW1-V1-02-I1` | `done`        | Codex GPT-5.6 Sol | [Token credential foundation](CW1-V1-02.md)             |
+| `CW1-V1-02-I2` | `done`        | Codex GPT-5.6 Sol | [Token transport and unary RPC safety](CW1-V1-02-I2.md) |
+| `CW1-V1-02-I3` | `done`        | Codex GPT-5.6 Sol | [Browser session and CSRF lifecycle](CW1-V1-02-I3.md)   |
+| `CW1-V1-02-I4` | `in-progress` | Codex GPT-5.6 Sol | [Password change and session rotation](CW1-V1-02-I4.md) |
+| `CW1-V2-01`    | `done`        | Codex GPT-5.6 Sol | [Machine-readable traceability](CW1-V2-01.md)           |
 
 `in-progress` means the packet owns only its explicitly active bounded
 increment; no implementation evidence or parent-goal completion is implied.
@@ -52,3 +53,10 @@ entering either state never closes its parent automatically.
 `done` for `CW1-V2-01` records accepted structural authority only. Its pending
 and contradicted behavior remains open, it retains no V0 artifact, and it does
 not promote a compatibility tier.
+
+`CW1-V1-02-I4` is active only on its accepted-I3-based rebased series. Its
+pre-rebase results are historical. Its accepted-I3 red-first proof and
+pre-governance local source-candidate ladder are green, while the
+governance-inclusive exact-byte rerun, candidate commit, exact-SHA CI, and
+claim/receipt sequence remain. It has no retained result or parent/tier/profile
+claim.

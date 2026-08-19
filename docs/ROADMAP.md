@@ -120,7 +120,7 @@ production release through PROD-1 and PROD-2.
 | ---- | ----------------------------------- | --------------------------------------- | ---------------------------------------------------- |
 | 0    | Stable language and decisions       | CONTEXT plus ADR 0001–0005              | `done`                                               |
 | 1    | Repository/shared-core baseline     | `CW1-G00`                               | `continuous`                                         |
-| 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01/I1/I2/I3 `done`; parent active                 |
+| 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01/I1/I2/I3 `done`; I4 active; parent open        |
 | 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01 `done`; remainder `blocked`                    |
 | 4    | First Core Workflow Profile         | `CW1-V1-*` through `CW1-V6-*`           | T1; active program                                   |
 | 5    | In-scope feature expansion          | `CP-P01`–`CP-P19`, then `MC-01`–`MC-10` | `blocked`                                            |
@@ -162,8 +162,18 @@ The starting `CW1-V1-01` and `CW1-V2-01` outcomes are accepted. Bounded
 the `CW1-V1-02` parent remains active. `CW1-V1-02-I2` is accepted and done for
 REST token grammar/outcomes and unary gRPC bearer/method safety.
 `CW1-V1-02-I3` is accepted and done for the browser-session, CSRF,
-login/logout, and REST credential-arbitration slice. The next separately
-reviewed `CW1-V1-02` child and ready `CW1-V3-01` may run in parallel only when
+login/logout, and REST credential-arbitration slice. `CW1-V1-02-I4` is the
+active password-change/session child after its exact four-commit series was
+rebased onto accepted I3 receipt head
+`8e59b3dff6ee86f8b1195d389a2b5c11211ea160`. Its pre-governance rebased digest
+was
+`source-v2:sha256:50c9ed75a76f5f3b387e6413c59557259a6445962ba8886db1a833f5e7afc96e`
+with 3,013 owned entries. The accepted-I3-based red-first proof and complete
+pre-governance local source-candidate ladder are green at
+`source-v2:sha256:e37353f2c10db82b81cfd7623f8741a83da8a9bd2a70677a6fdcdba4ce4b5927`
+with 3,013 entries. The governance-inclusive exact-byte rerun, candidate
+commit, push, exact-SHA CI, and claim/receipt sequence remain. I4 and ready
+`CW1-V3-01` may run in parallel only when
 their packets declare non-overlapping files and owners; otherwise serialize
 them. All merges serialize through `CW1-G00`. Production foundations may
 proceed in parallel only when they do not destabilize profile work or claim
@@ -171,24 +181,25 @@ production readiness early.
 
 ## Current execution board
 
-| Goal                | State         | Immediate outcome                                | Hard dependency                      |
-| ------------------- | ------------- | ------------------------------------------------ | ------------------------------------ |
-| `CW1-G00`           | `continuous`  | Keep source-v2 V0 current                        | Every relevant merged source         |
-| `CW1-V1-01`         | `done`        | Trusted-origin CORS retained                     | Retained entry-source `CW1-G00`      |
-| `CW1-V1-02`         | `in-progress` | Continue the later bounded identity children     | `CW1-V1-01` and current `CW1-G00`    |
-| `CW1-V1-03`–`V1-04` | `blocked`     | Complete and retain remaining identity/security  | Preceding V1 goal                    |
-| `CW1-V2-01`         | `done`        | Accepted structural rule/scenario traceability   | Fresh source-v2 V0 follows this gate |
-| `CW1-V2-02`–`V2-08` | `blocked`     | Close typed business behavior                    | V2-01 and named lane dependencies    |
-| `CW1-V3-01`         | `ready`       | Make HTTP/gRPC readiness dependency-aware        | `CW1-G00`                            |
-| `CW1-V3-02`–`V3-05` | `blocked`     | Close PostgreSQL/deployment evidence             | Named V2/V3 dependencies             |
-| `CW1-V4-01`–`V4-03` | `blocked`     | Earn complete first-profile REST T2              | V1–V3 as declared                    |
-| `CW1-V4-04`         | `blocked`     | Retain the identity extension report             | `CW1-V1-04`                          |
-| `CW1-V4-05`         | `blocked`     | Earn corresponding gRPC T3 per capability        | Retained T2 for that capability      |
-| `CW1-V4-06`         | `blocked`     | Retain the complete first-profile T2/T3 boundary | All V4 lanes                         |
-| `CW1-V5-01`–`V5-04` | `blocked`     | Author complete browser scenarios                | Stable named V1/V2/REST contracts    |
-| `CW1-V5-05`         | `blocked`     | Retain T4 for exercised workflows                | Corresponding T2/T3 and V5 authoring |
-| `CW1-V6-*`          | `blocked`     | Converge evidence and sign off the first profile | V1–V5                                |
-| `CP-P01`–`CP-P19`   | `blocked`     | Expand accepted feature breadth                  | `CW1-V6-03`                          |
+| Goal                | State         | Immediate outcome                                    | Hard dependency                        |
+| ------------------- | ------------- | ---------------------------------------------------- | -------------------------------------- |
+| `CW1-G00`           | `continuous`  | Keep source-v2 V0 current                            | Every relevant merged source           |
+| `CW1-V1-01`         | `done`        | Trusted-origin CORS retained                         | Retained entry-source `CW1-G00`        |
+| `CW1-V1-02`         | `in-progress` | Complete I4, then later bounded identity children    | `CW1-V1-01` and current `CW1-G00`      |
+| `CW1-V1-02-I4`      | `in-progress` | Commit, push, and retain the locally green candidate | Accepted/done I3 and current `CW1-G00` |
+| `CW1-V1-03`–`V1-04` | `blocked`     | Complete and retain remaining identity/security      | Preceding V1 goal                      |
+| `CW1-V2-01`         | `done`        | Accepted structural rule/scenario traceability       | Fresh source-v2 V0 follows this gate   |
+| `CW1-V2-02`–`V2-08` | `blocked`     | Close typed business behavior                        | V2-01 and named lane dependencies      |
+| `CW1-V3-01`         | `ready`       | Make HTTP/gRPC readiness dependency-aware            | `CW1-G00`                              |
+| `CW1-V3-02`–`V3-05` | `blocked`     | Close PostgreSQL/deployment evidence                 | Named V2/V3 dependencies               |
+| `CW1-V4-01`–`V4-03` | `blocked`     | Earn complete first-profile REST T2                  | V1–V3 as declared                      |
+| `CW1-V4-04`         | `blocked`     | Retain the identity extension report                 | `CW1-V1-04`                            |
+| `CW1-V4-05`         | `blocked`     | Earn corresponding gRPC T3 per capability            | Retained T2 for that capability        |
+| `CW1-V4-06`         | `blocked`     | Retain the complete first-profile T2/T3 boundary     | All V4 lanes                           |
+| `CW1-V5-01`–`V5-04` | `blocked`     | Author complete browser scenarios                    | Stable named V1/V2/REST contracts      |
+| `CW1-V5-05`         | `blocked`     | Retain T4 for exercised workflows                    | Corresponding T2/T3 and V5 authoring   |
+| `CW1-V6-*`          | `blocked`     | Converge evidence and sign off the first profile     | V1–V5                                  |
+| `CP-P01`–`CP-P19`   | `blocked`     | Expand accepted feature breadth                      | `CW1-V6-03`                            |
 
 No owner is assigned merely because a goal is `ready`. An executor claims one
 goal by recording its increment specification before editing code.
@@ -264,12 +275,15 @@ Completed bounded packets: [CW1-V1-02-I1 token credential
 foundation](increments/CW1-V1-02.md), [CW1-V1-02-I2 token transport and unary
 RPC safety](increments/CW1-V1-02-I2.md), and [CW1-V1-02-I3 browser session and
 CSRF lifecycle](increments/CW1-V1-02-I3.md). The parent checklist remains open
-until every later transport/session/throttle row is proved. I3 proves typed
-session outcomes, valid-session-first arbitration, transactional login/logout,
-exact CSRF pairing/recovery, and cookie shape. I2 proves only the direct-peer
-token transport slice; throttles, trusted-proxy source resolution,
-password-session policy, gRPC streams, and aggregate all-transport coverage
-remain open.
+until every later transport/session/throttle row is proved. The active
+[CW1-V1-02-I4 password-change/session packet](increments/CW1-V1-02-I4.md) is
+rebased onto accepted I3 and has a green pre-governance local ladder, but
+claims no retained I4 result until its governance-inclusive exact-byte,
+exact-SHA CI, attestation, and receipt sequence pass. I3 proves typed session
+outcomes, valid-session-first arbitration, transactional login/logout, exact
+CSRF pairing/recovery, and cookie shape. I2 proves only the direct-peer token
+transport slice; I4 password-session evidence, throttles, trusted-proxy source
+resolution, gRPC streams, and aggregate all-transport coverage remain open.
 
 - [ ] Test missing, malformed, unknown, expired, revoked, write-disabled, and
       IP-restricted API tokens.

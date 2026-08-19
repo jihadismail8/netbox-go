@@ -23,7 +23,7 @@ behavioral precedent.
 
 ## Current operating mode
 
-At the 2026-08-17 audit, `core-workflow-v1` is T1 and pre-publication. The
+At the 2026-08-19 activation, `core-workflow-v1` is T1 and pre-publication. The
 interrupted typed-boundary recovery is structurally closed, ADR 0005's
 dormant-wrapper cleanup is complete, and the new mode-aware `source-v2` digest
 has made the older V0 artifacts historical. The exact source-v2 entry revision
@@ -34,8 +34,15 @@ touch semantics. `CW1-V1-02-I2` is accepted and done only for baseline REST
 token grammar/outcomes and unary gRPC bearer/method safety.
 `CW1-V1-02-I3` is accepted and done only for browser-session classification,
 valid-session-first REST arbitration, exact CSRF pairing, transactional
-login/logout, active-session CSRF recovery, and session-cookie shape. The
-`CW1-V1-02` parent and its password, throttle,
+login/logout, active-session CSRF recovery, and session-cookie shape.
+`CW1-V1-02-I4` is the sole active identity child. Its exact four-commit series
+is rebased onto accepted I3 receipt head
+`8e59b3dff6ee86f8b1195d389a2b5c11211ea160`. Its accepted-I3-based red-first
+proof and pre-governance local source-candidate ladder are green, including
+focused, real-PostgreSQL, race, backend, and root repository gates. The
+governance-inclusive exact-byte rerun, candidate commit, push, exact-SHA CI,
+and claim/receipt sequence remain open, so I4 is still `in-progress`, not
+evidence. The `CW1-V1-02` parent and its password-policy, throttle,
 trusted-proxy, gRPC streaming, Django Origin/Referer/masking, and aggregate
 rows remain open. Do not begin or merge another
 Capability Profile while V0 is red or before `CW1-V6-03`. Once those gates are

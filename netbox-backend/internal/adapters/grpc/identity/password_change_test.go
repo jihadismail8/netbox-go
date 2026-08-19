@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"errors"
+	"strings"
 	"testing"
 	"time"
 
@@ -139,8 +140,7 @@ func TestGRPCPasswordChangeUsesTokenProvenance(t *testing.T) {
 		response, err := NewServer(application.NewService(store, i4GRPCClock{now: now})).ChangePassword(t.Context(), request)
 
 		require.Nil(t, response)
-		require.Equal(t, codes.Unauthenticated, status.Code(err))
-		require.Equal(t, "Authentication credentials were not provided.", status.Convert(err).Message())
+		i4GRPCRequireStatus(t, err, codes.Unauthenticated, "Authentication credentials were not provided.")
 		require.Zero(t, store.userLookups)
 		require.Zero(t, store.transactions)
 		require.Zero(t, store.updates)
@@ -171,8 +171,7 @@ func TestGRPCPasswordChangeUsesTokenProvenance(t *testing.T) {
 			response, err := NewServer(application.NewService(store, i4GRPCClock{now: now})).ChangePassword(ctx, validation.request)
 
 			require.Nil(t, response)
-			require.Equal(t, codes.InvalidArgument, status.Code(err))
-			require.Equal(t, "Invalid input.", status.Convert(err).Message())
+			i4GRPCRequireStatus(t, err, codes.InvalidArgument, "Invalid input.")
 			require.Zero(t, store.transactions)
 			require.Zero(t, store.updates)
 			i4GRPCRequirePassword(t, store.hashes[41], i4GRPCCurrentPassword, true)
@@ -186,8 +185,7 @@ func TestGRPCPasswordChangeUsesTokenProvenance(t *testing.T) {
 		response, err := NewServer(application.NewService(store, i4GRPCClock{now: now})).ChangePassword(ctx, request)
 
 		require.Nil(t, response)
-		require.Equal(t, codes.Internal, status.Code(err))
-		require.Equal(t, "An internal error occurred.", status.Convert(err).Message())
+		i4GRPCRequireStatus(t, err, codes.Internal, "An internal error occurred.")
 		require.Zero(t, store.transactions)
 		require.Zero(t, store.updates)
 	})
@@ -197,7 +195,9 @@ func TestGRPCPasswordChangeUsesTokenProvenance(t *testing.T) {
 		ctx := domain.WithPrincipal(t.Context(), store.users[41].Principal())
 		response, err := NewServer(application.NewService(store, i4GRPCClock{now: now})).ChangePassword(ctx, request)
 
-		require.NoError(t, err)
+		if err != nil {
+			t.Fatal("valid gRPC password change was rejected")
+		}
 		require.NotNil(t, response)
 		require.Zero(t, response.ProtoReflect().Descriptor().Fields().Len())
 		require.Equal(t, 1, store.transactions)
@@ -220,8 +220,7 @@ func TestGRPCPasswordChangeUsesTokenProvenance(t *testing.T) {
 		response, err := NewServer(application.NewService(store, i4GRPCClock{now: now})).ChangePassword(ctx, request)
 
 		require.Nil(t, response)
-		require.Equal(t, codes.Internal, status.Code(err))
-		require.Equal(t, "An internal error occurred.", status.Convert(err).Message())
+		i4GRPCRequireStatus(t, err, codes.Internal, "An internal error occurred.")
 		require.Equal(t, 1, store.transactions)
 		require.Equal(t, 1, store.updates)
 		require.Equal(t, 1, store.deletes)
@@ -231,6 +230,27 @@ func TestGRPCPasswordChangeUsesTokenProvenance(t *testing.T) {
 		i4GRPCRequirePassword(t, store.hashes[41], i4GRPCCurrentPassword, true)
 		i4GRPCRequirePassword(t, store.hashes[41], i4GRPCNextPassword, false)
 	})
+}
+
+func i4GRPCRequireStatus(t *testing.T, err error, wantCode codes.Code, wantMessage string) {
+	t.Helper()
+	message := status.Convert(err).Message()
+	for _, credential := range []string{
+		i4GRPCCurrentPassword,
+		i4GRPCNextPassword,
+		"incorrect-current-password",
+		"short",
+	} {
+		if strings.Contains(message, credential) {
+			t.Fatal("gRPC password-change error exposed submitted credential material")
+		}
+	}
+	if status.Code(err) != wantCode {
+		t.Fatal("gRPC password-change error used the wrong status code")
+	}
+	if message != wantMessage {
+		t.Fatal("gRPC password-change error used the wrong public message")
+	}
 }
 
 func i4GRPCFixture(t *testing.T, now time.Time) *i4GRPCStore {

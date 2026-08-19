@@ -244,7 +244,7 @@ func TestRESTPasswordChangeCredentialProvenance(t *testing.T) {
 			i4RESTValidBody(),
 		)
 
-		i3RequireDetail(t, response, http.StatusForbidden, "You do not have permission to perform this action.")
+		i4RESTRequireDetail(t, response, http.StatusForbidden, "You do not have permission to perform this action.")
 		require.Zero(t, store.tokenLookups)
 		require.Zero(t, store.transactions)
 		require.Zero(t, store.updates)
@@ -300,7 +300,7 @@ func TestRESTPasswordChangeCredentialProvenance(t *testing.T) {
 			},
 			map[string][]string{"Authorization": {"Token " + i4RESTToken}}, i4RESTValidBody())
 
-		i3RequireDetail(t, response, http.StatusUnauthorized, "Authentication credentials were not provided.")
+		i4RESTRequireDetail(t, response, http.StatusUnauthorized, "Authentication credentials were not provided.")
 		require.Zero(t, store.sessionLookups)
 		require.Zero(t, store.tokenLookups)
 		require.Zero(t, store.transactions)
@@ -314,7 +314,7 @@ func TestRESTPasswordChangeCredentialProvenance(t *testing.T) {
 			[]*http.Cookie{i3Cookie(sessionCookie, i4RESTSession)},
 			map[string][]string{"Authorization": {"Token " + i4RESTToken}}, i4RESTValidBody())
 
-		i3RequireDetail(t, response, http.StatusInternalServerError, "An internal error occurred.")
+		i4RESTRequireDetail(t, response, http.StatusInternalServerError, "An internal error occurred.")
 		require.Zero(t, store.tokenLookups)
 		require.Zero(t, store.transactions)
 		i3RequireSetCookieCount(t, response, 0)
@@ -344,7 +344,7 @@ func TestRESTPasswordChangeCredentialProvenance(t *testing.T) {
 			router.ServeHTTP(response, i3RequestBody(http.MethodPost, "/direct", nil,
 				map[string][]string{"Content-Type": {"application/json"}}, i4RESTValidBody()))
 
-			i3RequireDetail(t, response, http.StatusInternalServerError, "An internal error occurred.")
+			i4RESTRequireDetail(t, response, http.StatusInternalServerError, "An internal error occurred.")
 			require.Zero(t, store.userLookups)
 			require.Zero(t, store.transactions)
 			require.Zero(t, store.updates)
@@ -609,7 +609,7 @@ func TestRESTPasswordChangeFailureAndNoCookieMatrix(t *testing.T) {
 			if test.wantField != "" {
 				i4RESTRequireFieldError(t, response, test.wantStatus, test.wantField, test.wantValue)
 			} else {
-				i3RequireDetail(t, response, test.wantStatus, test.wantDetail)
+				i4RESTRequireDetail(t, response, test.wantStatus, test.wantDetail)
 			}
 			i3RequireSetCookieCount(t, response, 0)
 			i4RESTRequireBodyConcealsCredentials(t, response.Body.Bytes())
@@ -792,10 +792,38 @@ func i4RESTRequirePassword(t *testing.T, hash, password string, want bool) {
 
 func i4RESTRequireFieldError(t *testing.T, response *httptest.ResponseRecorder, status int, field, description string) {
 	t.Helper()
-	require.Equal(t, status, response.Code)
+	i4RESTRequireBodyConcealsCredentials(t, response.Body.Bytes())
+	if response.Code != status {
+		t.Fatal("password-change field error used the wrong HTTP status")
+	}
 	var body map[string][]string
-	require.NoError(t, json.Unmarshal(response.Body.Bytes(), &body))
-	require.Equal(t, map[string][]string{field: {description}}, body)
+	if err := json.Unmarshal(response.Body.Bytes(), &body); err != nil {
+		t.Fatal("password-change field error used an invalid response body")
+	}
+	values, ok := body[field]
+	if len(body) != 1 || !ok || len(values) != 1 || values[0] != description {
+		t.Fatal("password-change field error used the wrong response contract")
+	}
+
+}
+
+func i4RESTRequireDetail(t *testing.T, response *httptest.ResponseRecorder, status int, detail string) {
+	t.Helper()
+	i4RESTRequireBodyConcealsCredentials(t, response.Body.Bytes())
+	if response.Code != status {
+		t.Fatal("password-change detail error used the wrong HTTP status")
+	}
+	if response.Header().Get("WWW-Authenticate") != "" {
+		t.Fatal("password-change detail error advertised an authentication scheme")
+	}
+	var body map[string]string
+	if err := json.Unmarshal(response.Body.Bytes(), &body); err != nil {
+		t.Fatal("password-change detail error used an invalid response body")
+	}
+	actual, ok := body["detail"]
+	if len(body) != 1 || !ok || actual != detail {
+		t.Fatal("password-change detail error used the wrong response contract")
+	}
 }
 
 func i4RESTRequireBodyConcealsCredentials(t *testing.T, body []byte) {
@@ -807,6 +835,13 @@ func i4RESTRequireBodyConcealsCredentials(t *testing.T, body []byte) {
 		i4RESTSiblingSession,
 		i4RESTTokenSession,
 		i4RESTToken,
+		i3DerivedCSRF(i4RESTSession),
+		i3DerivedCSRF(i4RESTSiblingSession),
+		i3DerivedCSRF(i4RESTTokenSession),
+		"incorrect-current-password",
+		"short",
+		"different-csrf-candidate",
+		"unknown-ambient-session",
 	} {
 		if bytes.Contains(body, []byte(value)) {
 			t.Fatal("password-change response exposed reusable credential material")

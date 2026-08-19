@@ -64,7 +64,18 @@ session-cookie shape, and real-PostgreSQL rollback/advisory-lock/concurrency
 proof. It remains a classified browser-identity extension and does not close
 password-session, throttle, trusted-proxy, streaming, aggregate all-transport,
 REST T2, gRPC T3, or browser T4 work. GitHub CI currently runs the V0 command
-only. The owned PostgreSQL, deployment, differential, gRPC-promotion, and
+only. `CW1-V1-02-I4` is active `in-progress`: its exact four-commit
+password-change/session series was rebased onto accepted I3 receipt head
+`8e59b3dff6ee86f8b1195d389a2b5c11211ea160`, with an exact range-diff and a
+pre-governance rebased digest of
+`source-v2:sha256:50c9ed75a76f5f3b387e6413c59557259a6445962ba8886db1a833f5e7afc96e`
+over 3,013 entries. Pre-rebase runs are historical. The rebased red-first,
+focused, PostgreSQL, affected-package, race, backend, and root gates passed on
+the pre-governance local candidate digest
+`source-v2:sha256:e37353f2c10db82b81cfd7623f8741a83da8a9bd2a70677a6fdcdba4ce4b5927`
+with 3,013 entries. The governance-inclusive exact-byte rerun, exact-commit,
+exact-SHA CI, and claim/receipt gates remain before I4 evidence can be
+retained. The owned PostgreSQL, deployment, differential, gRPC-promotion, and
 browser gates remain manual until connected jobs retain durable artifacts.
 
 ## Owned external gates
@@ -200,15 +211,15 @@ and exact change-state outcomes remain to be added and retained.
 
 ## Verification checkpoints
 
-| Checkpoint               | Implementation state                                                  | Exit condition                                                                 | Current status                                           |
-| ------------------------ | --------------------------------------------------------------------- | ------------------------------------------------------------------------------ | -------------------------------------------------------- |
-| V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage  | `make check` retained green on each exact relevant source digest               | Entry source-v2 retained; active-source refresh required |
-| V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests | Complete principal/visibility/CLI/session/token matrix                         | CORS/I1/I2/I3 retained; parent open                      |
-| V2 profile behavior      | Shared 13-resource service and broad positive/negative tests          | Trace every declared invariant, field/filter/relationship, error, and rollback | Implementation/evidence gap                              |
-| V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness            | Truthful readiness, loss/recovery, real PostgreSQL and deployment artifacts    | Implementation/evidence gap                              |
-| V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites       | Complete T2 scenario report, then equivalent T3 report                         | T1; implementation gap                                   |
-| V5 Vue workflow          | Typed adapters and real-browser harness                               | Both workflows and every required negative/state case retained green           | T1; implementation gap                                   |
-| V6 sign-off              | First-profile legacy stacks retired                                   | V0-V5 green together with linked evidence                                      | Not earned                                               |
+| Checkpoint               | Implementation state                                                  | Exit condition                                                                     | Current status                                           |
+| ------------------------ | --------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage  | `make check` retained green on each exact relevant source digest                   | Entry source-v2 retained; active-source refresh required |
+| V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests | Re-run final I4 bytes and retain them, then complete the remaining identity matrix | I4 locally green, in progress; parent open               |
+| V2 profile behavior      | Shared 13-resource service and broad positive/negative tests          | Trace every declared invariant, field/filter/relationship, error, and rollback     | Implementation/evidence gap                              |
+| V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness            | Truthful readiness, loss/recovery, real PostgreSQL and deployment artifacts        | Implementation/evidence gap                              |
+| V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites       | Complete T2 scenario report, then equivalent T3 report                             | T1; implementation gap                                   |
+| V5 Vue workflow          | Typed adapters and real-browser harness                               | Both workflows and every required negative/state case retained green               | T1; implementation gap                                   |
+| V6 sign-off              | First-profile legacy stacks retired                                   | V0-V5 green together with linked evidence                                          | Not earned                                               |
 
 ## Merge rules
 
