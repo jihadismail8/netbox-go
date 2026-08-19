@@ -82,7 +82,16 @@ func (s *Server) ChangePassword(ctx context.Context, request *identityv1.ChangeP
 	if !ok {
 		return nil, statusmap.Error(unauthenticatedError())
 	}
-	if err := s.service.ChangePassword(ctx, principal, request.CurrentPassword, request.NewPassword); err != nil {
+	_, err := s.service.ChangePassword(
+		ctx,
+		principal,
+		application.NewPasswordChangeInput(
+			request.CurrentPassword,
+			request.NewPassword,
+			application.APITokenPasswordChangeCredential(),
+		),
+	)
+	if err != nil {
 		return nil, statusmap.Error(err)
 	}
 	return &identityv1.ChangePasswordResponse{}, nil

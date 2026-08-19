@@ -11,6 +11,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"io"
 	"net/netip"
 	"strings"
 	"sync"
@@ -72,18 +73,155 @@ type RealClock struct{}
 
 func (RealClock) Now() time.Time { return time.Now().UTC() }
 
-type Service struct {
-	store         Store
-	clock         Clock
-	mu            sync.Mutex
-	tokenAttempts map[int64][]time.Time
+type ServiceOption interface {
+	apply(*Service)
 }
 
-func NewService(store Store, clock Clock) *Service {
+type serviceOptionFunc func(*Service)
+
+func (option serviceOptionFunc) apply(service *Service) { option(service) }
+
+// WithPasswordChangeEntropy overrides only password-change replacement-secret
+// entropy. Production composition relies on the crypto/rand.Reader default.
+func WithPasswordChangeEntropy(reader io.Reader) ServiceOption {
+	if reader == nil {
+		panic("identity password-change entropy is required")
+	}
+	return serviceOptionFunc(func(service *Service) {
+		service.passwordChangeEntropy = reader
+	})
+}
+
+type Service struct {
+	store                 Store
+	clock                 Clock
+	passwordChangeEntropy io.Reader
+	mu                    sync.Mutex
+	tokenAttempts         map[int64][]time.Time
+}
+
+func NewService(store Store, clock Clock, options ...ServiceOption) *Service {
 	if store == nil || clock == nil {
 		panic("identity service requires store and clock")
 	}
-	return &Service{store: store, clock: clock, tokenAttempts: map[int64][]time.Time{}}
+	service := &Service{
+		store:                 store,
+		clock:                 clock,
+		passwordChangeEntropy: rand.Reader,
+		tokenAttempts:         map[int64][]time.Time{},
+	}
+	for _, option := range options {
+		if option == nil {
+			panic("identity service option is required")
+		}
+		option.apply(service)
+	}
+	return service
+}
+
+type passwordChangeCredentialKind uint8
+
+const (
+	passwordChangeCredentialInvalid passwordChangeCredentialKind = iota
+	passwordChangeCredentialBrowserSession
+	passwordChangeCredentialAPIToken
+)
+
+type PasswordChangeCredential interface {
+	String() string
+	GoString() string
+	Format(fmt.State, rune)
+	MarshalJSON() ([]byte, error)
+	passwordChangeCredential()
+}
+
+type passwordChangeCredential struct {
+	kind                passwordChangeCredentialKind
+	sessionSecret, csrf string
+}
+
+func BrowserSessionPasswordChangeCredential(sessionSecret, csrf string) PasswordChangeCredential {
+	return &passwordChangeCredential{
+		kind:          passwordChangeCredentialBrowserSession,
+		sessionSecret: sessionSecret,
+		csrf:          csrf,
+	}
+}
+
+func APITokenPasswordChangeCredential() PasswordChangeCredential {
+	return &passwordChangeCredential{kind: passwordChangeCredentialAPIToken}
+}
+
+func (*passwordChangeCredential) passwordChangeCredential() {}
+func (*passwordChangeCredential) String() string {
+	return "<password-change-credential:redacted>"
+}
+func (credential *passwordChangeCredential) GoString() string { return credential.String() }
+func (credential *passwordChangeCredential) Format(state fmt.State, _ rune) {
+	_, _ = io.WriteString(state, credential.String())
+}
+func (*passwordChangeCredential) MarshalJSON() ([]byte, error) {
+	return nil, errors.New("password-change credential serialization is disabled")
+}
+
+type ChangePasswordInput interface {
+	String() string
+	GoString() string
+	Format(fmt.State, rune)
+	MarshalJSON() ([]byte, error)
+	passwordChangeInput()
+}
+
+type passwordChangeInput struct {
+	currentPassword, newPassword string
+	credential                   PasswordChangeCredential
+}
+
+func NewPasswordChangeInput(currentPassword, newPassword string, credential PasswordChangeCredential) ChangePasswordInput {
+	return &passwordChangeInput{
+		currentPassword: currentPassword,
+		newPassword:     newPassword,
+		credential:      credential,
+	}
+}
+
+func (*passwordChangeInput) passwordChangeInput()   {}
+func (*passwordChangeInput) String() string         { return "<change-password-input:redacted>" }
+func (input *passwordChangeInput) GoString() string { return input.String() }
+func (input *passwordChangeInput) Format(state fmt.State, _ rune) {
+	_, _ = io.WriteString(state, input.String())
+}
+func (*passwordChangeInput) MarshalJSON() ([]byte, error) {
+	return nil, errors.New("password-change input serialization is disabled")
+}
+
+type ChangePasswordResult interface {
+	String() string
+	GoString() string
+	Format(fmt.State, rune)
+	MarshalJSON() ([]byte, error)
+	BrowserSession() (domain.BrowserSession, bool)
+	passwordChangeResult()
+}
+
+type changePasswordResult struct {
+	browserSession *domain.BrowserSession
+}
+
+func (*changePasswordResult) passwordChangeResult()   {}
+func (*changePasswordResult) String() string          { return "<change-password-result:redacted>" }
+func (result *changePasswordResult) GoString() string { return result.String() }
+func (result *changePasswordResult) Format(state fmt.State, _ rune) {
+	_, _ = io.WriteString(state, result.String())
+}
+func (*changePasswordResult) MarshalJSON() ([]byte, error) {
+	return nil, errors.New("password-change result serialization is disabled")
+}
+func (result *changePasswordResult) BrowserSession() (domain.BrowserSession, bool) {
+	if result == nil || result.browserSession == nil {
+		return domain.BrowserSession{}, false
+	}
+	return *result.browserSession, true
 }
 
 type CreateTokenInput struct {
@@ -429,24 +567,12 @@ func (s *Service) RevokeToken(ctx context.Context, principal domain.Principal, i
 	}
 	return nil
 }
-func (s *Service) ChangePassword(ctx context.Context, principal domain.Principal, current, next string) error {
-	if !principal.Authenticated() {
-		return unauthenticated()
-	}
-	user, hash, err := s.store.UserByID(ctx, principal.ID)
-	if err != nil || bcrypt.CompareHashAndPassword([]byte(hash), []byte(current)) != nil {
-		return invalid("current_password", "Current password is incorrect.")
-	}
-	nextHash, err := HashPassword(next)
-	if err != nil {
-		return err
-	}
-	return s.store.Transaction(ctx, func(store Store) error {
-		if err := store.UpdatePassword(ctx, user.ID, nextHash); err != nil {
-			return err
-		}
-		return store.DeleteSessionsForUser(ctx, user.ID)
-	})
+func (s *Service) ChangePassword(
+	context.Context,
+	domain.Principal,
+	ChangePasswordInput,
+) (ChangePasswordResult, error) {
+	return nil, internal(errors.New("password change implementation is pending"))
 }
 
 func (s *Service) BootstrapAdministrator(ctx context.Context, username, email, password string) (domain.User, error) {

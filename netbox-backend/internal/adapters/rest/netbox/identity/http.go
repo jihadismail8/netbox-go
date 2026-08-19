@@ -420,7 +420,13 @@ func (h *Handler) changePassword(c *gin.Context) {
 		))
 		return
 	}
-	if err := h.service.ChangePassword(c.Request.Context(), principal, input.Current, input.Next); err != nil {
+	var credential application.PasswordChangeCredential
+	_, err := h.service.ChangePassword(
+		c.Request.Context(),
+		principal,
+		application.NewPasswordChangeInput(input.Current, input.Next, credential),
+	)
+	if err != nil {
 		writeError(c, err)
 		return
 	}

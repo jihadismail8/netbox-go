@@ -59,7 +59,16 @@ func TestStandaloneIdentityLifecycle(t *testing.T) {
 	_, err = service.AuthenticateToken(ctx, created.Secret, "127.0.0.1:1234", false)
 	require.Error(t, err)
 
-	require.NoError(t, service.ChangePassword(ctx, principal, "Correct-Horse-2026!", "Different-Horse-2026!"))
+	_, err = service.ChangePassword(
+		ctx,
+		principal,
+		application.NewPasswordChangeInput(
+			"Correct-Horse-2026!",
+			"Different-Horse-2026!",
+			application.APITokenPasswordChangeCredential(),
+		),
+	)
+	require.NoError(t, err)
 	_, err = service.AuthenticateSession(ctx, session.Secret)
 	require.Error(t, err)
 	_, err = service.Login(ctx, "admin", "Correct-Horse-2026!")
