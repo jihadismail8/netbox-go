@@ -17,12 +17,13 @@ evidence-receipt CI. The
 [bounded browser-session and CSRF result](2026-08-17-core-workflow-v1-browser-session-i3-v0.md)
 passed its exact committed local, real-PostgreSQL, independent candidate CI,
 and evidence-receipt CI boundaries. The exact
-[password-change and session-rotation candidate](2026-08-19-core-workflow-v1-password-session-i4-v0.md)
+[password-change and session-rotation result](2026-08-19-core-workflow-v1-password-session-i4-v0.md)
 passed its accepted-I3 red-first, focused, race, real-PostgreSQL, complete L4,
 pinned repository, feature-candidate CI, and main exact-SHA CI boundaries. Its
-current nine-path claim-only transition conditionally records `evidence`; that
-state becomes effective only when the exact claim revision passes repository
-CI, after which its digest-excluded receipt and project-owner review remain.
+claim-only revision
+`d2a19d8e61838785be939c77e0e1a35ac95a075e` also passed its pinned local gate
+and exact-SHA repository CI, making bounded I4 `evidence`. This digest-excluded
+receipt still requires its own exact-SHA CI and then project-owner review.
 The project owner reviewed and retained the entry V0, CORS, bounded token I1,
 bounded token I2, and bounded browser-session I3 results. The
 [2026-08-03 post-cleanup V0](2026-08-03-post-cleanup-v0.md) used the superseded
@@ -32,19 +33,18 @@ the
 [Core Workflow recovery artifact](2026-08-01-core-workflow-v1-v0.md). The
 Profile remains T1 and pre-publication; V1-V6 remain open. `CW1-G00` passed for
 the exact I4 tested source; `CW1-V1-01`, `CW1-V1-02-I1`, `CW1-V1-02-I2`, and
-`CW1-V1-02-I3` are done. I4's conditional evidence claim awaits its own CI and
-receipt, then project-owner review. The parent credential/session matrix
-remains open. Feature work must re-establish V0 after its next owned-source
-change.
+`CW1-V1-02-I3` are done. I4 is `evidence`; this receipt's exact-SHA CI and then
+project-owner review remain. The parent credential/session matrix remains
+open. Feature work must re-establish V0 after its next owned-source change.
 
-| Evidence                 | Required command or boundary                                  | Current state                                             |
-| ------------------------ | ------------------------------------------------------------- | --------------------------------------------------------- |
-| Repository quality       | Revised `make check` including non-mutating backend coverage  | Exact I4 candidate passed; claim CI/receipt/review remain |
-| Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                   |
-| gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                     |
-| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, and I4 bounded slices passed; V1/V3 incomplete    |
-| Standalone deployment    | `make deployment-smoke`                                       | CORS-scoped exact-commit result retained; V3 still open   |
-| Browser workflow         | `make browser-e2e`                                            | Harness present; current result pending                   |
+| Evidence                 | Required command or boundary                                  | Current state                                           |
+| ------------------------ | ------------------------------------------------------------- | ------------------------------------------------------- |
+| Repository quality       | Revised `make check` including non-mutating backend coverage  | Exact I4 claim passed; receipt CI/review remain         |
+| Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                 |
+| gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                   |
+| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, and I4 bounded slices passed; V1/V3 incomplete  |
+| Standalone deployment    | `make deployment-smoke`                                       | CORS-scoped exact-commit result retained; V3 still open |
+| Browser workflow         | `make browser-e2e`                                            | Harness present; current result pending                 |
 
 GitHub CI currently runs V0 only. Real PostgreSQL, deployment, differential
 oracle, gRPC promotion, and browser gates remain operator-run until durable,

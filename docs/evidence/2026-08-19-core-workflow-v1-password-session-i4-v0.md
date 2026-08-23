@@ -5,8 +5,9 @@
 - Goal: `CW1-V1-02`.
 - Increment: `CW1-V1-02-I4`.
 - Executor: Codex GPT-5.6 Sol.
-- State: conditional `evidence`; effective only after the exact claim-only
-  revision carrying this artifact passes repository CI.
+- State: `evidence`; exact-SHA repository CI passed for claim revision
+  `d2a19d8e61838785be939c77e0e1a35ac95a075e`. This digest-excluded receipt
+  still requires its own exact-SHA CI and then explicit project-owner review.
 - Result: **the bounded tested candidate passed every required local,
   real-PostgreSQL, feature-candidate CI, and main exact-SHA CI boundary**.
 - Capability Profile: `core-workflow-v1`, still T1 and pre-publication.
@@ -19,10 +20,10 @@ Profile, the rewrite, deployment, or production readiness.
 
 The artifact intentionally carries no `netbox-go-evidence-v2` marker. I4
 promotes no compatibility tier, identity-extension verification axis,
-traceability consumer, or profile state. Its conditional `evidence` state
-becomes effective only after exact-SHA CI of the claim-only attestation.
-The digest-excluded receipt and explicit project-owner review remain separate
-later boundaries.
+traceability consumer, or profile state. Exact-SHA CI of the claim-only
+attestation made I4's bounded `evidence` state effective. This digest-excluded
+receipt still requires its own exact-SHA CI before explicit project-owner
+review may begin.
 
 ## Entry and tested source
 
@@ -38,13 +39,17 @@ later boundaries.
 - Tested owned entries: 3,013.
 - Tested source-manifest output SHA-256:
   `1bbf381d2a7d1bbf23e6e0cccc4184ca4e7539d14c22f4474609cd4f8c453548`.
-- Proposed attestation source digest:
+- Claim-only attestation revision:
+  `d2a19d8e61838785be939c77e0e1a35ac95a075e` on `main`.
+- Claim attestation source digest:
   `source-v2:sha256:734ca9f417d08326d9e5c9be24b1c3aa839a03f2ea4b29b8754096c72a1cd200`.
-- Proposed attestation owned entries: 3,013.
-- Proposed source-manifest output SHA-256:
+- Claim attestation owned entries: 3,013.
+- Claim source-manifest output SHA-256:
   `21f18e149ba0b05a4b4f74caa3c53cf1ca18583e35b233bcf33bbc8a785f06d0`.
 - Complete derived source-manifest diff SHA-256:
   `ef8cb91ad2375f9c4ebfb4ecd1824e30afdcadad9ade76445101bdf7069c72c8`.
+- Exact nine-path claim mapping JSON SHA-256:
+  `612fd2d6e20fcc1feb79437e317088bf7447d551aa65facb23b9fe6b9141fc79`.
 - Go: `go1.26.0 linux/amd64`.
 - Node.js: `v24.18.0`.
 - npm: `11.16.0`.
@@ -225,6 +230,43 @@ Main exact-SHA result:
 - Conclusion: **success**; every step succeeded and no step had a non-success
   conclusion.
 
+## Claim-only attestation and receipt boundary
+
+The exact claim-only revision passed its pinned local attestation gate from
+`2026-08-23T09:08:07Z` through `2026-08-23T09:13:03Z`, exit 0. Its source
+digest remained
+`source-v2:sha256:734ca9f417d08326d9e5c9be24b1c3aa839a03f2ea4b29b8754096c72a1cd200`
+with 3,013 entries, and its complete source-manifest output retained SHA-256
+`21f18e149ba0b05a4b4f74caa3c53cf1ca18583e35b233bcf33bbc8a785f06d0`.
+
+Claim exact-SHA result:
+
+- Workflow: `repository-gate`.
+- Run:
+  [32630464292](https://github.com/jihadismail8/netbox-go/actions/runs/32630464292),
+  attempt 1.
+- Job `check`:
+  [97172358983](https://github.com/jihadismail8/netbox-go/actions/runs/32630464292/job/97172358983).
+- Branch: `main`.
+- Head SHA: `d2a19d8e61838785be939c77e0e1a35ac95a075e`.
+- Run start/completion:
+  `2026-08-23T09:14:36Z`–`2026-08-23T09:33:59Z`.
+- Job start/completion:
+  `2026-08-23T09:14:39Z`–`2026-08-23T09:33:58Z`.
+- Repository gate:
+  `2026-08-23T09:16:22Z`–`2026-08-23T09:33:56Z`.
+- Conclusion: **success**; every setup, repository, post, and completion step
+  succeeded, with no workflow non-success or cancellation.
+
+That exact-SHA result made I4's bounded `evidence` state effective. The claim
+commit durably retains the complete nine-path mapping whose canonical JSON
+SHA-256 is
+`612fd2d6e20fcc1feb79437e317088bf7447d551aa65facb23b9fe6b9141fc79`.
+This receipt changes only this artifact and the evidence ledger, both excluded
+from `source-v2`; the claim source digest, entry count, and complete manifest
+therefore remain unchanged. This receipt still requires its own exact-SHA CI,
+after which explicit project-owner review may begin.
+
 ## Gate disposition
 
 - L0–L3: passed on the exact tested digest locally and through both exact-SHA
@@ -240,10 +282,11 @@ Main exact-SHA result:
   changed.
 - L8 browser: skipped/deferred to V5; `httptest` cookie mechanics do not earn
   T4.
-- L9: the exact tested digest and candidate/main CI prerequisites passed. The
-  current claim-only attestation still requires its own local gate and exact-SHA
-  CI before conditional `evidence` becomes effective, followed by its
-  digest-excluded receipt and project-owner review.
+- L9: the exact tested digest, candidate/main CI prerequisites, claim local
+  gate, and claim exact-SHA CI passed. I4's bounded `evidence` state is
+  effective. This digest-excluded receipt still requires exact-SHA CI, followed
+  by explicit project-owner review and the separate `evidence -> done`
+  claim/receipt sequence.
 
 No skipped boundary is implied by the focused, PostgreSQL, local, or CI
 results.
@@ -270,11 +313,14 @@ seven governance files above. Every changed owned entry remains a regular
 mode-`100644` file. No entry is added, removed, renamed, retargeted,
 type-changed, or made executable.
 
-The exact post-finalization nine-path Git old/new mode, raw byte size, and
-SHA-256 mapping is generated after these self-containing evidence bytes settle
-and is retained in the independent review record. The new artifact has an
-explicit absent old side. Keeping that final-byte commitment outside the file
-whose bytes it hashes avoids a false self-referential claim.
+The exact claim nine-path Git old/new mode, raw byte size, and SHA-256 mapping
+is retained verbatim in claim revision
+`d2a19d8e61838785be939c77e0e1a35ac95a075e`'s commit message. Its canonical
+JSON SHA-256 is
+`612fd2d6e20fcc1feb79437e317088bf7447d551aa65facb23b9fe6b9141fc79`.
+The new artifact has an explicit absent old side. Keeping that final-byte
+commitment outside the file whose bytes it hashes avoids a false
+self-referential claim.
 
 Human review must confirm that the complete manifests, derived source diff,
 and exact nine-path mapping change no behavior, route, schema, migration,
@@ -287,7 +333,10 @@ extension-axis status, tier, profile state, or parent-goal state.
 - The tested source digest and complete manifest remained unchanged through
   focused, real-PostgreSQL, full L4, pinned local, feature-candidate CI, and
   main exact-SHA CI boundaries.
-- The proposed claim changes only the nine paths above. The source-v2 diff is
+- The claim attestation source digest, 3,013-entry count, and complete manifest
+  remained unchanged through its pinned local gate, commit, push, and exact-SHA
+  CI.
+- The claim changes only the nine paths above. The source-v2 diff is
   exactly the seven governance files; the evidence artifact and ledger are
   intentionally source-digest-excluded.
 - Credential-bearing values were redacted at source. No password, verifier,
@@ -295,7 +344,8 @@ extension-axis status, tier, profile state, or parent-goal state.
   Cookie header, DSN, or complete configuration is retained here.
 - Go formatting is unaffected. Scoped Prettier, Markdown links, trailing
   whitespace, diff, mode/type, source-digest, source-manifest, and high-risk
-  secret checks must pass before the attestation commit.
+  secret checks passed for the exact claim commit and must pass again on the
+  exact receipt bytes before the receipt commit.
 - The current frontend dependency audit still reports three high-severity
   advisories. They predate I4 and were neither changed nor waived.
 
@@ -42674,7 +42724,7 @@ The following `CW1-V1-02` work remains open and unclaimed:
   production evidence.
 
 The parent `CW1-V1-02`, V1, T2/T3/T4, Capability Profile publication, full
-rewrite, deployment, and production-readiness claims all remain open. I4
-becomes `evidence` only after the exact claim-only revision passes CI; it is
-not `done` until later project-owner acceptance and its separate
-`evidence -> done` claim/receipt sequence.
+rewrite, deployment, and production-readiness claims all remain open. I4 is
+`evidence` after the exact claim-only revision passed CI. It is not `done`;
+this receipt's exact-SHA CI and later project-owner acceptance remain before
+the separate `evidence -> done` claim/receipt sequence.
