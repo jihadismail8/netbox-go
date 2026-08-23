@@ -35,7 +35,9 @@ for (const relativePath of profile.resource_metadata) {
   for (const resource of document.resources) {
     const resourceKey = `${document.module}.${resource.name}`;
     metadata.set(resourceKey, resource);
-    for (const [field, choice] of Object.entries(resource.choice_fields ?? {})) {
+    for (const [field, choice] of Object.entries(
+      resource.choice_fields ?? {},
+    )) {
       choiceMetadata.set(`${resourceKey}.${field}`, choice);
     }
   }
@@ -92,7 +94,10 @@ const relationFields = new Set([
   "site",
   "vrf",
 ]);
-const decimalFields = new Set(["dcim.DeviceType.u_height", "dcim.Device.position"]);
+const decimalFields = new Set([
+  "dcim.DeviceType.u_height",
+  "dcim.Device.position",
+]);
 const nullableDecimalFields = new Set(["dcim.Device.position"]);
 const nullableIntegerFields = new Set([
   "dcim.Interface.mtu",
@@ -142,9 +147,10 @@ function fieldSchema(resourceKey, field, response) {
   const qualifiedField = `${resourceKey}.${field}`;
   const choiceField = choiceMetadata.get(qualifiedField);
   if (choiceField) {
-    const scalar = choiceField.value_type === "integer"
-      ? { type: "integer", format: "int64" }
-      : { type: "string" };
+    const scalar =
+      choiceField.value_type === "integer"
+        ? { type: "integer", format: "int64" }
+        : { type: "string" };
     if (!response) {
       return choiceField.nullable
         ? { ...scalar, type: [scalar.type, "null"] }
@@ -164,6 +170,43 @@ function fieldSchema(resourceKey, field, response) {
       : choice;
   }
   return scalarFieldSchema(resourceKey, field, response);
+}
+
+function withNullability(schema, nullable) {
+  if (Array.isArray(schema.oneOf)) {
+    const nonNullSchemas = schema.oneOf.filter(
+      (candidate) => candidate.type !== "null",
+    );
+    return {
+      ...schema,
+      oneOf: nullable ? [...nonNullSchemas, { type: "null" }] : nonNullSchemas,
+    };
+  }
+  const declaredTypes = Array.isArray(schema.type)
+    ? schema.type
+    : [schema.type];
+  const nonNullTypes = declaredTypes.filter(
+    (candidate) => candidate !== undefined && candidate !== "null",
+  );
+  const types = nullable ? [...nonNullTypes, "null"] : nonNullTypes;
+  return {
+    ...schema,
+    type: types.length === 1 ? types[0] : types,
+  };
+}
+
+function contractedFieldSchema({ resourceKey, field, response, contract }) {
+  const schema = withNullability(
+    fieldSchema(resourceKey, field, response),
+    contract.nullable_fields.includes(field),
+  );
+  if (response) return schema;
+
+  const types = Array.isArray(schema.type) ? schema.type : [schema.type];
+  if (types.includes("string") && !contract.blank_fields.includes(field)) {
+    return { ...schema, minLength: 1 };
+  }
+  return schema;
 }
 
 function operationID(verb, name) {
@@ -199,25 +242,66 @@ for (const profileResource of profile.resources) {
   const key = `${profileResource.module}.${profileResource.name}`;
   const resource = metadata.get(key);
   const writeName = `${profileResource.name}Write`;
+  const operationSchemaNames = resource.field_contracts
+    ? {
+        create: `${profileResource.name}Create`,
+        replace: `${profileResource.name}Replace`,
+        update: `${profileResource.name}Update`,
+      }
+    : { create: writeName, replace: writeName, update: writeName };
   const listName = `${profileResource.name}List`;
   const responseFields = [
     ...new Set([...resource.writable_fields, ...resource.response_only_fields]),
   ];
-  schemas[writeName] = {
-    type: "object",
-    additionalProperties: false,
-    properties: Object.fromEntries(
-      resource.writable_fields.map((field) => [
-        field,
-        fieldSchema(key, field, false),
-      ]),
-    ),
-  };
+  if (resource.field_contracts) {
+    for (const operation of ["create", "replace", "update"]) {
+      const contract = resource.field_contracts[operation];
+      schemas[operationSchemaNames[operation]] = {
+        type: "object",
+        additionalProperties: false,
+        ...(contract.required_fields.length > 0
+          ? { required: contract.required_fields }
+          : {}),
+        properties: Object.fromEntries(
+          resource.writable_fields.map((field) => [
+            field,
+            contractedFieldSchema({
+              resourceKey: key,
+              field,
+              response: false,
+              contract,
+            }),
+          ]),
+        ),
+      };
+    }
+  } else {
+    schemas[writeName] = {
+      type: "object",
+      additionalProperties: false,
+      properties: Object.fromEntries(
+        resource.writable_fields.map((field) => [
+          field,
+          fieldSchema(key, field, false),
+        ]),
+      ),
+    };
+  }
   schemas[profileResource.name] = {
     type: "object",
     additionalProperties: false,
     properties: Object.fromEntries(
-      responseFields.map((field) => [field, fieldSchema(key, field, true)]),
+      responseFields.map((field) => [
+        field,
+        resource.field_contracts
+          ? contractedFieldSchema({
+              resourceKey: key,
+              field,
+              response: true,
+              contract: resource.field_contracts.response,
+            })
+          : fieldSchema(key, field, true),
+      ]),
     ),
   };
   schemas[listName] = {
@@ -269,7 +353,9 @@ for (const profileResource of profile.resources) {
         required: true,
         content: {
           "application/json": {
-            schema: { $ref: `#/components/schemas/${writeName}` },
+            schema: {
+              $ref: `#/components/schemas/${operationSchemaNames.create}`,
+            },
           },
         },
       },
@@ -318,7 +404,9 @@ for (const profileResource of profile.resources) {
         required: true,
         content: {
           "application/json": {
-            schema: { $ref: `#/components/schemas/${writeName}` },
+            schema: {
+              $ref: `#/components/schemas/${operationSchemaNames.replace}`,
+            },
           },
         },
       },
@@ -341,7 +429,9 @@ for (const profileResource of profile.resources) {
         required: true,
         content: {
           "application/json": {
-            schema: { $ref: `#/components/schemas/${writeName}` },
+            schema: {
+              $ref: `#/components/schemas/${operationSchemaNames.update}`,
+            },
           },
         },
       },

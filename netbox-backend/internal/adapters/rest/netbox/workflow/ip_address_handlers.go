@@ -5,13 +5,16 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"math"
+	"math/big"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"github.com/gin-gonic/gin"
 
@@ -357,6 +360,10 @@ func decodeIPAddressInput(c *gin.Context) (decodedIPAddressInput, error) {
 		return decodedIPAddressInput{},
 			shared.Invalid("non_field_errors", "Expected a JSON object.")
 	}
+	if !utf8.Valid(raw) {
+		return decodedIPAddressInput{},
+			shared.Invalid("non_field_errors", "Expected a JSON object.")
+	}
 	trimmed := bytes.TrimSpace(raw)
 	if len(trimmed) == 0 || trimmed[0] != '{' {
 		return decodedIPAddressInput{},
@@ -381,7 +388,7 @@ func decodeIPAddressInput(c *gin.Context) (decodedIPAddressInput, error) {
 			"non_field_errors", "Request body must contain one JSON object.")
 
 	}
-	address, err := decodeVRFStringField("address", input.Address)
+	address, err := decodeIPAddressAddressField(input.Address)
 	if err != nil {
 		return decodedIPAddressInput{}, err
 	}
@@ -389,23 +396,23 @@ func decodeIPAddressInput(c *gin.Context) (decodedIPAddressInput, error) {
 	if err != nil {
 		return decodedIPAddressInput{}, err
 	}
-	status, err := decodeVRFStringField("status", input.Status)
+	status, err := decodeIPAddressChoiceField("status", input.Status)
 	if err != nil {
 		return decodedIPAddressInput{}, err
 	}
-	role, err := decodeVRFStringField("role", input.Role)
+	role, err := decodeIPAddressChoiceField("role", input.Role)
 	if err != nil {
 		return decodedIPAddressInput{}, err
 	}
-	dnsName, err := decodeVRFStringField("dns_name", input.DNSName)
+	dnsName, err := decodeIPAddressCharField("dns_name", input.DNSName, false)
 	if err != nil {
 		return decodedIPAddressInput{}, err
 	}
-	description, err := decodeVRFStringField("description", input.Description)
+	description, err := decodeIPAddressCharField("description", input.Description, true)
 	if err != nil {
 		return decodedIPAddressInput{}, err
 	}
-	comments, err := decodeVRFStringField("comments", input.Comments)
+	comments, err := decodeIPAddressCharField("comments", input.Comments, true)
 	if err != nil {
 		return decodedIPAddressInput{}, err
 	}
@@ -427,6 +434,229 @@ func decodeIPAddressInput(c *gin.Context) (decodedIPAddressInput, error) {
 		assignedObjectType: assignedObjectType,
 		assignedObjectID:   assignedObjectID,
 	}, nil
+}
+
+func decodeIPAddressAddressField(
+	raw json.RawMessage,
+) (applicationipam.Field[string], error) {
+	if len(raw) == 0 {
+		return applicationipam.OmittedField[string](), nil
+	}
+	if bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+		return applicationipam.NullField[string](), nil
+	}
+	var text string
+	if err := json.Unmarshal(raw, &text); err == nil {
+		return applicationipam.FieldValue(text), nil
+	}
+	decoder := json.NewDecoder(bytes.NewReader(raw))
+	decoder.UseNumber()
+	var value any
+	if err := decoder.Decode(&value); err != nil {
+		return applicationipam.Field[string]{}, shared.Invalid(
+			"address", "Must be a string.",
+		)
+	}
+	typeName := ""
+	switch typed := value.(type) {
+	case bool:
+		typeName = "bool"
+	case json.Number:
+		if strings.ContainsAny(typed.String(), ".eE") {
+			typeName = "float"
+		} else {
+			typeName = "int"
+		}
+	case map[string]any:
+		typeName = "dict"
+	case []any:
+		typeName = "list"
+	}
+	if typeName == "" {
+		return applicationipam.Field[string]{}, shared.Invalid(
+			"address", "Must be a string.",
+		)
+	}
+	return applicationipam.Field[string]{}, shared.Invalid(
+		"address",
+		fmt.Sprintf("unexpected type <class '%s'> for addr arg", typeName),
+	)
+}
+
+func decodeIPAddressChoiceField(
+	name string,
+	raw json.RawMessage,
+) (applicationipam.Field[string], error) {
+	if len(raw) == 0 {
+		return applicationipam.OmittedField[string](), nil
+	}
+	if bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+		return applicationipam.NullField[string](), nil
+	}
+	var text string
+	if err := json.Unmarshal(raw, &text); err == nil {
+		return applicationipam.FieldValue(text), nil
+	}
+	decoder := json.NewDecoder(bytes.NewReader(raw))
+	decoder.UseNumber()
+	var value any
+	if err := decoder.Decode(&value); err != nil {
+		return applicationipam.Field[string]{}, shared.Invalid(name, "Must be a string.")
+	}
+	switch typed := value.(type) {
+	case map[string]any, []any:
+		return applicationipam.Field[string]{}, shared.Invalid(
+			name,
+			`Value must be passed directly (e.g. "foo": 123); do not use a dictionary or list.`,
+		)
+	case bool:
+		return applicationipam.FieldValue(strconv.FormatBool(typed)), nil
+	case json.Number:
+		return applicationipam.FieldValue(pythonJSONNumberString(typed)), nil
+	default:
+		return applicationipam.Field[string]{}, shared.Invalid(name, "Must be a string.")
+	}
+}
+
+func pythonJSONNumberString(value json.Number) string {
+	raw := value.String()
+	if !strings.ContainsAny(raw, ".eE") {
+		if integer, ok := new(big.Int).SetString(raw, 10); ok {
+			return integer.String()
+		}
+		return raw
+	}
+	number, err := strconv.ParseFloat(raw, 64)
+	if err != nil && !errors.Is(err, strconv.ErrRange) {
+		return raw
+	}
+	if math.IsInf(number, 1) {
+		return "inf"
+	}
+	if math.IsInf(number, -1) {
+		return "-inf"
+	}
+	scientific := strconv.FormatFloat(number, 'e', -1, 64)
+	exponentStart := strings.LastIndexByte(scientific, 'e') + 1
+	exponent, exponentErr := strconv.Atoi(scientific[exponentStart:])
+	if exponentErr != nil || exponent < -4 || exponent >= 16 {
+		return scientific
+	}
+	rendered := strconv.FormatFloat(number, 'f', -1, 64)
+	if !strings.ContainsRune(rendered, '.') {
+		return rendered + ".0"
+	}
+	return rendered
+}
+
+func decodeIPAddressCharField(
+	name string,
+	raw json.RawMessage,
+	rejectSurrogate bool,
+) (applicationipam.Field[string], error) {
+	if len(raw) == 0 {
+		return applicationipam.OmittedField[string](), nil
+	}
+	if bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+		return applicationipam.NullField[string](), nil
+	}
+	var text string
+	if err := json.Unmarshal(raw, &text); err == nil {
+		if codePoint, invalid := firstUnpairedJSONSurrogate(raw); invalid {
+			if name == "dns_name" || rejectSurrogate {
+				return applicationipam.Field[string]{}, shared.NewValidationError(
+					ipAddressSurrogateViolations(name, text, codePoint)...,
+				)
+			}
+		}
+		return applicationipam.FieldValue(text), nil
+	}
+	decoder := json.NewDecoder(bytes.NewReader(raw))
+	decoder.UseNumber()
+	var value any
+	if err := decoder.Decode(&value); err == nil {
+		if number, ok := value.(json.Number); ok {
+			return applicationipam.FieldValue(pythonJSONNumberString(number)), nil
+		}
+	}
+	return applicationipam.Field[string]{}, shared.Invalid(name, "Not a valid string.")
+}
+
+func ipAddressSurrogateViolations(
+	name string,
+	value string,
+	codePoint uint16,
+) []shared.FieldViolation {
+	trimmed := strings.TrimSpace(value)
+	violations := make([]shared.FieldViolation, 0, 4)
+	if name == "dns_name" {
+		violations = append(violations, shared.FieldViolation{
+			Field: name, Reason: "invalid",
+			Description: "Only alphanumeric characters, asterisks, hyphens, periods, and underscores are allowed in DNS names",
+		})
+	}
+	maximum := 0
+	switch name {
+	case "dns_name":
+		maximum = domainipam.IPAddressDNSNameMaxLength
+	case "description":
+		maximum = domainipam.IPAddressDescriptionMaxLength
+	}
+	if maximum > 0 && utf8.RuneCountInString(trimmed) > maximum {
+		violations = append(violations, shared.FieldViolation{
+			Field: name, Reason: "max_length",
+			Description: fmt.Sprintf(
+				"Ensure this field has no more than %d characters.", maximum,
+			),
+		})
+	}
+	if strings.ContainsRune(trimmed, '\x00') {
+		violations = append(violations, shared.FieldViolation{
+			Field: name, Reason: "invalid",
+			Description: "Null characters are not allowed.",
+		})
+	}
+	return append(violations, shared.FieldViolation{
+		Field: name, Reason: "invalid",
+		Description: fmt.Sprintf(
+			"Surrogate characters are not allowed: U+%04X.", codePoint,
+		),
+	})
+}
+
+func firstUnpairedJSONSurrogate(raw json.RawMessage) (uint16, bool) {
+	for index := 1; index+5 < len(raw); index++ {
+		if raw[index] != '\\' || raw[index+1] != 'u' {
+			continue
+		}
+		backslashes := 1
+		for previous := index - 1; previous > 0 && raw[previous] == '\\'; previous-- {
+			backslashes++
+		}
+		if backslashes%2 == 0 {
+			continue
+		}
+		parsed, err := strconv.ParseUint(string(raw[index+2:index+6]), 16, 16)
+		if err != nil {
+			return 0, false
+		}
+		codePoint := uint16(parsed)
+		if codePoint >= 0xD800 && codePoint <= 0xDBFF {
+			if index+11 < len(raw) && raw[index+6] == '\\' && raw[index+7] == 'u' {
+				low, lowErr := strconv.ParseUint(string(raw[index+8:index+12]), 16, 16)
+				if lowErr == nil && low >= 0xDC00 && low <= 0xDFFF {
+					index += 11
+					continue
+				}
+			}
+			return codePoint, true
+		}
+		if codePoint >= 0xDC00 && codePoint <= 0xDFFF {
+			return codePoint, true
+		}
+		index += 5
+	}
+	return 0, false
 }
 
 func (input decodedIPAddressInput) createCommand() applicationipam.CreateIPAddressCommand {

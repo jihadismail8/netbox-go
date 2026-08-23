@@ -26,18 +26,121 @@ const identity = JSON.parse(
 );
 const failures = [];
 
+const contractedResourceShapes = {
+  IPAddress: {
+    request: {
+      address: { type: "string" },
+      vrf: { type: "integer", format: "int64" },
+      dns_name: { type: "string" },
+      description: { type: "string" },
+      comments: { type: "string" },
+      assigned_object_type: { type: "string" },
+      assigned_object_id: { type: "integer", format: "int64" },
+    },
+    response: {
+      address: { type: "string" },
+      dns_name: { type: "string" },
+      description: { type: "string" },
+      comments: { type: "string" },
+      assigned_object_type: { type: "string" },
+      assigned_object_id: { type: "integer", format: "int64" },
+      id: { type: "integer", format: "int64" },
+      url: { type: "string", format: "uri" },
+      display: { type: "string" },
+      created: { type: "string", format: "date-time" },
+      last_updated: { type: "string", format: "date-time" },
+    },
+    responseReferences: {
+      vrf: "#/components/schemas/ObjectReference",
+      assigned_object: "#/components/schemas/ObjectReference",
+    },
+  },
+};
+
+const resourceMetadata = {};
 const choiceFields = {};
 for (const relativePath of profile.resource_metadata) {
   const document = JSON.parse(
-    fs.readFileSync(path.resolve(path.dirname(profilePath), relativePath), "utf8"),
+    fs.readFileSync(
+      path.resolve(path.dirname(profilePath), relativePath),
+      "utf8",
+    ),
   );
   for (const resource of document.resources) {
+    resourceMetadata[resource.name] = resource;
     choiceFields[resource.name] = resource.choice_fields ?? {};
   }
 }
 
 function assert(condition, message) {
   if (!condition) failures.push(message);
+}
+
+function schemaNullable(schema) {
+  return (
+    schema?.type === "null" ||
+    schema?.type?.includes?.("null") ||
+    schema?.oneOf?.some?.((candidate) => candidate.type === "null") === true
+  );
+}
+
+function stringValuedField(resource, field) {
+  const choice = resource.choice_fields?.[field];
+  if (choice) return choice.value_type === "string";
+  if ((resource.relationships ?? []).includes(field)) return false;
+  return !field.endsWith("_id");
+}
+
+function exactMembers(actual, expected) {
+  return (
+    JSON.stringify([...(actual ?? [])].sort()) ===
+    JSON.stringify([...expected].sort())
+  );
+}
+
+function nonNullTypes(schema) {
+  const declaredTypes = Array.isArray(schema?.type)
+    ? schema.type
+    : schema?.type === undefined
+      ? []
+      : [schema.type];
+  return declaredTypes.filter((type) => type !== "null");
+}
+
+function assertScalarShape(schema, expected, label) {
+  assert(
+    exactMembers(nonNullTypes(schema), [expected.type]),
+    `${label} base type must be ${expected.type}`,
+  );
+  assert(
+    schema?.format === expected.format,
+    `${label} format must be ${expected.format ?? "absent"}`,
+  );
+}
+
+function assertReferenceShape(schema, expectedReference, label) {
+  const concreteVariants = (schema?.oneOf ?? []).filter(
+    (candidate) => candidate.type !== "null",
+  );
+  assert(
+    concreteVariants.length === 1 &&
+      concreteVariants[0]?.$ref === expectedReference,
+    `${label} must reference ${expectedReference}`,
+  );
+}
+
+function requestSchemaReference(resource, operation) {
+  const operationDetails = {
+    create: { method: "post", path: resource.rest_path },
+    replace: { method: "put", path: `${resource.rest_path}{id}/` },
+    update: { method: "patch", path: `${resource.rest_path}{id}/` },
+  }[operation];
+  return {
+    ...operationDetails,
+    reference:
+      spec.paths?.[operationDetails.path]?.[operationDetails.method]
+        ?.requestBody?.content?.["application/json"]?.schema?.$ref,
+  };
 }
 
 assert(spec.openapi === "3.1.0", "OpenAPI version must be 3.1.0");
@@ -65,10 +168,37 @@ for (const resource of profile.resources) {
     spec.components.schemas[resource.name],
     `missing response schema ${resource.name}`,
   );
-  assert(
-    spec.components.schemas[`${resource.name}Write`],
-    `missing write schema ${resource.name}Write`,
-  );
+  const metadata = resourceMetadata[resource.name];
+  const requestSchemaNames = metadata?.field_contracts
+    ? {
+        create: `${resource.name}Create`,
+        replace: `${resource.name}Replace`,
+        update: `${resource.name}Update`,
+      }
+    : {
+        create: `${resource.name}Write`,
+        replace: `${resource.name}Write`,
+        update: `${resource.name}Write`,
+      };
+  for (const operation of ["create", "replace", "update"]) {
+    const schemaName = requestSchemaNames[operation];
+    assert(
+      spec.components.schemas[schemaName],
+      `missing request schema ${schemaName}`,
+    );
+    const request = requestSchemaReference(resource, operation);
+    const expectedReference = `#/components/schemas/${schemaName}`;
+    assert(
+      request.reference === expectedReference,
+      `${request.method.toUpperCase()} ${request.path} must reference ${expectedReference}`,
+    );
+  }
+  if (metadata?.field_contracts) {
+    assert(
+      spec.components.schemas[`${resource.name}Write`] === undefined,
+      `${resource.name} must not retain a conflated shared write schema`,
+    );
+  }
 }
 for (const operation of identity.rest_operations) {
   const methods = expectedPaths.get(operation.path) ?? new Set();
@@ -82,44 +212,231 @@ function choiceObject(schema) {
 }
 
 for (const [resource, fields] of Object.entries(choiceFields)) {
+  const metadataDocument = resourceMetadata[resource];
+  const requestSchemaNames = metadataDocument.field_contracts
+    ? [`${resource}Create`, `${resource}Replace`, `${resource}Update`]
+    : [`${resource}Write`];
   for (const [field, metadata] of Object.entries(fields)) {
-    const responseSchema = spec.components.schemas[resource]?.properties?.[field];
+    const responseSchema =
+      spec.components.schemas[resource]?.properties?.[field];
     const responseChoice = choiceObject(responseSchema);
-    assert(responseChoice, `${resource}.${field} response must be a choice object (or nullable choice object)`);
+    assert(
+      responseChoice,
+      `${resource}.${field} response must be a choice object (or nullable choice object)`,
+    );
     assert(
       responseChoice?.additionalProperties === false,
       `${resource}.${field} choice response must reject undeclared members`,
     );
     assert(
-      JSON.stringify([...(responseChoice?.required ?? [])].sort()) === JSON.stringify(["label", "value"]),
+      JSON.stringify([...(responseChoice?.required ?? [])].sort()) ===
+        JSON.stringify(["label", "value"]),
       `${resource}.${field} choice response must require value and label`,
     );
-    const writeField = spec.components.schemas[`${resource}Write`]?.properties?.[field];
-    if (writeField) {
-      assert(!choiceObject(writeField), `${resource}Write.${field} must remain scalar`);
+    const expectedChoiceShape =
+      metadata.value_type === "integer"
+        ? { type: "integer", format: "int64" }
+        : { type: "string" };
+    assertScalarShape(
+      responseChoice?.properties?.value,
+      expectedChoiceShape,
+      `${resource}.${field}.value`,
+    );
+    assertScalarShape(
+      responseChoice?.properties?.label,
+      { type: "string" },
+      `${resource}.${field}.label`,
+    );
+    for (const requestSchemaName of requestSchemaNames) {
+      const writeField =
+        spec.components.schemas[requestSchemaName]?.properties?.[field];
+      if (!writeField) continue;
       assert(
-        Array.isArray(writeField.type) === metadata.nullable,
-        `${resource}Write.${field} nullability must match resource metadata`,
+        !choiceObject(writeField),
+        `${requestSchemaName}.${field} must remain scalar`,
+      );
+      const operation = requestSchemaName.endsWith("Create")
+        ? "create"
+        : requestSchemaName.endsWith("Replace")
+          ? "replace"
+          : requestSchemaName.endsWith("Update")
+            ? "update"
+            : null;
+      const expectedNullable = operation
+        ? metadataDocument.field_contracts[operation].nullable_fields.includes(
+            field,
+          )
+        : metadata.nullable;
+      assert(
+        schemaNullable(writeField) === expectedNullable,
+        `${requestSchemaName}.${field} nullability must match resource metadata`,
+      );
+      assertScalarShape(
+        writeField,
+        expectedChoiceShape,
+        `${requestSchemaName}.${field}`,
       );
     }
     assert(
-      Boolean(responseSchema?.oneOf?.some?.((candidate) => candidate.type === "null")) === metadata.nullable,
+      schemaNullable(responseSchema) ===
+        (metadataDocument.field_contracts
+          ? metadataDocument.field_contracts.response.nullable_fields.includes(
+              field,
+            )
+          : metadata.nullable),
       `${resource}.${field} response nullability must match resource metadata`,
     );
   }
 }
 assert(
-  Object.values(choiceFields).reduce((total, fields) => total + Object.keys(fields).length, 0) === 19,
+  Object.values(choiceFields).reduce(
+    (total, fields) => total + Object.keys(fields).length,
+    0,
+  ) === 19,
   "resource metadata must declare the 19 pinned first-profile choice fields",
 );
 
+for (const resource of profile.resources) {
+  const metadata = resourceMetadata[resource.name];
+  if (!metadata?.field_contracts) continue;
+
+  const resourceShapes = contractedResourceShapes[resource.name];
+  assert(
+    resourceShapes,
+    `${resource.name} must have independently pinned OpenAPI field shapes`,
+  );
+
+  const responseFields = [
+    ...new Set([...metadata.writable_fields, ...metadata.response_only_fields]),
+  ];
+  const responseSchema = spec.components.schemas[resource.name];
+  assert(
+    responseSchema?.additionalProperties === false,
+    `${resource.name} response must reject undeclared members`,
+  );
+  assert(
+    exactMembers(Object.keys(responseSchema?.properties ?? {}), responseFields),
+    `${resource.name} response fields must match resource metadata`,
+  );
+  const responseChoiceFields = new Set(
+    Object.keys(metadata.choice_fields ?? {}),
+  );
+  const responseReferenceFields = new Set(
+    Object.keys(resourceShapes?.responseReferences ?? {}),
+  );
+  const scalarResponseFields = responseFields.filter(
+    (field) =>
+      !responseChoiceFields.has(field) && !responseReferenceFields.has(field),
+  );
+  assert(
+    exactMembers(
+      Object.keys(resourceShapes?.response ?? {}),
+      scalarResponseFields,
+    ),
+    `${resource.name} response scalar shape pins must cover every non-choice field`,
+  );
+  for (const field of responseFields) {
+    const fieldSchema = responseSchema?.properties?.[field];
+    const expectedNullable =
+      metadata.field_contracts.response.nullable_fields.includes(field);
+    assert(
+      schemaNullable(fieldSchema) === expectedNullable,
+      `${resource.name}.${field} response nullability must match field_contracts.response`,
+    );
+    const expectedScalarShape = resourceShapes?.response?.[field];
+    if (expectedScalarShape) {
+      assertScalarShape(
+        fieldSchema,
+        expectedScalarShape,
+        `${resource.name}.${field}`,
+      );
+    }
+    const expectedReference = resourceShapes?.responseReferences?.[field];
+    if (expectedReference) {
+      assertReferenceShape(
+        fieldSchema,
+        expectedReference,
+        `${resource.name}.${field}`,
+      );
+    }
+  }
+
+  const requestChoiceFields = new Set(
+    Object.keys(metadata.choice_fields ?? {}).filter((field) =>
+      metadata.writable_fields.includes(field),
+    ),
+  );
+  const scalarRequestFields = metadata.writable_fields.filter(
+    (field) => !requestChoiceFields.has(field),
+  );
+  assert(
+    exactMembers(
+      Object.keys(resourceShapes?.request ?? {}),
+      scalarRequestFields,
+    ),
+    `${resource.name} request scalar shape pins must cover every non-choice field`,
+  );
+
+  for (const operation of ["create", "replace", "update"]) {
+    const schemaName = `${resource.name}${operation[0].toUpperCase()}${operation.slice(1)}`;
+    const requestSchema = spec.components.schemas[schemaName];
+    const contract = metadata.field_contracts[operation];
+    assert(
+      requestSchema?.additionalProperties === false,
+      `${schemaName} must reject undeclared members`,
+    );
+    assert(
+      exactMembers(
+        Object.keys(requestSchema?.properties ?? {}),
+        metadata.writable_fields,
+      ),
+      `${schemaName} fields must match writable_fields`,
+    );
+    assert(
+      exactMembers(requestSchema?.required, contract.required_fields),
+      `${schemaName} required fields must match field_contracts.${operation}`,
+    );
+    for (const field of metadata.writable_fields) {
+      const fieldSchema = requestSchema?.properties?.[field];
+      const expectedNullable = contract.nullable_fields.includes(field);
+      assert(
+        schemaNullable(fieldSchema) === expectedNullable,
+        `${schemaName}.${field} nullability must match field_contracts.${operation}`,
+      );
+      const expectedScalarShape = resourceShapes?.request?.[field];
+      if (expectedScalarShape) {
+        assertScalarShape(
+          fieldSchema,
+          expectedScalarShape,
+          `${schemaName}.${field}`,
+        );
+      }
+      if (stringValuedField(metadata, field)) {
+        const expectedBlank = contract.blank_fields.includes(field);
+        const minLength = fieldSchema?.minLength;
+        assert(
+          expectedBlank
+            ? minLength === undefined || minLength === 0
+            : minLength === 1,
+          `${schemaName}.${field} blankability must match field_contracts.${operation}`,
+        );
+      }
+    }
+  }
+}
+
 assert(
-  spec.components.schemas.IPAddress?.properties?.assigned_object_id?.type?.includes?.("integer") ||
-    spec.components.schemas.IPAddress?.properties?.assigned_object_id?.type === "integer",
+  spec.components.schemas.IPAddress?.properties?.assigned_object_id?.type?.includes?.(
+    "integer",
+  ) ||
+    spec.components.schemas.IPAddress?.properties?.assigned_object_id?.type ===
+      "integer",
   "IPAddress.assigned_object_id must remain an integer identifier, not an object reference",
 );
 assert(
-  choiceObject(spec.components.schemas.IPAddress?.properties?.assigned_object) === undefined &&
+  choiceObject(
+    spec.components.schemas.IPAddress?.properties?.assigned_object,
+  ) === undefined &&
     spec.components.schemas.IPAddress?.properties?.assigned_object?.oneOf?.some?.(
       (candidate) => candidate.$ref === "#/components/schemas/ObjectReference",
     ),

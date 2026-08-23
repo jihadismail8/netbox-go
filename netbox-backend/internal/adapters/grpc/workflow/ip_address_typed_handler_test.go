@@ -8,6 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
+	"google.golang.org/protobuf/types/known/wrapperspb"
 
 	ipamv1 "netbox-go/gen/go/netbox/ipam/v1"
 	typesv1 "netbox-go/gen/go/netbox/types/v1"
@@ -54,12 +55,163 @@ func TestTypedIPAddressListAndUpdatePreservePresence(t *testing.T) {
 	assert.Equal(t, applicationipam.FieldNull, command.AssignedObjectID.State())
 	assert.Equal(t, applicationipam.FieldOmitted, command.Address.State())
 
-	_, err = typedIPAddressUpdateCommand(
+	command, err = typedIPAddressUpdateCommand(
 		17,
 		&ipamv1.IPAddressInput{},
 		&fieldmaskpb.FieldMask{Paths: []string{"address"}},
 	)
-	require.Error(t, err)
+	require.NoError(t, err)
+	assert.Equal(t, applicationipam.FieldNull, command.Address.State())
+}
+
+func TestIPAddressGRPCScalarPresenceMatrix(t *testing.T) {
+	type scalarCase struct {
+		name   string
+		input  *ipamv1.IPAddressInput
+		mask   *fieldmaskpb.FieldMask
+		state  applicationipam.FieldState
+		values map[string]string
+	}
+	withoutNull := []scalarCase{
+		{
+			name:  "omitted",
+			input: &ipamv1.IPAddressInput{},
+			state: applicationipam.FieldOmitted,
+		},
+		{
+			name:  "blank",
+			input: grpcIPAddressScalarInput("", "", "", "", "", ""),
+			state: applicationipam.FieldPresent,
+			values: map[string]string{
+				"address": "", "status": "", "role": "", "dns_name": "",
+				"description": "", "comments": "",
+			},
+		},
+		{
+			name: "concrete raw values",
+			input: grpcIPAddressScalarInput(
+				"192.0.2.17", " reserved ", " loopback ", " EDGE.EXAMPLE ",
+				" description ", " comments ",
+			),
+			state: applicationipam.FieldPresent,
+			values: map[string]string{
+				"address": "192.0.2.17", "status": " reserved ",
+				"role": " loopback ", "dns_name": " EDGE.EXAMPLE ",
+				"description": " description ", "comments": " comments ",
+			},
+		},
+		{
+			name: "baseline-sensitive raw values",
+			input: grpcIPAddressScalarInput(
+				"192.0.2.17/255.255.255.0", "true", "001", "123",
+				"contains\x00null", "contains\x00null",
+			),
+			state: applicationipam.FieldPresent,
+			values: map[string]string{
+				"address": "192.0.2.17/255.255.255.0", "status": "true",
+				"role": "001", "dns_name": "123",
+				"description": "contains\x00null", "comments": "contains\x00null",
+			},
+		},
+	}
+
+	for _, test := range withoutNull {
+		t.Run("create/"+test.name, func(t *testing.T) {
+			command := typedIPAddressCreateCommand(test.input)
+			assertIPAddressGRPCScalarFields(
+				t, grpcIPAddressCreateScalarFields(command), test.state, test.values,
+			)
+		})
+		t.Run("replace/"+test.name, func(t *testing.T) {
+			command := typedIPAddressReplaceCommand(17, test.input)
+			assertIPAddressGRPCScalarFields(
+				t,
+				grpcIPAddressCreateScalarFields(command.CreateIPAddressCommand),
+				test.state,
+				test.values,
+			)
+		})
+	}
+
+	updateCases := append(withoutNull, scalarCase{
+		name:  "explicit null",
+		input: &ipamv1.IPAddressInput{},
+		mask: &fieldmaskpb.FieldMask{Paths: []string{
+			"address", "status", "role", "dns_name", "description", "comments",
+		}},
+		state: applicationipam.FieldNull,
+	})
+	for _, test := range updateCases {
+		t.Run("update/"+test.name, func(t *testing.T) {
+			command, err := typedIPAddressUpdateCommand(17, test.input, test.mask)
+			require.NoError(t, err)
+			assertIPAddressGRPCScalarFields(
+				t, grpcIPAddressUpdateScalarFields(command), test.state, test.values,
+			)
+		})
+	}
+
+	t.Run("response role nullability", func(t *testing.T) {
+		assert.Nil(t, typedIPAddressRole(domainipam.NullIPAddressRole()))
+		assert.Nil(t, typedIPAddressRole(domainipam.NonNullIPAddressRole("")))
+		role := typedIPAddressRole(
+			domainipam.NonNullIPAddressRole(domainipam.IPAddressRoleLoopback),
+		)
+		require.NotNil(t, role)
+		assert.Equal(t, domainipam.IPAddressRoleLoopback.String(), role.Value)
+	})
+}
+
+func grpcIPAddressCreateScalarFields(
+	command applicationipam.CreateIPAddressCommand,
+) map[string]applicationipam.Field[string] {
+	return map[string]applicationipam.Field[string]{
+		"address": command.Address, "status": command.Status,
+		"role": command.Role, "dns_name": command.DNSName,
+		"description": command.Description, "comments": command.Comments,
+	}
+}
+
+func grpcIPAddressUpdateScalarFields(
+	command applicationipam.UpdateIPAddressCommand,
+) map[string]applicationipam.Field[string] {
+	return map[string]applicationipam.Field[string]{
+		"address": command.Address, "status": command.Status,
+		"role": command.Role, "dns_name": command.DNSName,
+		"description": command.Description, "comments": command.Comments,
+	}
+}
+
+func grpcIPAddressScalarInput(
+	address string,
+	status string,
+	role string,
+	dnsName string,
+	description string,
+	comments string,
+) *ipamv1.IPAddressInput {
+	return &ipamv1.IPAddressInput{
+		Address: &address, Status: &status, Role: wrapperspb.String(role),
+		DnsName: &dnsName, Description: &description, Comments: &comments,
+	}
+}
+
+func assertIPAddressGRPCScalarFields(
+	t *testing.T,
+	fields map[string]applicationipam.Field[string],
+	wantState applicationipam.FieldState,
+	wantValues map[string]string,
+) {
+	t.Helper()
+	for name, field := range fields {
+		assert.Equal(t, wantState, field.State(), name)
+		if wantState != applicationipam.FieldPresent {
+			continue
+		}
+		value, present := field.Get()
+		require.True(t, present, name)
+		assert.Equal(t, wantValues[name], value, name)
+	}
 }
 
 func TestIPAddressRPCAndIPAMServerUseOnlyTypedService(t *testing.T) {

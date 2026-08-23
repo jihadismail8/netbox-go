@@ -31,6 +31,7 @@ contracts-check: compatibility-oracle-source-test
 	fi
 	node scripts/validate_contract_inventory.mjs contracts/netbox/v4.4.6-post7/inventory
 	node scripts/validate_traceability.test.mjs
+	node scripts/validate_capability_profile.test.mjs
 	node scripts/validate_capability_profile.mjs contracts/netbox/v4.4.6-post7/profiles/core-workflow-v1.yaml
 	@descriptor="$$(mktemp /tmp/netbox-go-contract.XXXXXX.pb)"; \
 	trap 'rm -f "$$descriptor"' EXIT; \

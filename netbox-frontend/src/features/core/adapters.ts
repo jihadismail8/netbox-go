@@ -20,6 +20,7 @@ import {
   type InterfaceTemplateForm,
   type IPAddressDTO,
   type IPAddressForm,
+  type IPAddressMutation,
   type ManufacturerDTO,
   type ManufacturerForm,
   type PrefixDTO,
@@ -414,43 +415,77 @@ const prefixAdapter: CoreResourceAdapter<'prefix'> = {
   }),
 }
 
+const ipAddressOriginalMutation = Symbol('ip-address-original-mutation')
+
+const ipAddressScalarMutationFields = [
+  'address',
+  'status',
+  'role',
+  'dns_name',
+  'description',
+  'comments',
+] as const satisfies readonly (keyof IPAddressMutation)[]
+
+type TrackedIPAddressForm = IPAddressForm & {
+  [ipAddressOriginalMutation]?: IPAddressMutation
+}
+
+function ipAddressMutation(form: IPAddressForm): IPAddressMutation {
+  const mutation: IPAddressMutation = {}
+  if (hasFormField(form, 'address')) mutation.address = form.address
+  if (hasFormField(form, 'vrf')) mutation.vrf = relationID(form.vrf)
+  if (hasFormField(form, 'status')) mutation.status = form.status
+  if (hasFormField(form, 'role')) mutation.role = form.role
+  if (hasFormField(form, 'dns_name')) mutation.dns_name = form.dns_name
+  if (hasFormField(form, 'description')) mutation.description = form.description
+  if (hasFormField(form, 'comments')) mutation.comments = form.comments
+  if (!hasFormField(form, 'assigned_interface')) return mutation
+
+  const assignedID = relationID(form.assigned_interface)
+  if (
+    assignedID !== null &&
+    assignedID !== undefined &&
+    (!Number.isInteger(assignedID) || assignedID <= 0)
+  ) {
+    throw new Error('Select a valid Interface.')
+  }
+  mutation.assigned_object_type = assignedID ? 'dcim.interface' : null
+  mutation.assigned_object_id = assignedID ?? null
+  return mutation
+}
+
+function ipAddressMutationDelta(
+  current: IPAddressMutation,
+  original: IPAddressMutation,
+): IPAddressMutation {
+  const delta = { ...current }
+  for (const key of ipAddressScalarMutationFields) {
+    if (Object.is(current[key], original[key])) Reflect.deleteProperty(delta, key)
+  }
+  return delta
+}
+
 const ipAddressAdapter: CoreResourceAdapter<'ipaddress'> = {
   resource: 'ipaddress',
   emptyForm: () => ({ status: 'active' }),
-  formFromDTO: (dto: IPAddressDTO): IPAddressForm => ({
-    address: dto.address,
-    vrf: dto.vrf,
-    status: choiceValue(dto.status),
-    role: choiceValue(dto.role),
-    dns_name: dto.dns_name,
-    description: dto.description,
-    comments: dto.comments,
-    assigned_interface: dto.assigned_object,
-  }),
-  mutationFromForm: (form) => {
-    const mutation = {
-      address: form.address,
-      vrf: relationID(form.vrf),
-      status: form.status,
-      role: form.role,
-      dns_name: form.dns_name,
-      description: form.description,
-      comments: form.comments,
+  formFromDTO: (dto: IPAddressDTO): IPAddressForm => {
+    const form: TrackedIPAddressForm = {
+      address: dto.address,
+      vrf: dto.vrf,
+      status: choiceValue(dto.status),
+      role: choiceValue(dto.role),
+      dns_name: dto.dns_name,
+      description: dto.description,
+      comments: dto.comments,
+      assigned_interface: dto.assigned_object,
     }
-    if (!hasFormField(form, 'assigned_interface')) return mutation
-    const assignedID = relationID(form.assigned_interface)
-    if (
-      assignedID !== null &&
-      assignedID !== undefined &&
-      (!Number.isInteger(assignedID) || assignedID <= 0)
-    ) {
-      throw new Error('Select a valid Interface.')
-    }
-    return {
-      ...mutation,
-      assigned_object_type: assignedID ? 'dcim.interface' : null,
-      assigned_object_id: assignedID ?? null,
-    }
+    form[ipAddressOriginalMutation] = ipAddressMutation(form)
+    return form
+  },
+  mutationFromForm: (form, editing) => {
+    const mutation = ipAddressMutation(form)
+    const original = (form as TrackedIPAddressForm)[ipAddressOriginalMutation]
+    return editing && original ? ipAddressMutationDelta(mutation, original) : mutation
   },
   filtersFromState: (state) => ({
     vrf_id: state.vrf_id,

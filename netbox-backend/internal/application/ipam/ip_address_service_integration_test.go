@@ -2,6 +2,7 @@ package ipam_test
 
 import (
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -161,8 +162,277 @@ func TestIPAddressServiceAssignmentPartialPatchRollbackAndCascade(t *testing.T) 
 	assert.True(t, shared.HasReason(err, shared.ErrorReasonNotFound))
 }
 
+func TestReplaceIPAddressPreservesOmittedState(t *testing.T) {
+	_, service, _, vrfs, firstInterface, _ := newIPAddressApplicationService(t)
+	principal := testPrincipal()
+	vrf := createApplicationVRF(t, vrfs, "Preserved", "65000:101", false)
+
+	created, err := service.CreateIPAddress(
+		t.Context(), principal, applicationipam.CreateIPAddressCommand{
+			Address: applicationipam.FieldValue("192.0.2.17/24"),
+			VRF:     applicationipam.FieldValue(vrf.ID().Int64()),
+			Status: applicationipam.FieldValue(
+				domainipam.IPAddressStatusReserved.String(),
+			),
+			Role: applicationipam.FieldValue(
+				domainipam.IPAddressRoleLoopback.String(),
+			),
+			DNSName:     applicationipam.FieldValue(" Original.Example. "),
+			Description: applicationipam.FieldValue(" original description "),
+			Comments:    applicationipam.FieldValue(" original comments "),
+			AssignedObjectType: applicationipam.FieldValue(
+				domainipam.IPAddressAssignmentType,
+			),
+			AssignedObjectID: applicationipam.FieldValue(firstInterface.ID),
+		},
+	)
+	require.NoError(t, err)
+
+	replaced, err := service.ReplaceIPAddress(
+		t.Context(), principal, applicationipam.ReplaceIPAddressCommand{
+			ID: created.ID(),
+			CreateIPAddressCommand: applicationipam.CreateIPAddressCommand{
+				Address: applicationipam.FieldValue("198.51.100.8"),
+			},
+		},
+	)
+	require.NoError(t, err)
+	assert.Equal(t, "198.51.100.8/32", replaced.Display())
+	assert.Equal(t, domainipam.IPAddressStatusReserved, replaced.Status())
+	role, present := replaced.Role().Get()
+	require.True(t, present)
+	assert.Equal(t, domainipam.IPAddressRoleLoopback, role)
+	assert.Equal(t, "original.example.", replaced.DNSName())
+	assert.Equal(t, "original description", replaced.Description())
+	assert.Equal(t, "original comments", replaced.Comments())
+	resolvedVRF, present := replaced.VRF().Get()
+	require.True(t, present)
+	assert.Equal(t, vrf.ID(), resolvedVRF.ID())
+	assignment, present := replaced.Assignment().Get()
+	require.True(t, present)
+	assert.Equal(t, shared.ID(firstInterface.ID), assignment.ID())
+}
+
+func TestIPAddressScalarValidationLeavesStateUnchanged(t *testing.T) {
+	clock := &advancingIPAddressClock{now: applicationUpdatedAt}
+	db, service, repository, _, firstInterface, _ :=
+		newIPAddressApplicationServiceWithClock(t, clock)
+	principal := testPrincipal()
+	created, err := service.CreateIPAddress(
+		t.Context(), principal, applicationipam.CreateIPAddressCommand{
+			Address: applicationipam.FieldValue("192.0.2.19/32"),
+			Status: applicationipam.FieldValue(
+				domainipam.IPAddressStatusReserved.String(),
+			),
+			Role: applicationipam.FieldValue(
+				domainipam.IPAddressRoleLoopback.String(),
+			),
+			DNSName:     applicationipam.FieldValue("unchanged.example"),
+			Description: applicationipam.FieldValue("unchanged description"),
+			Comments:    applicationipam.FieldValue("unchanged comments"),
+			AssignedObjectType: applicationipam.FieldValue(
+				domainipam.IPAddressAssignmentType,
+			),
+			AssignedObjectID: applicationipam.FieldValue(firstInterface.ID),
+		},
+	)
+	require.NoError(t, err)
+	wantState := created.State()
+
+	type scalarRejection struct {
+		name               string
+		field              string
+		description        string
+		operations         []string
+		address            applicationipam.Field[string]
+		status             applicationipam.Field[string]
+		role               applicationipam.Field[string]
+		dnsName            applicationipam.Field[string]
+		commandDescription applicationipam.Field[string]
+		comments           applicationipam.Field[string]
+	}
+	allOperations := []string{"create", "replace", "update"}
+	createAndReplace := []string{"create", "replace"}
+	tests := []scalarRejection{
+		{
+			name: "address omitted", field: "address",
+			description: "This field is required.", operations: createAndReplace,
+		},
+		{
+			name: "address null", field: "address",
+			description: "This field may not be null.", operations: allOperations,
+			address: applicationipam.NullField[string](),
+		},
+		{
+			name: "address blank", field: "address",
+			description: "This field may not be blank.", operations: allOperations,
+			address: applicationipam.FieldValue(""),
+		},
+		{
+			name: "address invalid", field: "address",
+			description: "Invalid IP address format: invalid",
+			operations:  allOperations, address: applicationipam.FieldValue("invalid"),
+		},
+		{
+			name: "address leading whitespace", field: "address",
+			description: "Invalid IP address format:  198.51.100.19/32",
+			operations:  allOperations,
+			address:     applicationipam.FieldValue(" 198.51.100.19/32"),
+		},
+		{
+			name: "status null", field: "status",
+			description: "This field may not be blank.", operations: allOperations,
+			status: applicationipam.NullField[string](),
+		},
+		{
+			name: "status blank", field: "status",
+			description: "This field may not be blank.", operations: allOperations,
+			status: applicationipam.FieldValue(""),
+		},
+		{
+			name: "status invalid choice", field: "status",
+			description: " invalid  is not a valid choice.", operations: allOperations,
+			status: applicationipam.FieldValue(" invalid "),
+		},
+		{
+			name: "status boolean-like choice", field: "status",
+			description: "True is not a valid choice.", operations: allOperations,
+			status: applicationipam.FieldValue("true"),
+		},
+		{
+			name: "role invalid choice", field: "role",
+			description: " invalid  is not a valid choice.", operations: allOperations,
+			role: applicationipam.FieldValue(" invalid "),
+		},
+		{
+			name: "role integer-like choice", field: "role",
+			description: "1 is not a valid choice.", operations: allOperations,
+			role: applicationipam.FieldValue("001"),
+		},
+		{
+			name: "dns name null", field: "dns_name",
+			description: "This field may not be null.", operations: allOperations,
+			dnsName: applicationipam.NullField[string](),
+		},
+		{
+			name: "dns name invalid", field: "dns_name",
+			description: "Only alphanumeric characters, asterisks, hyphens, periods, and underscores are allowed in DNS names",
+			operations:  allOperations, dnsName: applicationipam.FieldValue("bad name"),
+		},
+		{
+			name: "description null", field: "description",
+			description: "This field may not be null.", operations: allOperations,
+			commandDescription: applicationipam.NullField[string](),
+		},
+		{
+			name: "comments null", field: "comments",
+			description: "This field may not be null.", operations: allOperations,
+			comments: applicationipam.NullField[string](),
+		},
+		{
+			name: "description null character", field: "description",
+			description: "Null characters are not allowed.", operations: allOperations,
+			commandDescription: applicationipam.FieldValue("contains\x00null"),
+		},
+		{
+			name: "comments null character", field: "comments",
+			description: "Null characters are not allowed.", operations: allOperations,
+			comments: applicationipam.FieldValue("contains\x00null"),
+		},
+	}
+	mutation := func(operation string, test scalarRejection) error {
+		address := test.address
+		if test.field != "address" && operation != "update" {
+			address = applicationipam.FieldValue("198.51.100.19/32")
+		}
+		createCommand := applicationipam.CreateIPAddressCommand{
+			Address: address, Status: test.status, Role: test.role,
+			DNSName: test.dnsName, Description: test.commandDescription,
+			Comments: test.comments,
+		}
+		switch operation {
+		case "create":
+			_, err := service.CreateIPAddress(t.Context(), principal, createCommand)
+			return err
+		case "replace":
+			_, err := service.ReplaceIPAddress(
+				t.Context(), principal, applicationipam.ReplaceIPAddressCommand{
+					ID: created.ID(), CreateIPAddressCommand: createCommand,
+				},
+			)
+			return err
+		case "update":
+			_, err := service.UpdateIPAddress(
+				t.Context(), principal, applicationipam.UpdateIPAddressCommand{
+					ID: created.ID(), Address: address, Status: test.status,
+					Role: test.role, DNSName: test.dnsName,
+					Description: test.commandDescription, Comments: test.comments,
+				},
+			)
+			return err
+		default:
+			t.Fatalf("unsupported scalar rejection operation %q", operation)
+			return nil
+		}
+	}
+	for _, test := range tests {
+		for _, operation := range test.operations {
+			t.Run(operation+"/"+test.name, func(t *testing.T) {
+				var rowsBefore, changesBefore int64
+				require.NoError(
+					t,
+					db.Model(&ipamrow.IPAddressRow{}).Count(&rowsBefore).Error,
+				)
+				require.NoError(
+					t,
+					db.Model(&postgreschangelog.ChangeRow{}).Count(&changesBefore).Error,
+				)
+				err := mutation(operation, test)
+				require.Error(t, err)
+				violations := shared.ViolationsOf(err)
+				require.Len(t, violations, 1)
+				assert.Equal(t, test.field, violations[0].Field)
+				assert.Equal(t, test.description, violations[0].Description)
+
+				reloaded, err := repository.Get(t.Context(), created.ID())
+				require.NoError(t, err)
+				assert.Equal(t, wantState, reloaded.State())
+				var rowsAfter, changesAfter int64
+				require.NoError(
+					t,
+					db.Model(&ipamrow.IPAddressRow{}).Count(&rowsAfter).Error,
+				)
+				require.NoError(
+					t,
+					db.Model(&postgreschangelog.ChangeRow{}).Count(&changesAfter).Error,
+				)
+				assert.Equal(t, rowsBefore, rowsAfter)
+				assert.Equal(t, changesBefore, changesAfter)
+			})
+		}
+	}
+	assert.Greater(t, clock.calls, 1, "domain-level rejections must exercise an advancing clock")
+}
+
 func newIPAddressApplicationService(
 	t *testing.T,
+) (
+	*gorm.DB,
+	*applicationipam.IPAddressService,
+	*postgresipam.IPAddressRepository,
+	*postgresipam.VRFRepository,
+	dcimrow.InterfaceRow,
+	dcimrow.InterfaceRow,
+) {
+	return newIPAddressApplicationServiceWithClock(
+		t,
+		fixedClock{now: applicationUpdatedAt},
+	)
+}
+
+func newIPAddressApplicationServiceWithClock(
+	t *testing.T,
+	clock shared.Clock,
 ) (
 	*gorm.DB,
 	*applicationipam.IPAddressService,
@@ -184,10 +454,22 @@ func newIPAddressApplicationService(
 		postgrestransaction.NewUnitOfWork(db),
 		postgreschangelog.NewRecorder(db),
 		&authz.AllowAll{},
-		fixedClock{now: applicationUpdatedAt},
+		clock,
 	)
 	require.NoError(t, err)
 	return db, service, repository, vrfs, first, second
+}
+
+type advancingIPAddressClock struct {
+	now   shared.Timestamp
+	calls int
+}
+
+func (clock *advancingIPAddressClock) Now() shared.Timestamp {
+	current := clock.now
+	clock.calls++
+	clock.now = shared.NewTimestamp(clock.now.Add(time.Second))
+	return current
 }
 
 func createIPAddressCommand(

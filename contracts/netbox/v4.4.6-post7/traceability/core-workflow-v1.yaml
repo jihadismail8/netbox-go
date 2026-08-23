@@ -3174,19 +3174,9 @@
     },
     {
       "id": "contradicted-ip-address-nullability",
-      "status": "contradicted",
-      "reason": "The generated IPAddress write schema permits null for address, role, dns_name, description, and comments, while the pinned serializer does not declare allow_null for those fields; resource metadata does not encode operation-specific nullability.",
-      "resolution_goal": "CW1-V2-02",
-      "conflict_references": [
-        {
-          "path": "netbox-backend/api/openapi/netbox-go-v1.yaml",
-          "anchor": "\"IPAddressWrite\": {\n        \"type\": \"object\","
-        },
-        {
-          "path": "netbox/netbox/ipam/api/serializers_/ip.py",
-          "anchor": "class IPAddressSerializer(NetBoxModelSerializer):"
-        }
-      ]
+      "status": "unresolved",
+      "reason": "The resource contract now distinguishes response nullability from create, replace, and update presence. The bounded implementation candidate preserves the pinned ChoiceField behavior that accepts role null and normalizes it to blank across typed behavior, REST/gRPC, PostgreSQL, Vue, and focused parity proof; the pinned differential oracle, retained evidence, project-owner review, 13-resource parent, and higher tiers remain pending.",
+      "resolution_goal": "CW1-V2-02"
     }
   ],
   "verification_sets": [

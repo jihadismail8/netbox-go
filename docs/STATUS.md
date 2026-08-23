@@ -1,6 +1,6 @@
 # Project status
 
-Updated: 2026-08-19
+Updated: 2026-08-23
 
 Compatibility baseline: checked-in NetBox source snapshot at commit
 `fbb948d30e79ce657fac62994a22aca72c1770a9`
@@ -49,16 +49,18 @@ claim, and receipt exact-SHA CI boundaries are green. Project-owner review
 remains before the separate `evidence` to `done` transition. Its parent and the
 password-policy, throttle, trusted-proxy, streaming, and aggregate rows remain
 open. The 293-row
-`CW1-V2-01` structural authority has human acceptance, while its 275 unresolved
-and 18 contradicted behavior rows remain open. V1-V5 contain implementation and
+`CW1-V2-01` structural authority has human acceptance, while its 280 unresolved
+and 13 contradicted behavior rows remain open. V1-V5 contain implementation and
 evidence gaps. No T2, T3, T4, V6 sign-off, or publication is claimed until
 corresponding current artifacts are retained.
 
 `CW1-V2-02-I1` is now the active rewrite increment. It owns a bounded
 IPAddress scalar write-presence correction across typed entity/application
 behavior, generated OpenAPI, REST/gRPC mapping, Vue validation/serialization,
-and focused tests. This is an active-scope/ownership claim only: no result, retained
-evidence, parent completion, or tier promotion exists yet.
+and focused tests. Its source candidate has local contract, focused, race,
+real-PostgreSQL, L4, Vue, and whole-project proof. The unavailable pinned
+differential oracle, retained evidence, and project-owner review remain open;
+no parent completion or tier promotion is claimed.
 
 > **Operational boundary:** this is a development build for disposable data.
 > Production TLS, schema upgrades, backup/restore, operational hardening, and

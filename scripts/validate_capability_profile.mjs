@@ -16,6 +16,12 @@ const contractRoot = path.dirname(baseDir);
 const failures = [];
 let traceabilityCounts = null;
 const IDENTITY_VERIFICATION_STATES = new Set(["partial", "complete"]);
+const FIELD_CONTRACT_KEYS = ["create", "replace", "response", "update"];
+const WRITE_FIELD_CONTRACT_KEYS = [
+  "blank_fields",
+  "nullable_fields",
+  "required_fields",
+];
 
 function readJSON(filePath) {
   try {
@@ -28,6 +34,114 @@ function readJSON(filePath) {
 
 function assert(condition, message) {
   if (!condition) failures.push(message);
+}
+
+function exactKeys(value, expected) {
+  return (
+    value !== null &&
+    typeof value === "object" &&
+    !Array.isArray(value) &&
+    JSON.stringify(Object.keys(value).sort()) === JSON.stringify(expected)
+  );
+}
+
+function validateFieldList({
+  resourceKey,
+  contractName,
+  listName,
+  value,
+  allowedFields,
+  isStringField,
+}) {
+  const label = `${resourceKey}: field_contracts.${contractName}.${listName}`;
+  if (!Array.isArray(value)) {
+    assert(false, `${label} must be an array`);
+    return;
+  }
+  const seen = new Set();
+  for (const field of value) {
+    if (typeof field !== "string" || field.length === 0) {
+      assert(false, `${label} contains an invalid field name`);
+      continue;
+    }
+    assert(!seen.has(field), `${label} contains duplicate field ${field}`);
+    seen.add(field);
+    assert(
+      allowedFields.has(field),
+      `${label} contains undeclared field ${field}`,
+    );
+    if (listName === "blank_fields" && allowedFields.has(field)) {
+      assert(
+        isStringField(field),
+        `${label} contains non-string field ${field}`,
+      );
+    }
+  }
+}
+
+function validateFieldContracts(resourceKey, resource) {
+  const contracts = resource.field_contracts;
+  assert(
+    exactKeys(contracts, FIELD_CONTRACT_KEYS),
+    `${resourceKey}: field_contracts must declare exactly response, create, replace, and update`,
+  );
+  if (!contracts || typeof contracts !== "object" || Array.isArray(contracts)) {
+    return;
+  }
+
+  const writableFields = new Set(resource.writable_fields ?? []);
+  const responseFields = new Set([
+    ...(resource.writable_fields ?? []),
+    ...(resource.response_only_fields ?? []),
+  ]);
+  const isStringField = (field) => {
+    const choice = resource.choice_fields?.[field];
+    if (choice) return choice.value_type === "string";
+    if ((resource.relationships ?? []).includes(field)) return false;
+    return !field.endsWith("_id");
+  };
+
+  const response = contracts.response;
+  assert(
+    exactKeys(response, ["nullable_fields"]),
+    `${resourceKey}: field_contracts.response must declare exactly nullable_fields`,
+  );
+  if (response && typeof response === "object" && !Array.isArray(response)) {
+    validateFieldList({
+      resourceKey,
+      contractName: "response",
+      listName: "nullable_fields",
+      value: response.nullable_fields,
+      allowedFields: responseFields,
+      isStringField,
+    });
+  }
+
+  for (const operation of ["create", "replace", "update"]) {
+    const contract = contracts[operation];
+    assert(
+      exactKeys(contract, WRITE_FIELD_CONTRACT_KEYS),
+      `${resourceKey}: field_contracts.${operation} must declare exactly required_fields, nullable_fields, and blank_fields`,
+    );
+    if (!contract || typeof contract !== "object" || Array.isArray(contract)) {
+      continue;
+    }
+    for (const listName of WRITE_FIELD_CONTRACT_KEYS) {
+      validateFieldList({
+        resourceKey,
+        contractName: operation,
+        listName,
+        value: contract[listName],
+        allowedFields: writableFields,
+        isStringField,
+      });
+    }
+  }
+  assert(
+    Array.isArray(contracts.update?.required_fields) &&
+      contracts.update.required_fields.length === 0,
+    `${resourceKey}: field_contracts.update.required_fields must be empty for PATCH`,
+  );
 }
 
 const profile = readJSON(profilePath);
@@ -153,6 +267,9 @@ if (profile && baseline && oracle && schema) {
           `${key}: choice field ${field} must declare nullability`,
         );
       }
+      if (resource.field_contracts !== undefined) {
+        validateFieldContracts(key, resource);
+      }
     }
   }
   assert(
@@ -162,6 +279,10 @@ if (profile && baseline && oracle && schema) {
   assert(
     choiceFieldCount === 19,
     `resource metadata: expected 19 choice fields, found ${choiceFieldCount}`,
+  );
+  assert(
+    metadataResources.get("ipam.IPAddress")?.field_contracts !== undefined,
+    "ipam.IPAddress: field_contracts must declare operation-specific presence semantics",
   );
   for (const resource of profile.resources ?? []) {
     const key = `${resource.module}.${resource.name}`;

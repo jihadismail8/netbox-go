@@ -2,9 +2,12 @@ package ipam
 
 import (
 	"fmt"
+	"math/big"
 	"net/netip"
 	"regexp"
+	"strconv"
 	"strings"
+	"unicode"
 	"unicode/utf8"
 
 	domaindcim "netbox-go/internal/domain/dcim"
@@ -25,11 +28,17 @@ type HostAddress struct {
 }
 
 func ParseHostAddress(value string) (HostAddress, error) {
-	prefix, err := netip.ParsePrefix(strings.TrimSpace(value))
-	if err != nil {
+	if strings.TrimSpace(value) == "" {
+		return HostAddress{}, shared.NewValidationError(shared.FieldViolation{
+			Field: "address", Reason: "blank",
+			Description: "This field may not be blank.",
+		})
+	}
+	prefix, valid := parseNetAddrHostPrefix(value)
+	if !valid {
 		return HostAddress{}, shared.NewValidationError(shared.FieldViolation{
 			Field: "address", Reason: "invalid",
-			Description: "Enter a valid IPv4 or IPv6 address with mask.",
+			Description: "Invalid IP address format: " + value,
 		})
 	}
 	if prefix.Bits() == 0 {
@@ -39,6 +48,142 @@ func ParseHostAddress(value string) (HostAddress, error) {
 		})
 	}
 	return HostAddress{prefix: prefix}, nil
+}
+
+// parseNetAddrHostPrefix mirrors the pinned netaddr IPNetwork grammar used by
+// NetBox's IPAddressField. The address side is strict, while a numeric mask is
+// parsed with Python-int-like whitespace, sign, leading-zero, and underscore
+// handling. Same-family contiguous netmasks and inverse hostmasks are also
+// accepted without discarding host bits.
+func parseNetAddrHostPrefix(value string) (netip.Prefix, bool) {
+	addressText, maskText, masked := strings.Cut(value, "/")
+	if masked && strings.Contains(maskText, "/") {
+		return netip.Prefix{}, false
+	}
+	address, err := netip.ParseAddr(addressText)
+	if err != nil || address.Zone() != "" {
+		return netip.Prefix{}, false
+	}
+	if !masked {
+		return netip.PrefixFrom(address, address.BitLen()), true
+	}
+
+	if normalized, ok := normalizePythonDecimalInteger(maskText); ok {
+		bits, err := strconv.Atoi(normalized)
+		if err == nil && bits >= 0 && bits <= address.BitLen() {
+			return netip.PrefixFrom(address, bits), true
+		}
+		return netip.Prefix{}, false
+	}
+
+	mask, err := netip.ParseAddr(maskText)
+	if err != nil || mask.Zone() != "" || mask.BitLen() != address.BitLen() {
+		return netip.Prefix{}, false
+	}
+	bits, ok := contiguousMaskPrefixLength(mask)
+	if !ok {
+		return netip.Prefix{}, false
+	}
+	return netip.PrefixFrom(address, bits), true
+}
+
+func normalizePythonDecimalInteger(value string) (string, bool) {
+	value = strings.TrimSpace(value)
+	if value == "" {
+		return "", false
+	}
+	characters := []rune(value)
+	start := 0
+	if characters[0] == '+' || characters[0] == '-' {
+		start = 1
+		if len(characters) == 1 {
+			return "", false
+		}
+	}
+	var normalized strings.Builder
+	normalized.Grow(len(value))
+	if start == 1 {
+		normalized.WriteRune(characters[0])
+	}
+	for index := start; index < len(characters); index++ {
+		character := characters[index]
+		if digit, ok := pythonDecimalDigit(character); ok {
+			normalized.WriteByte('0' + digit)
+			continue
+		}
+		if character != '_' || index == start || index+1 == len(characters) {
+			return "", false
+		}
+		if _, ok := pythonDecimalDigit(characters[index-1]); !ok {
+			return "", false
+		}
+		if _, ok := pythonDecimalDigit(characters[index+1]); !ok {
+			return "", false
+		}
+	}
+	return normalized.String(), true
+}
+
+func pythonDecimalDigit(character rune) (byte, bool) {
+	for _, valueRange := range unicode.Digit.R16 {
+		value := uint32(character)
+		lower := uint32(valueRange.Lo)
+		upper := uint32(valueRange.Hi)
+		stride := uint32(valueRange.Stride)
+		if value >= lower && value <= upper && (value-lower)%stride == 0 {
+			return byte(((value - lower) / stride) % 10), true
+		}
+	}
+	for _, valueRange := range unicode.Digit.R32 {
+		value := uint32(character)
+		lower := valueRange.Lo
+		upper := valueRange.Hi
+		stride := valueRange.Stride
+		if value >= lower && value <= upper && (value-lower)%stride == 0 {
+			return byte(((value - lower) / stride) % 10), true
+		}
+	}
+	return 0, false
+}
+
+func contiguousMaskPrefixLength(mask netip.Addr) (int, bool) {
+	bytes := addressBytes(mask)
+	if bits, ok := leadingOneBits(bytes); ok {
+		return bits, true
+	}
+	inverted := make([]byte, len(bytes))
+	for index, value := range bytes {
+		inverted[index] = ^value
+	}
+	return leadingOneBits(inverted)
+}
+
+func addressBytes(address netip.Addr) []byte {
+	if address.Is4() {
+		value := address.As4()
+		return value[:]
+	}
+	value := address.As16()
+	return value[:]
+}
+
+func leadingOneBits(mask []byte) (int, bool) {
+	ones := 0
+	seenZero := false
+	for _, value := range mask {
+		for bit := 7; bit >= 0; bit-- {
+			set := value&(1<<bit) != 0
+			if set && seenZero {
+				return 0, false
+			}
+			if set {
+				ones++
+			} else {
+				seenZero = true
+			}
+		}
+	}
+	return ones, true
 }
 
 func (address HostAddress) Prefix() netip.Prefix { return address.prefix }
@@ -76,7 +221,11 @@ const (
 )
 
 func ParseIPAddressStatus(value string) (IPAddressStatus, bool) {
-	status := IPAddressStatus(strings.TrimSpace(value))
+	return parseIPAddressStatusExact(strings.TrimSpace(value))
+}
+
+func parseIPAddressStatusExact(value string) (IPAddressStatus, bool) {
+	status := IPAddressStatus(value)
 	switch status {
 	case IPAddressStatusActive, IPAddressStatusReserved, IPAddressStatusDeprecated,
 		IPAddressStatusDHCP, IPAddressStatusSLAAC:
@@ -102,7 +251,11 @@ const (
 )
 
 func ParseIPAddressRole(value string) (IPAddressRole, bool) {
-	role := IPAddressRole(strings.TrimSpace(value))
+	return parseIPAddressRoleExact(strings.TrimSpace(value))
+}
+
+func parseIPAddressRoleExact(value string) (IPAddressRole, bool) {
+	role := IPAddressRole(value)
 	switch role {
 	case "", IPAddressRoleLoopback, IPAddressRoleSecondary, IPAddressRoleAnycast,
 		IPAddressRoleVIP, IPAddressRoleVRRP, IPAddressRoleHSRP, IPAddressRoleGLBP,
@@ -468,11 +621,17 @@ func validateIPAddressValues(
 			Field: "vrf", Reason: "invalid", Description: "Invalid VRF reference.",
 		})
 	}
-	status, validStatus := ParseIPAddressStatus(values.Status)
-	if !validStatus {
+	status, validStatus := parseIPAddressStatusExact(values.Status)
+	if values.Status == "" {
 		violations = append(violations, shared.FieldViolation{
-			Field: "status", Reason: "invalid_choice", Description: "Select a valid choice.",
+			Field: "status", Reason: "blank",
+			Description: "This field may not be blank.",
 		})
+	} else if !validStatus {
+		violations = append(
+			violations,
+			invalidIPAddressChoiceViolation("status", values.Status),
+		)
 	} else if status == IPAddressStatusSLAAC &&
 		hostAddress.Prefix().IsValid() && !hostAddress.Prefix().Addr().Is6() {
 		violations = append(violations, shared.FieldViolation{
@@ -482,22 +641,30 @@ func validateIPAddressValues(
 	}
 	role := values.Role
 	if value, present := role.Get(); present {
-		parsed, valid := ParseIPAddressRole(value.String())
+		parsed, valid := parseIPAddressRoleExact(value.String())
 		if !valid {
-			violations = append(violations, shared.FieldViolation{
-				Field: "role", Reason: "invalid_choice", Description: "Select a valid choice.",
-			})
+			violations = append(
+				violations,
+				invalidIPAddressChoiceViolation("role", value.String()),
+			)
 		} else {
 			role = NonNullIPAddressRole(parsed)
 		}
 	}
 	dnsName := strings.TrimSpace(values.DNSName)
-	if utf8.RuneCountInString(dnsName) > IPAddressDNSNameMaxLength {
-		violations = append(violations, maxLengthViolation("dns_name", IPAddressDNSNameMaxLength))
-	} else if dnsName != "" && !ipAddressDNSNamePattern.MatchString(dnsName) {
+	if dnsName != "" && !ipAddressDNSNamePattern.MatchString(dnsName) {
 		violations = append(violations, shared.FieldViolation{
 			Field: "dns_name", Reason: "invalid",
-			Description: "Only alphanumeric characters, asterisks, hyphens, periods, and underscores are allowed in DNS names.",
+			Description: "Only alphanumeric characters, asterisks, hyphens, periods, and underscores are allowed in DNS names",
+		})
+	}
+	if utf8.RuneCountInString(dnsName) > IPAddressDNSNameMaxLength {
+		violations = append(violations, maxLengthViolation("dns_name", IPAddressDNSNameMaxLength))
+	}
+	if strings.ContainsRune(dnsName, '\x00') {
+		violations = append(violations, shared.FieldViolation{
+			Field: "dns_name", Reason: "invalid",
+			Description: "Null characters are not allowed.",
 		})
 	}
 	description := strings.TrimSpace(values.Description)
@@ -506,6 +673,18 @@ func validateIPAddressValues(
 		violations = append(
 			violations, maxLengthViolation("description", IPAddressDescriptionMaxLength),
 		)
+	}
+	if strings.ContainsRune(description, '\x00') {
+		violations = append(violations, shared.FieldViolation{
+			Field: "description", Reason: "invalid",
+			Description: "Null characters are not allowed.",
+		})
+	}
+	if strings.ContainsRune(comments, '\x00') {
+		violations = append(violations, shared.FieldViolation{
+			Field: "comments", Reason: "invalid",
+			Description: "Null characters are not allowed.",
+		})
 	}
 	if assignment, present := values.Assignment.Get(); present {
 		if !assignment.Valid() {
@@ -524,6 +703,31 @@ func validateIPAddressValues(
 		dnsName: strings.ToLower(dnsName), description: description, comments: comments,
 		assignment: values.Assignment,
 	}, violations
+}
+
+func invalidIPAddressChoiceViolation(field string, value string) shared.FieldViolation {
+	return shared.FieldViolation{
+		Field: field, Reason: "invalid_choice",
+		Description: ipAddressChoiceErrorValue(value) + " is not a valid choice.",
+	}
+}
+
+func ipAddressChoiceErrorValue(value string) string {
+	switch strings.ToLower(value) {
+	case "true":
+		return "True"
+	case "false":
+		return "False"
+	}
+	normalized, ok := normalizePythonDecimalInteger(value)
+	if !ok {
+		return value
+	}
+	integer, ok := new(big.Int).SetString(normalized, 10)
+	if !ok {
+		return value
+	}
+	return integer.String()
 }
 
 func unusableInterfaceAddressReason(address HostAddress) string {

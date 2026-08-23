@@ -241,13 +241,13 @@ func (service *IPAddressService) ReplaceIPAddress(
 			); err != nil {
 				return err
 			}
-			commandValues, err := command.values()
+			commandPatch, err := command.patch()
 			if err != nil {
 				return err
 			}
-			values, err := service.resolveValues(
+			patch, err := service.resolvePatch(
 				transactionContext,
-				commandValues,
+				commandPatch,
 				domainipam.NullInterfaceAssignment(),
 			)
 			if err != nil {
@@ -255,7 +255,7 @@ func (service *IPAddressService) ReplaceIPAddress(
 			}
 			before := loaded.Snapshot()
 			now := service.clock.Now()
-			if err := loaded.Replace(values, now); err != nil {
+			if err := loaded.ApplyPatch(patch, now); err != nil {
 				return err
 			}
 			if err := service.enforceUniqueness(transactionContext, loaded); err != nil {

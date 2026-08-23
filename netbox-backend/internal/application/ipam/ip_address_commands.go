@@ -2,6 +2,7 @@ package ipam
 
 import (
 	"strconv"
+	"strings"
 
 	domainipam "netbox-go/internal/domain/ipam"
 	"netbox-go/internal/domain/shared"
@@ -72,10 +73,6 @@ func (command CreateIPAddressCommand) values() (ipAddressCommandValues, error) {
 	)
 }
 
-func (command ReplaceIPAddressCommand) values() (ipAddressCommandValues, error) {
-	return command.CreateIPAddressCommand.values()
-}
-
 func fullIPAddressValues(
 	address Field[string],
 	vrf Field[int64],
@@ -89,9 +86,9 @@ func fullIPAddressValues(
 ) (ipAddressCommandValues, error) {
 	var violations []shared.FieldViolation
 	values := ipAddressCommandValues{
-		address:            fullString(&violations, "address", address, "", true),
+		address:            fullIPAddressAddress(&violations, address),
 		vrfID:              fullIPAddressVRFID(&violations, vrf),
-		status:             fullString(&violations, "status", status, domainipam.IPAddressStatusActive.String(), false),
+		status:             fullIPAddressStatus(&violations, status),
 		role:               fullIPAddressRole(role),
 		dnsName:            fullString(&violations, "dns_name", dnsName, "", false),
 		description:        fullString(&violations, "description", description, "", false),
@@ -103,6 +100,34 @@ func fullIPAddressValues(
 		return ipAddressCommandValues{}, shared.NewValidationError(violations...)
 	}
 	return values, nil
+}
+
+func fullIPAddressAddress(
+	violations *[]shared.FieldViolation,
+	field Field[string],
+) string {
+	value := fullString(violations, "address", field, "", true)
+	if field.State() == FieldPresent && strings.TrimSpace(value) == "" {
+		*violations = append(*violations, blankIPAddressViolation("address"))
+	}
+	return value
+}
+
+func fullIPAddressStatus(
+	violations *[]shared.FieldViolation,
+	field Field[string],
+) string {
+	switch field.State() {
+	case FieldPresent:
+		value, _ := field.Get()
+		if value == "" {
+			*violations = append(*violations, blankIPAddressViolation("status"))
+		}
+		return value
+	case FieldNull:
+		*violations = append(*violations, blankIPAddressViolation("status"))
+	}
+	return domainipam.IPAddressStatusActive.String()
 }
 
 func fullIPAddressVRFID(
@@ -152,25 +177,69 @@ type ipAddressCommandPatch struct {
 	assignmentSet      bool
 }
 
+func (command ReplaceIPAddressCommand) patch() (ipAddressCommandPatch, error) {
+	return buildIPAddressPatch(
+		command.Address,
+		command.VRF,
+		command.Status,
+		command.Role,
+		command.DNSName,
+		command.Description,
+		command.Comments,
+		command.AssignedObjectType,
+		command.AssignedObjectID,
+		true,
+	)
+}
+
 func (command UpdateIPAddressCommand) patch() (ipAddressCommandPatch, error) {
+	return buildIPAddressPatch(
+		command.Address,
+		command.VRF,
+		command.Status,
+		command.Role,
+		command.DNSName,
+		command.Description,
+		command.Comments,
+		command.AssignedObjectType,
+		command.AssignedObjectID,
+		false,
+	)
+}
+
+func buildIPAddressPatch(
+	address Field[string],
+	vrf Field[int64],
+	status Field[string],
+	role Field[string],
+	dnsName Field[string],
+	description Field[string],
+	comments Field[string],
+	assignedObjectType Field[string],
+	assignedObjectID Field[int64],
+	requireAddress bool,
+) (ipAddressCommandPatch, error) {
 	var violations []shared.FieldViolation
-	patch := ipAddressCommandPatch{
-		address:            patchString(&violations, "address", command.Address),
-		status:             patchString(&violations, "status", command.Status),
-		role:               patchIPAddressRole(command.Role),
-		dnsName:            patchString(&violations, "dns_name", command.DNSName),
-		description:        patchString(&violations, "description", command.Description),
-		comments:           patchString(&violations, "comments", command.Comments),
-		assignedObjectType: command.AssignedObjectType,
-		assignedObjectID:   command.AssignedObjectID,
-		assignmentSet: command.AssignedObjectType.State() != FieldOmitted ||
-			command.AssignedObjectID.State() != FieldOmitted,
+	if requireAddress && address.State() == FieldOmitted {
+		violations = append(violations, requiredViolation("address"))
 	}
-	switch command.VRF.State() {
+	patch := ipAddressCommandPatch{
+		address:            patchIPAddressAddress(&violations, address),
+		status:             patchIPAddressStatus(&violations, status),
+		role:               patchIPAddressRole(role),
+		dnsName:            patchString(&violations, "dns_name", dnsName),
+		description:        patchString(&violations, "description", description),
+		comments:           patchString(&violations, "comments", comments),
+		assignedObjectType: assignedObjectType,
+		assignedObjectID:   assignedObjectID,
+		assignmentSet: assignedObjectType.State() != FieldOmitted ||
+			assignedObjectID.State() != FieldOmitted,
+	}
+	switch vrf.State() {
 	case FieldNull:
 		patch.vrfSet = true
 	case FieldPresent:
-		value, _ := command.VRF.Get()
+		value, _ := vrf.Get()
 		id := shared.ID(value)
 		patch.vrfSet = true
 		patch.vrfID = &id
@@ -185,6 +254,43 @@ func (command UpdateIPAddressCommand) patch() (ipAddressCommandPatch, error) {
 		})
 	}
 	return patch, nil
+}
+
+func patchIPAddressAddress(
+	violations *[]shared.FieldViolation,
+	field Field[string],
+) *string {
+	value := patchString(violations, "address", field)
+	if field.State() == FieldPresent {
+		address, _ := field.Get()
+		if strings.TrimSpace(address) == "" {
+			*violations = append(*violations, blankIPAddressViolation("address"))
+		}
+	}
+	return value
+}
+
+func patchIPAddressStatus(
+	violations *[]shared.FieldViolation,
+	field Field[string],
+) *string {
+	switch field.State() {
+	case FieldPresent:
+		value, _ := field.Get()
+		if value == "" {
+			*violations = append(*violations, blankIPAddressViolation("status"))
+		}
+		return &value
+	case FieldNull:
+		*violations = append(*violations, blankIPAddressViolation("status"))
+	}
+	return nil
+}
+
+func blankIPAddressViolation(field string) shared.FieldViolation {
+	return shared.FieldViolation{
+		Field: field, Reason: "blank", Description: "This field may not be blank.",
+	}
 }
 
 func patchIPAddressRole(

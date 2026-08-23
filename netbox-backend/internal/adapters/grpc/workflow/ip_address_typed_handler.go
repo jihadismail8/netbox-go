@@ -384,11 +384,11 @@ func typedIPAddressUpdateCommand(
 	for _, path := range mask.Paths {
 		switch path {
 		case "address":
-			if fields.address.State() != applicationipam.FieldPresent {
-				return applicationipam.UpdateIPAddressCommand{},
-					invalidIPAddressUpdateMask()
+			if input == nil || input.Address == nil {
+				command.Address = applicationipam.NullField[string]()
+			} else {
+				command.Address = fields.address
 			}
-			command.Address = fields.address
 		case "vrf":
 			if input == nil || input.Vrf == nil {
 				command.VRF = applicationipam.NullField[int64]()
@@ -396,11 +396,11 @@ func typedIPAddressUpdateCommand(
 				command.VRF = fields.vrf
 			}
 		case "status":
-			if fields.status.State() != applicationipam.FieldPresent {
-				return applicationipam.UpdateIPAddressCommand{},
-					invalidIPAddressUpdateMask()
+			if input == nil || input.Status == nil {
+				command.Status = applicationipam.NullField[string]()
+			} else {
+				command.Status = fields.status
 			}
-			command.Status = fields.status
 		case "role":
 			if input == nil || input.Role == nil {
 				command.Role = applicationipam.NullField[string]()
@@ -408,23 +408,23 @@ func typedIPAddressUpdateCommand(
 				command.Role = fields.role
 			}
 		case "dns_name":
-			if fields.dnsName.State() != applicationipam.FieldPresent {
-				return applicationipam.UpdateIPAddressCommand{},
-					invalidIPAddressUpdateMask()
+			if input == nil || input.DnsName == nil {
+				command.DNSName = applicationipam.NullField[string]()
+			} else {
+				command.DNSName = fields.dnsName
 			}
-			command.DNSName = fields.dnsName
 		case "description":
-			if fields.description.State() != applicationipam.FieldPresent {
-				return applicationipam.UpdateIPAddressCommand{},
-					invalidIPAddressUpdateMask()
+			if input == nil || input.Description == nil {
+				command.Description = applicationipam.NullField[string]()
+			} else {
+				command.Description = fields.description
 			}
-			command.Description = fields.description
 		case "comments":
-			if fields.comments.State() != applicationipam.FieldPresent {
-				return applicationipam.UpdateIPAddressCommand{},
-					invalidIPAddressUpdateMask()
+			if input == nil || input.Comments == nil {
+				command.Comments = applicationipam.NullField[string]()
+			} else {
+				command.Comments = fields.comments
 			}
-			command.Comments = fields.comments
 		case "assigned_object_type":
 			if input == nil || input.AssignedObjectType == nil {
 				command.AssignedObjectType =
@@ -493,7 +493,7 @@ func typedIPAddressRole(
 	nullable domainipam.NullableIPAddressRole,
 ) *wrapperspb.StringValue {
 	role, present := nullable.Get()
-	if !present {
+	if !present || role.String() == "" {
 		return nil
 	}
 	return wrapperspb.String(role.String())

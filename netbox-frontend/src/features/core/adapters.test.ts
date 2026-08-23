@@ -1,7 +1,14 @@
 import { describe, expect, it } from 'vitest'
 import { CORE_PROFILE_RESOURCE_NAMES } from './manifest'
 import { getCoreResourceAdapter } from './adapters'
-import { resourceField, type CoreReference, type SiteDTO } from './resources'
+import {
+  resourceField,
+  withFormField,
+  type CoreReference,
+  type IPAddressDTO,
+  type IPAddressForm,
+  type SiteDTO,
+} from './resources'
 
 const manufacturer: CoreReference = {
   id: 2,
@@ -149,6 +156,122 @@ describe('typed core resource adapters', () => {
         false,
       ),
     ).toEqual({ device_type: 6, role: 7, site: 3, rack: null })
+  })
+
+  it('preserves IPAddress scalar presence in create and PATCH mutations', () => {
+    const adapter = getCoreResourceAdapter('ipaddress')
+
+    const create = adapter.mutationFromForm({ address: '192.0.2.17', status: 'active' }, false)
+    expect(create).toEqual({ address: '192.0.2.17', status: 'active' })
+    for (const omitted of ['role', 'dns_name', 'description', 'comments']) {
+      expect(create).not.toHaveProperty(omitted)
+    }
+    expect(
+      adapter.mutationFromForm(
+        {
+          address: '192.0.2.18',
+          status: 'reserved',
+          role: null,
+          dns_name: 'edge.example',
+          description: '',
+          comments: '',
+        },
+        false,
+      ),
+    ).toEqual({
+      address: '192.0.2.18',
+      status: 'reserved',
+      role: null,
+      dns_name: 'edge.example',
+      description: '',
+      comments: '',
+    })
+
+    expect(adapter.mutationFromForm({}, true)).toEqual({})
+    expect(adapter.mutationFromForm({ role: null }, true)).toEqual({ role: null })
+    expect(adapter.mutationFromForm({ role: 'loopback' }, true)).toEqual({ role: 'loopback' })
+    expect(adapter.mutationFromForm({ dns_name: '', description: '', comments: '' }, true)).toEqual(
+      { dns_name: '', description: '', comments: '' },
+    )
+    expect(
+      adapter.mutationFromForm(
+        {
+          address: '2001:db8::17',
+          status: 'reserved',
+          role: 'anycast',
+          dns_name: 'edge.example',
+          description: 'Edge address',
+          comments: 'Operator note',
+        },
+        true,
+      ),
+    ).toEqual({
+      address: '2001:db8::17',
+      status: 'reserved',
+      role: 'anycast',
+      dns_name: 'edge.example',
+      description: 'Edge address',
+      comments: 'Operator note',
+    })
+  })
+
+  it('omits unchanged IPAddress scalars without changing relationship serialization', () => {
+    const adapter = getCoreResourceAdapter('ipaddress')
+    const dto: IPAddressDTO = {
+      id: 17,
+      url: '/api/ipam/ip-addresses/17/',
+      display: '192.0.2.17/24',
+      created: '2026-08-19T10:00:00Z',
+      last_updated: '2026-08-19T10:00:00Z',
+      address: '192.0.2.17/24',
+      vrf,
+      status: { value: 'active', label: 'Active' },
+      role: { value: 'loopback', label: 'Loopback' },
+      dns_name: 'edge.example',
+      description: 'Existing description',
+      comments: 'Existing comment',
+      assigned_object_type: 'dcim.interface',
+      assigned_object_id: assignedInterface.id,
+      family: { value: 4, label: 'IPv4' },
+      assigned_object: assignedInterface,
+    }
+    const hydrated = adapter.formFromDTO(dto)
+
+    const unchangedRelationships = {
+      vrf: vrf.id,
+      assigned_object_type: 'dcim.interface',
+      assigned_object_id: assignedInterface.id,
+    } as const
+    expect(adapter.mutationFromForm({ ...hydrated }, true)).toEqual(unchangedRelationships)
+
+    const nullableBlankHydrated = adapter.formFromDTO({
+      ...dto,
+      role: null,
+      dns_name: '',
+      description: '',
+      comments: '',
+    })
+    expect(adapter.mutationFromForm({ ...nullableBlankHydrated }, true)).toEqual(
+      unchangedRelationships,
+    )
+
+    const clearedRole = withFormField(hydrated, 'role', null) as IPAddressForm
+    expect(adapter.mutationFromForm(clearedRole, true)).toEqual({
+      ...unchangedRelationships,
+      role: null,
+    })
+    expect(adapter.mutationFromForm({ ...hydrated, description: '' }, true)).toEqual({
+      ...unchangedRelationships,
+      description: '',
+    })
+    expect(adapter.mutationFromForm({ ...hydrated, role: 'anycast' }, true)).toEqual({
+      ...unchangedRelationships,
+      role: 'anycast',
+    })
+    expect(adapter.mutationFromForm({ ...hydrated, dns_name: 'new.example' }, true)).toEqual({
+      ...unchangedRelationships,
+      dns_name: 'new.example',
+    })
   })
 
   it('narrows panel state to the declared resource filter contract', () => {

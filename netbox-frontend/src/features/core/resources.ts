@@ -203,7 +203,9 @@ export interface PrefixDTO extends CoreResourceBase {
   _depth: number
 }
 
-export interface IPAddressDTO extends CoreResourceBase {
+export interface IPAddressDTO extends Omit<CoreResourceBase, 'created' | 'last_updated'> {
+  created: string | null
+  last_updated: string | null
   address: string
   vrf: CoreReference | null
   status: ChoiceDTO<IPAddressStatus>

@@ -2742,7 +2742,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/IPAddressWrite"
+                "$ref": "#/components/schemas/IPAddressCreate"
               }
             }
           }
@@ -2812,7 +2812,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/IPAddressWrite"
+                "$ref": "#/components/schemas/IPAddressReplace"
               }
             }
           }
@@ -2851,7 +2851,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/IPAddressWrite"
+                "$ref": "#/components/schemas/IPAddressUpdate"
               }
             }
           }
@@ -4481,10 +4481,7 @@
         "additionalProperties": false,
         "properties": {
           "address": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "vrf": {
             "oneOf": [
@@ -4536,22 +4533,13 @@
             ]
           },
           "dns_name": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "description": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "comments": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "assigned_object_type": {
             "type": [
@@ -4575,10 +4563,7 @@
             "format": "uri"
           },
           "display": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "created": {
             "type": [
@@ -4623,6 +4608,59 @@
           }
         }
       },
+      "IPAddressCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "address"
+        ],
+        "properties": {
+          "address": {
+            "type": "string",
+            "minLength": 1
+          },
+          "vrf": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1
+          },
+          "role": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "dns_name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "comments": {
+            "type": "string"
+          },
+          "assigned_object_type": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1
+          },
+          "assigned_object_id": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          }
+        }
+      },
       "IPAddressList": {
         "type": "object",
         "additionalProperties": false,
@@ -4657,15 +4695,16 @@
           }
         }
       },
-      "IPAddressWrite": {
+      "IPAddressReplace": {
         "type": "object",
         "additionalProperties": false,
+        "required": [
+          "address"
+        ],
         "properties": {
           "address": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "minLength": 1
           },
           "vrf": {
             "type": [
@@ -4675,7 +4714,8 @@
             "format": "int64"
           },
           "status": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "role": {
             "type": [
@@ -4684,28 +4724,70 @@
             ]
           },
           "dns_name": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "description": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "comments": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "assigned_object_type": {
             "type": [
               "string",
               "null"
+            ],
+            "minLength": 1
+          },
+          "assigned_object_id": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          }
+        }
+      },
+      "IPAddressUpdate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "address": {
+            "type": "string",
+            "minLength": 1
+          },
+          "vrf": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1
+          },
+          "role": {
+            "type": [
+              "string",
+              "null"
             ]
+          },
+          "dns_name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "comments": {
+            "type": "string"
+          },
+          "assigned_object_type": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1
           },
           "assigned_object_id": {
             "type": [
