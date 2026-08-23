@@ -40,17 +40,15 @@ bearer parsing, and fail-closed unary method safety. `CW1-V1-02-I3` is accepted
 and done for typed browser-session outcomes, valid-session-first REST
 arbitration, exact CSRF pairing/recovery, transactional login/logout, and
 cookie shape. `CW1-V1-02-I4` is now the sole active identity child. Its exact
-four-commit password-change/session series was rebased onto accepted I3 receipt
-head `8e59b3dff6ee86f8b1195d389a2b5c11211ea160`; the rebased implementation tip
-before activation-governance edits had source digest
-`source-v2:sha256:50c9ed75a76f5f3b387e6413c59557259a6445962ba8886db1a833f5e7afc96e`
-and 3,013 owned entries. Pre-rebase results are historical. The accepted-I3
-red-first proof and pre-governance focused, real-PostgreSQL, race, backend, and
-root repository ladder are green at
-`source-v2:sha256:e37353f2c10db82b81cfd7623f8741a83da8a9bd2a70677a6fdcdba4ce4b5927`
-with 3,013 entries. The governance-inclusive exact-byte rerun, candidate
-commit, push, exact-SHA CI, and claim/receipt sequence remain, so I4 is still
-`in-progress` and no retained I4 outcome is claimed. Its parent and the
+tested password-change/session candidate is
+`c4b1ce1f00cb255b684fb9d795e4e5c7a578907f`, source digest
+`source-v2:sha256:3f37417bb791ac6bc97ac4a0d23c5f928062feecf81a0f8a4fb9e57445d53670`
+with 3,013 entries. Its accepted-I3-based red-first, focused, race,
+real-PostgreSQL, complete L4, pinned repository, feature-candidate CI, and main
+exact-SHA CI boundaries are green. The current nine-path claim-only revision
+conditionally moves I4 to `evidence`: that state becomes effective only after
+this exact revision passes repository CI. The digest-excluded receipt and
+project-owner review then remain. Its parent and the
 password-policy, throttle, trusted-proxy, streaming, and aggregate rows remain
 open. The 293-row
 `CW1-V2-01` structural authority has human acceptance, while its 275 unresolved
@@ -302,23 +300,23 @@ replacement completes ADR 0004's governing gate and CP-13.
 
 ## Evidence status
 
-| Checkpoint               | Present foundation                                                                                            | Missing before exit                                                                                                        | Status                                |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
-| V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                                       | Refresh for the active source and every later relevant merged digest                                                       | Continuous; entry source retained     |
-| V1 identity/RBAC         | Persisted identity, retained CORS, accepted bounded I1/I2/I3 evidence, and locally green rebased I4 candidate | Re-run exact governance bytes and retain I4; complete password-policy/throttle/proxy/streaming plus RBAC/admin/secret work | I4 in progress; parent open           |
-| V2 domain behavior       | Typed shared services, broad focused tests, and reviewed machine-readable 293-row traceability                | Uncovered presence, invariant, rollback, side-effect, and concurrency cases                                                | V2-01 done; behavior/evidence pending |
-| V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, and Compose harness                                                     | Dependency-aware HTTP/gRPC readiness, dependency loss/recovery, remaining locking cases, retained external run             | Implementation and evidence pending   |
-| V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                                   | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report                 | T1; implementation/evidence pending   |
-| V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                               | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes            | T1; implementation/evidence pending   |
-| V6 sign-off              | First-profile legacy stacks physically retired                                                                | V0-V5 retained green together, per-capability review, protobuf freeze/breaking baseline, joint sign-off                    | Not earned                            |
+| Checkpoint               | Present foundation                                                                                                                                         | Missing before exit                                                                                                                                         | Status                                     |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                                                                                    | Refresh for the active source and every later relevant merged digest                                                                                        | Continuous; entry source retained          |
+| V1 identity/RBAC         | Persisted identity, retained CORS, accepted bounded I1/I2/I3 evidence, and an exact I4 candidate green through local/PostgreSQL/feature/main CI boundaries | Pass the I4 claim revision's CI, retain its receipt, obtain owner review, and complete password-policy/throttle/proxy/streaming plus RBAC/admin/secret work | I4 evidence claim conditional; parent open |
+| V2 domain behavior       | Typed shared services, broad focused tests, and reviewed machine-readable 293-row traceability                                                             | Uncovered presence, invariant, rollback, side-effect, and concurrency cases                                                                                 | V2-01 done; behavior/evidence pending      |
+| V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, and Compose harness                                                                                                  | Dependency-aware HTTP/gRPC readiness, dependency loss/recovery, remaining locking cases, retained external run                                              | Implementation and evidence pending        |
+| V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                                                                                | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report                                                  | T1; implementation/evidence pending        |
+| V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                                                                            | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes                                             | T1; implementation/evidence pending        |
+| V6 sign-off              | First-profile legacy stacks physically retired                                                                                                             | V0-V5 retained green together, per-capability review, protobuf freeze/breaking baseline, joint sign-off                                                     | Not earned                                 |
 
 See [Evidence](evidence/README.md) for the artifact policy and commands.
 
 ## Remaining first-profile work
 
 1. Keep `CW1-G00` green with pinned Go, Node, and npm.
-2. Re-run the final exact bytes and retain active `CW1-V1-02-I4`, then complete the later
-   `CW1-V1-02` children through `CW1-V1-04`: close the credential and remaining
+2. Complete the exact `CW1-V1-02-I4` claim CI, receipt, and owner review, then complete
+   the later `CW1-V1-02` children through `CW1-V1-04`: close the credential and remaining
    identity/security matrix, then retain V1.
 3. Complete `CW1-V2-02` through `CW1-V2-08`: use the accepted traceability for
    every profile scenario and plan rule;

@@ -35,14 +35,16 @@ token grammar/outcomes and unary gRPC bearer/method safety.
 `CW1-V1-02-I3` is accepted and done only for browser-session classification,
 valid-session-first REST arbitration, exact CSRF pairing, transactional
 login/logout, active-session CSRF recovery, and session-cookie shape.
-`CW1-V1-02-I4` is the sole active identity child. Its exact four-commit series
-is rebased onto accepted I3 receipt head
-`8e59b3dff6ee86f8b1195d389a2b5c11211ea160`. Its accepted-I3-based red-first
-proof and pre-governance local source-candidate ladder are green, including
-focused, real-PostgreSQL, race, backend, and root repository gates. The
-governance-inclusive exact-byte rerun, candidate commit, push, exact-SHA CI,
-and claim/receipt sequence remain open, so I4 is still `in-progress`, not
-evidence. The `CW1-V1-02` parent and its password-policy, throttle,
+`CW1-V1-02-I4` is the sole active identity child. Its tested candidate at
+`c4b1ce1f00cb255b684fb9d795e4e5c7a578907f` passed the accepted-I3-based
+red-first proof, focused and race suites, real-PostgreSQL matrices and complete
+L4, the pinned repository gate, feature-candidate CI, and main exact-SHA CI on
+unchanged source digest
+`source-v2:sha256:3f37417bb791ac6bc97ac4a0d23c5f928062feecf81a0f8a4fb9e57445d53670`.
+The current nine-path claim-only revision conditionally moves I4 to `evidence`:
+that state becomes effective only after this exact revision passes repository
+CI. Its digest-excluded receipt and project-owner review then remain. The
+`CW1-V1-02` parent and its password-policy, throttle,
 trusted-proxy, gRPC streaming, Django Origin/Referer/masking, and aggregate
 rows remain open. Do not begin or merge another
 Capability Profile while V0 is red or before `CW1-V6-03`. Once those gates are
