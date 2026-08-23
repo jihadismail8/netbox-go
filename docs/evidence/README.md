@@ -27,11 +27,11 @@ receipt also passed exact-SHA CI; project-owner review remains.
 The
 [bounded IPAddress scalar write-presence result](2026-08-19-core-workflow-v2-ipaddress-scalar-presence-i1-v0.md)
 passed its focused, race, real-PostgreSQL, complete L4, generated-contract,
-Vue, pinned repository, and independent exact-candidate CI boundaries. The
-current claim-only transition records conditional `evidence`; it becomes
-effective only after the exact claim revision passes repository CI. Its
+Vue, pinned repository, and independent exact-candidate CI boundaries. Claim
+revision `05f24e211b4b446d3337941ba8811b7ffdd68ae6` also passed its pinned
+local gate and exact-SHA repository CI, making bounded I1 `evidence`. Its
 digest-excluded receipt, unavailable external differential, and explicit
-project-owner review then remain.
+project-owner review remain.
 The project owner reviewed and retained the entry V0, CORS, bounded token I1,
 bounded token I2, and bounded browser-session I3 results. The
 [2026-08-03 post-cleanup V0](2026-08-03-post-cleanup-v0.md) used the superseded
@@ -42,20 +42,19 @@ the
 Profile remains T1 and pre-publication; V1-V6 remain open. `CW1-G00` passed for
 the exact I4 tested source; `CW1-V1-01`, `CW1-V1-02-I1`, `CW1-V1-02-I2`, and
 `CW1-V1-02-I3` are done. I4 is `evidence`; project-owner review remains. The
-parent credential/session matrix remains
-open. `CW1-V2-02-I1` has a conditional `evidence` claim; claim CI, its receipt,
-the external differential, and project-owner review remain, and the
-13-resource `CW1-V2-02` parent stays open. Feature work must re-establish V0
-after its next owned-source change.
+parent credential/session matrix remains open. `CW1-V2-02-I1` is `evidence`;
+its receipt CI, external differential, and project-owner review remain, and
+the 13-resource `CW1-V2-02` parent stays open. Feature work must re-establish
+V0 after its next owned-source change.
 
-| Evidence                 | Required command or boundary                                  | Current state                                                    |
-| ------------------------ | ------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Repository quality       | Revised `make check` including non-mutating backend coverage  | I4 claim/receipt and V2-I1 candidate passed; V2-I1 claim pending |
-| Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                          |
-| gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                            |
-| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, I4, and V2-I1 bounded slices passed; V1/V3 incomplete    |
-| Standalone deployment    | `make deployment-smoke`                                       | CORS-scoped exact-commit result retained; V3 still open          |
-| Browser workflow         | `make browser-e2e`                                            | Harness present; current result pending                          |
+| Evidence                 | Required command or boundary                                  | Current state                                                         |
+| ------------------------ | ------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Repository quality       | Revised `make check` including non-mutating backend coverage  | I4 claim/receipt and V2-I1 candidate/claim passed; I1 receipt pending |
+| Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                               |
+| gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                                 |
+| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, I4, and V2-I1 bounded slices passed; V1/V3 incomplete         |
+| Standalone deployment    | `make deployment-smoke`                                       | CORS-scoped exact-commit result retained; V3 still open               |
+| Browser workflow         | `make browser-e2e`                                            | Harness present; current result pending                               |
 
 GitHub CI currently runs V0 only. Real PostgreSQL, deployment, differential
 oracle, gRPC promotion, and browser gates remain operator-run until durable,
