@@ -75,12 +75,17 @@ its digest-excluded receipt and project-owner review then remain. The owned
 PostgreSQL, deployment, differential, gRPC-promotion, and
 browser gates remain manual until connected jobs retain durable artifacts.
 
-Active `CW1-V2-02-I1` adds a red-first IPAddress scalar-presence matrix at the
-domain, application, REST, gRPC, real-PostgreSQL, parity, generated-contract,
-and Vue adapter/form boundaries. Until those tests pass on one retained source
-digest, this paragraph records planned scope only. Local transport and Vue
-tests cannot substitute for the pinned REST oracle, nor can they promote T2,
-T3, or T4.
+`CW1-V2-02-I1` has an exact tested candidate at
+`7acba402f0de2bd59e5b342a6f05df268bc9120b`, source digest
+`source-v2:sha256:ed330b0a5bbeafd70b7b16a4ce4d1052fa9a385313a3b8827b554983571c1b43`
+over 3,018 entries. Its eight named domain, application, REST, gRPC,
+real-PostgreSQL, and parity tests passed, as did the affected race,
+generated-contract, Vue adapter/form, complete L4, pinned repository, and
+independent exact-candidate CI boundaries. The current eight-path claim-only
+transition records bounded `evidence` only if this exact attestation revision
+passes repository CI; its digest-excluded receipt, unavailable pinned REST
+oracle, and project-owner review then remain. The local transport/parity and
+Vue results do not substitute for the oracle or promote T2, T3, or T4.
 
 ## Owned external gates
 
@@ -215,15 +220,15 @@ and exact change-state outcomes remain to be added and retained.
 
 ## Verification checkpoints
 
-| Checkpoint               | Implementation state                                                  | Exit condition                                                                                                 | Current status                                           |
-| ------------------------ | --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage  | `make check` retained green on each exact relevant source digest                                               | Entry source-v2 retained; active-source refresh required |
-| V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests | Pass I4's exact claim CI, retain its receipt, obtain owner review, then complete the remaining identity matrix | I4 evidence claim conditional; parent open               |
-| V2 profile behavior      | Shared 13-resource service and broad positive/negative tests          | Trace every declared invariant, field/filter/relationship, error, and rollback                                 | Implementation/evidence gap                              |
-| V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness            | Truthful readiness, loss/recovery, real PostgreSQL and deployment artifacts                                    | Implementation/evidence gap                              |
-| V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites       | Complete T2 scenario report, then equivalent T3 report                                                         | T1; implementation gap                                   |
-| V5 Vue workflow          | Typed adapters and real-browser harness                               | Both workflows and every required negative/state case retained green                                           | T1; implementation gap                                   |
-| V6 sign-off              | First-profile legacy stacks retired                                   | V0-V5 green together with linked evidence                                                                      | Not earned                                               |
+| Checkpoint               | Implementation state                                                   | Exit condition                                                                                                 | Current status                                           |
+| ------------------------ | ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage   | `make check` retained green on each exact relevant source digest                                               | Entry source-v2 retained; active-source refresh required |
+| V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests  | Pass I4's exact claim CI, retain its receipt, obtain owner review, then complete the remaining identity matrix | I4 evidence claim conditional; parent open               |
+| V2 profile behavior      | Shared 13-resource service, broad tests, and exact tested IPAddress I1 | Pass I1 claim CI, retain/review its receipt, then trace every remaining invariant, field, error, and rollback  | I1 evidence claim conditional; parent open               |
+| V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness             | Truthful readiness, loss/recovery, real PostgreSQL and deployment artifacts                                    | Implementation/evidence gap                              |
+| V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites        | Complete T2 scenario report, then equivalent T3 report                                                         | T1; implementation gap                                   |
+| V5 Vue workflow          | Typed adapters and real-browser harness                                | Both workflows and every required negative/state case retained green                                           | T1; implementation gap                                   |
+| V6 sign-off              | First-profile legacy stacks retired                                    | V0-V5 green together with linked evidence                                                                      | Not earned                                               |
 
 ## Merge rules
 

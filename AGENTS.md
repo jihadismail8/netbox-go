@@ -46,11 +46,20 @@ their exact-SHA repository CI boundaries. Project-owner review remains before
 the separate `evidence` to `done` transition. The
 `CW1-V1-02` parent and its password-policy, throttle,
 trusted-proxy, gRPC streaming, Django Origin/Referer/masking, and aggregate
-rows remain open. `CW1-V2-02-I1` is the active rewrite increment and owns only
-IPAddress scalar create/PUT/PATCH presence, operation-specific generated API
-contracts, matching REST/gRPC semantics, Vue form serialization/validation,
-and their focused tests. It does not close the 13-resource parent or promote a
-compatibility tier. Do not begin or merge another
+rows remain open. `CW1-V2-02-I1` has an exact tested candidate at
+`7acba402f0de2bd59e5b342a6f05df268bc9120b`, source digest
+`source-v2:sha256:ed330b0a5bbeafd70b7b16a4ce4d1052fa9a385313a3b8827b554983571c1b43`
+with 3,018 entries. Its focused, race, real-PostgreSQL, complete L4,
+generated-contract, Vue, pinned repository, and feature-candidate CI
+boundaries are green. The current eight-path claim-only transition
+conditionally moves the bounded child to `evidence`; that state becomes
+effective only after the exact claim revision passes repository CI. Its
+digest-excluded receipt, unavailable external differential, and project-owner
+review then remain. It owns only IPAddress scalar create/PUT/PATCH presence,
+operation-specific generated API contracts, matching REST/gRPC semantics, Vue
+form serialization/validation, and their focused tests. It does not close the
+13-resource parent or promote a compatibility tier. No later V2 child is
+claimed. Do not begin or merge another
 Capability Profile while V0 is red or before `CW1-V6-03`. Once those gates are
 durably closed, follow the next accepted profile in the roadmap and playbook
 rather than this dated snapshot.
