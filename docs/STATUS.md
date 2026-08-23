@@ -63,12 +63,21 @@ REST/gRPC mapping, Vue validation/serialization, and focused tests. Its
 focused, race, real-PostgreSQL, complete L4, generated-contract, Vue, pinned
 repository, independent exact-candidate CI, evidence-claim CI, and
 pre-acceptance receipt CI boundaries are green. The project owner accepted
-only this bounded result at `2026-08-23T17:25:54Z`. The current eight-path
-closeout records `CW1-V2-02-I1` as `done` only if this exact owner-accepted
-claim revision passes repository CI; its excluded closeout receipt then
-remains. The pinned differential oracle was unavailable, so REST T2 and
-corresponding gRPC T3 remain unearned. No parent, profile, traceability
+only this bounded result at `2026-08-23T17:25:54Z`. Its owner-accepted
+closeout claim and excluded closeout receipt also passed exact-SHA CI, so I1 is
+effectively `done`. The pinned differential oracle was unavailable, so REST T2
+and corresponding gRPC T3 remain unearned. No parent, profile, traceability
 consumer, or tier completion is claimed.
+
+`CW1-V2-02-I2` is the active reviewed implementation increment from clean
+entry revision `8aee314f9bca10f0414ec695b9163deffae7b993`, source digest
+`source-v2:sha256:eb7f085be604b29d32eb0059e0967de3b54c78abb993f03c9e60e9f5d622f038`
+with 3,018 entries. It owns only the six Site scalar create/PUT/PATCH presence
+states, operation-specific generated API contracts, matching REST/gRPC
+semantics, PostgreSQL durability, Vue dirty-field serialization/validation,
+and eight named focused tests. It does not own Site uniqueness, deletion,
+list/query behavior, full CRUD, a compatibility tier, the parent, or profile
+promotion.
 
 > **Operational boundary:** this is a development build for disposable data.
 > Production TLS, schema upgrades, backup/restore, operational hardening, and
@@ -318,7 +327,7 @@ replacement completes ADR 0004's governing gate and CP-13.
 | ------------------------ | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                     | Refresh for the active source and every later relevant merged digest                                            | Continuous; entry source retained                        |
 | V1 identity/RBAC         | Persisted identity, retained CORS, accepted I1/I2/I3, and retained I4 evidence              | Obtain I4 owner review; complete password-policy/throttle/proxy/streaming plus RBAC/admin/secret work           | I4 evidence; parent open                                 |
-| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, and owner-accepted exact IPAddress I1 | Execute remaining presence, invariant, rollback, side-effect, concurrency, and external-tier cases              | V2-01 done; V2-02-I1 done claim conditional; parent open |
+| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, and accepted IPAddress I1             | Execute active Site I2, then remaining presence, invariant, rollback, side-effect, concurrency, and tier cases  | V2-01/I1 done; V2-02-I2 in progress; parent open         |
 | V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, and Compose harness                                   | Dependency-aware HTTP/gRPC readiness, dependency loss/recovery, remaining locking cases, retained external run  | Implementation and evidence pending                      |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                 | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report      | T1; implementation/evidence pending                      |
 | V5 Vue                   | Typed adapters and real-Chrome workflow harness                                             | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes | T1; implementation/evidence pending                      |

@@ -121,7 +121,7 @@ production release through PROD-1 and PROD-2.
 | 0    | Stable language and decisions       | CONTEXT plus ADR 0001–0005              | `done`                                                         |
 | 1    | Repository/shared-core baseline     | `CW1-G00`                               | `continuous`                                                   |
 | 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01/I1/I2/I3 `done`; I4 `evidence`; parent open              |
-| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01 done; V2-02-I1 done claim conditional; parent/T2/T3 open |
+| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01/I1 done; Site I2 active; parent/T2/T3 open                |
 | 4    | First Core Workflow Profile         | `CW1-V1-*` through `CW1-V6-*`           | T1; active program                                             |
 | 5    | In-scope feature expansion          | `CP-P01`–`CP-P19`, then `MC-01`–`MC-10` | `blocked`                                                      |
 | 6    | Extension Service contracts         | `EXT-01`                                | `blocked` on a named inventory                                 |
@@ -181,12 +181,10 @@ production readiness early.
 `source-v2:sha256:ed330b0a5bbeafd70b7b16a4ce4d1052fa9a385313a3b8827b554983571c1b43`
 with 3,018 entries. Its focused, race, real-PostgreSQL, complete L4,
 generated-contract, Vue, pinned repository, and independent exact-candidate CI
-boundaries are green. The earlier eight-path evidence claim and its
-digest-excluded receipt both passed exact-SHA CI, making the bounded child
-`evidence`. The project owner accepted only this bounded result at
-`2026-08-23T17:25:54Z`. The current eight-path closeout records I1 as `done`
-only if this exact owner-accepted claim revision passes repository CI; its
-digest-excluded closeout receipt then remains. The unavailable external
+boundaries are green. The earlier eight-path evidence claim, pre-acceptance
+receipt, owner-accepted closeout claim, and excluded closeout receipt all
+passed exact-SHA CI. The project owner accepted only this bounded result at
+`2026-08-23T17:25:54Z`, so I1 is effectively `done`. The unavailable external
 differential leaves REST T2 and corresponding gRPC T3 unearned. The child
 closes no parent, tier, profile, or traceability-consumer boundary.
 
@@ -200,8 +198,9 @@ closes no parent, tier, profile, or traceability-consumer boundary.
 | `CW1-V1-02-I4`      | `evidence`    | Obtain project-owner review                        | Accepted/done I3 and current `CW1-G00` |
 | `CW1-V1-03`–`V1-04` | `blocked`     | Complete and retain remaining identity/security    | Preceding V1 goal                      |
 | `CW1-V2-01`         | `done`        | Accepted structural rule/scenario traceability     | Fresh source-v2 V0 follows this gate   |
-| `CW1-V2-02`         | `in-progress` | Claim the next reviewed bounded child              | Accepted V2-01 and current `CW1-G00`   |
-| `CW1-V2-02-I1`      | `done`*       | Accepted bounded IPAddress scalar write presence   | Tested candidate and current `CW1-G00` |
+| `CW1-V2-02`         | `in-progress` | Execute the reviewed Site scalar child             | Accepted V2-01 and current `CW1-G00`   |
+| `CW1-V2-02-I1`      | `done`        | Accepted bounded IPAddress scalar write presence   | Tested candidate and current `CW1-G00` |
+| `CW1-V2-02-I2`      | `in-progress` | Implement bounded Site scalar write presence       | Done I1 and current `CW1-G00`          |
 | `CW1-V2-03`–`V2-08` | `blocked`     | Close later typed business behavior                | V2-02 and named lane dependencies      |
 | `CW1-V3-01`         | `ready`       | Make HTTP/gRPC readiness dependency-aware          | `CW1-G00`                              |
 | `CW1-V3-02`–`V3-05` | `blocked`     | Close PostgreSQL/deployment evidence               | Named V2/V3 dependencies               |
@@ -376,18 +375,26 @@ visibly pending rather than falsely green.
 
 Entry: `CW1-V2-01` is green.
 
-Owner-accepted bounded child in closeout transition:
+Bounded children:
 
 - [`CW1-V2-02-I1`](increments/CW1-V2-02-I1.md) owns only IPAddress
   scalar create/PUT/PATCH presence, generated request/response nullability,
   REST/gRPC mapping, Vue form serialization/validation, and the named durable
   regressions. Its exact tested candidate, evidence claim, and pre-acceptance
-  receipt exact-SHA CI are green. The project owner accepted the bounded result
-  at `2026-08-23T17:25:54Z`; its `done` state is conditional on the current
-  owner-accepted closeout revision's exact-SHA CI, followed by the excluded
-  closeout receipt. The unavailable differential leaves REST T2 and
+  receipt, owner-accepted closeout claim, and excluded closeout receipt
+  exact-SHA CI are green. The project owner accepted the bounded result at
+  `2026-08-23T17:25:54Z`; I1 is effectively `done`. The unavailable
+  differential leaves REST T2 and
   corresponding gRPC T3 unearned. I1 does not close this parent, any
   compatibility tier, the profile, or a traceability consumer.
+
+- [`CW1-V2-02-I2`](increments/CW1-V2-02-I2.md) is the active reviewed child.
+  It owns only Site `name`, `slug`, `status`, `facility`, `description`, and
+  `comments` create/PUT/PATCH presence, operation-specific generated API
+  contracts, matching REST/gRPC semantics, PostgreSQL durability, Vue
+  serialization/validation, and eight named focused regressions. Site
+  uniqueness, delete protection, list/query behavior, full CRUD, external
+  differential evidence, every tier, and this parent remain open.
 
 - [ ] Represent all 13 resources × list/get/create/PUT/PATCH/delete.
 - [ ] Cover defaults, read-only fields, and nullability.

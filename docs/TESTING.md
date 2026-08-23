@@ -83,11 +83,21 @@ real-PostgreSQL, and parity tests passed, as did the affected race,
 generated-contract, Vue adapter/form, complete L4, pinned repository, and
 independent exact-candidate CI boundaries. Its evidence claim and
 pre-acceptance receipt also passed exact-SHA repository CI. The project owner
-accepted only this bounded result at `2026-08-23T17:25:54Z`; the current
-eight-path closeout records I1 as `done` only if this exact owner-accepted claim
-revision passes repository CI, followed by the excluded closeout receipt. The
+accepted only this bounded result at `2026-08-23T17:25:54Z`; the
+owner-accepted closeout claim and excluded closeout receipt also passed
+exact-SHA CI, so I1 is effectively `done`. The
 pinned REST oracle remained unavailable. The local transport/parity and Vue
 results do not substitute for that oracle or promote T2, T3, or T4.
+
+`CW1-V2-02-I2` starts from clean revision
+`8aee314f9bca10f0414ec695b9163deffae7b993` at
+`source-v2:sha256:eb7f085be604b29d32eb0059e0967de3b54c78abb993f03c9e60e9f5d622f038`
+over 3,018 entries. Its required focused matrix is exactly eight named Site
+domain, application, REST, gRPC, PostgreSQL, and parity tests plus generated
+contract and Vue adapter/form regressions. The affected/race, focused and full
+L4, backend, frontend, root, exact-candidate CI, and evidence gates remain
+pending until they pass on one unchanged candidate digest. Local results will
+not substitute for the pinned differential or promote T2/T3/T4.
 
 ## Owned external gates
 
@@ -226,7 +236,7 @@ and exact change-state outcomes remain to be added and retained.
 | ------------------------ | ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage     | `make check` retained green on each exact relevant source digest                                               | Entry source-v2 retained; active-source refresh required |
 | V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests    | Pass I4's exact claim CI, retain its receipt, obtain owner review, then complete the remaining identity matrix | I4 evidence claim conditional; parent open               |
-| V2 profile behavior      | Shared 13-resource service, broad tests, and owner-accepted IPAddress I1 | Trace every remaining invariant, field, error, rollback, and external-tier boundary                            | I1 done claim conditional; parent open                   |
+| V2 profile behavior      | Shared 13-resource service, broad tests, and accepted IPAddress I1       | Implement active Site I2; trace every remaining invariant, rollback, and external-tier boundary                | I1 done; Site I2 in progress; parent open                |
 | V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness               | Truthful readiness, loss/recovery, real PostgreSQL and deployment artifacts                                    | Implementation/evidence gap                              |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites          | Complete T2 scenario report, then equivalent T3 report                                                         | T1; implementation gap                                   |
 | V5 Vue workflow          | Typed adapters and real-browser harness                                  | Both workflows and every required negative/state case retained green                                           | T1; implementation gap                                   |

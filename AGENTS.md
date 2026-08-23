@@ -52,15 +52,20 @@ rows remain open. `CW1-V2-02-I1` has an exact tested candidate at
 with 3,018 entries. Its focused, race, real-PostgreSQL, complete L4,
 generated-contract, Vue, pinned repository, candidate, evidence-claim, and
 pre-acceptance receipt exact-SHA CI boundaries are green. The project owner
-accepted this bounded result at `2026-08-23T17:25:54Z`. The current eight-path
-closeout records `CW1-V2-02-I1` as `done` only if this exact owner-accepted
-claim revision passes repository CI; its digest-excluded closeout receipt then
-remains. I1 is done only for IPAddress scalar create/PUT/PATCH presence,
+accepted this bounded result at `2026-08-23T17:25:54Z`. The owner-accepted
+closeout claim and excluded closeout receipt also passed exact-SHA CI, so I1
+is effectively done only for IPAddress scalar create/PUT/PATCH presence,
 operation-specific generated API contracts, matching REST/gRPC semantics, Vue
 form serialization/validation, and their focused tests. The pinned external
 differential remained unavailable, so REST T2 and corresponding gRPC T3 are
 unearned. I1 closes no 13-resource parent, compatibility tier, profile state,
-or traceability consumer. No later V2 child is claimed. Do not begin or merge
+or traceability consumer. `CW1-V2-02-I2` is the active reviewed child and owns
+only Site `name`, `slug`, `status`, `facility`, `description`, and `comments`
+create/PUT/PATCH presence, generated request/response contracts, matching
+REST/gRPC semantics, PostgreSQL durability, Vue dirty-field
+serialization/validation, and the eight named focused tests. It does not own
+Site uniqueness, deletion, list/query behavior, full CRUD, a tier, the parent,
+or profile promotion. Do not begin or merge
 another
 Capability Profile while V0 is red or before `CW1-V6-03`. Once those gates are
 durably closed, follow the next accepted profile in the roadmap and playbook
