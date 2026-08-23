@@ -76,5 +76,8 @@ traceability-consumer claim changes.
 `8aee314f9bca10f0414ec695b9163deffae7b993`. It owns only Site's six scalar
 create/PUT/PATCH presence states, operation-specific generated contracts,
 matching REST/gRPC behavior, Vue dirty-field serialization/validation, and
-the named focused tests. Site uniqueness, deletion, list/query behavior, full
-CRUD, the 13-resource parent, and every tier remain open.
+the named focused tests. Its implementation worktree has green exact-name,
+affected/race, DSN-backed PostgreSQL, generated-contract, and focused Vue
+proof; exact committed candidate-wide gates and retained evidence remain
+pending. Site uniqueness, deletion, list/query behavior, full CRUD, the
+13-resource parent, and every tier remain open.

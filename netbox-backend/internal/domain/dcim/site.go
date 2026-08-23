@@ -204,6 +204,24 @@ func (site *Site) ApplyPatch(patch SitePatch, now shared.Timestamp) error {
 		})
 	}
 
+	return site.Replace(site.valuesWithPatch(patch), now)
+}
+
+// ValidatePatch checks the state a patch would produce without mutating the
+// aggregate. Empty patches are valid previews; ApplyPatch retains ownership of
+// the update-mask requirement for public mutation behavior.
+func (site *Site) ValidatePatch(patch SitePatch) error {
+	if site == nil {
+		return shared.NewError(shared.ErrorReasonInternal, "Cannot validate a patch for a nil Site.")
+	}
+	_, violations := validateSiteValues(site.valuesWithPatch(patch))
+	if len(violations) > 0 {
+		return shared.NewValidationError(violations...)
+	}
+	return nil
+}
+
+func (site Site) valuesWithPatch(patch SitePatch) SiteValues {
 	values := site.Values()
 	setString(&values.Name, patch.Name)
 	setString(&values.Slug, patch.Slug)
@@ -211,7 +229,7 @@ func (site *Site) ApplyPatch(patch SitePatch, now shared.Timestamp) error {
 	setString(&values.Facility, patch.Facility)
 	setString(&values.Description, patch.Description)
 	setString(&values.Comments, patch.Comments)
-	return site.Replace(values, now)
+	return values
 }
 
 func (site Site) ID() shared.ID                 { return site.id }
@@ -282,15 +300,12 @@ type normalizedSiteValues struct {
 func validateSiteValues(values SiteValues) (normalizedSiteValues, []shared.FieldViolation) {
 	values.Name = strings.TrimSpace(values.Name)
 	values.Slug = strings.TrimSpace(values.Slug)
-	values.Status = strings.TrimSpace(values.Status)
 	values.Facility = strings.TrimSpace(values.Facility)
 	values.Description = strings.TrimSpace(values.Description)
 	values.Comments = strings.TrimSpace(values.Comments)
 
 	var violations []shared.FieldViolation
 	validateRequiredLength(&violations, "name", values.Name, SiteNameMaxLength)
-	validateOptionalLength(&violations, "facility", values.Facility, SiteFacilityMaxLength)
-	validateOptionalLength(&violations, "description", values.Description, SiteDescriptionMaxLength)
 
 	slug, err := shared.ParseSlug(values.Slug, SiteSlugMaxLength)
 	if err != nil {
@@ -298,13 +313,22 @@ func validateSiteValues(values SiteValues) (normalizedSiteValues, []shared.Field
 	}
 
 	status, validStatus := ParseSiteStatus(values.Status)
-	if !validStatus {
+	if values.Status == "" {
+		violations = append(violations, shared.FieldViolation{
+			Field:       "status",
+			Reason:      "blank",
+			Description: "This field may not be blank.",
+		})
+	} else if !validStatus {
 		violations = append(violations, shared.FieldViolation{
 			Field:       "status",
 			Reason:      "invalid_choice",
-			Description: "Select a valid choice.",
+			Description: values.Status + " is not a valid choice.",
 		})
 	}
+
+	validateOptionalLength(&violations, "facility", values.Facility, SiteFacilityMaxLength)
+	validateOptionalLength(&violations, "description", values.Description, SiteDescriptionMaxLength)
 
 	return normalizedSiteValues{
 		name:        values.Name,

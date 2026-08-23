@@ -52,7 +52,9 @@ export type Airflow =
 export type RackAirflow = 'front-to-rear' | 'rear-to-front'
 export type InterfaceDuplex = 'half' | 'full' | 'auto'
 
-export interface SiteDTO extends CoreResourceBase {
+export interface SiteDTO extends Omit<CoreResourceBase, 'created' | 'last_updated'> {
+  created: string | null
+  last_updated: string | null
   name: string
   slug: string
   status: ChoiceDTO<InfrastructureStatus>

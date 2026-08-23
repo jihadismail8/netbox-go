@@ -8,6 +8,7 @@ import {
   type IPAddressDTO,
   type IPAddressForm,
   type SiteDTO,
+  type SiteForm,
 } from './resources'
 
 const manufacturer: CoreReference = {
@@ -215,6 +216,84 @@ describe('typed core resource adapters', () => {
     })
   })
 
+  it('preserves Site scalar presence in create mutations', () => {
+    const adapter = getCoreResourceAdapter('site')
+
+    expect(adapter.mutationFromForm(adapter.emptyForm(), false)).toEqual({ status: 'active' })
+    expect(
+      adapter.mutationFromForm(
+        {
+          name: 'MOW',
+          slug: 'mow',
+          status: 'planned',
+          facility: '',
+          description: '',
+          comments: '',
+        },
+        false,
+      ),
+    ).toEqual({
+      name: 'MOW',
+      slug: 'mow',
+      status: 'planned',
+      facility: '',
+      description: '',
+      comments: '',
+    })
+    expect(
+      adapter.mutationFromForm(
+        {
+          name: 'LED',
+          slug: 'led',
+          status: 'staging',
+          facility: 'LED1',
+          description: 'Staging site',
+          comments: 'Operator note',
+        },
+        false,
+      ),
+    ).toEqual({
+      name: 'LED',
+      slug: 'led',
+      status: 'staging',
+      facility: 'LED1',
+      description: 'Staging site',
+      comments: 'Operator note',
+    })
+  })
+
+  it('omits unchanged Site scalars and preserves explicit clears in PATCH mutations', () => {
+    const adapter = getCoreResourceAdapter('site')
+    const dto: SiteDTO = {
+      id: 3,
+      url: '/api/dcim/sites/3/',
+      display: 'MOW',
+      created: null,
+      last_updated: null,
+      name: 'MOW',
+      slug: 'mow',
+      status: { value: 'active', label: 'Active' },
+      facility: 'MOW1',
+      description: 'Primary',
+      comments: 'Operator note',
+      device_count: 4,
+      prefix_count: 2,
+      rack_count: 1,
+    }
+    const hydrated = adapter.formFromDTO(dto)
+
+    expect(adapter.mutationFromForm({ ...hydrated }, true)).toEqual({})
+    expect(
+      adapter.mutationFromForm({ ...hydrated, facility: '', description: '', comments: '' }, true),
+    ).toEqual({ facility: '', description: '', comments: '' })
+    expect(adapter.mutationFromForm({ ...hydrated, status: 'planned' }, true)).toEqual({
+      status: 'planned',
+    })
+
+    const renamed = withFormField(hydrated, 'name', 'Moscow') as SiteForm
+    expect(adapter.mutationFromForm(renamed, true)).toEqual({ name: 'Moscow' })
+  })
+
   it('omits unchanged IPAddress scalars without changing relationship serialization', () => {
     const adapter = getCoreResourceAdapter('ipaddress')
     const dto: IPAddressDTO = {
@@ -302,7 +381,8 @@ describe('typed core resource adapters', () => {
       rack_count: 1,
     }
 
-    expect(getCoreResourceAdapter('site').formFromDTO(dto)).toEqual({
+    const hydrated = getCoreResourceAdapter('site').formFromDTO(dto)
+    expect(Object.fromEntries(Object.entries(hydrated))).toEqual({
       name: 'MOW',
       slug: 'mow',
       status: 'active',

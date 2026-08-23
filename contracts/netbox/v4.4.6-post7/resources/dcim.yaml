@@ -13,6 +13,26 @@
       "writable_fields": ["name", "slug", "status", "facility", "description", "comments"],
       "response_only_fields": ["id", "url", "display", "created", "last_updated", "device_count", "prefix_count", "rack_count"],
       "choice_fields": {"status": {"value_type": "string", "nullable": false}},
+      "field_contracts": {
+        "response": {
+          "nullable_fields": ["created", "last_updated"]
+        },
+        "create": {
+          "required_fields": ["name", "slug"],
+          "nullable_fields": [],
+          "blank_fields": ["facility", "description", "comments"]
+        },
+        "replace": {
+          "required_fields": ["name", "slug"],
+          "nullable_fields": [],
+          "blank_fields": ["facility", "description", "comments"]
+        },
+        "update": {
+          "required_fields": [],
+          "nullable_fields": [],
+          "blank_fields": ["facility", "description", "comments"]
+        }
+      },
       "filters": ["name", "slug", "status"],
       "ordering": ["id", "name", "slug", "status", "created", "last_updated"],
       "relationships": [],

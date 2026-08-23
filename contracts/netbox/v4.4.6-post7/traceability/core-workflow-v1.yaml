@@ -3177,6 +3177,12 @@
       "status": "unresolved",
       "reason": "The resource contract now distinguishes response nullability from create, replace, and update presence. The bounded implementation candidate preserves the pinned ChoiceField behavior that accepts role null and normalizes it to blank across typed behavior, REST/gRPC, PostgreSQL, Vue, and focused parity proof; the pinned differential oracle, retained evidence, project-owner review, 13-resource parent, and higher tiers remain pending.",
       "resolution_goal": "CW1-V2-02"
+    },
+    {
+      "id": "unresolved-site-scalar-presence",
+      "status": "unresolved",
+      "reason": "Operation-specific Site metadata and the bounded implementation candidate now preserve name, slug, status, facility, description, and comments create/PUT/PATCH presence across typed behavior, REST/gRPC, PostgreSQL, generated OpenAPI, and Vue. The pinned differential oracle, retained evidence, project-owner review, remaining Site behavior, 13-resource parent, and higher tiers remain pending.",
+      "resolution_goal": "CW1-V2-02"
     }
   ],
   "verification_sets": [
@@ -4847,7 +4853,7 @@
       "capability": "dcim.Site",
       "operation": "contract",
       "reference_set": "dcim.Site",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-site-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {
@@ -5427,7 +5433,7 @@
       "capability": "dcim.Site",
       "operation": "create",
       "reference_set": "dcim.Site",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-site-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {
@@ -5467,7 +5473,7 @@
       "capability": "dcim.Site",
       "operation": "replace",
       "reference_set": "dcim.Site",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-site-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {
@@ -5477,7 +5483,7 @@
       "capability": "dcim.Site",
       "operation": "update",
       "reference_set": "dcim.Site",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-site-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {

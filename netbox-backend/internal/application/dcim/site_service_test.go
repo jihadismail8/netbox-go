@@ -195,11 +195,14 @@ func TestEmptyUpdateMaskDoesNotWrite(t *testing.T) {
 	assert.Empty(t, backend.state.changes)
 }
 
-func TestReplaceResetsOmittedOptionalFieldsToContractDefaults(t *testing.T) {
+func TestReplaceSitePreservesOmittedState(t *testing.T) {
 	t.Parallel()
 
 	service, backend, _, _, _ := newTestService(t)
 	seedSite(t, backend)
+	state := backend.state.sites[1]
+	state.Status = dcimdomain.SiteStatusPlanned.String()
+	backend.state.sites[1] = state
 
 	site, err := service.ReplaceSite(context.Background(), testPrincipal(), appdcim.ReplaceSiteCommand{
 		ID:   1,
@@ -208,11 +211,203 @@ func TestReplaceResetsOmittedOptionalFieldsToContractDefaults(t *testing.T) {
 	})
 	require.NoError(t, err)
 	assert.Equal(t, "Replacement", site.Name())
-	assert.Equal(t, dcimdomain.SiteStatusActive, site.Status())
-	assert.Empty(t, site.Facility())
-	assert.Empty(t, site.Description())
-	assert.Empty(t, site.Comments())
+	assert.Equal(t, dcimdomain.SiteStatusPlanned, site.Status())
+	assert.Equal(t, "M9", site.Facility())
+	assert.Equal(t, "Original description", site.Description())
+	assert.Equal(t, "Original comments", site.Comments())
 	require.Len(t, backend.state.changes, 1)
+	change := backend.state.changes[0]
+	before, ok := change.Before.(dcimdomain.SiteSnapshot)
+	require.True(t, ok)
+	after, ok := change.After.(dcimdomain.SiteSnapshot)
+	require.True(t, ok)
+	assert.Equal(t, dcimdomain.SiteStatusPlanned.String(), before.Status)
+	assert.Equal(t, before.Status, after.Status)
+	assert.Equal(t, before.Facility, after.Facility)
+	assert.Equal(t, before.Description, after.Description)
+	assert.Equal(t, before.Comments, after.Comments)
+}
+
+func TestSiteScalarValidationLeavesStateUnchanged(t *testing.T) {
+	t.Parallel()
+
+	t.Run("create presence validation", func(t *testing.T) {
+		service, backend, repository, _, _ := newTestService(t)
+		_, err := service.CreateSite(t.Context(), testPrincipal(), appdcim.CreateSiteCommand{
+			Name: appdcim.FieldValue("Site"), Slug: appdcim.FieldValue("site"),
+			Status: appdcim.NullField[string](),
+		})
+		require.Error(t, err)
+		assert.Equal(t, []shared.FieldViolation{{
+			Field: "status", Reason: "blank", Description: "This field may not be blank.",
+		}}, shared.ViolationsOf(err))
+		assert.Empty(t, backend.state.sites)
+		assert.Empty(t, backend.state.changes)
+		assert.Zero(t, repository.createCalls)
+	})
+
+	t.Run("create mixed presence and domain validation", func(t *testing.T) {
+		service, backend, repository, _, _ := newTestService(t)
+		_, err := service.CreateSite(t.Context(), testPrincipal(), appdcim.CreateSiteCommand{
+			Name: appdcim.FieldValue(""),
+		})
+		require.Error(t, err)
+		assert.Equal(t, []shared.FieldViolation{
+			{Field: "name", Reason: "required", Description: "This field may not be blank."},
+			{Field: "slug", Reason: "required", Description: "This field is required."},
+		}, shared.ViolationsOf(err))
+		assert.Empty(t, backend.state.sites)
+		assert.Empty(t, backend.state.changes)
+		assert.Zero(t, repository.createCalls)
+	})
+
+	t.Run("create command violation wins same-field domain violation", func(t *testing.T) {
+		service, backend, repository, _, _ := newTestService(t)
+		_, err := service.CreateSite(t.Context(), testPrincipal(), appdcim.CreateSiteCommand{
+			Name: appdcim.NullField[string](), Slug: appdcim.FieldValue("site"),
+		})
+		require.Error(t, err)
+		assert.Equal(t, []shared.FieldViolation{{
+			Field: "name", Reason: "null", Description: "This field may not be null.",
+		}}, shared.ViolationsOf(err))
+		assert.Empty(t, backend.state.sites)
+		assert.Empty(t, backend.state.changes)
+		assert.Zero(t, repository.createCalls)
+	})
+
+	for _, test := range []struct {
+		name       string
+		mutate     func(*appdcim.SiteService) error
+		violations []shared.FieldViolation
+	}{
+		{
+			name: "replace presence validation",
+			mutate: func(service *appdcim.SiteService) error {
+				_, err := service.ReplaceSite(t.Context(), testPrincipal(), appdcim.ReplaceSiteCommand{
+					ID: 1, Name: appdcim.FieldValue("Replacement"),
+					Slug: appdcim.FieldValue("replacement"), Status: appdcim.NullField[string](),
+				})
+				return err
+			},
+			violations: []shared.FieldViolation{{
+				Field: "status", Reason: "blank", Description: "This field may not be blank.",
+			}},
+		},
+		{
+			name: "update presence validation",
+			mutate: func(service *appdcim.SiteService) error {
+				_, err := service.UpdateSite(t.Context(), testPrincipal(), appdcim.UpdateSiteCommand{
+					ID: 1, Status: appdcim.NullField[string](),
+				})
+				return err
+			},
+			violations: []shared.FieldViolation{{
+				Field: "status", Reason: "blank", Description: "This field may not be blank.",
+			}},
+		},
+		{
+			name: "replace domain invalid and overlength",
+			mutate: func(service *appdcim.SiteService) error {
+				_, err := service.ReplaceSite(t.Context(), testPrincipal(), appdcim.ReplaceSiteCommand{
+					ID:       1,
+					Name:     appdcim.FieldValue("Replacement"),
+					Slug:     appdcim.FieldValue("not valid!"),
+					Facility: appdcim.FieldValue(strings.Repeat("f", dcimdomain.SiteFacilityMaxLength+1)),
+				})
+				return err
+			},
+			violations: []shared.FieldViolation{
+				{
+					Field: "slug", Reason: "invalid",
+					Description: "Enter a valid slug consisting of letters, numbers, underscores, or hyphens.",
+				},
+				{
+					Field: "facility", Reason: "max_length",
+					Description: "Ensure this field has no more than the supported number of characters.",
+				},
+			},
+		},
+		{
+			name: "update domain invalid and overlength",
+			mutate: func(service *appdcim.SiteService) error {
+				_, err := service.UpdateSite(t.Context(), testPrincipal(), appdcim.UpdateSiteCommand{
+					ID:          1,
+					Status:      appdcim.FieldValue(" active "),
+					Description: appdcim.FieldValue(strings.Repeat("d", dcimdomain.SiteDescriptionMaxLength+1)),
+				})
+				return err
+			},
+			violations: []shared.FieldViolation{
+				{
+					Field: "status", Reason: "invalid_choice",
+					Description: " active  is not a valid choice.",
+				},
+				{
+					Field: "description", Reason: "max_length",
+					Description: "Ensure this field has no more than the supported number of characters.",
+				},
+			},
+		},
+		{
+			name: "replace mixed presence and domain validation",
+			mutate: func(service *appdcim.SiteService) error {
+				_, err := service.ReplaceSite(t.Context(), testPrincipal(), appdcim.ReplaceSiteCommand{
+					ID:       1,
+					Name:     appdcim.NullField[string](),
+					Facility: appdcim.FieldValue(strings.Repeat("f", dcimdomain.SiteFacilityMaxLength+1)),
+				})
+				return err
+			},
+			violations: []shared.FieldViolation{
+				{Field: "name", Reason: "null", Description: "This field may not be null."},
+				{Field: "slug", Reason: "required", Description: "This field is required."},
+				{
+					Field: "facility", Reason: "max_length",
+					Description: "Ensure this field has no more than the supported number of characters.",
+				},
+			},
+		},
+	} {
+		test := test
+		t.Run(test.name, func(t *testing.T) {
+			service, backend, repository, _, _ := newTestService(t)
+			seedSite(t, backend)
+			before := backend.state.sites[1]
+
+			err := test.mutate(service)
+			require.Error(t, err)
+			assert.Equal(t, test.violations, shared.ViolationsOf(err))
+			assert.Equal(t, before, backend.state.sites[1])
+			assert.Equal(t, before.Created, backend.state.sites[1].Created)
+			assert.Equal(t, before.LastUpdated, backend.state.sites[1].LastUpdated)
+			assert.Empty(t, backend.state.changes)
+			assert.Zero(t, repository.updateCalls)
+		})
+	}
+
+	t.Run("internal clock failure wins presence validation", func(t *testing.T) {
+		backend := newMemoryBackend()
+		repository := &memoryRepository{backend: backend}
+		service, err := appdcim.NewSiteService(
+			repository,
+			backend,
+			&memoryRecorder{backend: backend},
+			&trackingAuthorizer{},
+			fixedClock{},
+		)
+		require.NoError(t, err)
+		seedSite(t, backend)
+		before := backend.state.sites[1]
+
+		_, err = service.UpdateSite(t.Context(), testPrincipal(), appdcim.UpdateSiteCommand{
+			ID: 1, Status: appdcim.NullField[string](),
+		})
+		require.Error(t, err)
+		assert.True(t, shared.HasReason(err, shared.ErrorReasonInternal))
+		assert.Equal(t, before, backend.state.sites[1])
+		assert.Zero(t, repository.updateCalls)
+		assert.Empty(t, backend.state.changes)
+	})
 }
 
 func TestDeleteRecordsThePrechangeSnapshot(t *testing.T) {

@@ -9,6 +9,7 @@ import { fileURLToPath } from "node:url";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CONTRACT_ROOT = path.join(ROOT, "contracts/netbox/v4.4.6-post7");
 const PROFILE_RELATIVE_PATH = "profiles/core-workflow-v1.yaml";
+const DCIM_RELATIVE_PATH = "resources/dcim.yaml";
 const IPAM_RELATIVE_PATH = "resources/ipam.yaml";
 const OPENAPI_PATH = path.join(
   ROOT,
@@ -59,6 +60,27 @@ const IP_ADDRESS_FIELD_CONTRACTS = {
   },
 };
 
+const SITE_FIELD_CONTRACTS = {
+  response: {
+    nullable_fields: ["created", "last_updated"],
+  },
+  create: {
+    required_fields: ["name", "slug"],
+    nullable_fields: [],
+    blank_fields: ["facility", "description", "comments"],
+  },
+  replace: {
+    required_fields: ["name", "slug"],
+    nullable_fields: [],
+    blank_fields: ["facility", "description", "comments"],
+  },
+  update: {
+    required_fields: [],
+    nullable_fields: [],
+    blank_fields: ["facility", "description", "comments"],
+  },
+};
+
 function runNode(script, argument) {
   return spawnSync(process.execPath, [path.join(ROOT, script), argument], {
     cwd: ROOT,
@@ -76,26 +98,52 @@ function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
 }
 
-function withContractFixture(mutator, callback) {
+function withResourceContractFixture(
+  relativePath,
+  resourceName,
+  fieldContracts,
+  mutator,
+  callback,
+) {
   const fixtureRoot = fs.mkdtempSync(
     path.join(os.tmpdir(), "netbox-go-capability-profile-"),
   );
   const contractRoot = path.join(fixtureRoot, "v4.4.6-post7");
   fs.cpSync(CONTRACT_ROOT, contractRoot, { recursive: true });
   try {
-    const metadataPath = path.join(contractRoot, IPAM_RELATIVE_PATH);
+    const metadataPath = path.join(contractRoot, relativePath);
     const metadata = JSON.parse(fs.readFileSync(metadataPath, "utf8"));
-    const ipAddress = metadata.resources.find(
-      (resource) => resource.name === "IPAddress",
+    const resource = metadata.resources.find(
+      (candidate) => candidate.name === resourceName,
     );
-    assert.ok(ipAddress, "fixture must contain IPAddress metadata");
-    ipAddress.field_contracts = structuredClone(IP_ADDRESS_FIELD_CONTRACTS);
-    mutator(ipAddress.field_contracts);
+    assert.ok(resource, `fixture must contain ${resourceName} metadata`);
+    resource.field_contracts = structuredClone(fieldContracts);
+    mutator(resource);
     fs.writeFileSync(metadataPath, `${JSON.stringify(metadata, null, 2)}\n`);
     callback(path.join(contractRoot, PROFILE_RELATIVE_PATH));
   } finally {
     fs.rmSync(fixtureRoot, { recursive: true, force: true });
   }
+}
+
+function withContractFixture(mutator, callback) {
+  withResourceContractFixture(
+    IPAM_RELATIVE_PATH,
+    "IPAddress",
+    IP_ADDRESS_FIELD_CONTRACTS,
+    (resource) => mutator(resource.field_contracts),
+    callback,
+  );
+}
+
+function withSiteResourceFixture(mutator, callback) {
+  withResourceContractFixture(
+    DCIM_RELATIVE_PATH,
+    "Site",
+    SITE_FIELD_CONTRACTS,
+    mutator,
+    callback,
+  );
 }
 
 function assertProfileRejected(name, mutator, expectedDiagnostic) {
@@ -114,6 +162,27 @@ function assertProfileRejected(name, mutator, expectedDiagnostic) {
         diagnostics(result),
         expectedDiagnostic,
         "validator must identify the malformed field contract",
+      );
+    });
+  });
+}
+
+function assertSiteProfileRejected(name, mutator, expectedDiagnostic) {
+  test(name, () => {
+    withSiteResourceFixture(mutator, (profilePath) => {
+      const result = runNode(
+        "scripts/validate_capability_profile.mjs",
+        profilePath,
+      );
+      assert.notEqual(
+        result.status,
+        0,
+        `expected rejection; ${diagnostics(result)}`,
+      );
+      assert.match(
+        diagnostics(result),
+        expectedDiagnostic,
+        "validator must identify the malformed Site field contract",
       );
     });
   });
@@ -159,6 +228,18 @@ test("current capability metadata validates", () => {
     IP_ADDRESS_FIELD_CONTRACTS,
     "current IPAddress presence metadata must match the independently pinned contract",
   );
+  const dcimMetadata = JSON.parse(
+    fs.readFileSync(path.join(CONTRACT_ROOT, DCIM_RELATIVE_PATH), "utf8"),
+  );
+  const site = dcimMetadata.resources.find(
+    (resource) => resource.name === "Site",
+  );
+  assert.ok(site, "current metadata must contain Site");
+  assert.deepStrictEqual(
+    site.field_contracts,
+    SITE_FIELD_CONTRACTS,
+    "current Site presence metadata must match the independently pinned contract",
+  );
 
   const result = runNode(
     "scripts/validate_capability_profile.mjs",
@@ -166,6 +247,72 @@ test("current capability metadata validates", () => {
   );
   assert.equal(result.status, 0, diagnostics(result));
 });
+
+assertSiteProfileRejected(
+  "Site field contracts are mandatory",
+  (site) => {
+    delete site.field_contracts;
+  },
+  /dcim\.Site: field_contracts must declare operation-specific presence semantics/u,
+);
+
+assertSiteProfileRejected(
+  "Site field contracts require every operation",
+  (site) => {
+    delete site.field_contracts.replace;
+  },
+  /dcim\.Site: field_contracts must declare exactly response, create, replace, and update/u,
+);
+
+assertSiteProfileRejected(
+  "Site operation fields reject undeclared fields",
+  (site) => {
+    site.field_contracts.create.required_fields.push("region");
+  },
+  /dcim\.Site: field_contracts\.create\.required_fields contains undeclared field region/u,
+);
+
+assertSiteProfileRejected(
+  "Site nullable fields remain a writable-field subset",
+  (site) => {
+    site.field_contracts.replace.nullable_fields.push("display");
+  },
+  /dcim\.Site: field_contracts\.replace\.nullable_fields contains undeclared field display/u,
+);
+
+assertSiteProfileRejected(
+  "Site blank fields remain a writable-field subset",
+  (site) => {
+    site.field_contracts.update.blank_fields.push("device_count");
+  },
+  /dcim\.Site: field_contracts\.update\.blank_fields contains undeclared field device_count/u,
+);
+
+assertSiteProfileRejected(
+  "Site operation fields reject duplicates",
+  (site) => {
+    site.field_contracts.create.blank_fields.push("facility");
+  },
+  /dcim\.Site: field_contracts\.create\.blank_fields contains duplicate field facility/u,
+);
+
+assertSiteProfileRejected(
+  "Site response and write contracts cannot be conflated",
+  (site) => {
+    site.field_contracts.response = structuredClone(
+      site.field_contracts.create,
+    );
+  },
+  /dcim\.Site: field_contracts\.response must declare exactly nullable_fields/u,
+);
+
+assertSiteProfileRejected(
+  "Site PATCH contracts cannot require fields",
+  (site) => {
+    site.field_contracts.update.required_fields.push("name");
+  },
+  /dcim\.Site: field_contracts\.update\.required_fields must be empty for PATCH/u,
+);
 
 assertProfileRejected(
   "field contracts require every operation",
@@ -251,6 +398,91 @@ for (const [name, pathName, method, expectedSchema] of [
     ),
   );
 }
+
+for (const [name, pathName, method, expectedSchema] of [
+  ["POST", "/api/dcim/sites/", "post", "SiteCreate"],
+  ["PUT", "/api/dcim/sites/{id}/", "put", "SiteReplace"],
+  ["PATCH", "/api/dcim/sites/{id}/", "patch", "SiteUpdate"],
+]) {
+  assertOpenAPIRejected(
+    `OpenAPI validation rejects a stale Site ${name} request reference`,
+    (spec) => {
+      spec.paths[pathName][method].requestBody.content[
+        "application/json"
+      ].schema = { $ref: "#/components/schemas/SiteWrite" };
+    },
+    new RegExp(
+      escapeRegExp(
+        `${name} ${pathName} must reference #/components/schemas/${expectedSchema}`,
+      ),
+      "u",
+    ),
+  );
+}
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Site create requiredness",
+  (spec) => {
+    const schema =
+      spec.components.schemas.SiteCreate ??
+      structuredClone(spec.components.schemas.SiteWrite);
+    schema.required = [];
+    spec.components.schemas.SiteCreate = schema;
+  },
+  /SiteCreate required fields must match field_contracts\.create/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Site request nullability",
+  (spec) => {
+    const schema =
+      spec.components.schemas.SiteReplace ??
+      structuredClone(spec.components.schemas.SiteWrite);
+    schema.properties.facility.type = ["string", "null"];
+    spec.components.schemas.SiteReplace = schema;
+  },
+  /SiteReplace\.facility nullability must match field_contracts\.replace/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Site request blankability",
+  (spec) => {
+    const schema =
+      spec.components.schemas.SiteUpdate ??
+      structuredClone(spec.components.schemas.SiteWrite);
+    schema.properties.description.minLength = 1;
+    spec.components.schemas.SiteUpdate = schema;
+  },
+  /SiteUpdate\.description blankability must match field_contracts\.update/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Site request scalar types",
+  (spec) => {
+    const schema =
+      spec.components.schemas.SiteCreate ??
+      structuredClone(spec.components.schemas.SiteWrite);
+    schema.properties.name.type = "integer";
+    spec.components.schemas.SiteCreate = schema;
+  },
+  /SiteCreate\.name base type must be string/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Site response timestamp nullability",
+  (spec) => {
+    spec.components.schemas.Site.properties.created.type = "string";
+  },
+  /Site\.created response nullability must match field_contracts\.response/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Site response scalar types",
+  (spec) => {
+    spec.components.schemas.Site.properties.rack_count.type = "string";
+  },
+  /Site\.rack_count base type must be integer/u,
+);
 
 assertOpenAPIRejected(
   "OpenAPI validation rejects stale create requiredness",

@@ -27,6 +27,30 @@ const identity = JSON.parse(
 const failures = [];
 
 const contractedResourceShapes = {
+  Site: {
+    request: {
+      name: { type: "string" },
+      slug: { type: "string" },
+      facility: { type: "string" },
+      description: { type: "string" },
+      comments: { type: "string" },
+    },
+    response: {
+      name: { type: "string" },
+      slug: { type: "string" },
+      facility: { type: "string" },
+      description: { type: "string" },
+      comments: { type: "string" },
+      id: { type: "integer", format: "int64" },
+      url: { type: "string", format: "uri" },
+      display: { type: "string" },
+      created: { type: "string", format: "date-time" },
+      last_updated: { type: "string", format: "date-time" },
+      device_count: { type: "integer", format: "int64" },
+      prefix_count: { type: "integer", format: "int64" },
+      rack_count: { type: "integer", format: "int64" },
+    },
+  },
   IPAddress: {
     request: {
       address: { type: "string" },

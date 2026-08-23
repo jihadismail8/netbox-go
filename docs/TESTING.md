@@ -94,10 +94,13 @@ results do not substitute for that oracle or promote T2, T3, or T4.
 `source-v2:sha256:eb7f085be604b29d32eb0059e0967de3b54c78abb993f03c9e60e9f5d622f038`
 over 3,018 entries. Its required focused matrix is exactly eight named Site
 domain, application, REST, gRPC, PostgreSQL, and parity tests plus generated
-contract and Vue adapter/form regressions. The affected/race, focused and full
-L4, backend, frontend, root, exact-candidate CI, and evidence gates remain
-pending until they pass on one unchanged candidate digest. Local results will
-not substitute for the pinned differential or promote T2/T3/T4.
+contract and Vue adapter/form regressions. Exact-name discovery, the complete
+focused matrix without a PostgreSQL skip, affected/race packages, 40
+capability/OpenAPI adversarial tests, 17 focused Vue tests, and both Vue
+typechecks are green on the implementation worktree. Full L4, backend,
+frontend, root, exact-candidate CI, and evidence gates must still pass on one
+unchanged committed candidate digest. Local results will not substitute for
+the pinned differential or promote T2/T3/T4.
 
 ## Owned external gates
 

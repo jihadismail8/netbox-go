@@ -75,7 +75,10 @@ entry revision `8aee314f9bca10f0414ec695b9163deffae7b993`, source digest
 with 3,018 entries. It owns only the six Site scalar create/PUT/PATCH presence
 states, operation-specific generated API contracts, matching REST/gRPC
 semantics, PostgreSQL durability, Vue dirty-field serialization/validation,
-and eight named focused tests. It does not own Site uniqueness, deletion,
+and eight named focused tests. The implementation candidate has green
+exact-name, affected/race, DSN-backed PostgreSQL, generated-contract, and
+focused Vue proof. Exact committed candidate-wide gates, independent CI, and
+retained evidence remain pending. It does not own Site uniqueness, deletion,
 list/query behavior, full CRUD, a compatibility tier, the parent, or profile
 promotion.
 

@@ -33,6 +33,7 @@ import {
   type RackTypeForm,
   type SiteDTO,
   type SiteForm,
+  type SiteMutation,
   type VRFDTO,
   type VRFForm,
 } from './resources'
@@ -45,18 +46,60 @@ export interface CoreResourceAdapter<N extends CoreProfileResourceName> {
   filtersFromState(state: CoreFilterState): CoreResourceFilters<N>
 }
 
+const siteOriginalMutation = Symbol('site-original-mutation')
+
+const siteScalarMutationFields = [
+  'name',
+  'slug',
+  'status',
+  'facility',
+  'description',
+  'comments',
+] as const satisfies readonly (keyof SiteMutation)[]
+
+type TrackedSiteForm = SiteForm & {
+  [siteOriginalMutation]?: SiteMutation
+}
+
+function siteMutation(form: SiteForm): SiteMutation {
+  const mutation: SiteMutation = {}
+  if (hasFormField(form, 'name')) mutation.name = form.name
+  if (hasFormField(form, 'slug')) mutation.slug = form.slug
+  if (hasFormField(form, 'status')) mutation.status = form.status
+  if (hasFormField(form, 'facility')) mutation.facility = form.facility
+  if (hasFormField(form, 'description')) mutation.description = form.description
+  if (hasFormField(form, 'comments')) mutation.comments = form.comments
+  return mutation
+}
+
+function siteMutationDelta(current: SiteMutation, original: SiteMutation): SiteMutation {
+  const delta = { ...current }
+  for (const field of siteScalarMutationFields) {
+    if (Object.is(current[field], original[field])) Reflect.deleteProperty(delta, field)
+  }
+  return delta
+}
+
 const siteAdapter: CoreResourceAdapter<'site'> = {
   resource: 'site',
   emptyForm: () => ({ status: 'active' }),
-  formFromDTO: (dto: SiteDTO): SiteForm => ({
-    name: dto.name,
-    slug: dto.slug,
-    status: choiceValue(dto.status),
-    facility: dto.facility,
-    description: dto.description,
-    comments: dto.comments,
-  }),
-  mutationFromForm: (form) => ({ ...form }),
+  formFromDTO: (dto: SiteDTO): SiteForm => {
+    const form: TrackedSiteForm = {
+      name: dto.name,
+      slug: dto.slug,
+      status: choiceValue(dto.status),
+      facility: dto.facility,
+      description: dto.description,
+      comments: dto.comments,
+    }
+    form[siteOriginalMutation] = siteMutation(form)
+    return form
+  },
+  mutationFromForm: (form, editing) => {
+    const mutation = siteMutation(form)
+    const original = (form as TrackedSiteForm)[siteOriginalMutation]
+    return editing && original ? siteMutationDelta(mutation, original) : mutation
+  },
   filtersFromState: (state) => ({
     name: state.name,
     slug: state.slug,

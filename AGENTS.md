@@ -65,7 +65,10 @@ create/PUT/PATCH presence, generated request/response contracts, matching
 REST/gRPC semantics, PostgreSQL durability, Vue dirty-field
 serialization/validation, and the eight named focused tests. It does not own
 Site uniqueness, deletion, list/query behavior, full CRUD, a tier, the parent,
-or profile promotion. Do not begin or merge
+or profile promotion. Its implementation candidate has green exact-name,
+affected/race, DSN-backed PostgreSQL, generated-contract, and focused Vue
+proof; exact committed candidate-wide gates and retained evidence remain
+pending. Do not begin or merge
 another
 Capability Profile while V0 is red or before `CW1-V6-03`. Once those gates are
 durably closed, follow the next accepted profile in the roadmap and playbook

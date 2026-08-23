@@ -47,6 +47,63 @@ func TestNewSiteNormalizesAndAcceptsEveryBaselineStatus(t *testing.T) {
 	}
 }
 
+func TestSiteScalarNormalizationContract(t *testing.T) {
+	t.Parallel()
+
+	site, err := dcim.NewSite(dcim.SiteValues{
+		Name:        "  Moscow DC  ",
+		Slug:        "  moscow-dc  ",
+		Status:      dcim.SiteStatusActive.String(),
+		Facility:    "  M9  ",
+		Description: "  Core site  ",
+		Comments:    "  maintained  ",
+	}, testTime)
+	require.NoError(t, err)
+	assert.Equal(t, "Moscow DC", site.Name())
+	assert.Equal(t, "moscow-dc", site.Slug().String())
+	assert.Equal(t, "M9", site.Facility())
+	assert.Equal(t, "Core site", site.Description())
+	assert.Equal(t, "maintained", site.Comments())
+
+	for _, test := range []struct {
+		name        string
+		status      string
+		description string
+	}{
+		{
+			name:        "blank",
+			status:      "",
+			description: "This field may not be blank.",
+		},
+		{
+			name:        "surrounding whitespace",
+			status:      " active ",
+			description: " active  is not a valid choice.",
+		},
+		{
+			name:        "unknown",
+			status:      "unknown",
+			description: "unknown is not a valid choice.",
+		},
+	} {
+		test := test
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+			_, err := dcim.NewSite(dcim.SiteValues{
+				Name:   "Moscow DC",
+				Slug:   "moscow-dc",
+				Status: test.status,
+			}, testTime)
+			require.Error(t, err)
+			assert.Equal(t, []shared.FieldViolation{{
+				Field:       "status",
+				Reason:      map[bool]string{true: "blank", false: "invalid_choice"}[test.status == ""],
+				Description: test.description,
+			}}, shared.ViolationsOf(err))
+		})
+	}
+}
+
 func TestNewSiteReturnsAllFieldViolations(t *testing.T) {
 	t.Parallel()
 

@@ -78,13 +78,16 @@ func typedSiteUpdateCommand(
 	}
 	for _, path := range mask.Paths {
 		field, supported := available[path]
-		if !supported || field.State() != applicationdcim.FieldPresent {
+		if !supported {
 			return applicationdcim.UpdateSiteCommand{}, shared.NewValidationError(
 				shared.FieldViolation{
 					Field:       "update_mask",
-					Description: "Every update_mask path must name a supported field with an explicit value.",
+					Description: "Every update_mask path must name a supported field.",
 				},
 			)
+		}
+		if field.State() == applicationdcim.FieldOmitted {
+			field = applicationdcim.NullField[string]()
 		}
 		switch path {
 		case "name":
