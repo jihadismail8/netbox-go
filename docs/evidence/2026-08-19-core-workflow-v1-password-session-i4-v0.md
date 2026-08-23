@@ -6,8 +6,9 @@
 - Increment: `CW1-V1-02-I4`.
 - Executor: Codex GPT-5.6 Sol.
 - State: `evidence`; exact-SHA repository CI passed for claim revision
-  `d2a19d8e61838785be939c77e0e1a35ac95a075e`. This digest-excluded receipt
-  still requires its own exact-SHA CI and then explicit project-owner review.
+  `d2a19d8e61838785be939c77e0e1a35ac95a075e` and digest-excluded receipt
+  revision `105bf69c90163a784e3e3359781ccb4e207e2d6c`. Explicit project-owner
+  review remains.
 - Result: **the bounded tested candidate passed every required local,
   real-PostgreSQL, feature-candidate CI, and main exact-SHA CI boundary**.
 - Capability Profile: `core-workflow-v1`, still T1 and pre-publication.
@@ -22,8 +23,7 @@ The artifact intentionally carries no `netbox-go-evidence-v2` marker. I4
 promotes no compatibility tier, identity-extension verification axis,
 traceability consumer, or profile state. Exact-SHA CI of the claim-only
 attestation made I4's bounded `evidence` state effective. This digest-excluded
-receipt still requires its own exact-SHA CI before explicit project-owner
-review may begin.
+receipt also passed exact-SHA CI; explicit project-owner review may now begin.
 
 ## Entry and tested source
 
@@ -264,8 +264,32 @@ SHA-256 is
 `612fd2d6e20fcc1feb79437e317088bf7447d551aa65facb23b9fe6b9141fc79`.
 This receipt changes only this artifact and the evidence ledger, both excluded
 from `source-v2`; the claim source digest, entry count, and complete manifest
-therefore remain unchanged. This receipt still requires its own exact-SHA CI,
-after which explicit project-owner review may begin.
+therefore remain unchanged.
+
+Receipt exact-SHA result:
+
+- Workflow: `repository-gate`.
+- Run:
+  [32631691864](https://github.com/jihadismail8/netbox-go/actions/runs/32631691864),
+  attempt 1.
+- Job `check`:
+  [97175360352](https://github.com/jihadismail8/netbox-go/actions/runs/32631691864/job/97175360352).
+- Branch: `main`.
+- Head SHA: `105bf69c90163a784e3e3359781ccb4e207e2d6c`.
+- Run start/completion:
+  `2026-08-23T09:41:19Z`–`2026-08-23T09:59:26Z`.
+- Job start/completion:
+  `2026-08-23T09:41:22Z`–`2026-08-23T09:59:25Z`.
+- Conclusion: **success**; every setup, repository, post, and completion step
+  succeeded, with no workflow non-success or cancellation.
+
+The receipt commit retains its exact two-path old/new mode, byte-size, and
+content-hash mapping in the commit message. The canonical mapping SHA-256 is
+`ae18fa9b6a5f21a66bf939b1a794420038d3856f5f2f48249cb16040c38a7bda`.
+The source digest remained
+`source-v2:sha256:734ca9f417d08326d9e5c9be24b1c3aa839a03f2ea4b29b8754096c72a1cd200`
+with 3,013 entries, and the complete source-manifest output SHA-256 remained
+`21f18e149ba0b05a4b4f74caa3c53cf1ca18583e35b233bcf33bbc8a785f06d0`.
 
 ## Gate disposition
 
@@ -283,10 +307,9 @@ after which explicit project-owner review may begin.
 - L8 browser: skipped/deferred to V5; `httptest` cookie mechanics do not earn
   T4.
 - L9: the exact tested digest, candidate/main CI prerequisites, claim local
-  gate, and claim exact-SHA CI passed. I4's bounded `evidence` state is
-  effective. This digest-excluded receipt still requires exact-SHA CI, followed
-  by explicit project-owner review and the separate `evidence -> done`
-  claim/receipt sequence.
+  gate, claim exact-SHA CI, and receipt exact-SHA CI passed. I4's bounded
+  `evidence` state is effective. Explicit project-owner review and the separate
+  `evidence -> done` claim/receipt sequence remain.
 
 No skipped boundary is implied by the focused, PostgreSQL, local, or CI
 results.
@@ -344,8 +367,8 @@ extension-axis status, tier, profile state, or parent-goal state.
   Cookie header, DSN, or complete configuration is retained here.
 - Go formatting is unaffected. Scoped Prettier, Markdown links, trailing
   whitespace, diff, mode/type, source-digest, source-manifest, and high-risk
-  secret checks passed for the exact claim commit and must pass again on the
-  exact receipt bytes before the receipt commit.
+  secret checks passed for the exact claim commit and passed again on the exact
+  receipt bytes before the receipt commit.
 - The current frontend dependency audit still reports three high-severity
   advisories. They predate I4 and were neither changed nor waived.
 
@@ -42726,5 +42749,5 @@ The following `CW1-V1-02` work remains open and unclaimed:
 The parent `CW1-V1-02`, V1, T2/T3/T4, Capability Profile publication, full
 rewrite, deployment, and production-readiness claims all remain open. I4 is
 `evidence` after the exact claim-only revision passed CI. It is not `done`;
-this receipt's exact-SHA CI and later project-owner acceptance remain before
-the separate `evidence -> done` claim/receipt sequence.
+explicit project-owner acceptance remains before the separate
+`evidence -> done` claim/receipt sequence.

@@ -22,8 +22,10 @@ passed its accepted-I3 red-first, focused, race, real-PostgreSQL, complete L4,
 pinned repository, feature-candidate CI, and main exact-SHA CI boundaries. Its
 claim-only revision
 `d2a19d8e61838785be939c77e0e1a35ac95a075e` also passed its pinned local gate
-and exact-SHA repository CI, making bounded I4 `evidence`. This digest-excluded
-receipt still requires its own exact-SHA CI and then project-owner review.
+and exact-SHA repository CI, making bounded I4 `evidence`. Digest-excluded
+receipt revision `105bf69c90163a784e3e3359781ccb4e207e2d6c` then passed exact-SHA
+repository CI; project-owner review remains.
+
 The project owner reviewed and retained the entry V0, CORS, bounded token I1,
 bounded token I2, and bounded browser-session I3 results. The
 [2026-08-03 post-cleanup V0](2026-08-03-post-cleanup-v0.md) used the superseded
@@ -33,18 +35,103 @@ the
 [Core Workflow recovery artifact](2026-08-01-core-workflow-v1-v0.md). The
 Profile remains T1 and pre-publication; V1-V6 remain open. `CW1-G00` passed for
 the exact I4 tested source; `CW1-V1-01`, `CW1-V1-02-I1`, `CW1-V1-02-I2`, and
-`CW1-V1-02-I3` are done. I4 is `evidence`; this receipt's exact-SHA CI and then
-project-owner review remain. The parent credential/session matrix remains
-open. Feature work must re-establish V0 after its next owned-source change.
+`CW1-V1-02-I3` are done. I4 is `evidence`; project-owner review remains. The
+parent credential/session matrix remains open.
+Feature work must re-establish V0 after its next owned-source change.
+
+The source-included governance documents intentionally preserve the claim-time
+wording in attestation revision
+`d2a19d8e61838785be939c77e0e1a35ac95a075e`, which maps to the tested I4
+revision and digest. This digest-excluded ledger is the later receipt-CI
+addendum and does not advance I4 beyond `evidence`.
 
 | Evidence                 | Required command or boundary                                  | Current state                                           |
 | ------------------------ | ------------------------------------------------------------- | ------------------------------------------------------- |
-| Repository quality       | Revised `make check` including non-mutating backend coverage  | Exact I4 claim passed; receipt CI/review remain         |
+| Repository quality       | Revised `make check` including non-mutating backend coverage  | Exact I4 claim and receipt CI passed; review remains    |
 | Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                 |
 | gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                   |
 | Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, and I4 bounded slices passed; V1/V3 incomplete  |
 | Standalone deployment    | `make deployment-smoke`                                       | CORS-scoped exact-commit result retained; V3 still open |
 | Browser workflow         | `make browser-e2e`                                            | Harness present; current result pending                 |
+
+### Entry V0/CORS claim-only reconciliation
+
+The accepted source-v2 V0 and CORS candidate at
+`07aaca9264e5af9830e39fc95dd3289c0b5c9476` was retained by claim-only revision
+`5d6f9cf9f5a5dc5e5e09de58f4f0e76e0f7a6381`. Candidate run
+[31994516467](https://github.com/jihadismail8/netbox-go/actions/runs/31994516467)
+and claim run
+[31997963053](https://github.com/jihadismail8/netbox-go/actions/runs/31997963053)
+both passed at their exact SHAs. Reconstruction from both reachable Git trees
+on 2026-08-23 produced the same 2,993-entry source manifest, SHA-256
+`8f82bbc5b6ba5fe0c6acefe17cd552fe5bd9523414a5f224fec0b7040e45ea49`,
+and source digest
+`source-v2:sha256:19957bc8191e6bc8b52d662f98e87019bf3bf00651ddb762f398f6b569cd5b82`.
+
+The canonical JSON below records the complete historical claim-only path
+mapping. Its exact UTF-8 bytes, including the final newline, have SHA-256
+`cda816c8a9fdbf1f0a859395bc6f6399cbad3123121b602080695cd157e57e69`.
+
+```json
+{
+  "schema_version": 1,
+  "tested_revision": "07aaca9264e5af9830e39fc95dd3289c0b5c9476",
+  "attestation_revision": "5d6f9cf9f5a5dc5e5e09de58f4f0e76e0f7a6381",
+  "tested_digest": "source-v2:sha256:19957bc8191e6bc8b52d662f98e87019bf3bf00651ddb762f398f6b569cd5b82",
+  "attestation_digest": "source-v2:sha256:19957bc8191e6bc8b52d662f98e87019bf3bf00651ddb762f398f6b569cd5b82",
+  "tested_files": 2993,
+  "attestation_files": 2993,
+  "tested_manifest_sha256": "sha256:8f82bbc5b6ba5fe0c6acefe17cd552fe5bd9523414a5f224fec0b7040e45ea49",
+  "attestation_manifest_sha256": "sha256:8f82bbc5b6ba5fe0c6acefe17cd552fe5bd9523414a5f224fec0b7040e45ea49",
+  "paths": [
+    {
+      "path": "docs/evidence/2026-08-03-core-workflow-v1-cors-v0.md",
+      "old": {
+        "present": false
+      },
+      "new": {
+        "present": true,
+        "mode": "100644",
+        "size": 6769,
+        "sha256": "sha256:197a4178374252a8527c61f9e9448f22f4f859b9447270137e3560947c82b3f9"
+      }
+    },
+    {
+      "path": "docs/evidence/2026-08-17-core-workflow-v1-source-v2-v0.md",
+      "old": {
+        "present": false
+      },
+      "new": {
+        "present": true,
+        "mode": "100644",
+        "size": 5119,
+        "sha256": "sha256:a13bb032ad66ecca5c88e0043d1d78786c33874f42f417f86aad3b43eaa5b00b"
+      }
+    },
+    {
+      "path": "docs/evidence/README.md",
+      "old": {
+        "present": true,
+        "mode": "100644",
+        "size": 5706,
+        "sha256": "sha256:e5ad226a59319b36174c79a2627269d788585a7dc61216bed1d02563e7fe4360"
+      },
+      "new": {
+        "present": true,
+        "mode": "100644",
+        "size": 6195,
+        "sha256": "sha256:3b1829c3112e1f3b3560fc87f928148b314555613c81e187ffc947c64d172a6d"
+      }
+    }
+  ]
+}
+```
+
+This reconciliation is digest-excluded historical evidence bookkeeping only.
+It makes no new retained claim and promotes no consumer row, extension axis,
+profile, or compatibility tier. It does not make the old V0 current for later
+source changes. The new bookkeeping becomes retained only after this
+reconciliation revision passes its own exact-SHA repository gate.
 
 GitHub CI currently runs V0 only. Real PostgreSQL, deployment, differential
 oracle, gRPC promotion, and browser gates remain operator-run until durable,

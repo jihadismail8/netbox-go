@@ -164,3 +164,27 @@ retention of the exact-SHA V0 and CORS evidence and authorized the stated
 next-step execution. Recorded at `2026-08-17T05:23:24Z`. `CW1-V1-01` is done
 for the exact revision and digest above. V1 as a whole and every compatibility
 tier remain unchanged.
+
+## Historical claim-only reconciliation — 2026-08-23
+
+The accepted result was retained by the separate claim-only revision
+`5d6f9cf9f5a5dc5e5e09de58f4f0e76e0f7a6381`, whose parent is the tested
+revision `07aaca9264e5af9830e39fc95dd3289c0b5c9476`. That claim changed exactly
+the two new evidence artifacts and the evidence ledger, all beneath the
+source-v2-excluded `docs/evidence/` boundary. It changed no owned source entry.
+
+Reconstruction from both reachable Git trees on 2026-08-23 produced the same
+2,993-entry source manifest, SHA-256
+`8f82bbc5b6ba5fe0c6acefe17cd552fe5bd9523414a5f224fec0b7040e45ea49`,
+and the same source digest recorded above. The claim revision's repository gate
+also passed at exact SHA: workflow run
+[31997963053](https://github.com/jihadismail8/netbox-go/actions/runs/31997963053),
+job
+[95292950293](https://github.com/jihadismail8/netbox-go/actions/runs/31997963053/job/95292950293),
+`2026-08-17T05:27:31Z`–`2026-08-17T05:39:47Z`, with every step successful.
+
+The evidence ledger retains the exact three-path mode/size/content-hash mapping
+and its canonical SHA-256. Once this reconciliation revision passes its own
+exact-SHA repository gate, it closes the historical claim-manifest
+documentation gap without changing CORS behavior, V1, the Capability Profile,
+or any compatibility tier.
