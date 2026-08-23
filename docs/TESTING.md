@@ -89,18 +89,18 @@ exact-SHA CI, so I1 is effectively `done`. The
 pinned REST oracle remained unavailable. The local transport/parity and Vue
 results do not substitute for that oracle or promote T2, T3, or T4.
 
-`CW1-V2-02-I2` starts from clean revision
-`8aee314f9bca10f0414ec695b9163deffae7b993` at
-`source-v2:sha256:eb7f085be604b29d32eb0059e0967de3b54c78abb993f03c9e60e9f5d622f038`
-over 3,018 entries. Its required focused matrix is exactly eight named Site
-domain, application, REST, gRPC, PostgreSQL, and parity tests plus generated
-contract and Vue adapter/form regressions. Exact-name discovery, the complete
-focused matrix without a PostgreSQL skip, affected/race packages, 40
-capability/OpenAPI adversarial tests, 17 focused Vue tests, and both Vue
-typechecks are green on the implementation worktree. Full L4, backend,
-frontend, root, exact-candidate CI, and evidence gates must still pass on one
-unchanged committed candidate digest. Local results will not substitute for
-the pinned differential or promote T2/T3/T4.
+`CW1-V2-02-I2` has an exact tested candidate at
+`87863efd38fe71dfa05c818b860b37b7e94d67b4`, source digest
+`source-v2:sha256:c7c1b86c2bcd768bb719149a54dddbceccf2b5b2e4087dd4b79eec20bef5a37c`
+over 3,022 entries. Its eight named Site domain, application, REST, gRPC,
+real-PostgreSQL, and parity tests passed, as did the exact affected/race,
+generated-contract, 17-test Vue adapter/form, complete L4, pinned repository,
+and independent exact-candidate CI boundaries. The current eight-path
+claim-only transition records bounded `evidence` only if this exact
+attestation revision passes repository CI; its digest-excluded receipt and
+project-owner review then remain. Docker rejected the differential harness's
+temporary source bind before oracle execution. The local transport/parity and
+Vue results do not substitute for that oracle or promote T2, T3, or T4.
 
 ## Owned external gates
 

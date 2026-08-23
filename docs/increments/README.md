@@ -42,7 +42,7 @@ implementation exists.
 | `CW1-V1-02-I4` | `evidence`    | Codex GPT-5.6 Sol | [Password change and session rotation](CW1-V1-02-I4.md) |
 | `CW1-V2-01`    | `done`        | Codex GPT-5.6 Sol | [Machine-readable traceability](CW1-V2-01.md)           |
 | `CW1-V2-02-I1` | `done`        | Codex GPT-5.6 Sol | [IPAddress scalar write presence](CW1-V2-02-I1.md)      |
-| `CW1-V2-02-I2` | `in-progress` | Codex GPT-5.6 Sol | [Site scalar write presence](CW1-V2-02-I2.md)           |
+| `CW1-V2-02-I2` | `evidence`*   | Codex GPT-5.6 Sol | [Site scalar write presence](CW1-V2-02-I2.md)           |
 
 `in-progress` means the packet owns only its explicitly active bounded
 increment; no implementation evidence or parent-goal completion is implied.
@@ -72,12 +72,12 @@ passed exact-SHA CI. The project owner accepted only this bounded result at
 differential was unavailable, and no parent, tier, profile, or
 traceability-consumer claim changes.
 
-`CW1-V2-02-I2` starts from the accepted I1 receipt at
-`8aee314f9bca10f0414ec695b9163deffae7b993`. It owns only Site's six scalar
-create/PUT/PATCH presence states, operation-specific generated contracts,
-matching REST/gRPC behavior, Vue dirty-field serialization/validation, and
-the named focused tests. Its implementation worktree has green exact-name,
-affected/race, DSN-backed PostgreSQL, generated-contract, and focused Vue
-proof; exact committed candidate-wide gates and retained evidence remain
-pending. Site uniqueness, deletion, list/query behavior, full CRUD, the
-13-resource parent, and every tier remain open.
+`CW1-V2-02-I2` has an exact tested candidate at
+`87863efd38fe71dfa05c818b860b37b7e94d67b4` with green focused, race,
+real-PostgreSQL, complete L4, generated-contract, Vue, pinned repository, and
+independent candidate-CI boundaries. Its `evidence` row is conditional: it
+becomes effective only after the exact claim-only revision carrying this
+transition passes repository CI. The digest-excluded receipt and project-owner
+review then remain. Docker rejected the external differential's temporary
+source bind before oracle execution. Site uniqueness, deletion, list/query
+behavior, full CRUD, the 13-resource parent, and every tier remain open.

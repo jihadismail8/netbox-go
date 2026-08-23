@@ -121,7 +121,7 @@ production release through PROD-1 and PROD-2.
 | 0    | Stable language and decisions       | CONTEXT plus ADR 0001–0005              | `done`                                                         |
 | 1    | Repository/shared-core baseline     | `CW1-G00`                               | `continuous`                                                   |
 | 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01/I1/I2/I3 `done`; I4 `evidence`; parent open              |
-| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01/I1 done; Site I2 active; parent/T2/T3 open                |
+| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01/I1 done; Site I2 conditional evidence; parent/T2/T3 open  |
 | 4    | First Core Workflow Profile         | `CW1-V1-*` through `CW1-V6-*`           | T1; active program                                             |
 | 5    | In-scope feature expansion          | `CP-P01`–`CP-P19`, then `MC-01`–`MC-10` | `blocked`                                                      |
 | 6    | Extension Service contracts         | `EXT-01`                                | `blocked` on a named inventory                                 |
@@ -198,9 +198,9 @@ closes no parent, tier, profile, or traceability-consumer boundary.
 | `CW1-V1-02-I4`      | `evidence`    | Obtain project-owner review                        | Accepted/done I3 and current `CW1-G00` |
 | `CW1-V1-03`–`V1-04` | `blocked`     | Complete and retain remaining identity/security    | Preceding V1 goal                      |
 | `CW1-V2-01`         | `done`        | Accepted structural rule/scenario traceability     | Fresh source-v2 V0 follows this gate   |
-| `CW1-V2-02`         | `in-progress` | Execute the reviewed Site scalar child             | Accepted V2-01 and current `CW1-G00`   |
+| `CW1-V2-02`         | `in-progress` | Retain/review the bounded Site scalar child         | Accepted V2-01 and current `CW1-G00`   |
 | `CW1-V2-02-I1`      | `done`        | Accepted bounded IPAddress scalar write presence   | Tested candidate and current `CW1-G00` |
-| `CW1-V2-02-I2`      | `in-progress` | Verify bounded Site scalar write candidate          | Done I1 and current `CW1-G00`          |
+| `CW1-V2-02-I2`      | `evidence`*   | Pass claim CI, retain receipt, obtain owner review | Done I1 and current `CW1-G00`          |
 | `CW1-V2-03`–`V2-08` | `blocked`     | Close later typed business behavior                | V2-02 and named lane dependencies      |
 | `CW1-V3-01`         | `ready`       | Make HTTP/gRPC readiness dependency-aware          | `CW1-G00`                              |
 | `CW1-V3-02`–`V3-05` | `blocked`     | Close PostgreSQL/deployment evidence               | Named V2/V3 dependencies               |
@@ -388,16 +388,17 @@ Bounded children:
   corresponding gRPC T3 unearned. I1 does not close this parent, any
   compatibility tier, the profile, or a traceability consumer.
 
-- [`CW1-V2-02-I2`](increments/CW1-V2-02-I2.md) is the active reviewed child.
-  It owns only Site `name`, `slug`, `status`, `facility`, `description`, and
-  `comments` create/PUT/PATCH presence, operation-specific generated API
-  contracts, matching REST/gRPC semantics, PostgreSQL durability, Vue
-  serialization/validation, and eight named focused regressions. Its current
-  implementation candidate has green exact-name, affected/race, DSN-backed
-  PostgreSQL, generated-contract, and focused Vue proof. Exact committed
-  candidate-wide gates and retained evidence remain pending. Site
-  uniqueness, delete protection, list/query behavior, full CRUD, external
-  differential evidence, every tier, and this parent remain open.
+- [`CW1-V2-02-I2`](increments/CW1-V2-02-I2.md) owns only Site `name`, `slug`,
+  `status`, `facility`, `description`, and `comments` create/PUT/PATCH
+  presence, operation-specific generated API contracts, matching REST/gRPC
+  semantics, PostgreSQL durability, Vue serialization/validation, and eight
+  named focused regressions. Its exact tested candidate and independent
+  candidate CI are green. Its `evidence` state is conditional on the current
+  claim revision's exact-SHA CI; the digest-excluded receipt and project-owner
+  review remain. Docker rejected the differential harness's temporary source
+  bind before oracle execution, so T2/T3 remain unearned. Site uniqueness,
+  delete protection, list/query behavior, full CRUD, every tier, and this
+  parent remain open.
 
 - [ ] Represent all 13 resources × list/get/create/PUT/PATCH/delete.
 - [ ] Cover defaults, read-only fields, and nullability.

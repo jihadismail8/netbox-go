@@ -69,18 +69,22 @@ effectively `done`. The pinned differential oracle was unavailable, so REST T2
 and corresponding gRPC T3 remain unearned. No parent, profile, traceability
 consumer, or tier completion is claimed.
 
-`CW1-V2-02-I2` is the active reviewed implementation increment from clean
-entry revision `8aee314f9bca10f0414ec695b9163deffae7b993`, source digest
-`source-v2:sha256:eb7f085be604b29d32eb0059e0967de3b54c78abb993f03c9e60e9f5d622f038`
-with 3,018 entries. It owns only the six Site scalar create/PUT/PATCH presence
+`CW1-V2-02-I2` has an exact tested candidate at
+`87863efd38fe71dfa05c818b860b37b7e94d67b4`, source digest
+`source-v2:sha256:c7c1b86c2bcd768bb719149a54dddbceccf2b5b2e4087dd4b79eec20bef5a37c`
+with 3,022 entries. It owns only the six Site scalar create/PUT/PATCH presence
 states, operation-specific generated API contracts, matching REST/gRPC
 semantics, PostgreSQL durability, Vue dirty-field serialization/validation,
-and eight named focused tests. The implementation candidate has green
-exact-name, affected/race, DSN-backed PostgreSQL, generated-contract, and
-focused Vue proof. Exact committed candidate-wide gates, independent CI, and
-retained evidence remain pending. It does not own Site uniqueness, deletion,
-list/query behavior, full CRUD, a compatibility tier, the parent, or profile
-promotion.
+and eight named focused tests. Its exact-name, affected/race, real-PostgreSQL,
+complete L4, generated-contract, Vue, pinned repository, and independent
+exact-candidate CI boundaries are green. The current eight-path claim-only
+transition conditionally moves the bounded child to `evidence`: that state
+becomes effective only after this exact revision passes repository CI. Its
+digest-excluded receipt and project-owner review then remain. The differential
+harness was unavailable before oracle execution because Docker rejected its
+temporary source bind, so REST T2 and corresponding gRPC T3 remain unearned.
+It does not own Site uniqueness, deletion, list/query behavior, full CRUD, a
+compatibility tier, the parent, or profile promotion.
 
 > **Operational boundary:** this is a development build for disposable data.
 > Production TLS, schema upgrades, backup/restore, operational hardening, and

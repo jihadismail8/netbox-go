@@ -59,17 +59,23 @@ operation-specific generated API contracts, matching REST/gRPC semantics, Vue
 form serialization/validation, and their focused tests. The pinned external
 differential remained unavailable, so REST T2 and corresponding gRPC T3 are
 unearned. I1 closes no 13-resource parent, compatibility tier, profile state,
-or traceability consumer. `CW1-V2-02-I2` is the active reviewed child and owns
-only Site `name`, `slug`, `status`, `facility`, `description`, and `comments`
-create/PUT/PATCH presence, generated request/response contracts, matching
-REST/gRPC semantics, PostgreSQL durability, Vue dirty-field
+or traceability consumer. `CW1-V2-02-I2` has an exact tested candidate at
+`87863efd38fe71dfa05c818b860b37b7e94d67b4`, source digest
+`source-v2:sha256:c7c1b86c2bcd768bb719149a54dddbceccf2b5b2e4087dd4b79eec20bef5a37c`
+with 3,022 entries. Its exact-name, affected/race, real-PostgreSQL, complete
+L4, generated-contract, Vue, pinned repository, and independent candidate-CI
+boundaries are green. The current eight-path claim-only transition
+conditionally moves the bounded child to `evidence`; that state becomes
+effective only after the exact claim revision passes repository CI. Its
+digest-excluded receipt and project-owner review then remain. The external
+differential was unavailable before execution because Docker rejected its
+temporary source bind, so REST T2 and corresponding gRPC T3 remain unearned.
+I2 owns only Site `name`, `slug`, `status`, `facility`, `description`, and
+`comments` create/PUT/PATCH presence, generated request/response contracts,
+matching REST/gRPC semantics, PostgreSQL durability, Vue dirty-field
 serialization/validation, and the eight named focused tests. It does not own
 Site uniqueness, deletion, list/query behavior, full CRUD, a tier, the parent,
-or profile promotion. Its implementation candidate has green exact-name,
-affected/race, DSN-backed PostgreSQL, generated-contract, and focused Vue
-proof; exact committed candidate-wide gates and retained evidence remain
-pending. Do not begin or merge
-another
+profile promotion, or a later V2 child. Do not begin or merge another
 Capability Profile while V0 is red or before `CW1-V6-03`. Once those gates are
 durably closed, follow the next accepted profile in the roadmap and playbook
 rather than this dated snapshot.
