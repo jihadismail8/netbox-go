@@ -50,16 +50,18 @@ rows remain open. `CW1-V2-02-I1` has an exact tested candidate at
 `7acba402f0de2bd59e5b342a6f05df268bc9120b`, source digest
 `source-v2:sha256:ed330b0a5bbeafd70b7b16a4ce4d1052fa9a385313a3b8827b554983571c1b43`
 with 3,018 entries. Its focused, race, real-PostgreSQL, complete L4,
-generated-contract, Vue, pinned repository, and feature-candidate CI
-boundaries are green. The current eight-path claim-only transition
-conditionally moves the bounded child to `evidence`; that state becomes
-effective only after the exact claim revision passes repository CI. Its
-digest-excluded receipt, unavailable external differential, and project-owner
-review then remain. It owns only IPAddress scalar create/PUT/PATCH presence,
+generated-contract, Vue, pinned repository, candidate, evidence-claim, and
+pre-acceptance receipt exact-SHA CI boundaries are green. The project owner
+accepted this bounded result at `2026-08-23T17:25:54Z`. The current eight-path
+closeout records `CW1-V2-02-I1` as `done` only if this exact owner-accepted
+claim revision passes repository CI; its digest-excluded closeout receipt then
+remains. I1 is done only for IPAddress scalar create/PUT/PATCH presence,
 operation-specific generated API contracts, matching REST/gRPC semantics, Vue
-form serialization/validation, and their focused tests. It does not close the
-13-resource parent or promote a compatibility tier. No later V2 child is
-claimed. Do not begin or merge another
+form serialization/validation, and their focused tests. The pinned external
+differential remained unavailable, so REST T2 and corresponding gRPC T3 are
+unearned. I1 closes no 13-resource parent, compatibility tier, profile state,
+or traceability consumer. No later V2 child is claimed. Do not begin or merge
+another
 Capability Profile while V0 is red or before `CW1-V6-03`. Once those gates are
 durably closed, follow the next accepted profile in the roadmap and playbook
 rather than this dated snapshot.

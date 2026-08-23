@@ -81,11 +81,13 @@ browser gates remain manual until connected jobs retain durable artifacts.
 over 3,018 entries. Its eight named domain, application, REST, gRPC,
 real-PostgreSQL, and parity tests passed, as did the affected race,
 generated-contract, Vue adapter/form, complete L4, pinned repository, and
-independent exact-candidate CI boundaries. The current eight-path claim-only
-transition records bounded `evidence` only if this exact attestation revision
-passes repository CI; its digest-excluded receipt, unavailable pinned REST
-oracle, and project-owner review then remain. The local transport/parity and
-Vue results do not substitute for the oracle or promote T2, T3, or T4.
+independent exact-candidate CI boundaries. Its evidence claim and
+pre-acceptance receipt also passed exact-SHA repository CI. The project owner
+accepted only this bounded result at `2026-08-23T17:25:54Z`; the current
+eight-path closeout records I1 as `done` only if this exact owner-accepted claim
+revision passes repository CI, followed by the excluded closeout receipt. The
+pinned REST oracle remained unavailable. The local transport/parity and Vue
+results do not substitute for that oracle or promote T2, T3, or T4.
 
 ## Owned external gates
 
@@ -220,15 +222,15 @@ and exact change-state outcomes remain to be added and retained.
 
 ## Verification checkpoints
 
-| Checkpoint               | Implementation state                                                   | Exit condition                                                                                                 | Current status                                           |
-| ------------------------ | ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage   | `make check` retained green on each exact relevant source digest                                               | Entry source-v2 retained; active-source refresh required |
-| V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests  | Pass I4's exact claim CI, retain its receipt, obtain owner review, then complete the remaining identity matrix | I4 evidence claim conditional; parent open               |
-| V2 profile behavior      | Shared 13-resource service, broad tests, and exact tested IPAddress I1 | Pass I1 claim CI, retain/review its receipt, then trace every remaining invariant, field, error, and rollback  | I1 evidence claim conditional; parent open               |
-| V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness             | Truthful readiness, loss/recovery, real PostgreSQL and deployment artifacts                                    | Implementation/evidence gap                              |
-| V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites        | Complete T2 scenario report, then equivalent T3 report                                                         | T1; implementation gap                                   |
-| V5 Vue workflow          | Typed adapters and real-browser harness                                | Both workflows and every required negative/state case retained green                                           | T1; implementation gap                                   |
-| V6 sign-off              | First-profile legacy stacks retired                                    | V0-V5 green together with linked evidence                                                                      | Not earned                                               |
+| Checkpoint               | Implementation state                                                     | Exit condition                                                                                                 | Current status                                           |
+| ------------------------ | ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage     | `make check` retained green on each exact relevant source digest                                               | Entry source-v2 retained; active-source refresh required |
+| V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests    | Pass I4's exact claim CI, retain its receipt, obtain owner review, then complete the remaining identity matrix | I4 evidence claim conditional; parent open               |
+| V2 profile behavior      | Shared 13-resource service, broad tests, and owner-accepted IPAddress I1 | Trace every remaining invariant, field, error, rollback, and external-tier boundary                            | I1 done claim conditional; parent open                   |
+| V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness               | Truthful readiness, loss/recovery, real PostgreSQL and deployment artifacts                                    | Implementation/evidence gap                              |
+| V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites          | Complete T2 scenario report, then equivalent T3 report                                                         | T1; implementation gap                                   |
+| V5 Vue workflow          | Typed adapters and real-browser harness                                  | Both workflows and every required negative/state case retained green                                           | T1; implementation gap                                   |
+| V6 sign-off              | First-profile legacy stacks retired                                      | V0-V5 green together with linked evidence                                                                      | Not earned                                               |
 
 ## Merge rules
 
