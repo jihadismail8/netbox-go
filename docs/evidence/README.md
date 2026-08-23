@@ -41,11 +41,12 @@ The
 [bounded Site scalar write-presence result](2026-08-23-core-workflow-v2-site-scalar-presence-i2-v0.md)
 passed its exact-name, affected/race, real-PostgreSQL, complete L4,
 generated-contract, Vue, pinned repository, and independent exact-candidate
-CI boundaries. Its current eight-path claim-only transition conditionally
-makes bounded I2 `evidence` only after that exact revision passes repository
-CI; its digest-excluded receipt and project-owner review then remain. Docker
-rejected the differential harness's temporary source bind before oracle
-execution, so no T2/T3 claim is made.
+CI boundaries. Claim revision
+`65d37902b4111e1f091ff8c9a75548966514082b` also passed its pinned local gate
+and exact-SHA repository CI, making bounded I2 `evidence`. Its
+digest-excluded receipt and project-owner review remain. Docker rejected the
+differential harness's temporary source bind before oracle execution, so no
+T2/T3 claim is made.
 The project owner reviewed and retained the entry V0, CORS, bounded token I1,
 bounded token I2, bounded browser-session I3, and bounded IPAddress I1 results.
 The
@@ -61,15 +62,15 @@ parent credential/session matrix remains open. `CW1-V2-02-I1` has an
 effective owner-accepted `done` closeout only for IPAddress scalar
 create/PUT/PATCH presence. The current excluded receipt preserves that fact and
 is evaluated by exact-SHA CI without a self-referential documentation commit.
-`CW1-V2-02-I2` has a green exact tested candidate and a conditional evidence
-transition only for Site scalar create/PUT/PATCH presence. The external
-differential, REST T2, corresponding gRPC T3, browser T4, and 13-resource
-`CW1-V2-02` parent stay open. Feature work must re-establish V0 after its next
-owned-source change.
+`CW1-V2-02-I2` is `evidence` only for Site scalar create/PUT/PATCH presence;
+its receipt CI and project-owner review remain. The external differential,
+REST T2, corresponding gRPC T3, browser T4, and 13-resource `CW1-V2-02` parent
+stay open. Feature work must re-establish V0 after its next owned-source
+change.
 
 | Evidence                 | Required command or boundary                                  | Current state                                                    |
 | ------------------------ | ------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Repository quality       | Revised `make check` including non-mutating backend coverage  | I4, V2-I1, and V2-I2 candidate/claim boundaries passed or active |
+| Repository quality       | Revised `make check` including non-mutating backend coverage  | I4 and V2-I1 boundaries passed; V2-I2 claim passed, receipt pending |
 | Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                          |
 | gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                            |
 | Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, I4, V2-I1, and V2-I2 bounded slices passed; V1/V3 open   |

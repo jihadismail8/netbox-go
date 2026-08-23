@@ -5,8 +5,9 @@
 - Goal: `CW1-V2-02`.
 - Increment: `CW1-V2-02-I2`.
 - Executor: Codex GPT-5.6 Sol.
-- State: conditional `evidence`; effective only after the exact claim-only
-  revision carrying this artifact passes repository CI.
+- State: `evidence`; exact-SHA repository CI passed for claim revision
+  `65d37902b4111e1f091ff8c9a75548966514082b`. This digest-excluded receipt
+  still requires its own exact-SHA CI and then explicit project-owner review.
 - Result: **the bounded source candidate passed every required local,
   real-PostgreSQL, generated-contract, frontend, and independent candidate-CI
   boundary available in this environment**.
@@ -20,9 +21,9 @@ the Capability Profile, the rewrite, deployment, or production readiness.
 
 No `netbox-go-evidence-v2` marker is present because this increment promotes
 no tier, profile state, traceability consumer, or completed parent goal. The
-conditional `evidence` state becomes effective only after exact-SHA CI of the
-claim-only attestation. The digest-excluded receipt and project-owner review
-remain separate later boundaries.
+exact-SHA claim CI made the bounded `evidence` state effective. This
+digest-excluded receipt still requires exact-SHA CI; project-owner review
+remains a separate later boundary.
 
 ## Entry and tested source
 
@@ -40,13 +41,17 @@ remain separate later boundaries.
 - Tested owned entries: 3,022.
 - Canonical source-manifest output SHA-256:
   `de88441a75d8e54ff5beca67ba7fe84a45f83642b876705371dcf47869891371`.
-- Proposed attestation source digest:
+- Claim-only attestation revision:
+  `65d37902b4111e1f091ff8c9a75548966514082b`.
+- Claim attestation source digest:
   `source-v2:sha256:512c88121bcc6afd9ad7c4a813bf6deb2eabe8321707dfdaedec03037f0eeb18`.
-- Proposed attestation owned entries: 3,022.
-- Proposed attestation source-manifest output SHA-256:
+- Claim attestation owned entries: 3,022.
+- Claim attestation source-manifest output SHA-256:
   `bc9f703752964b22a7385b14805997ef26639d6e11fddf9fd1c1fca89cc3a1ca`.
 - Complete derived source-manifest diff SHA-256:
   `109bc3b336bbf37c08defbfd9365e52090e50e4f9d41c031d361350fc205bc08`.
+- Exact eight-path claim mapping JSON SHA-256:
+  `5b81a70ba697d5ea0e387ec3f4ac050982a25d545356cb611f8adef2316dd839`.
 - Go: `go1.26.0 linux/amd64`.
 - Node.js: `v24.18.0`.
 - npm: `11.16.0`.
@@ -263,7 +268,7 @@ different merge revision.
 
 ## Claim-only attestation local gate
 
-The six source-v2 governance edits produced proposed attestation digest
+The six source-v2 governance edits produced claim attestation digest
 `source-v2:sha256:512c88121bcc6afd9ad7c4a813bf6deb2eabe8321707dfdaedec03037f0eeb18` with the same 3,022 path/kind entries. Its complete
 source-manifest output retained SHA-256
 `bc9f703752964b22a7385b14805997ef26639d6e11fddf9fd1c1fca89cc3a1ca`.
@@ -276,6 +281,31 @@ statement coverage, all 96 traceability-validator tests, all 40
 capability/OpenAPI adversarial tests, the 13-resource/three-interface/
 17-scenario/293-row profile, 33 OpenAPI paths and 86 operations, generated
 outputs, and all documentation links.
+
+## Claim exact-SHA CI and receipt boundary
+
+- Workflow: `repository-gate`.
+- Run:
+  [32666092864](https://github.com/jihadismail8/netbox-go/actions/runs/32666092864).
+- Job `check`:
+  [97259574540](https://github.com/jihadismail8/netbox-go/actions/runs/32666092864/job/97259574540).
+- Branch: `work/cw1-v2-02-i2-site-presence`.
+- Head SHA: `65d37902b4111e1f091ff8c9a75548966514082b`.
+- Run start/completion:
+  `2026-08-23T20:59:11Z`–`2026-08-23T21:19:04Z`.
+- Job start/completion:
+  `2026-08-23T20:59:13Z`–`2026-08-23T21:19:04Z`.
+- Conclusion: **success**; every setup, repository, post, and completion step
+  succeeded, with no cancellation or non-success conclusion.
+
+That exact-SHA result made the bounded I2 `evidence` state effective. The
+claim commit retains the exact eight-path mapping whose canonical JSON
+SHA-256 is
+`5b81a70ba697d5ea0e387ec3f4ac050982a25d545356cb611f8adef2316dd839`.
+This receipt changes only this artifact and the evidence ledger, both excluded
+from `source-v2`; the claim source digest, entry count, and complete manifest
+therefore remain unchanged. This receipt still requires its own exact-SHA CI,
+after which explicit project-owner review may begin.
 
 ## External differential and residual limits
 
@@ -312,17 +342,18 @@ CRUD, and the 13-resource parent remain open.
   not change.
 - L8 browser: not applicable to this Vue unit/type boundary; no T4 claim is
   made.
-- L9: tested-digest confirmation, independent exact-candidate CI, and the
-  claim-only attestation's pinned local gate passed. The exact claim revision
-  still requires exact-SHA CI before conditional `evidence` becomes effective,
-  followed by its digest-excluded receipt and project-owner review.
+- L9: tested-digest confirmation, independent exact-candidate CI, claim local
+  gate, and claim exact-SHA CI passed. The bounded increment is `evidence`.
+  This digest-excluded receipt still requires exact-SHA CI, followed by
+  explicit project-owner review and the separate `evidence -> done`
+  claim/receipt sequence.
 
 No skipped or unavailable boundary is implied by the focused, PostgreSQL,
 frontend, local, or CI results.
 
 ## Claim-only attestation boundary
 
-The current claim changes exactly six source-v2 governance paths and the two
+The exact claim changes exactly six source-v2 governance paths and the two
 source-digest-excluded evidence paths listed below:
 
 1. `AGENTS.md`
@@ -341,7 +372,13 @@ only the six governance files above. Every changed owned entry must remain a
 regular mode-`100644` file; no entry may be added, removed, renamed,
 retargeted, type-changed, or made executable.
 
-Human review must confirm that the exact eight-path mapping changes no
+The exact mapping is retained verbatim in claim revision
+`65d37902b4111e1f091ff8c9a75548966514082b`'s commit message. Its canonical
+JSON SHA-256 is
+`5b81a70ba697d5ea0e387ec3f4ac050982a25d545356cb611f8adef2316dd839`.
+
+Independent review confirmed before the claim commit that the exact eight-path
+mapping changes no
 behavior, route, schema, migration, security policy, contract behavior,
 scenario, fixture, comparator, normalizer, permission, dependency, toolchain,
 coverage rule, tier, profile state, or parent-goal state.
@@ -349,10 +386,10 @@ coverage rule, tier, profile state, or parent-goal state.
 No password, session or CSRF value, bearer/API token, authorization or cookie
 header, database credential, complete DSN, private key, provider signature,
 or complete configuration object is retained here. The attestation gate and
-exact-SHA claim CI have separate boundaries; the local gate passes first. The
-later receipt and project-owner review must confirm the bounded proof, the
-unavailable differential boundary, and the absence of parent/tier/profile
-promotion before changing `evidence` to `done`.
+exact-SHA claim CI both passed. This receipt's exact-SHA CI and later
+project-owner review must confirm the bounded proof, the unavailable
+differential boundary, and the absence of parent/tier/profile promotion before
+changing `evidence` to `done`.
 
 ## Complete tested source manifest
 
@@ -21521,10 +21558,10 @@ The block below is the exact canonical output for tested revision
 }
 ```
 
-## Complete proposed attestation source manifest
+## Complete claim attestation source manifest
 
-The block below is the exact canonical output for the proposed claim-only
-attestation worktree.
+The block below is the exact canonical output for claim revision
+`65d37902b4111e1f091ff8c9a75548966514082b`.
 
 ```json
 {
