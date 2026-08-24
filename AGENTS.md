@@ -98,15 +98,22 @@ traceability-consumer boundary. `CW1-V2-02-I4` has exact tested candidate
 with 3,036 entries. Its focused, race, real-PostgreSQL, complete L4,
 generated-contract, Vue, repository, candidate-CI, evidence-claim, and
 pre-acceptance receipt boundaries are green. The project owner's acceptance
-of only this bounded result was recorded at `2026-08-24T18:51:56Z`. The
-current owner-accepted closeout records I4 as `done` only if its exact claim
-revision passes repository CI; its excluded receipt then remains. I4 owns only
+of only this bounded result was recorded at `2026-08-24T18:51:56Z`. Its
+owner-accepted closeout claim and excluded receipt passed exact-SHA repository
+CI, so I4 is effectively `done`. I4 owns only
 RackRole `name`, `slug`, `color`, and `description` create/PUT/PATCH presence,
 defaults, validation, generated API contracts, matching REST/gRPC semantics,
 PostgreSQL durability, Vue serialization/validation, and eight fixed tests.
 No retained differential accompanies it, so T2/T3 remain unearned. I4 closes
 no RackRole uniqueness, deletion, list/query behavior, full CRUD, another
-resource, tier, parent, profile, or traceability-consumer boundary. Do not begin or merge another
+resource, tier, parent, profile, or traceability-consumer boundary.
+`CW1-V2-02-I5` is the active bounded increment and owns only RackType common
+writable-field create/PUT/PATCH presence, including the numeric-ID
+Manufacturer envelope, operation-specific generated contracts, matching
+REST/gRPC semantics, PostgreSQL durability, Vue dirty-field handling, and its
+focused tests. It excludes RackType uniqueness, Rack propagation semantics,
+deletion, list/query behavior, alternate nested Manufacturer inputs, every
+tier/consumer, and the parent. Do not begin or merge another
 Capability Profile while V0 is red or before `CW1-V6-03`. Once those gates are
 durably closed, follow the next accepted profile in the roadmap and playbook
 rather than this dated snapshot.

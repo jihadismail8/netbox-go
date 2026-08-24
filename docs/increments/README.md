@@ -44,7 +44,8 @@ implementation exists.
 | `CW1-V2-02-I1` | `done`        | Codex GPT-5.6 Sol | [IPAddress scalar write presence](CW1-V2-02-I1.md)      |
 | `CW1-V2-02-I2` | `done`        | Codex GPT-5.6 Sol | [Site scalar write presence](CW1-V2-02-I2.md)           |
 | `CW1-V2-02-I3` | `done`        | Codex GPT-5.6 Sol | [Manufacturer scalar write presence](CW1-V2-02-I3.md)   |
-| `CW1-V2-02-I4` | `done`*       | Codex GPT-5.6 Sol | [RackRole scalar write presence](CW1-V2-02-I4.md)       |
+| `CW1-V2-02-I4` | `done`        | Codex GPT-5.6 Sol | [RackRole scalar write presence](CW1-V2-02-I4.md)       |
+| `CW1-V2-02-I5` | `in-progress` | Codex GPT-5.6 Sol | [RackType scalar write presence](CW1-V2-02-I5.md)       |
 
 `in-progress` means the packet owns only its explicitly active bounded
 increment; no implementation evidence or parent-goal completion is implied.
@@ -105,8 +106,8 @@ and every traceability consumer remain open.
 real-PostgreSQL, complete L4, generated-contract, Vue, repository,
 candidate-CI, evidence-claim, and pre-acceptance receipt boundaries. The
 project owner accepted only this bounded result at `2026-08-24T18:51:56Z`.
-Its `done` row is conditional on the exact owner-accepted closeout revision
-passing repository CI; its excluded receipt then remains. I4 owns only
+Its owner-accepted closeout claim and excluded receipt passed exact-SHA
+repository CI, so I4 is effectively `done`. I4 owns only
 RackRole `name`, `slug`, `color`, and `description` create/PUT/PATCH presence,
 defaults, validation, generated request/response contracts, matching
 REST/gRPC semantics, PostgreSQL durability, Vue serialization/validation, and
@@ -114,6 +115,9 @@ eight fixed tests. No differential was run. RackRole uniqueness, deletion,
 list/query behavior, full CRUD, the parent, all tiers, and every traceability
 consumer remain open.
 
-The asterisk records that the owner-accepted closeout becomes effective only
-after the exact closeout claim revision's repository CI succeeds. It does not
-weaken or broaden the meaning of `done`.
+`CW1-V2-02-I5` is the active bounded RackType scalar-presence increment. Its
+closed packet owns the ten declared write fields across operation metadata,
+typed domain/application behavior, REST/gRPC semantics, PostgreSQL durability,
+and Vue dirty-field serialization. RackType uniqueness, propagation,
+deletion, list/query behavior, relationship-dictionary input, all tiers, every
+consumer, and the parent remain open.
