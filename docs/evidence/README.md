@@ -78,10 +78,12 @@ source-digest-excluded claim revision
 exact-SHA repository CI, making only bounded I4 `evidence`. Its excluded
 receipt `9dd7727dbe66463bafe4e7adb17c90835ae91c56` also passed exact-SHA
 repository CI. The project owner accepted only this bounded result at
-`2026-08-24T18:51:56Z`. Its `done` transition is conditional on the current
-owner-accepted closeout claim passing exact-SHA CI; an excluded receipt then
-remains. No retained pinned differential accompanies this bounded result, so
-no T2/T3 claim is made.
+`2026-08-24T18:51:56Z`. Owner-accepted closeout revision
+`0ff9cf8481e6b703cffcd07b6f562ca04119b07b` passed its pinned local gate and
+exact-SHA repository CI, making only bounded I4 `done`. This two-path excluded
+receipt preserves that result without changing source and requires its own
+exact-SHA CI. No retained pinned differential accompanies this bounded
+result, so no T2/T3 claim is made.
 The project owner reviewed and retained the entry V0, CORS, bounded token I1,
 bounded token I2, bounded browser-session I3, bounded IPAddress I1, and bounded
 Site I2, Manufacturer I3, and RackRole I4 results.
@@ -108,11 +110,12 @@ revision `9274f8dbe331af14e5f3f7953f1ae8a74c100e15`, only for Manufacturer
 receipt preserves that exact result without changing source and must pass its
 own exact-SHA CI. I3 promotes no compatibility-tier, profile, parent, or
 traceability-consumer boundary.
-`CW1-V2-02-I4` has owner-accepted conditional `done` only for RackRole
-`name`, `slug`, `color`, and `description` create/PUT/PATCH presence. Its
-closeout claim CI and excluded receipt remain. I4 promotes no compatibility
-tier, profile, parent, or traceability-consumer boundary. The external
-differential, REST T2,
+`CW1-V2-02-I4` has an effective owner-accepted `done` closeout at exact
+revision `0ff9cf8481e6b703cffcd07b6f562ca04119b07b`, only for RackRole
+`name`, `slug`, `color`, and `description` create/PUT/PATCH presence. This
+excluded receipt preserves that exact result without changing source and must
+pass its own exact-SHA CI. I4 promotes no compatibility tier, profile, parent,
+or traceability-consumer boundary. The external differential, REST T2,
 corresponding gRPC T3, browser T4, and 13-resource `CW1-V2-02` parent stay
 open. I2 and I3 promote no compatibility-tier or traceability-consumer
 boundary. Feature work must re-establish V0 after its next owned-source
@@ -120,7 +123,7 @@ change.
 
 | Evidence                 | Required command or boundary                                  | Current state                                                    |
 | ------------------------ | ------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Repository quality       | Revised `make check` including non-mutating backend coverage  | V1-I4 and V2-I1/I2/I3 retained; V2-I4 closeout claim conditional |
+| Repository quality       | Revised `make check` including non-mutating backend coverage  | V1-I4 and V2-I1/I2/I3 retained; V2-I4 closeout claim passed      |
 | Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                          |
 | gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                            |
 | Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, V1-I4, V2-I1/I2/I3, and bounded V2-I4 passed; V1/V3 remain open |
