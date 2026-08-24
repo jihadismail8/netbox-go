@@ -83,18 +83,23 @@ with 3,029 entries. Its exact-name, affected/race, real-PostgreSQL, complete
 L4, generated-contract, Vue, pinned repository, independent exact-candidate,
 evidence-claim, and pre-acceptance receipt exact-SHA CI boundaries are green.
 The project owner's acceptance of this bounded result was recorded at
-`2026-08-24T10:28:34Z`. The current eight-path closeout records
-`CW1-V2-02-I3` as `done` only if this exact owner-accepted claim revision
-passes repository CI; its digest-excluded closeout receipt then remains. That
-conditional transition is bounded to Manufacturer `name`, `slug`, and
+`2026-08-24T10:28:34Z`. Its owner-accepted closeout claim and excluded
+closeout receipt both passed exact-SHA repository CI, so I3 is effectively
+done only for Manufacturer `name`, `slug`, and
 `description` create/PUT/PATCH presence, operation-specific generated API
 contracts, matching REST/gRPC semantics, PostgreSQL durability, Vue
 dirty-field serialization/validation, and the eight named focused tests. No
 retained pinned differential accompanies this result, so REST T2 and
 corresponding gRPC T3 remain unearned. I3 closes no Manufacturer uniqueness,
 deletion, list/query, full CRUD, compatibility-tier, parent, profile, or
-traceability-consumer boundary and claims no later V2 child. Do not begin or
-merge another
+traceability-consumer boundary. `CW1-V2-02-I4` is the reviewed RackRole packet
+and owns only `name`, `slug`, `color`, and `description` create/PUT/PATCH
+presence, defaults, validation, operation-specific generated API contracts,
+matching REST/gRPC semantics, PostgreSQL durability, Vue dirty-field
+serialization/validation, and eight fixed focused tests. Implementation is
+blocked until the project owner explicitly accepts that packet. I4 does not
+own RackRole uniqueness, deletion, list/query behavior, full CRUD, another
+resource, a tier, the parent, or profile promotion. Do not begin or merge another
 Capability Profile while V0 is red or before `CW1-V6-03`. Once those gates are
 durably closed, follow the next accepted profile in the roadmap and playbook
 rather than this dated snapshot.

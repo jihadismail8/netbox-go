@@ -116,16 +116,16 @@ production release through PROD-1 and PROD-2.
 
 ## Gate-to-goal map
 
-| Gate | Outcome                             | Goals                                   | Current state                                                  |
-| ---- | ----------------------------------- | --------------------------------------- | -------------------------------------------------------------- |
-| 0    | Stable language and decisions       | CONTEXT plus ADR 0001–0005              | `done`                                                         |
-| 1    | Repository/shared-core baseline     | `CW1-G00`                               | `continuous`                                                   |
-| 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01/I1/I2/I3 `done`; I4 `evidence`; parent open              |
-| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01/I1/I2 done; Manufacturer I3 done claim conditional; parent/T2/T3 open |
-| 4    | First Core Workflow Profile         | `CW1-V1-*` through `CW1-V6-*`           | T1; active program                                             |
-| 5    | In-scope feature expansion          | `CP-P01`–`CP-P19`, then `MC-01`–`MC-10` | `blocked`                                                      |
-| 6    | Extension Service contracts         | `EXT-01`                                | `blocked` on a named inventory                                 |
-| 7    | Production release                  | `PROD-1`–`PROD-7`                       | `blocked` on replacement and applicable EXT closeout           |
+| Gate | Outcome                             | Goals                                   | Current state                                                                    |
+| ---- | ----------------------------------- | --------------------------------------- | -------------------------------------------------------------------------------- |
+| 0    | Stable language and decisions       | CONTEXT plus ADR 0001–0005              | `done`                                                                           |
+| 1    | Repository/shared-core baseline     | `CW1-G00`                               | `continuous`                                                                     |
+| 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01/I1/I2/I3 `done`; I4 `evidence`; parent open                                |
+| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01/I1/I2/I3 done; RackRole I4 packet blocked on acceptance; parent/T2/T3 open |
+| 4    | First Core Workflow Profile         | `CW1-V1-*` through `CW1-V6-*`           | T1; active program                                                               |
+| 5    | In-scope feature expansion          | `CP-P01`–`CP-P19`, then `MC-01`–`MC-10` | `blocked`                                                                        |
+| 6    | Extension Service contracts         | `EXT-01`                                | `blocked` on a named inventory                                                   |
+| 7    | Production release                  | `PROD-1`–`PROD-7`                       | `blocked` on replacement and applicable EXT closeout                             |
 
 ## Dependency map
 
@@ -209,38 +209,50 @@ dirty-field serialization/validation, and eight fixed focused tests. Its
 exact tested candidate and independent exact-candidate CI are green. Its
 evidence claim and pre-acceptance receipt exact-SHA CI are also green. The
 project owner's acceptance of only this bounded result was recorded at
-`2026-08-24T10:28:34Z`; its `done` state is conditional on the current
-owner-accepted closeout revision's exact-SHA CI, followed by the excluded
-closeout receipt. No retained pinned differential accompanies this bounded
-result, so T2/T3 remain unearned. Manufacturer uniqueness, delete protection,
-list/query behavior, full CRUD, every tier, every traceability consumer, and
-this parent remain open.
+`2026-08-24T10:28:34Z`. Its owner-accepted closeout claim and excluded
+closeout receipt exact-SHA CI are green, so I3 is effectively `done`. No
+retained pinned differential accompanies this bounded result, so T2/T3 remain
+unearned. Manufacturer uniqueness, delete protection, list/query behavior,
+full CRUD, every tier, every traceability consumer, and this parent remain
+open.
+
+[`CW1-V2-02-I4`](increments/CW1-V2-02-I4.md) is the reviewed RackRole packet
+from clean accepted-I3 receipt
+`1f0a7ccab6c20e6e5db529c6179312afc7c86a18`, source digest
+`source-v2:sha256:880a95bbde0f812e8a422344f7555b6b6d1ef527555c97537e451ad1049505fa`
+with 3,029 entries. It owns only RackRole `name`, `slug`, `color`, and
+`description` create/PUT/PATCH presence, defaults, validation,
+operation-specific generated API contracts, matching REST/gRPC semantics,
+PostgreSQL durability, Vue dirty-field serialization/validation, and eight
+fixed focused tests. Implementation is blocked until the project owner accepts
+the packet.
 
 ## Current execution board
 
-| Goal                | State         | Immediate outcome                                  | Hard dependency                        |
-| ------------------- | ------------- | -------------------------------------------------- | -------------------------------------- |
-| `CW1-G00`           | `continuous`  | Keep source-v2 V0 current                          | Every relevant merged source           |
-| `CW1-V1-01`         | `done`        | Trusted-origin CORS retained                       | Retained entry-source `CW1-G00`        |
-| `CW1-V1-02`         | `in-progress` | Review I4, then continue bounded identity children | `CW1-V1-01` and current `CW1-G00`      |
-| `CW1-V1-02-I4`      | `evidence`    | Obtain project-owner review                        | Accepted/done I3 and current `CW1-G00` |
-| `CW1-V1-03`–`V1-04` | `blocked`     | Complete and retain remaining identity/security    | Preceding V1 goal                      |
-| `CW1-V2-01`         | `done`        | Accepted structural rule/scenario traceability     | Fresh source-v2 V0 follows this gate   |
-| `CW1-V2-02`         | `in-progress` | Plan the next reviewed bounded child               | Accepted V2-01 and current `CW1-G00`   |
-| `CW1-V2-02-I1`      | `done`        | Accepted bounded IPAddress scalar write presence   | Tested candidate and current `CW1-G00` |
-| `CW1-V2-02-I2`      | `done`        | Accepted bounded Site scalar write presence       | Done I1 and current `CW1-G00`          |
-| `CW1-V2-02-I3`      | `done`*       | Accepted bounded Manufacturer scalar write presence | Done I2 and current `CW1-G00`          |
-| `CW1-V2-03`–`V2-08` | `blocked`     | Close later typed business behavior                | V2-02 and named lane dependencies      |
-| `CW1-V3-01`         | `ready`       | Make HTTP/gRPC readiness dependency-aware          | `CW1-G00`                              |
-| `CW1-V3-02`–`V3-05` | `blocked`     | Close PostgreSQL/deployment evidence               | Named V2/V3 dependencies               |
-| `CW1-V4-01`–`V4-03` | `blocked`     | Earn complete first-profile REST T2                | V1–V3 as declared                      |
-| `CW1-V4-04`         | `blocked`     | Retain the identity extension report               | `CW1-V1-04`                            |
-| `CW1-V4-05`         | `blocked`     | Earn corresponding gRPC T3 per capability          | Retained T2 for that capability        |
-| `CW1-V4-06`         | `blocked`     | Retain the complete first-profile T2/T3 boundary   | All V4 lanes                           |
-| `CW1-V5-01`–`V5-04` | `blocked`     | Author complete browser scenarios                  | Stable named V1/V2/REST contracts      |
-| `CW1-V5-05`         | `blocked`     | Retain T4 for exercised workflows                  | Corresponding T2/T3 and V5 authoring   |
-| `CW1-V6-*`          | `blocked`     | Converge evidence and sign off the first profile   | V1–V5                                  |
-| `CP-P01`–`CP-P19`   | `blocked`     | Expand accepted feature breadth                    | `CW1-V6-03`                            |
+| Goal                | State         | Immediate outcome                                   | Hard dependency                        |
+| ------------------- | ------------- | --------------------------------------------------- | -------------------------------------- |
+| `CW1-G00`           | `continuous`  | Keep source-v2 V0 current                           | Every relevant merged source           |
+| `CW1-V1-01`         | `done`        | Trusted-origin CORS retained                        | Retained entry-source `CW1-G00`        |
+| `CW1-V1-02`         | `in-progress` | Review I4, then continue bounded identity children  | `CW1-V1-01` and current `CW1-G00`      |
+| `CW1-V1-02-I4`      | `evidence`    | Obtain project-owner review                         | Accepted/done I3 and current `CW1-G00` |
+| `CW1-V1-03`–`V1-04` | `blocked`     | Complete and retain remaining identity/security     | Preceding V1 goal                      |
+| `CW1-V2-01`         | `done`        | Accepted structural rule/scenario traceability      | Fresh source-v2 V0 follows this gate   |
+| `CW1-V2-02`         | `in-progress` | Obtain owner acceptance for RackRole I4 packet      | Accepted V2-01 and current `CW1-G00`   |
+| `CW1-V2-02-I1`      | `done`        | Accepted bounded IPAddress scalar write presence    | Tested candidate and current `CW1-G00` |
+| `CW1-V2-02-I2`      | `done`        | Accepted bounded Site scalar write presence         | Done I1 and current `CW1-G00`          |
+| `CW1-V2-02-I3`      | `done`        | Accepted bounded Manufacturer scalar write presence | Done I2 and current `CW1-G00`          |
+| `CW1-V2-02-I4`      | `blocked`     | Obtain owner acceptance before implementation       | Done I3 and current `CW1-G00`          |
+| `CW1-V2-03`–`V2-08` | `blocked`     | Close later typed business behavior                 | V2-02 and named lane dependencies      |
+| `CW1-V3-01`         | `ready`       | Make HTTP/gRPC readiness dependency-aware           | `CW1-G00`                              |
+| `CW1-V3-02`–`V3-05` | `blocked`     | Close PostgreSQL/deployment evidence                | Named V2/V3 dependencies               |
+| `CW1-V4-01`–`V4-03` | `blocked`     | Earn complete first-profile REST T2                 | V1–V3 as declared                      |
+| `CW1-V4-04`         | `blocked`     | Retain the identity extension report                | `CW1-V1-04`                            |
+| `CW1-V4-05`         | `blocked`     | Earn corresponding gRPC T3 per capability           | Retained T2 for that capability        |
+| `CW1-V4-06`         | `blocked`     | Retain the complete first-profile T2/T3 boundary    | All V4 lanes                           |
+| `CW1-V5-01`–`V5-04` | `blocked`     | Author complete browser scenarios                   | Stable named V1/V2/REST contracts      |
+| `CW1-V5-05`         | `blocked`     | Retain T4 for exercised workflows                   | Corresponding T2/T3 and V5 authoring   |
+| `CW1-V6-*`          | `blocked`     | Converge evidence and sign off the first profile    | V1–V5                                  |
+| `CP-P01`–`CP-P19`   | `blocked`     | Expand accepted feature breadth                     | `CW1-V6-03`                            |
 
 No owner is assigned merely because a goal is `ready`. An executor claims one
 goal by recording its increment specification before editing code.
@@ -435,14 +447,21 @@ Bounded children:
   operation-specific generated API contracts, matching REST/gRPC semantics,
   PostgreSQL durability, Vue dirty-field serialization/validation, and eight
   fixed focused regressions. Its exact tested candidate, evidence claim, and
-  pre-acceptance receipt exact-SHA CI are green. The project owner's
-  acceptance of only this bounded result was recorded at
-  `2026-08-24T10:28:34Z`; its `done` state is conditional on the current
-  owner-accepted closeout revision's exact-SHA CI, followed by the excluded
-  closeout receipt. No retained pinned differential accompanies this result,
-  so T2/T3 remain unearned. Manufacturer uniqueness, delete protection,
-  list/query behavior, full CRUD, tiers, this parent, and every traceability
-  consumer remain open.
+  pre-acceptance receipt, owner-accepted closeout claim, and excluded closeout
+  receipt exact-SHA CI are green. The project owner accepted only this bounded
+  result at `2026-08-24T10:28:34Z`; I3 is effectively `done`. No retained
+  pinned differential accompanies this result, so T2/T3 remain unearned.
+  Manufacturer uniqueness, delete protection, list/query behavior, full CRUD,
+  tiers, this parent, and every traceability consumer remain open.
+
+- [`CW1-V2-02-I4`](increments/CW1-V2-02-I4.md) is a reviewed, unaccepted
+  RackRole packet. It owns only `name`, `slug`, `color`, and `description`
+  create/PUT/PATCH presence, defaults, validation, operation-specific
+  generated API contracts, matching REST/gRPC semantics, PostgreSQL
+  durability, Vue dirty-field serialization/validation, and eight fixed
+  focused regressions. Implementation is blocked until explicit project-owner
+  acceptance. RackRole uniqueness, delete protection, list/query behavior,
+  full CRUD, tiers, this parent, and every traceability consumer remain open.
 
 - [ ] Represent all 13 resources × list/get/create/PUT/PATCH/delete.
 - [ ] Cover defaults, read-only fields, and nullability.
