@@ -72,11 +72,13 @@ The
 passed its exact-name, affected/race, real-PostgreSQL, complete L4,
 generated-contract, Vue, pinned repository, and independent exact-candidate
 CI boundaries on exact revision
-`f1ef3d5e21b66a8e2f77bd380c09c81a8ef5dbfe`. Its current two-path,
-source-digest-excluded claim conditionally makes bounded I4 `evidence` only
-after the exact claim revision passes repository CI; its receipt and
-project-owner evidence review then remain. No retained pinned differential
-accompanies this bounded result, so no T2/T3 claim is made.
+`f1ef3d5e21b66a8e2f77bd380c09c81a8ef5dbfe`. Its two-path,
+source-digest-excluded claim revision
+`7277f09afa22d5b17dde5c12e8607ef7c7ebb33f` passed its pinned local gate and
+exact-SHA repository CI, making only bounded I4 `evidence`. This receipt
+preserves that result without changing source and requires its own exact-SHA
+CI; project-owner evidence review then remains. No retained pinned
+differential accompanies this bounded result, so no T2/T3 claim is made.
 The project owner reviewed and retained the entry V0, CORS, bounded token I1,
 bounded token I2, bounded browser-session I3, bounded IPAddress I1, and bounded
 Site I2 and Manufacturer I3 results.
@@ -103,11 +105,12 @@ revision `9274f8dbe331af14e5f3f7953f1ae8a74c100e15`, only for Manufacturer
 receipt preserves that exact result without changing source and must pass its
 own exact-SHA CI. I3 promotes no compatibility-tier, profile, parent, or
 traceability-consumer boundary.
-`CW1-V2-02-I4` has a green exact tested candidate and a conditional evidence
-transition only for RackRole `name`, `slug`, `color`, and `description`
-create/PUT/PATCH presence. Its exact claim CI, receipt, and project-owner
-evidence review remain. I4 promotes no compatibility-tier, profile, parent,
-or traceability-consumer boundary. The external differential, REST T2,
+`CW1-V2-02-I4` has effective `evidence` at exact claim revision
+`7277f09afa22d5b17dde5c12e8607ef7c7ebb33f`, only for RackRole `name`,
+`slug`, `color`, and `description` create/PUT/PATCH presence. Its receipt CI
+and project-owner evidence review remain. I4 promotes no compatibility-tier,
+profile, parent, or traceability-consumer boundary. The external differential,
+REST T2,
 corresponding gRPC T3, browser T4, and 13-resource `CW1-V2-02` parent stay
 open. I2 and I3 promote no compatibility-tier or traceability-consumer
 boundary. Feature work must re-establish V0 after its next owned-source
@@ -115,7 +118,7 @@ change.
 
 | Evidence                 | Required command or boundary                                  | Current state                                                    |
 | ------------------------ | ------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Repository quality       | Revised `make check` including non-mutating backend coverage  | V1-I4 and V2-I1/I2/I3 retained; V2-I4 candidate green, claim CI pending |
+| Repository quality       | Revised `make check` including non-mutating backend coverage  | V1-I4 and V2-I1/I2/I3 retained; V2-I4 evidence effective, receipt CI pending |
 | Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                          |
 | gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                            |
 | Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, V1-I4, V2-I1/I2/I3, and bounded V2-I4 passed; V1/V3 remain open |
