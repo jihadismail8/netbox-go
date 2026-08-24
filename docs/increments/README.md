@@ -43,7 +43,7 @@ implementation exists.
 | `CW1-V2-01`    | `done`        | Codex GPT-5.6 Sol | [Machine-readable traceability](CW1-V2-01.md)           |
 | `CW1-V2-02-I1` | `done`        | Codex GPT-5.6 Sol | [IPAddress scalar write presence](CW1-V2-02-I1.md)      |
 | `CW1-V2-02-I2` | `done`        | Codex GPT-5.6 Sol | [Site scalar write presence](CW1-V2-02-I2.md)           |
-| `CW1-V2-02-I3` | `in-progress` | Codex GPT-5.6 Sol | [Manufacturer scalar write presence](CW1-V2-02-I3.md)   |
+| `CW1-V2-02-I3` | `evidence`*   | Codex GPT-5.6 Sol | [Manufacturer scalar write presence](CW1-V2-02-I3.md)   |
 
 `in-progress` means the packet owns only its explicitly active bounded
 increment; no implementation evidence or parent-goal completion is implied.
@@ -85,10 +85,13 @@ temporary source bind before oracle execution. Site uniqueness, deletion,
 list/query behavior, full CRUD, and the 13-resource parent remain open. I2
 changes no compatibility-tier or traceability-consumer boundary.
 
-`CW1-V2-02-I3` is the reviewed active Manufacturer child from clean accepted-I2
-receipt `236591c991ff6558cbc371e93760688a85f5758f`. It owns only `name`,
-`slug`, and `description` create/PUT/PATCH presence, generated request/response
-contracts, matching REST/gRPC semantics, PostgreSQL durability, Vue
-dirty-field serialization/validation, and eight fixed focused tests.
-Manufacturer uniqueness, deletion, list/query behavior, full CRUD, the parent,
-all tiers, and every traceability consumer remain open.
+`CW1-V2-02-I3` has an exact tested candidate at
+`651d33bc3fb2c8e663b6b14320af405b8501471f` with green focused, race,
+real-PostgreSQL, complete L4, generated-contract, Vue, pinned repository, and
+independent candidate-CI boundaries. Its `evidence` row is conditional: it
+becomes effective only after the exact claim-only revision carrying this
+transition passes repository CI. The digest-excluded receipt and project-owner
+review then remain. No retained pinned differential accompanies this bounded
+result. Manufacturer uniqueness, deletion, list/query behavior, full CRUD,
+the 13-resource parent, all tiers, and every traceability consumer remain
+open.

@@ -76,13 +76,23 @@ differential was unavailable before execution because Docker rejected its
 temporary source bind, so REST T2 and corresponding gRPC T3 remain unearned.
 I2 closes no Site uniqueness, deletion, list/query, full CRUD,
 compatibility-tier, parent, profile, or traceability consumer boundary.
-`CW1-V2-02-I3` is the active reviewed child and owns only Manufacturer `name`,
+`CW1-V2-02-I3` has an exact tested candidate at
+`651d33bc3fb2c8e663b6b14320af405b8501471f`, source digest
+`source-v2:sha256:09499a6618569d2dae224edfb339ac82585bf0248d20e5a4d5ff23d19221fe6f`
+with 3,029 entries. Its exact-name, affected/race, real-PostgreSQL, complete
+L4, generated-contract, Vue, pinned repository, and independent
+exact-candidate CI boundaries are green. The current eight-path claim-only
+transition conditionally moves this bounded child to `evidence`; that state
+becomes effective only after this exact claim revision passes repository CI.
+Its digest-excluded receipt and project-owner review then remain. No retained
+pinned differential accompanies this bounded result, so REST T2 and
+corresponding gRPC T3 remain unearned. I3 owns only Manufacturer `name`,
 `slug`, and `description` create/PUT/PATCH presence, operation-specific
 generated API contracts, matching REST/gRPC semantics, PostgreSQL durability,
 Vue dirty-field serialization/validation, and the eight named focused tests.
-It does not own Manufacturer uniqueness, deletion, list/query behavior, full
-CRUD, another resource, a tier, the parent, or profile promotion. Do not begin
-or merge another
+It closes no Manufacturer uniqueness, deletion, list/query, full CRUD,
+compatibility-tier, parent, profile, or traceability-consumer boundary. Do not
+begin or merge another
 Capability Profile while V0 is red or before `CW1-V6-03`. Once those gates are
 durably closed, follow the next accepted profile in the roadmap and playbook
 rather than this dated snapshot.

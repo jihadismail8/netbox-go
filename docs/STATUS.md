@@ -88,16 +88,23 @@ deletion, list/query
 behavior, full CRUD, a compatibility tier, the parent, profile promotion, or
 a traceability consumer.
 
-`CW1-V2-02-I3` is the active reviewed Manufacturer scalar-presence child from
-clean accepted-I2 receipt `236591c991ff6558cbc371e93760688a85f5758f`, source
-digest
-`source-v2:sha256:ecf552ec85a342abf16fbc8d4de10177f3648176f3b1aa3283bb693b2e3fc16f`
-with 3,022 entries. It owns only `name`, `slug`, and `description`
-create/PUT/PATCH presence, operation-specific generated API contracts,
-matching REST/gRPC semantics, PostgreSQL durability, Vue dirty-field
-serialization/validation, and eight fixed focused tests. It does not own
-Manufacturer uniqueness, deletion, list/query behavior, full CRUD, a tier,
-the parent, profile promotion, or a traceability consumer.
+`CW1-V2-02-I3` has an exact tested candidate at
+`651d33bc3fb2c8e663b6b14320af405b8501471f`, source digest
+`source-v2:sha256:09499a6618569d2dae224edfb339ac82585bf0248d20e5a4d5ff23d19221fe6f`
+with 3,029 entries. It owns only Manufacturer `name`, `slug`, and
+`description` create/PUT/PATCH presence, operation-specific generated API
+contracts, matching REST/gRPC semantics, PostgreSQL durability, Vue
+dirty-field serialization/validation, and eight fixed focused tests. Its
+exact-name, affected/race, real-PostgreSQL, complete L4, generated-contract,
+Vue, pinned repository, and independent exact-candidate CI boundaries are
+green. The current eight-path claim-only transition conditionally moves the
+bounded child to `evidence`: that state becomes effective only after this
+exact revision passes repository CI. Its digest-excluded receipt and
+project-owner review then remain. No retained pinned differential accompanies
+this bounded result, so REST T2 and corresponding gRPC T3 remain unearned. It
+does not own Manufacturer uniqueness, deletion, list/query behavior, full
+CRUD, a compatibility tier, the parent, profile promotion, or a traceability
+consumer.
 
 > **Operational boundary:** this is a development build for disposable data.
 > Production TLS, schema upgrades, backup/restore, operational hardening, and
@@ -347,7 +354,7 @@ replacement completes ADR 0004's governing gate and CP-13.
 | ------------------------ | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                     | Refresh for the active source and every later relevant merged digest                                            | Continuous; entry source retained                        |
 | V1 identity/RBAC         | Persisted identity, retained CORS, accepted I1/I2/I3, and retained I4 evidence              | Obtain I4 owner review; complete password-policy/throttle/proxy/streaming plus RBAC/admin/secret work           | I4 evidence; parent open                                 |
-| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, and accepted IPAddress I1/Site I2     | Execute Manufacturer I3, then remaining invariant, rollback, side-effect, concurrency, and tier cases             | V2-01/I1/I2 done; I3 active; parent open                 |
+| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, accepted IPAddress I1/Site I2, and exact Manufacturer I3 candidate | Pass I3 claim CI, retain its receipt, obtain owner review, then complete remaining invariant, rollback, side-effect, concurrency, and tier cases | I1/I2 done; I3 conditional evidence; parent open |
 | V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, and Compose harness                                   | Dependency-aware HTTP/gRPC readiness, dependency loss/recovery, remaining locking cases, retained external run  | Implementation and evidence pending                      |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                 | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report      | T1; implementation/evidence pending                      |
 | V5 Vue                   | Typed adapters and real-Chrome workflow harness                                             | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes | T1; implementation/evidence pending                      |

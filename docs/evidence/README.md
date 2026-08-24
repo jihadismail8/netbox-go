@@ -52,6 +52,16 @@ exact-SHA repository CI, making only bounded I2 `done`. This two-path excluded
 receipt preserves that result without changing source and requires its own
 exact-SHA CI. Docker rejected the differential harness's temporary source bind
 before oracle execution, so no T2/T3 claim is made.
+The
+[bounded Manufacturer scalar write-presence result](2026-08-24-core-workflow-v2-manufacturer-scalar-presence-i3-v0.md)
+passed its exact-name, affected/race, real-PostgreSQL, complete L4,
+generated-contract, Vue, pinned repository, and independent exact-candidate
+CI boundaries on exact revision
+`651d33bc3fb2c8e663b6b14320af405b8501471f`. Its current eight-path
+claim-only transition conditionally makes bounded I3 `evidence` only after
+the exact claim revision passes repository CI; its digest-excluded receipt
+and project-owner review then remain. No retained pinned differential
+accompanies this bounded result, so no T2/T3 claim is made.
 The project owner reviewed and retained the entry V0, CORS, bounded token I1,
 bounded token I2, bounded browser-session I3, bounded IPAddress I1, and bounded
 Site I2 results.
@@ -71,7 +81,12 @@ is evaluated by exact-SHA CI without a self-referential documentation commit.
 `CW1-V2-02-I2` has an effective owner-accepted `done` closeout at exact
 revision `dd2550d3e721d27efc525838d3a9bc0b1bf329f9`, only for Site scalar
 create/PUT/PATCH presence. This excluded receipt preserves that exact result
-without changing source and must pass its own exact-SHA CI. The external
+without changing source and must pass its own exact-SHA CI.
+`CW1-V2-02-I3` has a green exact tested candidate and a conditional evidence
+transition only for Manufacturer `name`, `slug`, and `description`
+create/PUT/PATCH presence. Its claim CI, digest-excluded receipt, and
+project-owner review remain. I3 promotes no compatibility-tier, profile,
+parent, or traceability-consumer boundary. The external
 differential, REST T2, corresponding gRPC T3, browser T4, and 13-resource
 `CW1-V2-02` parent stay open. I2 promotes no compatibility-tier or
 traceability-consumer boundary. Feature work must re-establish V0 after its
@@ -79,10 +94,10 @@ next owned-source change.
 
 | Evidence                 | Required command or boundary                                  | Current state                                                    |
 | ------------------------ | ------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Repository quality       | Revised `make check` including non-mutating backend coverage  | I4 and V2-I1 passed; V2-I2 candidate/evidence/receipt/done claim passed |
+| Repository quality       | Revised `make check` including non-mutating backend coverage  | I4 and V2-I1/I2 retained; V2-I3 candidate green and conditional claim active |
 | Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                          |
 | gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                            |
-| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, I4, V2-I1, and V2-I2 bounded slices passed; V1/V3 open   |
+| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, I4, V2-I1, V2-I2, and bounded V2-I3 passed; V1/V3 remain open |
 | Standalone deployment    | `make deployment-smoke`                                       | CORS-scoped exact-commit result retained; V3 still open          |
 | Browser workflow         | `make browser-e2e`                                            | Harness present; current result pending                          |
 

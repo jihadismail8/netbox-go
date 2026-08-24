@@ -121,7 +121,7 @@ production release through PROD-1 and PROD-2.
 | 0    | Stable language and decisions       | CONTEXT plus ADR 0001–0005              | `done`                                                         |
 | 1    | Repository/shared-core baseline     | `CW1-G00`                               | `continuous`                                                   |
 | 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01/I1/I2/I3 `done`; I4 `evidence`; parent open              |
-| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01/I1/I2 done; Manufacturer I3 active; parent/T2/T3 open      |
+| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01/I1/I2 done; Manufacturer I3 conditional evidence; parent/T2/T3 open |
 | 4    | First Core Workflow Profile         | `CW1-V1-*` through `CW1-V6-*`           | T1; active program                                             |
 | 5    | In-scope feature expansion          | `CP-P01`–`CP-P19`, then `MC-01`–`MC-10` | `blocked`                                                      |
 | 6    | Extension Service contracts         | `EXT-01`                                | `blocked` on a named inventory                                 |
@@ -199,13 +199,20 @@ boundaries are green. The project owner accepted only this bounded result at
 differential leaves REST T2 and corresponding gRPC T3 unearned. The child
 closes no parent, tier, profile, or traceability-consumer boundary.
 
-`CW1-V2-02-I3` is the reviewed active child from clean accepted-I2 receipt
-`236591c991ff6558cbc371e93760688a85f5758f`, source digest
-`source-v2:sha256:ecf552ec85a342abf16fbc8d4de10177f3648176f3b1aa3283bb693b2e3fc16f`
-with 3,022 entries. It owns only Manufacturer `name`, `slug`, and
+`CW1-V2-02-I3` has an exact tested candidate at
+`651d33bc3fb2c8e663b6b14320af405b8501471f`, source digest
+`source-v2:sha256:09499a6618569d2dae224edfb339ac82585bf0248d20e5a4d5ff23d19221fe6f`
+with 3,029 entries. It owns only Manufacturer `name`, `slug`, and
 `description` create/PUT/PATCH presence, operation-specific generated API
 contracts, matching REST/gRPC semantics, PostgreSQL durability, Vue
-dirty-field serialization/validation, and eight fixed focused tests.
+dirty-field serialization/validation, and eight fixed focused tests. Its
+exact tested candidate and independent exact-candidate CI are green. Its
+`evidence` state is conditional on the current claim revision's exact-SHA CI;
+the digest-excluded receipt and project-owner review remain. No retained
+pinned differential accompanies this bounded result, so T2/T3 remain
+unearned. Manufacturer uniqueness, delete protection, list/query behavior,
+full CRUD, every tier, every traceability consumer, and this parent remain
+open.
 
 ## Current execution board
 
@@ -217,10 +224,10 @@ dirty-field serialization/validation, and eight fixed focused tests.
 | `CW1-V1-02-I4`      | `evidence`    | Obtain project-owner review                        | Accepted/done I3 and current `CW1-G00` |
 | `CW1-V1-03`–`V1-04` | `blocked`     | Complete and retain remaining identity/security    | Preceding V1 goal                      |
 | `CW1-V2-01`         | `done`        | Accepted structural rule/scenario traceability     | Fresh source-v2 V0 follows this gate   |
-| `CW1-V2-02`         | `in-progress` | Execute reviewed Manufacturer I3                   | Accepted V2-01 and current `CW1-G00`   |
+| `CW1-V2-02`         | `in-progress` | Retain/review bounded Manufacturer I3              | Accepted V2-01 and current `CW1-G00`   |
 | `CW1-V2-02-I1`      | `done`        | Accepted bounded IPAddress scalar write presence   | Tested candidate and current `CW1-G00` |
 | `CW1-V2-02-I2`      | `done`        | Accepted bounded Site scalar write presence       | Done I1 and current `CW1-G00`          |
-| `CW1-V2-02-I3`      | `in-progress` | Implement Manufacturer scalar write presence      | Done I2 and current `CW1-G00`          |
+| `CW1-V2-02-I3`      | `evidence`*   | Pass claim CI, retain receipt, obtain owner review | Done I2 and current `CW1-G00`          |
 | `CW1-V2-03`–`V2-08` | `blocked`     | Close later typed business behavior                | V2-02 and named lane dependencies      |
 | `CW1-V3-01`         | `ready`       | Make HTTP/gRPC readiness dependency-aware          | `CW1-G00`                              |
 | `CW1-V3-02`–`V3-05` | `blocked`     | Close PostgreSQL/deployment evidence               | Named V2/V3 dependencies               |
@@ -421,13 +428,17 @@ Bounded children:
   CRUD, and this parent remain open. I2 changes no compatibility-tier or
   traceability-consumer boundary.
 
-- [`CW1-V2-02-I3`](increments/CW1-V2-02-I3.md) is the reviewed active child
-  and owns only Manufacturer `name`, `slug`, and `description`
-  create/PUT/PATCH presence, operation-specific generated API contracts,
-  matching REST/gRPC semantics, PostgreSQL durability, Vue dirty-field
-  serialization/validation, and eight fixed focused regressions. Manufacturer
-  uniqueness, delete protection, list/query behavior, full CRUD, tiers, this
-  parent, and every traceability consumer remain open.
+- [`CW1-V2-02-I3`](increments/CW1-V2-02-I3.md) owns only Manufacturer
+  `name`, `slug`, and `description` create/PUT/PATCH presence,
+  operation-specific generated API contracts, matching REST/gRPC semantics,
+  PostgreSQL durability, Vue dirty-field serialization/validation, and eight
+  fixed focused regressions. Its exact tested candidate and independent
+  candidate CI are green. Its `evidence` state is conditional on the current
+  claim revision's exact-SHA CI; the digest-excluded receipt and project-owner
+  review remain. No retained pinned differential accompanies this result, so
+  T2/T3 remain unearned. Manufacturer uniqueness, delete protection,
+  list/query behavior, full CRUD, tiers, this parent, and every traceability
+  consumer remain open.
 
 - [ ] Represent all 13 resources × list/get/create/PUT/PATCH/delete.
 - [ ] Cover defaults, read-only fields, and nullability.
