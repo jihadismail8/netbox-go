@@ -3189,6 +3189,12 @@
       "status": "unresolved",
       "reason": "Operation-specific Manufacturer metadata and the bounded implementation candidate now preserve name, slug, and description create/PUT/PATCH presence across typed behavior, REST/gRPC, PostgreSQL, generated OpenAPI, and Vue. The pinned differential oracle, retained evidence, project-owner review, remaining Manufacturer behavior, 13-resource parent, and higher tiers remain pending.",
       "resolution_goal": "CW1-V2-02"
+    },
+    {
+      "id": "unresolved-rack-role-scalar-presence",
+      "status": "unresolved",
+      "reason": "Operation-specific RackRole metadata and the bounded implementation candidate now preserve name, slug, color, and description create/PUT/PATCH presence, defaults, and validation across typed behavior, REST/gRPC, PostgreSQL, generated OpenAPI, and Vue. The pinned differential oracle, retained evidence, project-owner review, remaining RackRole behavior, 13-resource parent, and higher tiers remain pending.",
+      "resolution_goal": "CW1-V2-02"
     }
   ],
   "verification_sets": [
@@ -4829,7 +4835,7 @@
       "capability": "dcim.RackRole",
       "operation": "contract",
       "reference_set": "dcim.RackRole",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-rack-role-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {
@@ -5259,7 +5265,7 @@
       "capability": "dcim.RackRole",
       "operation": "create",
       "reference_set": "dcim.RackRole",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-rack-role-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {
@@ -5299,7 +5305,7 @@
       "capability": "dcim.RackRole",
       "operation": "replace",
       "reference_set": "dcim.RackRole",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-rack-role-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {
@@ -5309,7 +5315,7 @@
       "capability": "dcim.RackRole",
       "operation": "update",
       "reference_set": "dcim.RackRole",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-rack-role-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {

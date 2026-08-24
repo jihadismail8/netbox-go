@@ -75,7 +75,9 @@ export interface ManufacturerDTO extends Omit<CoreResourceBase, 'created' | 'las
   devicetype_count: number
 }
 
-export interface RackRoleDTO extends CoreResourceBase {
+export interface RackRoleDTO extends Omit<CoreResourceBase, 'created' | 'last_updated'> {
+  created: string | null
+  last_updated: string | null
   name: string
   slug: string
   color: string

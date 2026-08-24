@@ -31,6 +31,76 @@ func TestRackRoleNormalizesAndValidatesLowercaseRGBColor(t *testing.T) {
 	}
 }
 
+func TestRackRoleScalarNormalizationContract(t *testing.T) {
+	t.Parallel()
+
+	nameAtLimit := strings.Repeat("é", dcim.RackRoleNameMaxLength)
+	slugAtLimit := strings.Repeat("s", dcim.RackRoleSlugMaxLength)
+	descriptionAtLimit := strings.Repeat("界", dcim.RackRoleDescriptionMaxLength)
+	role, err := dcim.NewRackRole(dcim.RackRoleValues{
+		Name: "  " + nameAtLimit + "  ", Slug: "  " + slugAtLimit + "  ",
+		Color: "  0a1b2c  ", Description: "  " + descriptionAtLimit + "  ",
+	}, testTime)
+	require.NoError(t, err)
+	assert.Equal(t, nameAtLimit, role.Name())
+	assert.Equal(t, slugAtLimit, role.Slug().String())
+	assert.Equal(t, "0a1b2c", role.Color().String())
+	assert.Equal(t, descriptionAtLimit, role.Description())
+
+	for _, test := range []struct {
+		name        string
+		color       string
+		reason      string
+		description string
+	}{
+		{
+			name: "blank", color: "  ", reason: "required",
+			description: "This field may not be blank.",
+		},
+		{
+			name: "uppercase", color: "A0b1c2", reason: "invalid",
+			description: "Enter a valid hexadecimal RGB color code.",
+		},
+		{
+			name: "leading hash", color: "#0a1b2c", reason: "invalid",
+			description: "Enter a valid hexadecimal RGB color code.",
+		},
+		{
+			name: "wrong length", color: "0a1b2", reason: "invalid",
+			description: "Enter a valid hexadecimal RGB color code.",
+		},
+		{
+			name: "non hexadecimal", color: "0a1b2g", reason: "invalid",
+			description: "Enter a valid hexadecimal RGB color code.",
+		},
+	} {
+		test := test
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+			_, err := dcim.ParseRackRoleColor(test.color)
+			require.Error(t, err)
+			assert.Equal(t, []shared.FieldViolation{{
+				Field: "color", Reason: test.reason, Description: test.description,
+			}}, shared.ViolationsOf(err))
+		})
+	}
+
+	_, err = dcim.NewRackRole(dcim.RackRoleValues{
+		Name: strings.Repeat("é", dcim.RackRoleNameMaxLength+1),
+		Slug: "not valid!", Color: "ABCDEF",
+		Description: strings.Repeat("界", dcim.RackRoleDescriptionMaxLength+1),
+	}, testTime)
+	require.Error(t, err)
+	violations := shared.ViolationsOf(err)
+	require.Len(t, violations, 4)
+	assert.Equal(t, []string{"name", "slug", "color", "description"}, []string{
+		violations[0].Field, violations[1].Field, violations[2].Field, violations[3].Field,
+	})
+	assert.Equal(t, []string{"max_length", "invalid", "invalid", "max_length"}, []string{
+		violations[0].Reason, violations[1].Reason, violations[2].Reason, violations[3].Reason,
+	})
+}
+
 func TestRackRoleReturnsEveryLocalViolation(t *testing.T) {
 	t.Parallel()
 	_, err := dcim.NewRackRole(dcim.RackRoleValues{

@@ -7,8 +7,6 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
 
 	dcimv1 "netbox-go/gen/go/netbox/dcim/v1"
@@ -49,28 +47,29 @@ func TestTypedOrganizationGRPCListPreservesPagePresenceAndMapsDomainResult(t *te
 	assert.Equal(t, uint64(1), response.Page.Count)
 }
 
-func TestTypedOrganizationGRPCUpdateMaskRequiresPresentTypedField(t *testing.T) {
+func TestTypedOrganizationGRPCUpdateMaskPreservesExplicitNullIntent(t *testing.T) {
 	service := &organizationGRPCServiceSpy{rackRole: restoredGRPCRackRole(t)}
 	server := NewDCIMOrganizationServer(service, service)
 	ctx := identity.WithPrincipal(
 		t.Context(), identity.Principal{ID: 1, Username: "typed-organization"},
 	)
 
-	_, err := server.UpdateRackRole(ctx, &dcimv1.UpdateRackRoleRequest{
-		Id: 8, RackRole: &dcimv1.RackRoleInput{},
-		UpdateMask: &fieldmaskpb.FieldMask{Paths: []string{"color"}},
-	})
-	require.Error(t, err)
-	assert.Equal(t, codes.InvalidArgument, status.Code(err))
-	assert.Zero(t, service.rackRoleUpdateCalls)
-
-	color := "00ff00"
 	response, err := server.UpdateRackRole(ctx, &dcimv1.UpdateRackRoleRequest{
-		Id: 8, RackRole: &dcimv1.RackRoleInput{Color: &color},
+		Id: 8, RackRole: &dcimv1.RackRoleInput{},
 		UpdateMask: &fieldmaskpb.FieldMask{Paths: []string{"color"}},
 	})
 	require.NoError(t, err)
 	assert.Equal(t, 1, service.rackRoleUpdateCalls)
+	assert.Equal(t, applicationdcim.FieldNull, service.rackRoleUpdate.Color.State())
+	assert.Equal(t, "00ff00", response.RackRole.Color)
+
+	color := "00ff00"
+	response, err = server.UpdateRackRole(ctx, &dcimv1.UpdateRackRoleRequest{
+		Id: 8, RackRole: &dcimv1.RackRoleInput{Color: &color},
+		UpdateMask: &fieldmaskpb.FieldMask{Paths: []string{"color"}},
+	})
+	require.NoError(t, err)
+	assert.Equal(t, 2, service.rackRoleUpdateCalls)
 	assert.Equal(t, shared.ID(8), service.rackRoleUpdate.ID)
 	assert.Equal(t, applicationdcim.FieldOmitted, service.rackRoleUpdate.Name.State())
 	assert.Equal(t, applicationdcim.FieldPresent, service.rackRoleUpdate.Color.State())

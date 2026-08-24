@@ -115,7 +115,7 @@ func TestManufacturerUpdateRollsBackWhenTypedChangeRecordingFails(t *testing.T) 
 	assert.Empty(t, backend.state.changes)
 }
 
-func TestReplaceRackRoleResetsOmittedOptionals(t *testing.T) {
+func TestReplaceRackRolePreservesOmittedOptionals(t *testing.T) {
 	t.Parallel()
 	backend := newOrganizationBackend()
 	seedRackRole(t, backend, 2, "Original Role")
@@ -126,8 +126,8 @@ func TestReplaceRackRoleResetsOmittedOptionals(t *testing.T) {
 		ID: 2, Name: appdcim.FieldValue("Replacement Role"), Slug: appdcim.FieldValue("replacement-role"),
 	})
 	require.NoError(t, err)
-	assert.Equal(t, dcimdomain.RackRoleDefaultColor, role.Color().String())
-	assert.Empty(t, role.Description())
+	assert.Equal(t, "123abc", role.Color().String())
+	assert.Equal(t, "Original description", role.Description())
 }
 
 func TestOrganizationListValidatesCriteriaAndPushesCompleteVisibilityScope(t *testing.T) {

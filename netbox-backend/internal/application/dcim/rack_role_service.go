@@ -148,14 +148,11 @@ func (service *RackRoleService) CreateRackRole(
 	}
 	var role *dcimdomain.RackRole
 	err := service.unitOfWork.WithinTransaction(ctx, func(transactionContext context.Context) error {
-		values, valuesErr := command.values()
-		if valuesErr != nil {
-			return valuesErr
-		}
+		values, commandErr := command.values()
 		now := service.clock.Now()
 		candidate, domainErr := dcimdomain.NewRackRole(values, now)
-		if domainErr != nil {
-			return domainErr
+		if validationErr := mergeRackRoleMutationErrors(commandErr, domainErr); validationErr != nil {
+			return validationErr
 		}
 		if authorizeErr := service.authorize(transactionContext, principal, authz.Add, candidate); authorizeErr != nil {
 			return authorizeErr
@@ -204,11 +201,15 @@ func (service *RackRoleService) ReplaceRackRole(
 		}
 		before := loaded.Snapshot()
 		now := service.clock.Now()
-		values, valuesErr := command.values()
-		if valuesErr != nil {
-			return valuesErr
+		if now.IsZero() {
+			return shared.NewError(shared.ErrorReasonInternal, "Clock returned a zero timestamp.")
 		}
-		if replaceErr := loaded.Replace(values, now); replaceErr != nil {
+		patch, commandErr := command.patch()
+		domainErr := loaded.ValidatePatch(patch)
+		if validationErr := mergeRackRoleMutationErrors(commandErr, domainErr); validationErr != nil {
+			return validationErr
+		}
+		if replaceErr := loaded.ApplyPatch(patch, now); replaceErr != nil {
 			return replaceErr
 		}
 		if updateErr := service.repository.Update(transactionContext, loaded); updateErr != nil {
@@ -248,12 +249,16 @@ func (service *RackRoleService) UpdateRackRole(
 		}
 		before := loaded.Snapshot()
 		now := service.clock.Now()
-		patch, patchErr := command.patch()
-		if patchErr != nil {
-			return patchErr
+		if now.IsZero() {
+			return shared.NewError(shared.ErrorReasonInternal, "Clock returned a zero timestamp.")
 		}
-		if domainErr := loaded.ApplyPatch(patch, now); domainErr != nil {
-			return domainErr
+		patch, commandErr := command.patch()
+		domainErr := loaded.ValidatePatch(patch)
+		if validationErr := mergeRackRoleMutationErrors(commandErr, domainErr); validationErr != nil {
+			return validationErr
+		}
+		if patchErr := loaded.ApplyPatch(patch, now); patchErr != nil {
+			return patchErr
 		}
 		if updateErr := service.repository.Update(transactionContext, loaded); updateErr != nil {
 			return updateErr

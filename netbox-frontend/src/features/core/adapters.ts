@@ -30,6 +30,7 @@ import {
   type RackForm,
   type RackRoleDTO,
   type RackRoleForm,
+  type RackRoleMutation,
   type RackTypeDTO,
   type RackTypeForm,
   type SiteDTO,
@@ -166,16 +167,57 @@ const manufacturerAdapter: CoreResourceAdapter<'manufacturer'> = {
   filtersFromState: (state) => ({ name: state.name, slug: state.slug }),
 }
 
+const rackRoleOriginalMutation = Symbol('rack-role-original-mutation')
+
+const rackRoleScalarMutationFields = [
+  'name',
+  'slug',
+  'color',
+  'description',
+] as const satisfies readonly (keyof RackRoleMutation)[]
+
+type TrackedRackRoleForm = RackRoleForm & {
+  [rackRoleOriginalMutation]?: RackRoleMutation
+}
+
+function rackRoleMutation(form: RackRoleForm): RackRoleMutation {
+  const mutation: RackRoleMutation = {}
+  if (hasFormField(form, 'name')) mutation.name = form.name
+  if (hasFormField(form, 'slug')) mutation.slug = form.slug
+  if (hasFormField(form, 'color')) mutation.color = form.color
+  if (hasFormField(form, 'description')) mutation.description = form.description
+  return mutation
+}
+
+function rackRoleMutationDelta(
+  current: RackRoleMutation,
+  original: RackRoleMutation,
+): RackRoleMutation {
+  const delta = { ...current }
+  for (const field of rackRoleScalarMutationFields) {
+    if (Object.is(current[field], original[field])) Reflect.deleteProperty(delta, field)
+  }
+  return delta
+}
+
 const rackRoleAdapter: CoreResourceAdapter<'rackrole'> = {
   resource: 'rackrole',
   emptyForm: () => ({ color: '9e9e9e' }),
-  formFromDTO: (dto: RackRoleDTO): RackRoleForm => ({
-    name: dto.name,
-    slug: dto.slug,
-    color: dto.color,
-    description: dto.description,
-  }),
-  mutationFromForm: (form) => ({ ...form }),
+  formFromDTO: (dto: RackRoleDTO): RackRoleForm => {
+    const form: TrackedRackRoleForm = {
+      name: dto.name,
+      slug: dto.slug,
+      color: dto.color,
+      description: dto.description,
+    }
+    form[rackRoleOriginalMutation] = rackRoleMutation(form)
+    return form
+  },
+  mutationFromForm: (form, editing) => {
+    const mutation = rackRoleMutation(form)
+    const original = (form as TrackedRackRoleForm)[rackRoleOriginalMutation]
+    return editing && original ? rackRoleMutationDelta(mutation, original) : mutation
+  },
   filtersFromState: (state) => ({ name: state.name, slug: state.slug }),
 }
 

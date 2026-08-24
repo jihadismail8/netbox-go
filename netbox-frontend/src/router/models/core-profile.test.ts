@@ -9,6 +9,8 @@ import type {
   IPAddressForm,
   ManufacturerDTO,
   ManufacturerForm,
+  RackRoleDTO,
+  RackRoleForm,
   SiteDTO,
   SiteForm,
 } from '@/features/core/resources'
@@ -170,6 +172,83 @@ describe('Manufacturer core profile form contract', () => {
 
     const form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as ManufacturerForm
     expect(adapter.mutationFromForm(form, true)).toEqual({ description: '' })
+  })
+})
+
+describe('RackRole core profile form contract', () => {
+  it('requires Name and Slug while defaulting optional Color and keeping Description optional', () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'rackrole')!
+    const fields = new Map(config.fields.map((field) => [field.key, field]))
+
+    expect(fields.get('name')?.required).toBe(true)
+    expect(fields.get('slug')?.required).toBe(true)
+    expect(fields.get('color')).toEqual(expect.objectContaining({ default: '9e9e9e' }))
+    expect(fields.get('color')?.required).not.toBe(true)
+    expect(fields.get('description')).toBeDefined()
+    expect(fields.get('description')?.required).not.toBe(true)
+  })
+
+  it('routes field-scoped REST validation to the matching RackRole field', () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'rackrole')!
+    const wrapper = mount(DynamicForm, {
+      props: {
+        fields: config.fields,
+        modelValue: { name: 'Core', slug: 'core', color: '' },
+        errors: {
+          color: ['This field may not be blank.'],
+        },
+      },
+    })
+
+    const color = wrapper
+      .findAllComponents(DynamicField)
+      .find((field) => field.props('field').key === 'color')
+    const slug = wrapper
+      .findAllComponents(DynamicField)
+      .find((field) => field.props('field').key === 'slug')
+    expect(color).toBeDefined()
+    expect(color?.props('error')).toBe('This field may not be blank.')
+    expect(slug).toBeDefined()
+    expect(slug?.props('error')).toBeUndefined()
+  })
+
+  it('types nullable RackRole response timestamps exactly', () => {
+    expectTypeOf<RackRoleDTO['created']>().toEqualTypeOf<string | null>()
+    expectTypeOf<RackRoleDTO['last_updated']>().toEqualTypeOf<string | null>()
+  })
+
+  it('preserves the RackRole scalar dirty baseline through the real DynamicForm edit flow', async () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'rackrole')!
+    const adapter = getCoreResourceAdapter('rackrole')
+    const dto: RackRoleDTO = {
+      id: 5,
+      url: '/api/dcim/rack-roles/5/',
+      display: 'Core',
+      created: null,
+      last_updated: null,
+      name: 'Core',
+      slug: 'core',
+      color: '9e9e9e',
+      description: 'Core racks',
+      rack_count: 3,
+    }
+    const wrapper = mount(DynamicForm, {
+      props: {
+        fields: config.fields,
+        modelValue: adapter.formFromDTO(dto),
+        editing: true,
+      },
+    })
+
+    const color = wrapper
+      .findAllComponents(DynamicField)
+      .find((field) => field.props('field').key === 'color')
+    expect(color).toBeDefined()
+    color!.vm.$emit('update:modelValue', '00ff00')
+    await nextTick()
+
+    const form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as RackRoleForm
+    expect(adapter.mutationFromForm(form, true)).toEqual({ color: '00ff00' })
   })
 })
 

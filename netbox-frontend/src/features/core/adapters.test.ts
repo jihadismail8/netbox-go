@@ -9,6 +9,8 @@ import {
   type IPAddressForm,
   type ManufacturerDTO,
   type ManufacturerForm,
+  type RackRoleDTO,
+  type RackRoleForm,
   type SiteDTO,
   type SiteForm,
 } from './resources'
@@ -343,6 +345,70 @@ describe('typed core resource adapters', () => {
 
     const reslugged = withFormField(hydrated, 'slug', 'acme-networks') as ManufacturerForm
     expect(adapter.mutationFromForm(reslugged, true)).toEqual({ slug: 'acme-networks' })
+  })
+
+  it('preserves RackRole scalar presence and the pinned create default', () => {
+    const adapter = getCoreResourceAdapter('rackrole')
+
+    expect(adapter.mutationFromForm({}, false)).toEqual({})
+    expect(adapter.mutationFromForm(adapter.emptyForm(), false)).toEqual({ color: '9e9e9e' })
+    expect(adapter.mutationFromForm({ name: 'Core', slug: 'core' }, false)).toEqual({
+      name: 'Core',
+      slug: 'core',
+    })
+    expect(
+      adapter.mutationFromForm(
+        { name: 'Blank Fields', slug: 'blank-fields', color: '', description: '' },
+        false,
+      ),
+    ).toEqual({ name: 'Blank Fields', slug: 'blank-fields', color: '', description: '' })
+    expect(
+      adapter.mutationFromForm(
+        {
+          name: 'Distribution',
+          slug: 'distribution',
+          color: '00ff00',
+          description: 'Distribution racks',
+        },
+        false,
+      ),
+    ).toEqual({
+      name: 'Distribution',
+      slug: 'distribution',
+      color: '00ff00',
+      description: 'Distribution racks',
+    })
+  })
+
+  it('omits unchanged RackRole scalars and emits only dirty PATCH fields', () => {
+    const adapter = getCoreResourceAdapter('rackrole')
+    const dto: RackRoleDTO = {
+      id: 5,
+      url: '/api/dcim/rack-roles/5/',
+      display: 'Core',
+      created: null,
+      last_updated: null,
+      name: 'Core',
+      slug: 'core',
+      color: '9e9e9e',
+      description: 'Core racks',
+      rack_count: 3,
+    }
+    const hydrated = adapter.formFromDTO(dto)
+
+    expect(adapter.mutationFromForm({ ...hydrated }, true)).toEqual({})
+
+    const cleared = withFormField(hydrated, 'description', '') as RackRoleForm
+    expect(adapter.mutationFromForm(cleared, true)).toEqual({ description: '' })
+
+    const renamed = withFormField(hydrated, 'name', 'Core Infrastructure') as RackRoleForm
+    expect(adapter.mutationFromForm(renamed, true)).toEqual({ name: 'Core Infrastructure' })
+
+    const reslugged = withFormField(hydrated, 'slug', 'core-infrastructure') as RackRoleForm
+    expect(adapter.mutationFromForm(reslugged, true)).toEqual({ slug: 'core-infrastructure' })
+
+    const recolored = withFormField(hydrated, 'color', '00ff00') as RackRoleForm
+    expect(adapter.mutationFromForm(recolored, true)).toEqual({ color: '00ff00' })
   })
 
   it('omits unchanged IPAddress scalars without changing relationship serialization', () => {

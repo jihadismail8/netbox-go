@@ -171,6 +171,10 @@ func typedRackRoleUpdateCommand(
 ) (applicationdcim.UpdateRackRoleCommand, error) {
 	fields := typedRackRoleInputFields(input)
 	command := applicationdcim.UpdateRackRoleCommand{ID: id}
+	available := map[string]applicationdcim.Field[string]{
+		"name": fields.name, "slug": fields.slug, "color": fields.color,
+		"description": fields.description,
+	}
 	if mask == nil || len(mask.Paths) == 0 {
 		command.Name = fields.name
 		command.Slug = fields.slug
@@ -179,41 +183,31 @@ func typedRackRoleUpdateCommand(
 		return command, nil
 	}
 	for _, path := range mask.Paths {
+		field, supported := available[path]
+		if !supported {
+			return applicationdcim.UpdateRackRoleCommand{}, invalidTypedRackRoleMask()
+		}
+		if field.State() == applicationdcim.FieldOmitted {
+			field = applicationdcim.NullField[string]()
+		}
 		switch path {
 		case "name":
-			if fields.name.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateRackRoleCommand{}, invalidTypedOrganizationMask()
-			}
-			command.Name = fields.name
+			command.Name = field
 		case "slug":
-			if fields.slug.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateRackRoleCommand{}, invalidTypedOrganizationMask()
-			}
-			command.Slug = fields.slug
+			command.Slug = field
 		case "color":
-			if fields.color.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateRackRoleCommand{}, invalidTypedOrganizationMask()
-			}
-			command.Color = fields.color
+			command.Color = field
 		case "description":
-			if fields.description.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateRackRoleCommand{}, invalidTypedOrganizationMask()
-			}
-			command.Description = fields.description
-		default:
-			return applicationdcim.UpdateRackRoleCommand{}, invalidTypedOrganizationMask()
+			command.Description = field
 		}
 	}
 	return command, nil
 }
 
-func invalidTypedOrganizationMask() error {
-	return shared.NewValidationError(
-		shared.FieldViolation{
-			Field:       "update_mask",
-			Description: "Every update_mask path must name a supported field with an explicit value.",
-		},
-	)
+func invalidTypedRackRoleMask() error {
+	return shared.NewValidationError(shared.FieldViolation{
+		Field: "update_mask", Description: "Every update_mask path must name a supported field.",
+	})
 }
 
 func typedManufacturerProto(manufacturer *domaindcim.Manufacturer) *dcimv1.Manufacturer {

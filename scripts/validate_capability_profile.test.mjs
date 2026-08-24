@@ -102,6 +102,27 @@ const MANUFACTURER_FIELD_CONTRACTS = {
   },
 };
 
+const RACK_ROLE_FIELD_CONTRACTS = {
+  response: {
+    nullable_fields: ["created", "last_updated"],
+  },
+  create: {
+    required_fields: ["name", "slug"],
+    nullable_fields: [],
+    blank_fields: ["description"],
+  },
+  replace: {
+    required_fields: ["name", "slug"],
+    nullable_fields: [],
+    blank_fields: ["description"],
+  },
+  update: {
+    required_fields: [],
+    nullable_fields: [],
+    blank_fields: ["description"],
+  },
+};
+
 function runNode(script, argument) {
   return spawnSync(process.execPath, [path.join(ROOT, script), argument], {
     cwd: ROOT,
@@ -177,6 +198,16 @@ function withManufacturerResourceFixture(mutator, callback) {
   );
 }
 
+function withRackRoleResourceFixture(mutator, callback) {
+  withResourceContractFixture(
+    DCIM_RELATIVE_PATH,
+    "RackRole",
+    RACK_ROLE_FIELD_CONTRACTS,
+    mutator,
+    callback,
+  );
+}
+
 function assertProfileRejected(name, mutator, expectedDiagnostic) {
   test(name, () => {
     withContractFixture(mutator, (profilePath) => {
@@ -235,6 +266,27 @@ function assertManufacturerProfileRejected(name, mutator, expectedDiagnostic) {
         diagnostics(result),
         expectedDiagnostic,
         "validator must identify the malformed Manufacturer field contract",
+      );
+    });
+  });
+}
+
+function assertRackRoleProfileRejected(name, mutator, expectedDiagnostic) {
+  test(name, () => {
+    withRackRoleResourceFixture(mutator, (profilePath) => {
+      const result = runNode(
+        "scripts/validate_capability_profile.mjs",
+        profilePath,
+      );
+      assert.notEqual(
+        result.status,
+        0,
+        `expected rejection; ${diagnostics(result)}`,
+      );
+      assert.match(
+        diagnostics(result),
+        expectedDiagnostic,
+        "validator must identify the malformed RackRole field contract",
       );
     });
   });
@@ -300,6 +352,15 @@ test("current capability metadata validates", () => {
     manufacturer.field_contracts,
     MANUFACTURER_FIELD_CONTRACTS,
     "current Manufacturer presence metadata must match the independently pinned contract",
+  );
+  const rackRole = dcimMetadata.resources.find(
+    (resource) => resource.name === "RackRole",
+  );
+  assert.ok(rackRole, "current metadata must contain RackRole");
+  assert.deepStrictEqual(
+    rackRole.field_contracts,
+    RACK_ROLE_FIELD_CONTRACTS,
+    "current RackRole presence metadata must match the independently pinned contract",
   );
 
   const result = runNode(
@@ -381,6 +442,72 @@ assertManufacturerProfileRejected(
     manufacturer.field_contracts.update.required_fields.push("name");
   },
   /dcim\.Manufacturer: field_contracts\.update\.required_fields must be empty for PATCH/u,
+);
+
+assertRackRoleProfileRejected(
+  "RackRole field contracts are mandatory",
+  (rackRole) => {
+    delete rackRole.field_contracts;
+  },
+  /dcim\.RackRole: field_contracts must declare operation-specific presence semantics/u,
+);
+
+assertRackRoleProfileRejected(
+  "RackRole field contracts require every operation",
+  (rackRole) => {
+    delete rackRole.field_contracts.replace;
+  },
+  /dcim\.RackRole: field_contracts must declare exactly response, create, replace, and update/u,
+);
+
+assertRackRoleProfileRejected(
+  "RackRole operation fields reject undeclared fields",
+  (rackRole) => {
+    rackRole.field_contracts.create.required_fields.push("tags");
+  },
+  /dcim\.RackRole: field_contracts\.create\.required_fields contains undeclared field tags/u,
+);
+
+assertRackRoleProfileRejected(
+  "RackRole nullable fields remain a writable-field subset",
+  (rackRole) => {
+    rackRole.field_contracts.replace.nullable_fields.push("display");
+  },
+  /dcim\.RackRole: field_contracts\.replace\.nullable_fields contains undeclared field display/u,
+);
+
+assertRackRoleProfileRejected(
+  "RackRole blank fields remain a writable-field subset",
+  (rackRole) => {
+    rackRole.field_contracts.update.blank_fields.push("rack_count");
+  },
+  /dcim\.RackRole: field_contracts\.update\.blank_fields contains undeclared field rack_count/u,
+);
+
+assertRackRoleProfileRejected(
+  "RackRole operation fields reject duplicates",
+  (rackRole) => {
+    rackRole.field_contracts.create.blank_fields.push("description");
+  },
+  /dcim\.RackRole: field_contracts\.create\.blank_fields contains duplicate field description/u,
+);
+
+assertRackRoleProfileRejected(
+  "RackRole response and write contracts cannot be conflated",
+  (rackRole) => {
+    rackRole.field_contracts.response = structuredClone(
+      rackRole.field_contracts.create,
+    );
+  },
+  /dcim\.RackRole: field_contracts\.response must declare exactly nullable_fields/u,
+);
+
+assertRackRoleProfileRejected(
+  "RackRole PATCH contracts cannot require fields",
+  (rackRole) => {
+    rackRole.field_contracts.update.required_fields.push("name");
+  },
+  /dcim\.RackRole: field_contracts\.update\.required_fields must be empty for PATCH/u,
 );
 
 assertSiteProfileRejected(
@@ -610,6 +737,102 @@ assertOpenAPIRejected(
       "string";
   },
   /Manufacturer\.devicetype_count base type must be integer/u,
+);
+
+for (const [name, pathName, method, expectedSchema] of [
+  ["POST", "/api/dcim/rack-roles/", "post", "RackRoleCreate"],
+  ["PUT", "/api/dcim/rack-roles/{id}/", "put", "RackRoleReplace"],
+  ["PATCH", "/api/dcim/rack-roles/{id}/", "patch", "RackRoleUpdate"],
+]) {
+  assertOpenAPIRejected(
+    `OpenAPI validation rejects a stale RackRole ${name} request reference`,
+    (spec) => {
+      spec.paths[pathName][method].requestBody.content[
+        "application/json"
+      ].schema = { $ref: "#/components/schemas/RackRoleWrite" };
+    },
+    new RegExp(
+      escapeRegExp(
+        `${name} ${pathName} must reference #/components/schemas/${expectedSchema}`,
+      ),
+      "u",
+    ),
+  );
+}
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects a stale shared RackRole write schema",
+  (spec) => {
+    spec.components.schemas.RackRoleWrite = structuredClone(
+      spec.components.schemas.RackRoleCreate ??
+        spec.components.schemas.RackRoleWrite,
+    );
+  },
+  /RackRole must not retain a conflated shared write schema/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale RackRole create requiredness",
+  (spec) => {
+    const schema =
+      spec.components.schemas.RackRoleCreate ??
+      structuredClone(spec.components.schemas.RackRoleWrite);
+    schema.required = [];
+    spec.components.schemas.RackRoleCreate = schema;
+  },
+  /RackRoleCreate required fields must match field_contracts\.create/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale RackRole request nullability",
+  (spec) => {
+    const schema =
+      spec.components.schemas.RackRoleReplace ??
+      structuredClone(spec.components.schemas.RackRoleWrite);
+    schema.properties.color.type = ["string", "null"];
+    spec.components.schemas.RackRoleReplace = schema;
+  },
+  /RackRoleReplace\.color nullability must match field_contracts\.replace/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale RackRole request blankability",
+  (spec) => {
+    const schema =
+      spec.components.schemas.RackRoleUpdate ??
+      structuredClone(spec.components.schemas.RackRoleWrite);
+    schema.properties.description.minLength = 1;
+    spec.components.schemas.RackRoleUpdate = schema;
+  },
+  /RackRoleUpdate\.description blankability must match field_contracts\.update/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale RackRole request scalar types",
+  (spec) => {
+    const schema =
+      spec.components.schemas.RackRoleCreate ??
+      structuredClone(spec.components.schemas.RackRoleWrite);
+    schema.properties.color.type = "integer";
+    spec.components.schemas.RackRoleCreate = schema;
+  },
+  /RackRoleCreate\.color base type must be string/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale RackRole response timestamp nullability",
+  (spec) => {
+    spec.components.schemas.RackRole.properties.created.type = "string";
+  },
+  /RackRole\.created response nullability must match field_contracts\.response/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale RackRole response scalar types",
+  (spec) => {
+    spec.components.schemas.RackRole.properties.rack_count.type = "string";
+  },
+  /RackRole\.rack_count base type must be integer/u,
 );
 
 for (const [name, pathName, method, expectedSchema] of [

@@ -22,6 +22,11 @@ type RackRoleColor string
 
 func ParseRackRoleColor(value string) (RackRoleColor, error) {
 	value = strings.TrimSpace(value)
+	if value == "" {
+		return "", shared.NewValidationError(shared.FieldViolation{
+			Field: "color", Reason: "required", Description: "This field may not be blank.",
+		})
+	}
 	if !rackRoleColorPattern.MatchString(value) {
 		return "", shared.NewValidationError(shared.FieldViolation{
 			Field: "color", Reason: "invalid", Description: "Enter a valid hexadecimal RGB color code.",
@@ -160,12 +165,33 @@ func (role *RackRole) ApplyPatch(patch RackRolePatch, now shared.Timestamp) erro
 			Field: "update_mask", Reason: "required", Description: "At least one writable field must be supplied.",
 		})
 	}
+	return role.Replace(role.valuesWithPatch(patch), now)
+}
+
+// ValidatePatch checks the state a patch would produce without mutating the
+// aggregate. Empty patches are valid previews; ApplyPatch retains ownership of
+// the public update-mask requirement.
+func (role *RackRole) ValidatePatch(patch RackRolePatch) error {
+	if role == nil {
+		return shared.NewError(
+			shared.ErrorReasonInternal,
+			"Cannot validate a patch for a nil RackRole.",
+		)
+	}
+	_, violations := validateRackRoleValues(role.valuesWithPatch(patch))
+	if len(violations) > 0 {
+		return shared.NewValidationError(violations...)
+	}
+	return nil
+}
+
+func (role RackRole) valuesWithPatch(patch RackRolePatch) RackRoleValues {
 	values := role.Values()
 	setString(&values.Name, patch.Name)
 	setString(&values.Slug, patch.Slug)
 	setString(&values.Color, patch.Color)
 	setString(&values.Description, patch.Description)
-	return role.Replace(values, now)
+	return values
 }
 
 func (role RackRole) ID() shared.ID                 { return role.id }
@@ -212,7 +238,6 @@ func validateRackRoleValues(values RackRoleValues) (normalizedRackRoleValues, []
 	values.Description = strings.TrimSpace(values.Description)
 	var violations []shared.FieldViolation
 	validateRequiredLength(&violations, "name", values.Name, RackRoleNameMaxLength)
-	validateOptionalLength(&violations, "description", values.Description, RackRoleDescriptionMaxLength)
 	slug, err := shared.ParseSlug(values.Slug, RackRoleSlugMaxLength)
 	if err != nil {
 		violations = append(violations, shared.ViolationsOf(err)...)
@@ -221,6 +246,7 @@ func validateRackRoleValues(values RackRoleValues) (normalizedRackRoleValues, []
 	if err != nil {
 		violations = append(violations, shared.ViolationsOf(err)...)
 	}
+	validateOptionalLength(&violations, "description", values.Description, RackRoleDescriptionMaxLength)
 	return normalizedRackRoleValues{
 		name: values.Name, slug: slug, color: color, description: values.Description,
 	}, violations
