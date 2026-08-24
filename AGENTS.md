@@ -92,16 +92,21 @@ dirty-field serialization/validation, and the eight named focused tests. No
 retained pinned differential accompanies this result, so REST T2 and
 corresponding gRPC T3 remain unearned. I3 closes no Manufacturer uniqueness,
 deletion, list/query, full CRUD, compatibility-tier, parent, profile, or
-traceability-consumer boundary. `CW1-V2-02-I4` is the reviewed and
-owner-accepted RackRole packet
-and owns only `name`, `slug`, `color`, and `description` create/PUT/PATCH
-presence, defaults, validation, operation-specific generated API contracts,
-matching REST/gRPC semantics, PostgreSQL durability, Vue dirty-field
-serialization/validation, and eight fixed focused tests. The project owner
-accepted the packet at `2026-08-24T16:03:26Z`, so its bounded implementation
-is now in progress. No implementation result is claimed yet. I4 does not
-own RackRole uniqueness, deletion, list/query behavior, full CRUD, another
-resource, a tier, the parent, or profile promotion. Do not begin or merge another
+traceability-consumer boundary. `CW1-V2-02-I4` has exact tested candidate
+`f1ef3d5e21b66a8e2f77bd380c09c81a8ef5dbfe` at source digest
+`source-v2:sha256:68db7a9835545d66ef9a651b9c4a000c91f3d834b5503a1b89e4a122275c3bc9`
+with 3,036 entries. Its focused, race, real-PostgreSQL, complete L4,
+generated-contract, Vue, repository, candidate-CI, evidence-claim, and
+pre-acceptance receipt boundaries are green. The project owner's acceptance
+of only this bounded result was recorded at `2026-08-24T18:51:56Z`. The
+current owner-accepted closeout records I4 as `done` only if its exact claim
+revision passes repository CI; its excluded receipt then remains. I4 owns only
+RackRole `name`, `slug`, `color`, and `description` create/PUT/PATCH presence,
+defaults, validation, generated API contracts, matching REST/gRPC semantics,
+PostgreSQL durability, Vue serialization/validation, and eight fixed tests.
+No retained differential accompanies it, so T2/T3 remain unearned. I4 closes
+no RackRole uniqueness, deletion, list/query behavior, full CRUD, another
+resource, tier, parent, profile, or traceability-consumer boundary. Do not begin or merge another
 Capability Profile while V0 is red or before `CW1-V6-03`. Once those gates are
 durably closed, follow the next accepted profile in the roadmap and playbook
 rather than this dated snapshot.

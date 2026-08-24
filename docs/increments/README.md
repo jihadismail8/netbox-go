@@ -44,7 +44,7 @@ implementation exists.
 | `CW1-V2-02-I1` | `done`        | Codex GPT-5.6 Sol | [IPAddress scalar write presence](CW1-V2-02-I1.md)      |
 | `CW1-V2-02-I2` | `done`        | Codex GPT-5.6 Sol | [Site scalar write presence](CW1-V2-02-I2.md)           |
 | `CW1-V2-02-I3` | `done`        | Codex GPT-5.6 Sol | [Manufacturer scalar write presence](CW1-V2-02-I3.md)   |
-| `CW1-V2-02-I4` | `in-progress` | Codex GPT-5.6 Sol | [RackRole scalar write presence](CW1-V2-02-I4.md)       |
+| `CW1-V2-02-I4` | `done`*       | Codex GPT-5.6 Sol | [RackRole scalar write presence](CW1-V2-02-I4.md)       |
 
 `in-progress` means the packet owns only its explicitly active bounded
 increment; no implementation evidence or parent-goal completion is implied.
@@ -100,12 +100,20 @@ differential accompanies this bounded result. Manufacturer uniqueness,
 deletion, list/query behavior, full CRUD, the 13-resource parent, all tiers,
 and every traceability consumer remain open.
 
-`CW1-V2-02-I4` is a reviewed, owner-accepted RackRole packet from clean accepted-I3 receipt
-`1f0a7ccab6c20e6e5db529c6179312afc7c86a18`. It owns only `name`, `slug`,
-`color`, and `description` create/PUT/PATCH presence, defaults, validation,
-generated request/response contracts, matching REST/gRPC semantics,
-PostgreSQL durability, Vue dirty-field serialization/validation, and eight
-fixed focused tests. The project owner accepted the packet at
-`2026-08-24T16:03:26Z`, so its bounded implementation is now `in-progress`.
-No result is claimed yet. RackRole uniqueness, deletion, list/query behavior,
-full CRUD, the parent, all tiers, and every traceability consumer remain open.
+`CW1-V2-02-I4` has exact tested candidate
+`f1ef3d5e21b66a8e2f77bd380c09c81a8ef5dbfe` with green focused, race,
+real-PostgreSQL, complete L4, generated-contract, Vue, repository,
+candidate-CI, evidence-claim, and pre-acceptance receipt boundaries. The
+project owner accepted only this bounded result at `2026-08-24T18:51:56Z`.
+Its `done` row is conditional on the exact owner-accepted closeout revision
+passing repository CI; its excluded receipt then remains. I4 owns only
+RackRole `name`, `slug`, `color`, and `description` create/PUT/PATCH presence,
+defaults, validation, generated request/response contracts, matching
+REST/gRPC semantics, PostgreSQL durability, Vue serialization/validation, and
+eight fixed tests. No differential was run. RackRole uniqueness, deletion,
+list/query behavior, full CRUD, the parent, all tiers, and every traceability
+consumer remain open.
+
+The asterisk records that the owner-accepted closeout becomes effective only
+after the exact closeout claim revision's repository CI succeeds. It does not
+weaken or broaden the meaning of `done`.

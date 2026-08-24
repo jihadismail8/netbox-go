@@ -106,19 +106,21 @@ REST T2 and corresponding gRPC T3 remain unearned. It does not own
 Manufacturer uniqueness, deletion, list/query behavior, full CRUD, a
 compatibility tier, the parent, profile promotion, or a traceability consumer.
 
-`CW1-V2-02-I4` is a reviewed RackRole scalar-presence packet from clean
-accepted-I3 receipt `1f0a7ccab6c20e6e5db529c6179312afc7c86a18`, source
-digest
-`source-v2:sha256:880a95bbde0f812e8a422344f7555b6b6d1ef527555c97537e451ad1049505fa`
-with 3,029 entries. It owns only `name`, `slug`, `color`, and `description`
-create/PUT/PATCH presence, defaults, validation, operation-specific generated
-API contracts, matching REST/gRPC semantics, PostgreSQL durability, Vue
-dirty-field serialization/validation, and eight fixed focused tests. The
-project owner accepted the packet at `2026-08-24T16:03:26Z`; bounded
-implementation is now `in-progress`, but no result is claimed. RackRole
-uniqueness, deletion, list/query behavior, full CRUD,
-tiers, the parent, profile promotion, and every traceability consumer remain
-open.
+`CW1-V2-02-I4` has exact tested candidate
+`f1ef3d5e21b66a8e2f77bd380c09c81a8ef5dbfe` at source digest
+`source-v2:sha256:68db7a9835545d66ef9a651b9c4a000c91f3d834b5503a1b89e4a122275c3bc9`
+with 3,036 entries. Its focused, race, real-PostgreSQL, complete L4,
+generated-contract, Vue, repository, candidate-CI, evidence-claim, and
+pre-acceptance receipt boundaries are green. The project owner accepted only
+this bounded result at `2026-08-24T18:51:56Z`. `Done` becomes effective when
+the current owner-accepted closeout claim passes exact-SHA CI; its excluded
+receipt then remains. I4 owns only RackRole `name`, `slug`, `color`, and
+`description` create/PUT/PATCH presence, defaults, validation, generated API
+contracts, matching REST/gRPC semantics, PostgreSQL durability, Vue
+serialization/validation, and eight fixed tests. No retained differential
+accompanies it, so T2/T3 remain unearned. RackRole uniqueness, deletion,
+list/query behavior, full CRUD, tiers, the parent, profile promotion, and every
+traceability consumer remain open.
 
 > **Operational boundary:** this is a development build for disposable data.
 > Production TLS, schema upgrades, backup/restore, operational hardening, and
@@ -368,7 +370,7 @@ replacement completes ADR 0004's governing gate and CP-13.
 | ------------------------ | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
 | V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                                 | Refresh for the active source and every later relevant merged digest                                                             | Continuous; entry source retained          |
 | V1 identity/RBAC         | Persisted identity, retained CORS, accepted I1/I2/I3, and retained I4 evidence                          | Obtain I4 owner review; complete password-policy/throttle/proxy/streaming plus RBAC/admin/secret work                            | I4 evidence; parent open                   |
-| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, and accepted IPAddress I1/Site I2/Manufacturer I3 | Complete accepted RackRole I4 bounded implementation and remaining invariant, rollback, side-effect, concurrency, and tier cases | I1/I2/I3 done; I4 in progress; parent open |
+| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, and accepted IPAddress I1/Site I2/Manufacturer I3/RackRole I4 | Retain I4 closeout, then complete remaining invariant, rollback, side-effect, concurrency, and tier cases | I1/I2/I3 done; I4 done claim conditional; parent open |
 | V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, and Compose harness                                               | Dependency-aware HTTP/gRPC readiness, dependency loss/recovery, remaining locking cases, retained external run                   | Implementation and evidence pending        |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                             | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report                       | T1; implementation/evidence pending        |
 | V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                         | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes                  | T1; implementation/evidence pending        |
