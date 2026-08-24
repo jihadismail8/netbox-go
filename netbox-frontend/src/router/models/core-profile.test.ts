@@ -4,7 +4,14 @@ import { describe, expect, expectTypeOf, it } from 'vitest'
 import DynamicField from '@/components/form/DynamicField.vue'
 import DynamicForm from '@/components/form/DynamicForm.vue'
 import { getCoreResourceAdapter } from '@/features/core/adapters'
-import type { IPAddressDTO, IPAddressForm, SiteDTO, SiteForm } from '@/features/core/resources'
+import type {
+  IPAddressDTO,
+  IPAddressForm,
+  ManufacturerDTO,
+  ManufacturerForm,
+  SiteDTO,
+  SiteForm,
+} from '@/features/core/resources'
 import { CORE_PROFILE_MODELS } from './core-profile'
 
 describe('Site core profile form contract', () => {
@@ -89,6 +96,80 @@ describe('Site core profile form contract', () => {
 
     const form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as SiteForm
     expect(adapter.mutationFromForm(form, true)).toEqual({ facility: '' })
+  })
+})
+
+describe('Manufacturer core profile form contract', () => {
+  it('requires Name and Slug while keeping Description optional', () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'manufacturer')!
+    const fields = new Map(config.fields.map((field) => [field.key, field]))
+
+    expect(fields.get('name')?.required).toBe(true)
+    expect(fields.get('slug')?.required).toBe(true)
+    expect(fields.get('description')).toBeDefined()
+    expect(fields.get('description')?.required).not.toBe(true)
+  })
+
+  it('routes field-scoped REST validation to the matching Manufacturer field', () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'manufacturer')!
+    const wrapper = mount(DynamicForm, {
+      props: {
+        fields: config.fields,
+        modelValue: { name: 'Acme', slug: '' },
+        errors: {
+          slug: ['This field may not be blank.'],
+        },
+      },
+    })
+
+    const slug = wrapper
+      .findAllComponents(DynamicField)
+      .find((field) => field.props('field').key === 'slug')
+    const description = wrapper
+      .findAllComponents(DynamicField)
+      .find((field) => field.props('field').key === 'description')
+    expect(slug).toBeDefined()
+    expect(slug?.props('error')).toBe('This field may not be blank.')
+    expect(description).toBeDefined()
+    expect(description?.props('error')).toBeUndefined()
+  })
+
+  it('types nullable Manufacturer response timestamps exactly', () => {
+    expectTypeOf<ManufacturerDTO['created']>().toEqualTypeOf<string | null>()
+    expectTypeOf<ManufacturerDTO['last_updated']>().toEqualTypeOf<string | null>()
+  })
+
+  it('preserves the Manufacturer scalar dirty baseline through the real DynamicForm edit flow', async () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'manufacturer')!
+    const adapter = getCoreResourceAdapter('manufacturer')
+    const dto: ManufacturerDTO = {
+      id: 2,
+      url: '/api/dcim/manufacturers/2/',
+      display: 'Acme',
+      created: null,
+      last_updated: null,
+      name: 'Acme',
+      slug: 'acme',
+      description: 'Network manufacturer',
+      devicetype_count: 4,
+    }
+    const wrapper = mount(DynamicForm, {
+      props: {
+        fields: config.fields,
+        modelValue: adapter.formFromDTO(dto),
+        editing: true,
+      },
+    })
+
+    const description = wrapper
+      .findAllComponents(DynamicField)
+      .find((field) => field.props('field').key === 'description')
+    expect(description).toBeDefined()
+    description!.vm.$emit('update:modelValue', '')
+    await nextTick()
+
+    const form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as ManufacturerForm
+    expect(adapter.mutationFromForm(form, true)).toEqual({ description: '' })
   })
 })
 

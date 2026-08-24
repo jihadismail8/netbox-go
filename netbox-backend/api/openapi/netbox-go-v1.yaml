@@ -1505,7 +1505,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ManufacturerWrite"
+                "$ref": "#/components/schemas/ManufacturerCreate"
               }
             }
           }
@@ -1575,7 +1575,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ManufacturerWrite"
+                "$ref": "#/components/schemas/ManufacturerReplace"
               }
             }
           }
@@ -1614,7 +1614,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ManufacturerWrite"
+                "$ref": "#/components/schemas/ManufacturerUpdate"
               }
             }
           }
@@ -4803,22 +4803,13 @@
         "additionalProperties": false,
         "properties": {
           "name": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "slug": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "description": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "id": {
             "type": "integer",
@@ -4829,10 +4820,7 @@
             "format": "uri"
           },
           "display": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "created": {
             "type": [
@@ -4851,6 +4839,27 @@
           "devicetype_count": {
             "type": "integer",
             "format": "int64"
+          }
+        }
+      },
+      "ManufacturerCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "slug"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "slug": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string"
           }
         }
       },
@@ -4888,27 +4897,41 @@
           }
         }
       },
-      "ManufacturerWrite": {
+      "ManufacturerReplace": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "slug"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "slug": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "ManufacturerUpdate": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
           "name": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "minLength": 1
           },
           "slug": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "minLength": 1
           },
           "description": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           }
         }
       },

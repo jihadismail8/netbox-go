@@ -44,6 +44,26 @@
       "grpc_prefix": "Manufacturer",
       "writable_fields": ["name", "slug", "description"],
       "response_only_fields": ["id", "url", "display", "created", "last_updated", "devicetype_count"],
+      "field_contracts": {
+        "response": {
+          "nullable_fields": ["created", "last_updated"]
+        },
+        "create": {
+          "required_fields": ["name", "slug"],
+          "nullable_fields": [],
+          "blank_fields": ["description"]
+        },
+        "replace": {
+          "required_fields": ["name", "slug"],
+          "nullable_fields": [],
+          "blank_fields": ["description"]
+        },
+        "update": {
+          "required_fields": [],
+          "nullable_fields": [],
+          "blank_fields": ["description"]
+        }
+      },
       "filters": ["name", "slug"],
       "ordering": ["id", "name", "slug", "created", "last_updated"],
       "relationships": [],

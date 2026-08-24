@@ -94,6 +94,9 @@ func typedManufacturerUpdateCommand(
 ) (applicationdcim.UpdateManufacturerCommand, error) {
 	fields := typedManufacturerInputFields(input)
 	command := applicationdcim.UpdateManufacturerCommand{ID: id}
+	available := map[string]applicationdcim.Field[string]{
+		"name": fields.name, "slug": fields.slug, "description": fields.description,
+	}
 	if mask == nil || len(mask.Paths) == 0 {
 		command.Name = fields.name
 		command.Slug = fields.slug
@@ -101,27 +104,29 @@ func typedManufacturerUpdateCommand(
 		return command, nil
 	}
 	for _, path := range mask.Paths {
+		field, supported := available[path]
+		if !supported {
+			return applicationdcim.UpdateManufacturerCommand{}, invalidTypedManufacturerMask()
+		}
+		if field.State() == applicationdcim.FieldOmitted {
+			field = applicationdcim.NullField[string]()
+		}
 		switch path {
 		case "name":
-			if fields.name.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateManufacturerCommand{}, invalidTypedOrganizationMask()
-			}
-			command.Name = fields.name
+			command.Name = field
 		case "slug":
-			if fields.slug.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateManufacturerCommand{}, invalidTypedOrganizationMask()
-			}
-			command.Slug = fields.slug
+			command.Slug = field
 		case "description":
-			if fields.description.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateManufacturerCommand{}, invalidTypedOrganizationMask()
-			}
-			command.Description = fields.description
-		default:
-			return applicationdcim.UpdateManufacturerCommand{}, invalidTypedOrganizationMask()
+			command.Description = field
 		}
 	}
 	return command, nil
+}
+
+func invalidTypedManufacturerMask() error {
+	return shared.NewValidationError(shared.FieldViolation{
+		Field: "update_mask", Description: "Every update_mask path must name a supported field.",
+	})
 }
 
 type typedRackRoleFields struct {

@@ -81,6 +81,27 @@ const SITE_FIELD_CONTRACTS = {
   },
 };
 
+const MANUFACTURER_FIELD_CONTRACTS = {
+  response: {
+    nullable_fields: ["created", "last_updated"],
+  },
+  create: {
+    required_fields: ["name", "slug"],
+    nullable_fields: [],
+    blank_fields: ["description"],
+  },
+  replace: {
+    required_fields: ["name", "slug"],
+    nullable_fields: [],
+    blank_fields: ["description"],
+  },
+  update: {
+    required_fields: [],
+    nullable_fields: [],
+    blank_fields: ["description"],
+  },
+};
+
 function runNode(script, argument) {
   return spawnSync(process.execPath, [path.join(ROOT, script), argument], {
     cwd: ROOT,
@@ -146,6 +167,16 @@ function withSiteResourceFixture(mutator, callback) {
   );
 }
 
+function withManufacturerResourceFixture(mutator, callback) {
+  withResourceContractFixture(
+    DCIM_RELATIVE_PATH,
+    "Manufacturer",
+    MANUFACTURER_FIELD_CONTRACTS,
+    mutator,
+    callback,
+  );
+}
+
 function assertProfileRejected(name, mutator, expectedDiagnostic) {
   test(name, () => {
     withContractFixture(mutator, (profilePath) => {
@@ -183,6 +214,27 @@ function assertSiteProfileRejected(name, mutator, expectedDiagnostic) {
         diagnostics(result),
         expectedDiagnostic,
         "validator must identify the malformed Site field contract",
+      );
+    });
+  });
+}
+
+function assertManufacturerProfileRejected(name, mutator, expectedDiagnostic) {
+  test(name, () => {
+    withManufacturerResourceFixture(mutator, (profilePath) => {
+      const result = runNode(
+        "scripts/validate_capability_profile.mjs",
+        profilePath,
+      );
+      assert.notEqual(
+        result.status,
+        0,
+        `expected rejection; ${diagnostics(result)}`,
+      );
+      assert.match(
+        diagnostics(result),
+        expectedDiagnostic,
+        "validator must identify the malformed Manufacturer field contract",
       );
     });
   });
@@ -240,6 +292,15 @@ test("current capability metadata validates", () => {
     SITE_FIELD_CONTRACTS,
     "current Site presence metadata must match the independently pinned contract",
   );
+  const manufacturer = dcimMetadata.resources.find(
+    (resource) => resource.name === "Manufacturer",
+  );
+  assert.ok(manufacturer, "current metadata must contain Manufacturer");
+  assert.deepStrictEqual(
+    manufacturer.field_contracts,
+    MANUFACTURER_FIELD_CONTRACTS,
+    "current Manufacturer presence metadata must match the independently pinned contract",
+  );
 
   const result = runNode(
     "scripts/validate_capability_profile.mjs",
@@ -254,6 +315,72 @@ assertSiteProfileRejected(
     delete site.field_contracts;
   },
   /dcim\.Site: field_contracts must declare operation-specific presence semantics/u,
+);
+
+assertManufacturerProfileRejected(
+  "Manufacturer field contracts are mandatory",
+  (manufacturer) => {
+    delete manufacturer.field_contracts;
+  },
+  /dcim\.Manufacturer: field_contracts must declare operation-specific presence semantics/u,
+);
+
+assertManufacturerProfileRejected(
+  "Manufacturer field contracts require every operation",
+  (manufacturer) => {
+    delete manufacturer.field_contracts.replace;
+  },
+  /dcim\.Manufacturer: field_contracts must declare exactly response, create, replace, and update/u,
+);
+
+assertManufacturerProfileRejected(
+  "Manufacturer operation fields reject undeclared fields",
+  (manufacturer) => {
+    manufacturer.field_contracts.create.required_fields.push("tags");
+  },
+  /dcim\.Manufacturer: field_contracts\.create\.required_fields contains undeclared field tags/u,
+);
+
+assertManufacturerProfileRejected(
+  "Manufacturer nullable fields remain a writable-field subset",
+  (manufacturer) => {
+    manufacturer.field_contracts.replace.nullable_fields.push("display");
+  },
+  /dcim\.Manufacturer: field_contracts\.replace\.nullable_fields contains undeclared field display/u,
+);
+
+assertManufacturerProfileRejected(
+  "Manufacturer blank fields remain a writable-field subset",
+  (manufacturer) => {
+    manufacturer.field_contracts.update.blank_fields.push("devicetype_count");
+  },
+  /dcim\.Manufacturer: field_contracts\.update\.blank_fields contains undeclared field devicetype_count/u,
+);
+
+assertManufacturerProfileRejected(
+  "Manufacturer operation fields reject duplicates",
+  (manufacturer) => {
+    manufacturer.field_contracts.create.blank_fields.push("description");
+  },
+  /dcim\.Manufacturer: field_contracts\.create\.blank_fields contains duplicate field description/u,
+);
+
+assertManufacturerProfileRejected(
+  "Manufacturer response and write contracts cannot be conflated",
+  (manufacturer) => {
+    manufacturer.field_contracts.response = structuredClone(
+      manufacturer.field_contracts.create,
+    );
+  },
+  /dcim\.Manufacturer: field_contracts\.response must declare exactly nullable_fields/u,
+);
+
+assertManufacturerProfileRejected(
+  "Manufacturer PATCH contracts cannot require fields",
+  (manufacturer) => {
+    manufacturer.field_contracts.update.required_fields.push("name");
+  },
+  /dcim\.Manufacturer: field_contracts\.update\.required_fields must be empty for PATCH/u,
 );
 
 assertSiteProfileRejected(
@@ -398,6 +525,92 @@ for (const [name, pathName, method, expectedSchema] of [
     ),
   );
 }
+
+for (const [name, pathName, method, expectedSchema] of [
+  ["POST", "/api/dcim/manufacturers/", "post", "ManufacturerCreate"],
+  ["PUT", "/api/dcim/manufacturers/{id}/", "put", "ManufacturerReplace"],
+  ["PATCH", "/api/dcim/manufacturers/{id}/", "patch", "ManufacturerUpdate"],
+]) {
+  assertOpenAPIRejected(
+    `OpenAPI validation rejects a stale Manufacturer ${name} request reference`,
+    (spec) => {
+      spec.paths[pathName][method].requestBody.content[
+        "application/json"
+      ].schema = { $ref: "#/components/schemas/ManufacturerWrite" };
+    },
+    new RegExp(
+      escapeRegExp(
+        `${name} ${pathName} must reference #/components/schemas/${expectedSchema}`,
+      ),
+      "u",
+    ),
+  );
+}
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Manufacturer create requiredness",
+  (spec) => {
+    const schema =
+      spec.components.schemas.ManufacturerCreate ??
+      structuredClone(spec.components.schemas.ManufacturerWrite);
+    schema.required = [];
+    spec.components.schemas.ManufacturerCreate = schema;
+  },
+  /ManufacturerCreate required fields must match field_contracts\.create/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Manufacturer request nullability",
+  (spec) => {
+    const schema =
+      spec.components.schemas.ManufacturerReplace ??
+      structuredClone(spec.components.schemas.ManufacturerWrite);
+    schema.properties.description.type = ["string", "null"];
+    spec.components.schemas.ManufacturerReplace = schema;
+  },
+  /ManufacturerReplace\.description nullability must match field_contracts\.replace/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Manufacturer request blankability",
+  (spec) => {
+    const schema =
+      spec.components.schemas.ManufacturerUpdate ??
+      structuredClone(spec.components.schemas.ManufacturerWrite);
+    schema.properties.description.minLength = 1;
+    spec.components.schemas.ManufacturerUpdate = schema;
+  },
+  /ManufacturerUpdate\.description blankability must match field_contracts\.update/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Manufacturer request scalar types",
+  (spec) => {
+    const schema =
+      spec.components.schemas.ManufacturerCreate ??
+      structuredClone(spec.components.schemas.ManufacturerWrite);
+    schema.properties.name.type = "integer";
+    spec.components.schemas.ManufacturerCreate = schema;
+  },
+  /ManufacturerCreate\.name base type must be string/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Manufacturer response timestamp nullability",
+  (spec) => {
+    spec.components.schemas.Manufacturer.properties.created.type = "string";
+  },
+  /Manufacturer\.created response nullability must match field_contracts\.response/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Manufacturer response scalar types",
+  (spec) => {
+    spec.components.schemas.Manufacturer.properties.devicetype_count.type =
+      "string";
+  },
+  /Manufacturer\.devicetype_count base type must be integer/u,
+);
 
 for (const [name, pathName, method, expectedSchema] of [
   ["POST", "/api/dcim/sites/", "post", "SiteCreate"],

@@ -3183,6 +3183,12 @@
       "status": "unresolved",
       "reason": "Operation-specific Site metadata and the bounded implementation candidate now preserve name, slug, status, facility, description, and comments create/PUT/PATCH presence across typed behavior, REST/gRPC, PostgreSQL, generated OpenAPI, and Vue. The pinned differential oracle, retained evidence, project-owner review, remaining Site behavior, 13-resource parent, and higher tiers remain pending.",
       "resolution_goal": "CW1-V2-02"
+    },
+    {
+      "id": "unresolved-manufacturer-scalar-presence",
+      "status": "unresolved",
+      "reason": "Operation-specific Manufacturer metadata and the bounded implementation candidate now preserve name, slug, and description create/PUT/PATCH presence across typed behavior, REST/gRPC, PostgreSQL, generated OpenAPI, and Vue. The pinned differential oracle, retained evidence, project-owner review, remaining Manufacturer behavior, 13-resource parent, and higher tiers remain pending.",
+      "resolution_goal": "CW1-V2-02"
     }
   ],
   "verification_sets": [
@@ -4813,7 +4819,7 @@
       "capability": "dcim.Manufacturer",
       "operation": "contract",
       "reference_set": "dcim.Manufacturer",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-manufacturer-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {
@@ -5193,7 +5199,7 @@
       "capability": "dcim.Manufacturer",
       "operation": "create",
       "reference_set": "dcim.Manufacturer",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-manufacturer-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {
@@ -5233,7 +5239,7 @@
       "capability": "dcim.Manufacturer",
       "operation": "replace",
       "reference_set": "dcim.Manufacturer",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-manufacturer-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {
@@ -5243,7 +5249,7 @@
       "capability": "dcim.Manufacturer",
       "operation": "update",
       "reference_set": "dcim.Manufacturer",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-manufacturer-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {

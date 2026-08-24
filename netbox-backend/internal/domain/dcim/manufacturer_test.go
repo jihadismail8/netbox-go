@@ -27,6 +27,38 @@ func TestManufacturerNormalizesCompleteStateAndSnapshot(t *testing.T) {
 	}, manufacturer.Snapshot())
 }
 
+func TestManufacturerScalarNormalizationContract(t *testing.T) {
+	t.Parallel()
+
+	nameAtLimit := strings.Repeat("é", dcim.ManufacturerNameMaxLength)
+	slugAtLimit := strings.Repeat("s", dcim.ManufacturerSlugMaxLength)
+	descriptionAtLimit := strings.Repeat("界", dcim.ManufacturerDescriptionMaxLength)
+	manufacturer, err := dcim.NewManufacturer(dcim.ManufacturerValues{
+		Name: "  " + nameAtLimit + "  ", Slug: "  " + slugAtLimit + "  ",
+		Description: "  " + descriptionAtLimit + "  ",
+	}, testTime)
+	require.NoError(t, err)
+	assert.Equal(t, nameAtLimit, manufacturer.Name())
+	assert.Equal(t, slugAtLimit, manufacturer.Slug().String())
+	assert.Equal(t, descriptionAtLimit, manufacturer.Description())
+
+	_, err = dcim.NewManufacturer(dcim.ManufacturerValues{
+		Name:        strings.Repeat("é", dcim.ManufacturerNameMaxLength+1),
+		Slug:        strings.Repeat("s", dcim.ManufacturerSlugMaxLength+1),
+		Description: strings.Repeat("界", dcim.ManufacturerDescriptionMaxLength+1),
+	}, testTime)
+	require.Error(t, err)
+	assert.Equal(t, map[string]string{
+		"name": "max_length", "slug": "max_length", "description": "max_length",
+	}, violationReasons(err))
+
+	_, err = dcim.NewManufacturer(dcim.ManufacturerValues{
+		Name: "Manufacturer", Slug: "non-ascii-é",
+	}, testTime)
+	require.Error(t, err)
+	assert.Equal(t, map[string]string{"slug": "invalid"}, violationReasons(err))
+}
+
 func TestManufacturerReturnsEveryLocalViolation(t *testing.T) {
 	t.Parallel()
 	_, err := dcim.NewManufacturer(dcim.ManufacturerValues{
@@ -55,9 +87,15 @@ func TestManufacturerPatchIsAtomicAndPreservesOmittedFields(t *testing.T) {
 	assert.Equal(t, updatedAt, manufacturer.LastUpdated())
 
 	invalidSlug := "not valid"
-	err := manufacturer.ApplyPatch(dcim.ManufacturerPatch{Slug: &invalidSlug}, updatedAt)
+	beforeInvalid := manufacturer.State()
+	err := manufacturer.ValidatePatch(dcim.ManufacturerPatch{Slug: &invalidSlug})
+	require.Error(t, err)
+	assert.Equal(t, beforeInvalid, manufacturer.State())
+
+	err = manufacturer.ApplyPatch(dcim.ManufacturerPatch{Slug: &invalidSlug}, updatedAt)
 	require.Error(t, err)
 	assert.Equal(t, "original-manufacturer", manufacturer.Slug().String())
+	assert.Equal(t, beforeInvalid, manufacturer.State())
 }
 
 func TestManufacturerRejectsEmptyPatchAndInvalidRestore(t *testing.T) {

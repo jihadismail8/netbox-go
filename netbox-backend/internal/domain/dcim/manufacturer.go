@@ -149,11 +149,32 @@ func (manufacturer *Manufacturer) ApplyPatch(patch ManufacturerPatch, now shared
 			Field: "update_mask", Reason: "required", Description: "At least one writable field must be supplied.",
 		})
 	}
+	return manufacturer.Replace(manufacturer.valuesWithPatch(patch), now)
+}
+
+// ValidatePatch checks the state a patch would produce without mutating the
+// aggregate. Empty patches are valid previews; ApplyPatch retains ownership of
+// the public update-mask requirement.
+func (manufacturer *Manufacturer) ValidatePatch(patch ManufacturerPatch) error {
+	if manufacturer == nil {
+		return shared.NewError(
+			shared.ErrorReasonInternal,
+			"Cannot validate a patch for a nil Manufacturer.",
+		)
+	}
+	_, violations := validateManufacturerValues(manufacturer.valuesWithPatch(patch))
+	if len(violations) > 0 {
+		return shared.NewValidationError(violations...)
+	}
+	return nil
+}
+
+func (manufacturer Manufacturer) valuesWithPatch(patch ManufacturerPatch) ManufacturerValues {
 	values := manufacturer.Values()
 	setString(&values.Name, patch.Name)
 	setString(&values.Slug, patch.Slug)
 	setString(&values.Description, patch.Description)
-	return manufacturer.Replace(values, now)
+	return values
 }
 
 func (manufacturer Manufacturer) ID() shared.ID                 { return manufacturer.id }

@@ -7,6 +7,8 @@ import {
   type CoreReference,
   type IPAddressDTO,
   type IPAddressForm,
+  type ManufacturerDTO,
+  type ManufacturerForm,
   type SiteDTO,
   type SiteForm,
 } from './resources'
@@ -292,6 +294,55 @@ describe('typed core resource adapters', () => {
 
     const renamed = withFormField(hydrated, 'name', 'Moscow') as SiteForm
     expect(adapter.mutationFromForm(renamed, true)).toEqual({ name: 'Moscow' })
+  })
+
+  it('preserves Manufacturer scalar presence in create mutations', () => {
+    const adapter = getCoreResourceAdapter('manufacturer')
+
+    expect(adapter.mutationFromForm(adapter.emptyForm(), false)).toEqual({})
+    expect(adapter.mutationFromForm({ name: 'Acme', slug: 'acme' }, false)).toEqual({
+      name: 'Acme',
+      slug: 'acme',
+    })
+    expect(
+      adapter.mutationFromForm(
+        { name: 'Empty Description', slug: 'empty-description', description: '' },
+        false,
+      ),
+    ).toEqual({ name: 'Empty Description', slug: 'empty-description', description: '' })
+    expect(
+      adapter.mutationFromForm(
+        { name: 'Juniper', slug: 'juniper', description: 'Network manufacturer' },
+        false,
+      ),
+    ).toEqual({ name: 'Juniper', slug: 'juniper', description: 'Network manufacturer' })
+  })
+
+  it('omits unchanged Manufacturer scalars and preserves explicit clears in PATCH mutations', () => {
+    const adapter = getCoreResourceAdapter('manufacturer')
+    const dto: ManufacturerDTO = {
+      id: 2,
+      url: '/api/dcim/manufacturers/2/',
+      display: 'Acme',
+      created: null,
+      last_updated: null,
+      name: 'Acme',
+      slug: 'acme',
+      description: 'Network manufacturer',
+      devicetype_count: 4,
+    }
+    const hydrated = adapter.formFromDTO(dto)
+
+    expect(adapter.mutationFromForm({ ...hydrated }, true)).toEqual({})
+
+    const cleared = withFormField(hydrated, 'description', '') as ManufacturerForm
+    expect(adapter.mutationFromForm(cleared, true)).toEqual({ description: '' })
+
+    const renamed = withFormField(hydrated, 'name', 'Acme Networks') as ManufacturerForm
+    expect(adapter.mutationFromForm(renamed, true)).toEqual({ name: 'Acme Networks' })
+
+    const reslugged = withFormField(hydrated, 'slug', 'acme-networks') as ManufacturerForm
+    expect(adapter.mutationFromForm(reslugged, true)).toEqual({ slug: 'acme-networks' })
   })
 
   it('omits unchanged IPAddress scalars without changing relationship serialization', () => {

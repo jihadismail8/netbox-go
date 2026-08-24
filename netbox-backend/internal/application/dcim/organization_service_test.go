@@ -115,20 +115,12 @@ func TestManufacturerUpdateRollsBackWhenTypedChangeRecordingFails(t *testing.T) 
 	assert.Empty(t, backend.state.changes)
 }
 
-func TestReplaceOrganizationResourcesResetsOmittedOptionals(t *testing.T) {
+func TestReplaceRackRoleResetsOmittedOptionals(t *testing.T) {
 	t.Parallel()
 	backend := newOrganizationBackend()
-	seedManufacturer(t, backend, 1, "Original")
 	seedRackRole(t, backend, 2, "Original Role")
 	recorder := &organizationRecorder{backend: backend}
-	manufacturerService := newManufacturerTestService(t, backend, recorder, &trackingAuthorizer{})
 	rackRoleService := newRackRoleTestService(t, backend, recorder, &trackingAuthorizer{})
-
-	manufacturer, err := manufacturerService.ReplaceManufacturer(t.Context(), testPrincipal(), appdcim.ReplaceManufacturerCommand{
-		ID: 1, Name: appdcim.FieldValue("Replacement"), Slug: appdcim.FieldValue("replacement"),
-	})
-	require.NoError(t, err)
-	assert.Empty(t, manufacturer.Description())
 
 	role, err := rackRoleService.ReplaceRackRole(t.Context(), testPrincipal(), appdcim.ReplaceRackRoleCommand{
 		ID: 2, Name: appdcim.FieldValue("Replacement Role"), Slug: appdcim.FieldValue("replacement-role"),

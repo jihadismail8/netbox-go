@@ -27,6 +27,24 @@ const identity = JSON.parse(
 const failures = [];
 
 const contractedResourceShapes = {
+  Manufacturer: {
+    request: {
+      name: { type: "string" },
+      slug: { type: "string" },
+      description: { type: "string" },
+    },
+    response: {
+      name: { type: "string" },
+      slug: { type: "string" },
+      description: { type: "string" },
+      id: { type: "integer", format: "int64" },
+      url: { type: "string", format: "uri" },
+      display: { type: "string" },
+      created: { type: "string", format: "date-time" },
+      last_updated: { type: "string", format: "date-time" },
+      devicetype_count: { type: "integer", format: "int64" },
+    },
+  },
   Site: {
     request: {
       name: { type: "string" },

@@ -66,7 +66,9 @@ export interface SiteDTO extends Omit<CoreResourceBase, 'created' | 'last_update
   rack_count: number
 }
 
-export interface ManufacturerDTO extends CoreResourceBase {
+export interface ManufacturerDTO extends Omit<CoreResourceBase, 'created' | 'last_updated'> {
+  created: string | null
+  last_updated: string | null
   name: string
   slug: string
   description: string

@@ -23,6 +23,7 @@ import {
   type IPAddressMutation,
   type ManufacturerDTO,
   type ManufacturerForm,
+  type ManufacturerMutation,
   type PrefixDTO,
   type PrefixForm,
   type RackDTO,
@@ -114,15 +115,54 @@ const siteAdapter: CoreResourceAdapter<'site'> = {
   }),
 }
 
+const manufacturerOriginalMutation = Symbol('manufacturer-original-mutation')
+
+const manufacturerScalarMutationFields = [
+  'name',
+  'slug',
+  'description',
+] as const satisfies readonly (keyof ManufacturerMutation)[]
+
+type TrackedManufacturerForm = ManufacturerForm & {
+  [manufacturerOriginalMutation]?: ManufacturerMutation
+}
+
+function manufacturerMutation(form: ManufacturerForm): ManufacturerMutation {
+  const mutation: ManufacturerMutation = {}
+  if (hasFormField(form, 'name')) mutation.name = form.name
+  if (hasFormField(form, 'slug')) mutation.slug = form.slug
+  if (hasFormField(form, 'description')) mutation.description = form.description
+  return mutation
+}
+
+function manufacturerMutationDelta(
+  current: ManufacturerMutation,
+  original: ManufacturerMutation,
+): ManufacturerMutation {
+  const delta = { ...current }
+  for (const field of manufacturerScalarMutationFields) {
+    if (Object.is(current[field], original[field])) Reflect.deleteProperty(delta, field)
+  }
+  return delta
+}
+
 const manufacturerAdapter: CoreResourceAdapter<'manufacturer'> = {
   resource: 'manufacturer',
   emptyForm: () => ({}),
-  formFromDTO: (dto: ManufacturerDTO): ManufacturerForm => ({
-    name: dto.name,
-    slug: dto.slug,
-    description: dto.description,
-  }),
-  mutationFromForm: (form) => ({ ...form }),
+  formFromDTO: (dto: ManufacturerDTO): ManufacturerForm => {
+    const form: TrackedManufacturerForm = {
+      name: dto.name,
+      slug: dto.slug,
+      description: dto.description,
+    }
+    form[manufacturerOriginalMutation] = manufacturerMutation(form)
+    return form
+  },
+  mutationFromForm: (form, editing) => {
+    const mutation = manufacturerMutation(form)
+    const original = (form as TrackedManufacturerForm)[manufacturerOriginalMutation]
+    return editing && original ? manufacturerMutationDelta(mutation, original) : mutation
+  },
   filtersFromState: (state) => ({ name: state.name, slug: state.slug }),
 }
 
