@@ -113,9 +113,10 @@ digest
 with 3,029 entries. It owns only `name`, `slug`, `color`, and `description`
 create/PUT/PATCH presence, defaults, validation, operation-specific generated
 API contracts, matching REST/gRPC semantics, PostgreSQL durability, Vue
-dirty-field serialization/validation, and eight fixed focused tests. No
-implementation result is claimed: project-owner packet acceptance is the hard
-entry gate. RackRole uniqueness, deletion, list/query behavior, full CRUD,
+dirty-field serialization/validation, and eight fixed focused tests. The
+project owner accepted the packet at `2026-08-24T16:03:26Z`; bounded
+implementation is now `in-progress`, but no result is claimed. RackRole
+uniqueness, deletion, list/query behavior, full CRUD,
 tiers, the parent, profile promotion, and every traceability consumer remain
 open.
 
@@ -363,15 +364,15 @@ replacement completes ADR 0004's governing gate and CP-13.
 
 ## Evidence status
 
-| Checkpoint               | Present foundation                                                                                      | Missing before exit                                                                                                                                        | Status                                                      |
-| ------------------------ | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                                 | Refresh for the active source and every later relevant merged digest                                                                                       | Continuous; entry source retained                           |
-| V1 identity/RBAC         | Persisted identity, retained CORS, accepted I1/I2/I3, and retained I4 evidence                          | Obtain I4 owner review; complete password-policy/throttle/proxy/streaming plus RBAC/admin/secret work                                                      | I4 evidence; parent open                                    |
-| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, and accepted IPAddress I1/Site I2/Manufacturer I3 | Obtain RackRole I4 packet acceptance, then complete its bounded implementation and remaining invariant, rollback, side-effect, concurrency, and tier cases | I1/I2/I3 done; I4 packet blocked on acceptance; parent open |
-| V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, and Compose harness                                               | Dependency-aware HTTP/gRPC readiness, dependency loss/recovery, remaining locking cases, retained external run                                             | Implementation and evidence pending                         |
-| V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                             | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report                                                 | T1; implementation/evidence pending                         |
-| V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                         | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes                                            | T1; implementation/evidence pending                         |
-| V6 sign-off              | First-profile legacy stacks physically retired                                                          | V0-V5 retained green together, per-capability review, protobuf freeze/breaking baseline, joint sign-off                                                    | Not earned                                                  |
+| Checkpoint               | Present foundation                                                                                      | Missing before exit                                                                                                              | Status                                     |
+| ------------------------ | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                                 | Refresh for the active source and every later relevant merged digest                                                             | Continuous; entry source retained          |
+| V1 identity/RBAC         | Persisted identity, retained CORS, accepted I1/I2/I3, and retained I4 evidence                          | Obtain I4 owner review; complete password-policy/throttle/proxy/streaming plus RBAC/admin/secret work                            | I4 evidence; parent open                   |
+| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, and accepted IPAddress I1/Site I2/Manufacturer I3 | Complete accepted RackRole I4 bounded implementation and remaining invariant, rollback, side-effect, concurrency, and tier cases | I1/I2/I3 done; I4 in progress; parent open |
+| V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, and Compose harness                                               | Dependency-aware HTTP/gRPC readiness, dependency loss/recovery, remaining locking cases, retained external run                   | Implementation and evidence pending        |
+| V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                             | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report                       | T1; implementation/evidence pending        |
+| V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                         | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes                  | T1; implementation/evidence pending        |
+| V6 sign-off              | First-profile legacy stacks physically retired                                                          | V0-V5 retained green together, per-capability review, protobuf freeze/breaking baseline, joint sign-off                          | Not earned                                 |
 
 See [Evidence](evidence/README.md) for the artifact policy and commands.
 

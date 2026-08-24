@@ -33,25 +33,23 @@ implementation exists.
 
 ## Packets
 
-| Goal           | State      | Intended executor | Packet                                                  |
-| -------------- | ---------- | ----------------- | ------------------------------------------------------- |
-| `CW1-V1-01`    | `done`     | Codex GPT-5.6 Sol | [Trusted-origin CORS](CW1-V1-01.md)                     |
-| `CW1-V1-02-I1` | `done`     | Codex GPT-5.6 Sol | [Token credential foundation](CW1-V1-02.md)             |
-| `CW1-V1-02-I2` | `done`     | Codex GPT-5.6 Sol | [Token transport and unary RPC safety](CW1-V1-02-I2.md) |
-| `CW1-V1-02-I3` | `done`     | Codex GPT-5.6 Sol | [Browser session and CSRF lifecycle](CW1-V1-02-I3.md)   |
-| `CW1-V1-02-I4` | `evidence` | Codex GPT-5.6 Sol | [Password change and session rotation](CW1-V1-02-I4.md) |
-| `CW1-V2-01`    | `done`     | Codex GPT-5.6 Sol | [Machine-readable traceability](CW1-V2-01.md)           |
-| `CW1-V2-02-I1` | `done`     | Codex GPT-5.6 Sol | [IPAddress scalar write presence](CW1-V2-02-I1.md)      |
-| `CW1-V2-02-I2` | `done`     | Codex GPT-5.6 Sol | [Site scalar write presence](CW1-V2-02-I2.md)           |
-| `CW1-V2-02-I3` | `done`     | Codex GPT-5.6 Sol | [Manufacturer scalar write presence](CW1-V2-02-I3.md)   |
-| `CW1-V2-02-I4` | `blocked`  | Codex GPT-5.6 Sol | [RackRole scalar write presence](CW1-V2-02-I4.md)       |
+| Goal           | State         | Intended executor | Packet                                                  |
+| -------------- | ------------- | ----------------- | ------------------------------------------------------- |
+| `CW1-V1-01`    | `done`        | Codex GPT-5.6 Sol | [Trusted-origin CORS](CW1-V1-01.md)                     |
+| `CW1-V1-02-I1` | `done`        | Codex GPT-5.6 Sol | [Token credential foundation](CW1-V1-02.md)             |
+| `CW1-V1-02-I2` | `done`        | Codex GPT-5.6 Sol | [Token transport and unary RPC safety](CW1-V1-02-I2.md) |
+| `CW1-V1-02-I3` | `done`        | Codex GPT-5.6 Sol | [Browser session and CSRF lifecycle](CW1-V1-02-I3.md)   |
+| `CW1-V1-02-I4` | `evidence`    | Codex GPT-5.6 Sol | [Password change and session rotation](CW1-V1-02-I4.md) |
+| `CW1-V2-01`    | `done`        | Codex GPT-5.6 Sol | [Machine-readable traceability](CW1-V2-01.md)           |
+| `CW1-V2-02-I1` | `done`        | Codex GPT-5.6 Sol | [IPAddress scalar write presence](CW1-V2-02-I1.md)      |
+| `CW1-V2-02-I2` | `done`        | Codex GPT-5.6 Sol | [Site scalar write presence](CW1-V2-02-I2.md)           |
+| `CW1-V2-02-I3` | `done`        | Codex GPT-5.6 Sol | [Manufacturer scalar write presence](CW1-V2-02-I3.md)   |
+| `CW1-V2-02-I4` | `in-progress` | Codex GPT-5.6 Sol | [RackRole scalar write presence](CW1-V2-02-I4.md)       |
 
 `in-progress` means the packet owns only its explicitly active bounded
 increment; no implementation evidence or parent-goal completion is implied.
 
 `blocked` means the packet is reviewed but a named hard entry gate remains.
-For I4 that gate is explicit project-owner packet acceptance; no behavior path
-is authorized before it.
 
 `evidence` means the bounded candidate has current retained results but still
 awaits any human acceptance required by its packet. `done` means that bounded
@@ -102,12 +100,12 @@ differential accompanies this bounded result. Manufacturer uniqueness,
 deletion, list/query behavior, full CRUD, the 13-resource parent, all tiers,
 and every traceability consumer remain open.
 
-`CW1-V2-02-I4` is a reviewed RackRole packet from clean accepted-I3 receipt
+`CW1-V2-02-I4` is a reviewed, owner-accepted RackRole packet from clean accepted-I3 receipt
 `1f0a7ccab6c20e6e5db529c6179312afc7c86a18`. It owns only `name`, `slug`,
 `color`, and `description` create/PUT/PATCH presence, defaults, validation,
 generated request/response contracts, matching REST/gRPC semantics,
 PostgreSQL durability, Vue dirty-field serialization/validation, and eight
-fixed focused tests. No implementation exists or is authorized until the
-project owner accepts the packet. RackRole uniqueness, deletion, list/query
-behavior, full CRUD, the parent, all tiers, and every traceability consumer
-remain open.
+fixed focused tests. The project owner accepted the packet at
+`2026-08-24T16:03:26Z`, so its bounded implementation is now `in-progress`.
+No result is claimed yet. RackRole uniqueness, deletion, list/query behavior,
+full CRUD, the parent, all tiers, and every traceability consumer remain open.
