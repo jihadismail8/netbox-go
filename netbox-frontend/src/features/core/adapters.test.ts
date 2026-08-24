@@ -11,6 +11,8 @@ import {
   type ManufacturerForm,
   type RackRoleDTO,
   type RackRoleForm,
+  type RackTypeDTO,
+  type RackTypeForm,
   type SiteDTO,
   type SiteForm,
 } from './resources'
@@ -409,6 +411,132 @@ describe('typed core resource adapters', () => {
 
     const recolored = withFormField(hydrated, 'color', '00ff00') as RackRoleForm
     expect(adapter.mutationFromForm(recolored, true)).toEqual({ color: '00ff00' })
+  })
+
+  it('preserves RackType create omissions, defaults, IDs, and concrete scalar states', () => {
+    const adapter = getCoreResourceAdapter('racktype')
+
+    expect(adapter.mutationFromForm({}, false)).toEqual({})
+    expect(adapter.mutationFromForm(adapter.emptyForm(), false)).toEqual({
+      width: 19,
+      u_height: 42,
+      starting_unit: 1,
+      desc_units: false,
+    })
+    expect(
+      adapter.mutationFromForm(
+        {
+          manufacturer,
+          model: 'R42',
+          slug: 'r42',
+          form_factor: '4-post-cabinet',
+          width: 23,
+          u_height: 48,
+          starting_unit: 2,
+          desc_units: true,
+          description: 'Core rack',
+          comments: 'Operator note',
+        },
+        false,
+      ),
+    ).toEqual({
+      manufacturer: 2,
+      model: 'R42',
+      slug: 'r42',
+      form_factor: '4-post-cabinet',
+      width: 23,
+      u_height: 48,
+      starting_unit: 2,
+      desc_units: true,
+      description: 'Core rack',
+      comments: 'Operator note',
+    })
+    expect(
+      adapter.mutationFromForm(
+        {
+          manufacturer: null,
+          u_height: 0,
+          starting_unit: 0,
+          desc_units: false,
+          description: '',
+          comments: '',
+        },
+        false,
+      ),
+    ).toEqual({
+      manufacturer: null,
+      u_height: 0,
+      starting_unit: 0,
+      desc_units: false,
+      description: '',
+      comments: '',
+    })
+  })
+
+  it('omits unchanged RackType scalars and emits one normalized dirty PATCH field', () => {
+    const adapter = getCoreResourceAdapter('racktype')
+    const dto: RackTypeDTO = {
+      id: 4,
+      url: '/api/dcim/rack-types/4/',
+      display: 'Acme R42',
+      created: null,
+      last_updated: null,
+      manufacturer,
+      model: 'R42',
+      slug: 'r42',
+      form_factor: { value: '4-post-cabinet', label: '4-post cabinet' },
+      width: { value: 19, label: '19 inches' },
+      u_height: 42,
+      starting_unit: 1,
+      desc_units: true,
+      description: 'Core rack',
+      comments: 'Operator note',
+    }
+    const hydrated = adapter.formFromDTO(dto)
+
+    expect(adapter.mutationFromForm({ ...hydrated }, true)).toEqual({})
+
+    const otherManufacturer: CoreReference = {
+      id: 12,
+      url: '/api/dcim/manufacturers/12/',
+      display: 'Globex',
+    }
+    expect(
+      adapter.mutationFromForm(
+        withFormField(hydrated, 'manufacturer', otherManufacturer) as RackTypeForm,
+        true,
+      ),
+    ).toEqual({ manufacturer: 12 })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'model', 'R48') as RackTypeForm, true),
+    ).toEqual({ model: 'R48' })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'slug', 'r48') as RackTypeForm, true),
+    ).toEqual({ slug: 'r48' })
+    expect(
+      adapter.mutationFromForm(
+        withFormField(hydrated, 'form_factor', '2-post-frame') as RackTypeForm,
+        true,
+      ),
+    ).toEqual({ form_factor: '2-post-frame' })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'width', 23) as RackTypeForm, true),
+    ).toEqual({ width: 23 })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'u_height', 0) as RackTypeForm, true),
+    ).toEqual({ u_height: 0 })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'starting_unit', 2) as RackTypeForm, true),
+    ).toEqual({ starting_unit: 2 })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'desc_units', false) as RackTypeForm, true),
+    ).toEqual({ desc_units: false })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'description', '') as RackTypeForm, true),
+    ).toEqual({ description: '' })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'comments', '') as RackTypeForm, true),
+    ).toEqual({ comments: '' })
   })
 
   it('omits unchanged IPAddress scalars without changing relationship serialization', () => {

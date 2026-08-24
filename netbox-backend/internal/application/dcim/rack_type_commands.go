@@ -1,6 +1,8 @@
 package dcim
 
 import (
+	"sort"
+
 	dcimdomain "netbox-go/internal/domain/dcim"
 	"netbox-go/internal/domain/shared"
 )
@@ -58,8 +60,8 @@ func (command CreateRackTypeCommand) values() (rackTypeCommandValues, error) {
 		manufacturerID: fullFieldValue(&violations, "manufacturer", command.Manufacturer, shared.ID(0), true),
 		model:          valueForFullMutation(&violations, "model", command.Model, "", true),
 		slug:           valueForFullMutation(&violations, "slug", command.Slug, "", true),
-		formFactor:     valueForFullMutation(&violations, "form_factor", command.FormFactor, "", true),
-		width:          fullFieldValue(&violations, "width", command.Width, dcimdomain.RackTypeDefaultWidth, false),
+		formFactor:     valueForFullMutation(&violations, "form_factor", command.FormFactor, "", false),
+		width:          fullRackTypeWidth(&violations, command.Width),
 		uHeight:        fullFieldValue(&violations, "u_height", command.UHeight, dcimdomain.RackTypeDefaultUHeight, false),
 		startingUnit:   fullFieldValue(&violations, "starting_unit", command.StartingUnit, dcimdomain.RackTypeDefaultStartingUnit, false),
 		descUnits:      fullFieldValue(&violations, "desc_units", command.DescUnits, false, false),
@@ -72,13 +74,19 @@ func (command CreateRackTypeCommand) values() (rackTypeCommandValues, error) {
 		})
 	}
 	if len(violations) > 0 {
-		return rackTypeCommandValues{}, shared.NewValidationError(violations...)
+		return values, newRackTypeValidationError(violations)
 	}
 	return values, nil
 }
 
-func (command ReplaceRackTypeCommand) values() (rackTypeCommandValues, error) {
-	return command.CreateRackTypeCommand.values()
+func fullRackTypeWidth(violations *[]shared.FieldViolation, field Field[uint32]) uint32 {
+	if field.State() == FieldNull {
+		*violations = append(*violations, blankRackTypeWidthViolation())
+		return dcimdomain.RackTypeDefaultWidth
+	}
+	return fullFieldValue(
+		violations, "width", field, dcimdomain.RackTypeDefaultWidth, false,
+	)
 }
 
 type rackTypeCommandPatch struct {
@@ -101,19 +109,52 @@ func (patch rackTypeCommandPatch) empty() bool {
 		patch.comments == nil
 }
 
+func (command ReplaceRackTypeCommand) patch() (rackTypeCommandPatch, error) {
+	return buildRackTypePatch(
+		command.Manufacturer, command.Model, command.Slug, command.FormFactor,
+		command.Width, command.UHeight, command.StartingUnit, command.DescUnits,
+		command.Description, command.Comments, true,
+	)
+}
+
 func (command UpdateRackTypeCommand) patch() (rackTypeCommandPatch, error) {
+	return buildRackTypePatch(
+		command.Manufacturer, command.Model, command.Slug, command.FormFactor,
+		command.Width, command.UHeight, command.StartingUnit, command.DescUnits,
+		command.Description, command.Comments, false,
+	)
+}
+
+func buildRackTypePatch(
+	manufacturer Field[shared.ID],
+	model Field[string],
+	slug Field[string],
+	formFactor Field[string],
+	width Field[uint32],
+	uHeight Field[uint32],
+	startingUnit Field[uint32],
+	descUnits Field[bool],
+	description Field[string],
+	comments Field[string],
+	requireIdentity bool,
+) (rackTypeCommandPatch, error) {
 	var violations []shared.FieldViolation
+	if requireIdentity {
+		requireRackTypeField(&violations, "manufacturer", manufacturer)
+		requireRackTypeField(&violations, "model", model)
+		requireRackTypeField(&violations, "slug", slug)
+	}
 	patch := rackTypeCommandPatch{
-		manufacturerID: patchFieldValue(&violations, "manufacturer", command.Manufacturer),
-		model:          patchValue(&violations, "model", command.Model),
-		slug:           patchValue(&violations, "slug", command.Slug),
-		formFactor:     patchValue(&violations, "form_factor", command.FormFactor),
-		width:          patchFieldValue(&violations, "width", command.Width),
-		uHeight:        patchFieldValue(&violations, "u_height", command.UHeight),
-		startingUnit:   patchFieldValue(&violations, "starting_unit", command.StartingUnit),
-		descUnits:      patchFieldValue(&violations, "desc_units", command.DescUnits),
-		description:    patchValue(&violations, "description", command.Description),
-		comments:       patchValue(&violations, "comments", command.Comments),
+		manufacturerID: patchFieldValue(&violations, "manufacturer", manufacturer),
+		model:          patchValue(&violations, "model", model),
+		slug:           patchValue(&violations, "slug", slug),
+		formFactor:     patchValue(&violations, "form_factor", formFactor),
+		width:          patchRackTypeWidth(&violations, width),
+		uHeight:        patchFieldValue(&violations, "u_height", uHeight),
+		startingUnit:   patchFieldValue(&violations, "starting_unit", startingUnit),
+		descUnits:      patchFieldValue(&violations, "desc_units", descUnits),
+		description:    patchValue(&violations, "description", description),
+		comments:       patchValue(&violations, "comments", comments),
 	}
 	if patch.manufacturerID != nil && !patch.manufacturerID.IsValid() {
 		violations = append(violations, shared.FieldViolation{
@@ -121,14 +162,44 @@ func (command UpdateRackTypeCommand) patch() (rackTypeCommandPatch, error) {
 		})
 	}
 	if len(violations) > 0 {
-		return rackTypeCommandPatch{}, shared.NewValidationError(violations...)
+		return patch, newRackTypeValidationError(violations)
 	}
 	if patch.empty() {
-		return rackTypeCommandPatch{}, shared.NewValidationError(shared.FieldViolation{
+		return patch, newRackTypeValidationError([]shared.FieldViolation{{
 			Field: "update_mask", Reason: "required", Description: "At least one writable field must be supplied.",
-		})
+		}})
 	}
 	return patch, nil
+}
+
+func requireRackTypeField[T any](
+	violations *[]shared.FieldViolation,
+	name string,
+	field Field[T],
+) {
+	if field.State() != FieldOmitted {
+		return
+	}
+	*violations = append(*violations, shared.FieldViolation{
+		Field: name, Reason: "required", Description: "This field is required.",
+	})
+}
+
+func patchRackTypeWidth(
+	violations *[]shared.FieldViolation,
+	field Field[uint32],
+) *uint32 {
+	if field.State() == FieldNull {
+		*violations = append(*violations, blankRackTypeWidthViolation())
+		return nil
+	}
+	return patchFieldValue(violations, "width", field)
+}
+
+func blankRackTypeWidthViolation() shared.FieldViolation {
+	return shared.FieldViolation{
+		Field: "width", Reason: "blank", Description: "This field may not be blank.",
+	}
 }
 
 func fullFieldValue[T any](
@@ -169,6 +240,63 @@ func patchFieldValue[T any](
 		*violations = append(*violations, shared.FieldViolation{
 			Field: name, Reason: "null", Description: "This field may not be null.",
 		})
+	}
+	return nil
+}
+
+var rackTypeValidationFieldOrder = map[string]int{
+	"manufacturer":  0,
+	"model":         1,
+	"slug":          2,
+	"form_factor":   3,
+	"width":         4,
+	"u_height":      5,
+	"starting_unit": 6,
+	"desc_units":    7,
+	"description":   8,
+	"comments":      9,
+	"update_mask":   10,
+}
+
+func newRackTypeValidationError(violations []shared.FieldViolation) error {
+	ordered := append([]shared.FieldViolation(nil), violations...)
+	sort.SliceStable(ordered, func(left, right int) bool {
+		leftOrder, leftKnown := rackTypeValidationFieldOrder[ordered[left].Field]
+		rightOrder, rightKnown := rackTypeValidationFieldOrder[ordered[right].Field]
+		switch {
+		case leftKnown && rightKnown:
+			return leftOrder < rightOrder
+		case leftKnown:
+			return true
+		case rightKnown:
+			return false
+		default:
+			return false
+		}
+	})
+	return shared.NewValidationError(ordered...)
+}
+
+func mergeRackTypeMutationErrors(errs ...error) error {
+	for _, err := range errs {
+		if err != nil && !shared.HasReason(err, shared.ErrorReasonValidation) {
+			return err
+		}
+	}
+
+	seenFields := make(map[string]struct{})
+	var merged []shared.FieldViolation
+	for _, err := range errs {
+		for _, violation := range shared.ViolationsOf(err) {
+			if _, duplicate := seenFields[violation.Field]; duplicate {
+				continue
+			}
+			seenFields[violation.Field] = struct{}{}
+			merged = append(merged, violation)
+		}
+	}
+	if len(merged) > 0 {
+		return newRackTypeValidationError(merged)
 	}
 	return nil
 }

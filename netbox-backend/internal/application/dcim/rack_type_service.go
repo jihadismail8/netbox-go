@@ -155,18 +155,14 @@ func (service *RackTypeService) CreateRackType(
 	}
 	var rackType *dcimdomain.RackType
 	err := service.unitOfWork.WithinTransaction(ctx, func(transactionContext context.Context) error {
-		commandValues, valuesErr := command.values()
-		if valuesErr != nil {
-			return valuesErr
-		}
-		values, valuesErr := service.resolveValues(transactionContext, commandValues)
-		if valuesErr != nil {
-			return valuesErr
-		}
+		commandValues, commandErr := command.values()
+		values, relationshipErr := service.resolveValues(transactionContext, commandValues)
 		now := service.clock.Now()
 		candidate, domainErr := dcimdomain.NewRackType(values, now)
-		if domainErr != nil {
-			return domainErr
+		if validationErr := mergeRackTypeMutationErrors(
+			commandErr, relationshipErr, domainErr,
+		); validationErr != nil {
+			return validationErr
 		}
 		if authorizeErr := service.authorize(transactionContext, principal, authz.Add, candidate); authorizeErr != nil {
 			return authorizeErr
@@ -213,17 +209,20 @@ func (service *RackTypeService) ReplaceRackType(
 		if authorizeErr := service.authorize(transactionContext, principal, authz.Change, loaded); authorizeErr != nil {
 			return authorizeErr
 		}
-		commandValues, valuesErr := command.values()
-		if valuesErr != nil {
-			return valuesErr
-		}
-		values, valuesErr := service.resolveValues(transactionContext, commandValues)
-		if valuesErr != nil {
-			return valuesErr
-		}
 		before := loaded.Snapshot()
 		now := service.clock.Now()
-		if replaceErr := loaded.Replace(values, now); replaceErr != nil {
+		if now.IsZero() {
+			return shared.NewError(shared.ErrorReasonInternal, "Clock returned a zero timestamp.")
+		}
+		commandPatch, commandErr := command.patch()
+		patch, relationshipErr := service.resolvePatch(transactionContext, commandPatch)
+		domainErr := loaded.ValidatePatch(patch)
+		if validationErr := mergeRackTypeMutationErrors(
+			commandErr, relationshipErr, domainErr,
+		); validationErr != nil {
+			return validationErr
+		}
+		if replaceErr := loaded.ApplyPatch(patch, now); replaceErr != nil {
 			return replaceErr
 		}
 		if updateErr := service.repository.Update(transactionContext, loaded); updateErr != nil {
@@ -264,16 +263,19 @@ func (service *RackTypeService) UpdateRackType(
 		if authorizeErr := service.authorize(transactionContext, principal, authz.Change, loaded); authorizeErr != nil {
 			return authorizeErr
 		}
-		commandPatch, patchErr := command.patch()
-		if patchErr != nil {
-			return patchErr
-		}
-		patch, patchErr := service.resolvePatch(transactionContext, commandPatch)
-		if patchErr != nil {
-			return patchErr
-		}
 		before := loaded.Snapshot()
 		now := service.clock.Now()
+		if now.IsZero() {
+			return shared.NewError(shared.ErrorReasonInternal, "Clock returned a zero timestamp.")
+		}
+		commandPatch, commandErr := command.patch()
+		patch, relationshipErr := service.resolvePatch(transactionContext, commandPatch)
+		domainErr := loaded.ValidatePatch(patch)
+		if validationErr := mergeRackTypeMutationErrors(
+			commandErr, relationshipErr, domainErr,
+		); validationErr != nil {
+			return validationErr
+		}
 		if domainErr := loaded.ApplyPatch(patch, now); domainErr != nil {
 			return domainErr
 		}
@@ -335,16 +337,21 @@ func (service *RackTypeService) resolveValues(
 	ctx context.Context,
 	values rackTypeCommandValues,
 ) (dcimdomain.RackTypeValues, error) {
-	reference, err := service.resolveManufacturer(ctx, values.manufacturerID)
-	if err != nil {
-		return dcimdomain.RackTypeValues{}, err
-	}
-	return dcimdomain.RackTypeValues{
-		Manufacturer: reference, Model: values.model, Slug: values.slug,
+	domainValues := dcimdomain.RackTypeValues{
+		Model: values.model, Slug: values.slug,
 		FormFactor: values.formFactor, Width: values.width, UHeight: values.uHeight,
 		StartingUnit: values.startingUnit, DescUnits: values.descUnits,
 		Description: values.description, Comments: values.comments,
-	}, nil
+	}
+	if !values.manufacturerID.IsValid() {
+		return domainValues, nil
+	}
+	reference, err := service.resolveManufacturer(ctx, values.manufacturerID)
+	if err != nil {
+		return domainValues, err
+	}
+	domainValues.Manufacturer = reference
+	return domainValues, nil
 }
 
 func (service *RackTypeService) resolvePatch(
@@ -357,9 +364,12 @@ func (service *RackTypeService) resolvePatch(
 		DescUnits: patch.descUnits, Description: patch.description, Comments: patch.comments,
 	}
 	if patch.manufacturerID != nil {
+		if !patch.manufacturerID.IsValid() {
+			return domainPatch, nil
+		}
 		reference, err := service.resolveManufacturer(ctx, *patch.manufacturerID)
 		if err != nil {
-			return dcimdomain.RackTypePatch{}, err
+			return domainPatch, err
 		}
 		domainPatch.Manufacturer = &reference
 	}

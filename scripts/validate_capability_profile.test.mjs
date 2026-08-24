@@ -123,6 +123,27 @@ const RACK_ROLE_FIELD_CONTRACTS = {
   },
 };
 
+const RACK_TYPE_FIELD_CONTRACTS = {
+  response: {
+    nullable_fields: ["created", "last_updated"],
+  },
+  create: {
+    required_fields: ["manufacturer", "model", "slug", "form_factor"],
+    nullable_fields: [],
+    blank_fields: ["description", "comments"],
+  },
+  replace: {
+    required_fields: ["manufacturer", "model", "slug"],
+    nullable_fields: [],
+    blank_fields: ["description", "comments"],
+  },
+  update: {
+    required_fields: [],
+    nullable_fields: [],
+    blank_fields: ["description", "comments"],
+  },
+};
+
 function runNode(script, argument) {
   return spawnSync(process.execPath, [path.join(ROOT, script), argument], {
     cwd: ROOT,
@@ -203,6 +224,16 @@ function withRackRoleResourceFixture(mutator, callback) {
     DCIM_RELATIVE_PATH,
     "RackRole",
     RACK_ROLE_FIELD_CONTRACTS,
+    mutator,
+    callback,
+  );
+}
+
+function withRackTypeResourceFixture(mutator, callback) {
+  withResourceContractFixture(
+    DCIM_RELATIVE_PATH,
+    "RackType",
+    RACK_TYPE_FIELD_CONTRACTS,
     mutator,
     callback,
   );
@@ -292,6 +323,27 @@ function assertRackRoleProfileRejected(name, mutator, expectedDiagnostic) {
   });
 }
 
+function assertRackTypeProfileRejected(name, mutator, expectedDiagnostic) {
+  test(name, () => {
+    withRackTypeResourceFixture(mutator, (profilePath) => {
+      const result = runNode(
+        "scripts/validate_capability_profile.mjs",
+        profilePath,
+      );
+      assert.notEqual(
+        result.status,
+        0,
+        `expected rejection; ${diagnostics(result)}`,
+      );
+      assert.match(
+        diagnostics(result),
+        expectedDiagnostic,
+        "validator must identify the malformed RackType field contract",
+      );
+    });
+  });
+}
+
 function assertOpenAPIRejected(name, mutator, expectedDiagnostic) {
   test(name, () => {
     const spec = JSON.parse(fs.readFileSync(OPENAPI_PATH, "utf8"));
@@ -361,6 +413,15 @@ test("current capability metadata validates", () => {
     rackRole.field_contracts,
     RACK_ROLE_FIELD_CONTRACTS,
     "current RackRole presence metadata must match the independently pinned contract",
+  );
+  const rackType = dcimMetadata.resources.find(
+    (resource) => resource.name === "RackType",
+  );
+  assert.ok(rackType, "current metadata must contain RackType");
+  assert.deepStrictEqual(
+    rackType.field_contracts,
+    RACK_TYPE_FIELD_CONTRACTS,
+    "current RackType presence metadata must match the independently pinned contract",
   );
 
   const result = runNode(
@@ -508,6 +569,88 @@ assertRackRoleProfileRejected(
     rackRole.field_contracts.update.required_fields.push("name");
   },
   /dcim\.RackRole: field_contracts\.update\.required_fields must be empty for PATCH/u,
+);
+
+assertRackTypeProfileRejected(
+  "RackType field contracts are mandatory",
+  (rackType) => {
+    delete rackType.field_contracts;
+  },
+  /dcim\.RackType: field_contracts must declare operation-specific presence semantics/u,
+);
+
+assertRackTypeProfileRejected(
+  "RackType field contracts require every operation",
+  (rackType) => {
+    delete rackType.field_contracts.replace;
+  },
+  /dcim\.RackType: field_contracts must declare exactly response, create, replace, and update/u,
+);
+
+assertRackTypeProfileRejected(
+  "RackType operation fields reject undeclared fields",
+  (rackType) => {
+    rackType.field_contracts.create.required_fields.push("outer_width");
+  },
+  /dcim\.RackType: field_contracts\.create\.required_fields contains undeclared field outer_width/u,
+);
+
+assertRackTypeProfileRejected(
+  "RackType nullable fields remain a writable-field subset",
+  (rackType) => {
+    rackType.field_contracts.replace.nullable_fields.push("display");
+  },
+  /dcim\.RackType: field_contracts\.replace\.nullable_fields contains undeclared field display/u,
+);
+
+assertRackTypeProfileRejected(
+  "RackType blank fields reject non-choice integer height fields",
+  (rackType) => {
+    rackType.field_contracts.update.blank_fields.push("u_height");
+  },
+  /dcim\.RackType: field_contracts\.update\.blank_fields contains non-string field u_height/u,
+);
+
+assertRackTypeProfileRejected(
+  "RackType blank fields reject non-choice integer starting-unit fields",
+  (rackType) => {
+    rackType.field_contracts.create.blank_fields.push("starting_unit");
+  },
+  /dcim\.RackType: field_contracts\.create\.blank_fields contains non-string field starting_unit/u,
+);
+
+assertRackTypeProfileRejected(
+  "RackType blank fields reject non-choice boolean fields",
+  (rackType) => {
+    rackType.field_contracts.replace.blank_fields.push("desc_units");
+  },
+  /dcim\.RackType: field_contracts\.replace\.blank_fields contains non-string field desc_units/u,
+);
+
+assertRackTypeProfileRejected(
+  "RackType operation fields reject duplicates",
+  (rackType) => {
+    rackType.field_contracts.create.blank_fields.push("description");
+  },
+  /dcim\.RackType: field_contracts\.create\.blank_fields contains duplicate field description/u,
+);
+
+assertRackTypeProfileRejected(
+  "RackType response and write contracts cannot be conflated",
+  (rackType) => {
+    rackType.field_contracts.response = structuredClone(
+      rackType.field_contracts.create,
+    );
+  },
+  /dcim\.RackType: field_contracts\.response must declare exactly nullable_fields/u,
+);
+
+assertRackTypeProfileRejected(
+  "RackType PATCH contracts cannot require fields",
+  (rackType) => {
+    rackType.field_contracts.update.required_fields.push("manufacturer");
+  },
+  /dcim\.RackType: field_contracts\.update\.required_fields must be empty for PATCH/u,
 );
 
 assertSiteProfileRejected(
@@ -836,6 +979,148 @@ assertOpenAPIRejected(
 );
 
 for (const [name, pathName, method, expectedSchema] of [
+  ["POST", "/api/dcim/rack-types/", "post", "RackTypeCreate"],
+  ["PUT", "/api/dcim/rack-types/{id}/", "put", "RackTypeReplace"],
+  ["PATCH", "/api/dcim/rack-types/{id}/", "patch", "RackTypeUpdate"],
+]) {
+  assertOpenAPIRejected(
+    `OpenAPI validation rejects a stale RackType ${name} request reference`,
+    (spec) => {
+      spec.paths[pathName][method].requestBody.content[
+        "application/json"
+      ].schema = { $ref: "#/components/schemas/RackTypeWrite" };
+    },
+    new RegExp(
+      escapeRegExp(
+        `${name} ${pathName} must reference #/components/schemas/${expectedSchema}`,
+      ),
+      "u",
+    ),
+  );
+}
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects a stale shared RackType write schema",
+  (spec) => {
+    spec.components.schemas.RackTypeWrite = structuredClone(
+      spec.components.schemas.RackTypeCreate,
+    );
+  },
+  /RackType must not retain a conflated shared write schema/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale RackType create requiredness",
+  (spec) => {
+    spec.components.schemas.RackTypeCreate.required = [
+      "manufacturer",
+      "model",
+      "slug",
+    ];
+  },
+  /RackTypeCreate required fields must match field_contracts\.create/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale RackType replace requiredness",
+  (spec) => {
+    spec.components.schemas.RackTypeReplace.required.push("form_factor");
+  },
+  /RackTypeReplace required fields must match field_contracts\.replace/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale RackType request nullability",
+  (spec) => {
+    spec.components.schemas.RackTypeUpdate.properties.manufacturer.type = [
+      "integer",
+      "null",
+    ];
+  },
+  /RackTypeUpdate\.manufacturer nullability must match field_contracts\.update/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale RackType request blankability",
+  (spec) => {
+    spec.components.schemas.RackTypeUpdate.properties.description.minLength = 1;
+  },
+  /RackTypeUpdate\.description blankability must match field_contracts\.update/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale RackType Manufacturer identifier types",
+  (spec) => {
+    spec.components.schemas.RackTypeCreate.properties.manufacturer.type =
+      "string";
+    delete spec.components.schemas.RackTypeCreate.properties.manufacturer
+      .format;
+  },
+  /RackTypeCreate\.manufacturer base type must be integer/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale RackType text scalar types",
+  (spec) => {
+    spec.components.schemas.RackTypeReplace.properties.model.type = "integer";
+  },
+  /RackTypeReplace\.model base type must be string/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale RackType numeric scalar types",
+  (spec) => {
+    spec.components.schemas.RackTypeUpdate.properties.starting_unit.type =
+      "string";
+  },
+  /RackTypeUpdate\.starting_unit base type must be integer/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale RackType integer choice types",
+  (spec) => {
+    spec.components.schemas.RackTypeCreate.properties.width.type = "string";
+    delete spec.components.schemas.RackTypeCreate.properties.width.format;
+  },
+  /RackTypeCreate\.width base type must be integer/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects nullable RackType Manufacturer responses",
+  (spec) => {
+    spec.components.schemas.RackType.properties.manufacturer.oneOf.push({
+      type: "null",
+    });
+  },
+  /RackType\.manufacturer response nullability must match field_contracts\.response/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale RackType Manufacturer response references",
+  (spec) => {
+    spec.components.schemas.RackType.properties.manufacturer.oneOf[0].$ref =
+      "#/components/schemas/RackType";
+  },
+  /RackType\.manufacturer must reference #\/components\/schemas\/ObjectReference/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale RackType response timestamp nullability",
+  (spec) => {
+    spec.components.schemas.RackType.properties.created.type = "string";
+  },
+  /RackType\.created response nullability must match field_contracts\.response/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale RackType response scalar types",
+  (spec) => {
+    spec.components.schemas.RackType.properties.desc_units.type = "string";
+  },
+  /RackType\.desc_units base type must be boolean/u,
+);
+
+for (const [name, pathName, method, expectedSchema] of [
   ["POST", "/api/dcim/sites/", "post", "SiteCreate"],
   ["PUT", "/api/dcim/sites/{id}/", "put", "SiteReplace"],
   ["PATCH", "/api/dcim/sites/{id}/", "patch", "SiteUpdate"],
@@ -947,8 +1232,7 @@ assertOpenAPIRejected(
 assertOpenAPIRejected(
   "OpenAPI validation rejects stale request scalar types",
   (spec) => {
-    spec.components.schemas.IPAddressCreate.properties.address.type =
-      "integer";
+    spec.components.schemas.IPAddressCreate.properties.address.type = "integer";
   },
   /IPAddressCreate\.address base type must be string/u,
 );
@@ -956,8 +1240,7 @@ assertOpenAPIRejected(
 assertOpenAPIRejected(
   "OpenAPI validation rejects stale request choice types",
   (spec) => {
-    spec.components.schemas.IPAddressCreate.properties.status.type =
-      "integer";
+    spec.components.schemas.IPAddressCreate.properties.status.type = "integer";
   },
   /IPAddressCreate\.status base type must be string/u,
 );

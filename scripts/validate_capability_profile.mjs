@@ -22,6 +22,46 @@ const WRITE_FIELD_CONTRACT_KEYS = [
   "nullable_fields",
   "required_fields",
 ];
+// Keep these scalar classifications aligned with contract generation and the
+// independently pinned OpenAPI shapes. Only string-valued write fields may be
+// declared blankable by an operation-specific field contract.
+const BOOLEAN_SCALAR_FIELDS = new Set([
+  "desc_units",
+  "enabled",
+  "enforce_unique",
+  "exclude_from_utilization",
+  "is_full_depth",
+  "is_pool",
+  "mark_utilized",
+  "mgmt_only",
+  "vm_role",
+  "write_enabled",
+]);
+const INTEGER_SCALAR_FIELDS = new Set([
+  "assigned_object_id",
+  "children",
+  "count_ipaddresses",
+  "depth",
+  "_depth",
+  "device_count",
+  "devicetype_count",
+  "family",
+  "id",
+  "interface_count",
+  "interface_template_count",
+  "ipaddress_count",
+  "mtu",
+  "prefix_count",
+  "rack_count",
+  "speed",
+  "starting_unit",
+  "u_height",
+  "width",
+]);
+const DECIMAL_SCALAR_FIELDS = new Set([
+  "dcim.DeviceType.u_height",
+  "dcim.Device.position",
+]);
 
 function readJSON(filePath) {
   try {
@@ -43,6 +83,18 @@ function exactKeys(value, expected) {
     !Array.isArray(value) &&
     JSON.stringify(Object.keys(value).sort()) === JSON.stringify(expected)
   );
+}
+
+function fieldScalarType(resourceKey, resource, field) {
+  const choice = resource.choice_fields?.[field];
+  if (choice) return choice.value_type;
+  if (BOOLEAN_SCALAR_FIELDS.has(field)) return "boolean";
+  if (DECIMAL_SCALAR_FIELDS.has(`${resourceKey}.${field}`)) return "number";
+  if (INTEGER_SCALAR_FIELDS.has(field) || field.endsWith("_count")) {
+    return "integer";
+  }
+  if ((resource.relationships ?? []).includes(field)) return "integer";
+  return "string";
 }
 
 function validateFieldList({
@@ -94,12 +146,8 @@ function validateFieldContracts(resourceKey, resource) {
     ...(resource.writable_fields ?? []),
     ...(resource.response_only_fields ?? []),
   ]);
-  const isStringField = (field) => {
-    const choice = resource.choice_fields?.[field];
-    if (choice) return choice.value_type === "string";
-    if ((resource.relationships ?? []).includes(field)) return false;
-    return !field.endsWith("_id");
-  };
+  const isStringField = (field) =>
+    fieldScalarType(resourceKey, resource, field) === "string";
 
   const response = contracts.response;
   assert(
@@ -295,6 +343,10 @@ if (profile && baseline && oracle && schema) {
   assert(
     metadataResources.get("dcim.RackRole")?.field_contracts !== undefined,
     "dcim.RackRole: field_contracts must declare operation-specific presence semantics",
+  );
+  assert(
+    metadataResources.get("dcim.RackType")?.field_contracts !== undefined,
+    "dcim.RackType: field_contracts must declare operation-specific presence semantics",
   );
   for (const resource of profile.resources ?? []) {
     const key = `${resource.module}.${resource.name}`;

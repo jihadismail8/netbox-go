@@ -260,55 +260,65 @@ func typedRackTypeUpdateCommand(
 	for _, path := range mask.Paths {
 		switch path {
 		case "manufacturer":
-			if fields.manufacturer.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateRackTypeCommand{}, invalidTypedRackTypeMask()
+			field := fields.manufacturer
+			if field.State() == applicationdcim.FieldOmitted {
+				field = applicationdcim.NullField[shared.ID]()
 			}
-			command.Manufacturer = fields.manufacturer
+			command.Manufacturer = field
 		case "model":
-			if fields.model.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateRackTypeCommand{}, invalidTypedRackTypeMask()
+			field := fields.model
+			if field.State() == applicationdcim.FieldOmitted {
+				field = applicationdcim.NullField[string]()
 			}
-			command.Model = fields.model
+			command.Model = field
 		case "slug":
-			if fields.slug.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateRackTypeCommand{}, invalidTypedRackTypeMask()
+			field := fields.slug
+			if field.State() == applicationdcim.FieldOmitted {
+				field = applicationdcim.NullField[string]()
 			}
-			command.Slug = fields.slug
+			command.Slug = field
 		case "form_factor":
-			if fields.formFactor.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateRackTypeCommand{}, invalidTypedRackTypeMask()
+			field := fields.formFactor
+			if field.State() == applicationdcim.FieldOmitted {
+				field = applicationdcim.NullField[string]()
 			}
-			command.FormFactor = fields.formFactor
+			command.FormFactor = field
 		case "width":
-			if fields.width.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateRackTypeCommand{}, invalidTypedRackTypeMask()
+			field := fields.width
+			if field.State() == applicationdcim.FieldOmitted {
+				field = applicationdcim.NullField[uint32]()
 			}
-			command.Width = fields.width
+			command.Width = field
 		case "u_height":
-			if fields.uHeight.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateRackTypeCommand{}, invalidTypedRackTypeMask()
+			field := fields.uHeight
+			if field.State() == applicationdcim.FieldOmitted {
+				field = applicationdcim.NullField[uint32]()
 			}
-			command.UHeight = fields.uHeight
+			command.UHeight = field
 		case "starting_unit":
-			if fields.startingUnit.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateRackTypeCommand{}, invalidTypedRackTypeMask()
+			field := fields.startingUnit
+			if field.State() == applicationdcim.FieldOmitted {
+				field = applicationdcim.NullField[uint32]()
 			}
-			command.StartingUnit = fields.startingUnit
+			command.StartingUnit = field
 		case "desc_units":
-			if fields.descUnits.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateRackTypeCommand{}, invalidTypedRackTypeMask()
+			field := fields.descUnits
+			if field.State() == applicationdcim.FieldOmitted {
+				field = applicationdcim.NullField[bool]()
 			}
-			command.DescUnits = fields.descUnits
+			command.DescUnits = field
 		case "description":
-			if fields.description.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateRackTypeCommand{}, invalidTypedRackTypeMask()
+			field := fields.description
+			if field.State() == applicationdcim.FieldOmitted {
+				field = applicationdcim.NullField[string]()
 			}
-			command.Description = fields.description
+			command.Description = field
 		case "comments":
-			if fields.comments.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateRackTypeCommand{}, invalidTypedRackTypeMask()
+			field := fields.comments
+			if field.State() == applicationdcim.FieldOmitted {
+				field = applicationdcim.NullField[string]()
 			}
-			command.Comments = fields.comments
+			command.Comments = field
 		default:
 			return applicationdcim.UpdateRackTypeCommand{}, invalidTypedRackTypeMask()
 		}
@@ -320,7 +330,7 @@ func invalidTypedRackTypeMask() error {
 	return shared.NewValidationError(
 		shared.FieldViolation{
 			Field:       "update_mask",
-			Description: "Every update_mask path must name a supported field with an explicit value.",
+			Description: "Every update_mask path must name a supported field.",
 		},
 	)
 }

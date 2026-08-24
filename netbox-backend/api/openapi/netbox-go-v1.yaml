@@ -1969,7 +1969,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RackTypeWrite"
+                "$ref": "#/components/schemas/RackTypeCreate"
               }
             }
           }
@@ -2039,7 +2039,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RackTypeWrite"
+                "$ref": "#/components/schemas/RackTypeReplace"
               }
             }
           }
@@ -2078,7 +2078,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RackTypeWrite"
+                "$ref": "#/components/schemas/RackTypeUpdate"
               }
             }
           }
@@ -5528,23 +5528,14 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/ObjectReference"
-              },
-              {
-                "type": "null"
               }
             ]
           },
           "model": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "slug": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "form_factor": {
             "type": "object",
@@ -5591,16 +5582,10 @@
             "type": "boolean"
           },
           "description": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "comments": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "id": {
             "type": "integer",
@@ -5611,10 +5596,7 @@
             "format": "uri"
           },
           "display": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "created": {
             "type": [
@@ -5629,6 +5611,55 @@
               "null"
             ],
             "format": "date-time"
+          }
+        }
+      },
+      "RackTypeCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "manufacturer",
+          "model",
+          "slug",
+          "form_factor"
+        ],
+        "properties": {
+          "manufacturer": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "model": {
+            "type": "string",
+            "minLength": 1
+          },
+          "slug": {
+            "type": "string",
+            "minLength": 1
+          },
+          "form_factor": {
+            "type": "string",
+            "minLength": 1
+          },
+          "width": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "u_height": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "starting_unit": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "desc_units": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string"
+          },
+          "comments": {
+            "type": "string"
           }
         }
       },
@@ -5666,31 +5697,30 @@
           }
         }
       },
-      "RackTypeWrite": {
+      "RackTypeReplace": {
         "type": "object",
         "additionalProperties": false,
+        "required": [
+          "manufacturer",
+          "model",
+          "slug"
+        ],
         "properties": {
           "manufacturer": {
-            "type": [
-              "integer",
-              "null"
-            ],
+            "type": "integer",
             "format": "int64"
           },
           "model": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "minLength": 1
           },
           "slug": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "minLength": 1
           },
           "form_factor": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "width": {
             "type": "integer",
@@ -5708,16 +5738,53 @@
             "type": "boolean"
           },
           "description": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "comments": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
+          }
+        }
+      },
+      "RackTypeUpdate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "manufacturer": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "model": {
+            "type": "string",
+            "minLength": 1
+          },
+          "slug": {
+            "type": "string",
+            "minLength": 1
+          },
+          "form_factor": {
+            "type": "string",
+            "minLength": 1
+          },
+          "width": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "u_height": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "starting_unit": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "desc_units": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string"
+          },
+          "comments": {
+            "type": "string"
           }
         }
       },

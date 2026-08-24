@@ -65,6 +65,35 @@ const contractedResourceShapes = {
       rack_count: { type: "integer", format: "int64" },
     },
   },
+  RackType: {
+    request: {
+      manufacturer: { type: "integer", format: "int64" },
+      model: { type: "string" },
+      slug: { type: "string" },
+      u_height: { type: "integer", format: "int64" },
+      starting_unit: { type: "integer", format: "int64" },
+      desc_units: { type: "boolean" },
+      description: { type: "string" },
+      comments: { type: "string" },
+    },
+    response: {
+      model: { type: "string" },
+      slug: { type: "string" },
+      u_height: { type: "integer", format: "int64" },
+      starting_unit: { type: "integer", format: "int64" },
+      desc_units: { type: "boolean" },
+      description: { type: "string" },
+      comments: { type: "string" },
+      id: { type: "integer", format: "int64" },
+      url: { type: "string", format: "uri" },
+      display: { type: "string" },
+      created: { type: "string", format: "date-time" },
+      last_updated: { type: "string", format: "date-time" },
+    },
+    responseReferences: {
+      manufacturer: "#/components/schemas/ObjectReference",
+    },
+  },
   Site: {
     request: {
       name: { type: "string" },
@@ -150,6 +179,9 @@ function stringValuedField(resource, field) {
   const choice = resource.choice_fields?.[field];
   if (choice) return choice.value_type === "string";
   if ((resource.relationships ?? []).includes(field)) return false;
+  const pinnedType =
+    contractedResourceShapes[resource.name]?.request?.[field]?.type;
+  if (pinnedType !== undefined) return pinnedType === "string";
   return !field.endsWith("_id");
 }
 

@@ -84,31 +84,40 @@ func TestTypedRackTypeGRPCCreatePreservesOmittedDefaultsAndExplicitFalse(t *test
 	assert.Equal(t, int64(41), response.RackType.Id)
 }
 
-func TestTypedRackTypeGRPCUpdateMaskRequiresExplicitSupportedFields(t *testing.T) {
+func TestTypedRackTypeGRPCUpdateMaskMapsAbsentSupportedFieldsAndRejectsUnknownPaths(t *testing.T) {
 	service := &rackTypeGRPCServiceSpy{rackType: grpcRackTypeFixture(t)}
 	handler := NewRackTypeRPCHandler(service)
 
-	_, err := handler.UpdateRackType(rackTypeGRPCContext(t), &dcimv1.UpdateRackTypeRequest{
+	response, err := handler.UpdateRackType(rackTypeGRPCContext(t), &dcimv1.UpdateRackTypeRequest{
 		Id: 41, RackType: &dcimv1.RackTypeInput{},
 		UpdateMask: &fieldmaskpb.FieldMask{Paths: []string{"width"}},
 	})
-	require.Error(t, err)
-	assert.Equal(t, codes.InvalidArgument, status.Code(err))
-	assert.Zero(t, service.updateCalls)
+	require.NoError(t, err)
+	assert.Equal(t, 1, service.updateCalls)
+	assert.Equal(t, applicationdcim.FieldNull, service.updateCommand.Width.State())
+	assert.Equal(t, int64(41), response.RackType.Id)
 
 	width := uint32(23)
 	description := ""
-	response, err := handler.UpdateRackType(rackTypeGRPCContext(t), &dcimv1.UpdateRackTypeRequest{
+	response, err = handler.UpdateRackType(rackTypeGRPCContext(t), &dcimv1.UpdateRackTypeRequest{
 		Id: 41, RackType: &dcimv1.RackTypeInput{Width: &width, Description: &description},
 		UpdateMask: &fieldmaskpb.FieldMask{Paths: []string{"width", "description"}},
 	})
 	require.NoError(t, err)
-	assert.Equal(t, 1, service.updateCalls)
+	assert.Equal(t, 2, service.updateCalls)
 	assert.Equal(t, shared.ID(41), service.updateCommand.ID)
 	assert.Equal(t, applicationdcim.FieldOmitted, service.updateCommand.Manufacturer.State())
 	assert.Equal(t, applicationdcim.FieldPresent, service.updateCommand.Width.State())
 	assert.Equal(t, applicationdcim.FieldPresent, service.updateCommand.Description.State())
 	assert.Equal(t, int64(41), response.RackType.Id)
+
+	_, err = handler.UpdateRackType(rackTypeGRPCContext(t), &dcimv1.UpdateRackTypeRequest{
+		Id: 41, RackType: &dcimv1.RackTypeInput{Width: &width},
+		UpdateMask: &fieldmaskpb.FieldMask{Paths: []string{"unknown"}},
+	})
+	require.Error(t, err)
+	assert.Equal(t, codes.InvalidArgument, status.Code(err))
+	assert.Equal(t, 2, service.updateCalls)
 }
 
 func TestRackTypeRPCHandlerDispatchesGetReplaceDeleteAndRequiresAuthentication(t *testing.T) {

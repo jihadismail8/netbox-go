@@ -85,7 +85,9 @@ export interface RackRoleDTO extends Omit<CoreResourceBase, 'created' | 'last_up
   rack_count: number
 }
 
-export interface RackTypeDTO extends CoreResourceBase {
+export interface RackTypeDTO extends Omit<CoreResourceBase, 'created' | 'last_updated'> {
+  created: string | null
+  last_updated: string | null
   manufacturer: CoreReference
   model: string
   slug: string

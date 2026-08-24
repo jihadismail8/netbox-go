@@ -33,6 +33,7 @@ import {
   type RackRoleMutation,
   type RackTypeDTO,
   type RackTypeForm,
+  type RackTypeMutation,
   type SiteDTO,
   type SiteForm,
   type SiteMutation,
@@ -221,33 +222,75 @@ const rackRoleAdapter: CoreResourceAdapter<'rackrole'> = {
   filtersFromState: (state) => ({ name: state.name, slug: state.slug }),
 }
 
+const rackTypeOriginalMutation = Symbol('rack-type-original-mutation')
+
+const rackTypeMutationFields = [
+  'manufacturer',
+  'model',
+  'slug',
+  'form_factor',
+  'width',
+  'u_height',
+  'starting_unit',
+  'desc_units',
+  'description',
+  'comments',
+] as const satisfies readonly (keyof RackTypeMutation)[]
+
+type TrackedRackTypeForm = RackTypeForm & {
+  [rackTypeOriginalMutation]?: RackTypeMutation
+}
+
+function rackTypeMutation(form: RackTypeForm): RackTypeMutation {
+  const mutation: RackTypeMutation = {}
+  if (hasFormField(form, 'manufacturer')) mutation.manufacturer = relationID(form.manufacturer)
+  if (hasFormField(form, 'model')) mutation.model = form.model
+  if (hasFormField(form, 'slug')) mutation.slug = form.slug
+  if (hasFormField(form, 'form_factor')) mutation.form_factor = form.form_factor
+  if (hasFormField(form, 'width')) mutation.width = form.width
+  if (hasFormField(form, 'u_height')) mutation.u_height = form.u_height
+  if (hasFormField(form, 'starting_unit')) mutation.starting_unit = form.starting_unit
+  if (hasFormField(form, 'desc_units')) mutation.desc_units = form.desc_units
+  if (hasFormField(form, 'description')) mutation.description = form.description
+  if (hasFormField(form, 'comments')) mutation.comments = form.comments
+  return mutation
+}
+
+function rackTypeMutationDelta(
+  current: RackTypeMutation,
+  original: RackTypeMutation,
+): RackTypeMutation {
+  const delta = { ...current }
+  for (const field of rackTypeMutationFields) {
+    if (Object.is(current[field], original[field])) Reflect.deleteProperty(delta, field)
+  }
+  return delta
+}
+
 const rackTypeAdapter: CoreResourceAdapter<'racktype'> = {
   resource: 'racktype',
   emptyForm: () => ({ width: 19, u_height: 42, starting_unit: 1, desc_units: false }),
-  formFromDTO: (dto: RackTypeDTO): RackTypeForm => ({
-    manufacturer: dto.manufacturer,
-    model: dto.model,
-    slug: dto.slug,
-    form_factor: choiceValue(dto.form_factor),
-    width: choiceValue(dto.width),
-    u_height: dto.u_height,
-    starting_unit: dto.starting_unit,
-    desc_units: dto.desc_units,
-    description: dto.description,
-    comments: dto.comments,
-  }),
-  mutationFromForm: (form) => ({
-    manufacturer: relationID(form.manufacturer),
-    model: form.model,
-    slug: form.slug,
-    form_factor: form.form_factor,
-    width: form.width,
-    u_height: form.u_height,
-    starting_unit: form.starting_unit,
-    desc_units: form.desc_units,
-    description: form.description,
-    comments: form.comments,
-  }),
+  formFromDTO: (dto: RackTypeDTO): RackTypeForm => {
+    const form: TrackedRackTypeForm = {
+      manufacturer: dto.manufacturer,
+      model: dto.model,
+      slug: dto.slug,
+      form_factor: choiceValue(dto.form_factor),
+      width: choiceValue(dto.width),
+      u_height: dto.u_height,
+      starting_unit: dto.starting_unit,
+      desc_units: dto.desc_units,
+      description: dto.description,
+      comments: dto.comments,
+    }
+    form[rackTypeOriginalMutation] = rackTypeMutation(form)
+    return form
+  },
+  mutationFromForm: (form, editing) => {
+    const mutation = rackTypeMutation(form)
+    const original = (form as TrackedRackTypeForm)[rackTypeOriginalMutation]
+    return editing && original ? rackTypeMutationDelta(mutation, original) : mutation
+  },
   filtersFromState: (state) => ({
     manufacturer_id: state.manufacturer_id,
     manufacturer_slug: state.manufacturer_slug,

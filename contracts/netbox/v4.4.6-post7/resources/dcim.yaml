@@ -108,6 +108,26 @@
       "response_only_fields": ["id", "url", "display", "created", "last_updated"],
       "choice_fields": {"form_factor": {"value_type": "string", "nullable": false}, "width": {"value_type": "integer", "nullable": false}},
       "filters": ["manufacturer_id", "manufacturer_slug", "model", "slug"],
+      "field_contracts": {
+        "response": {
+          "nullable_fields": ["created", "last_updated"]
+        },
+        "create": {
+          "required_fields": ["manufacturer", "model", "slug", "form_factor"],
+          "nullable_fields": [],
+          "blank_fields": ["description", "comments"]
+        },
+        "replace": {
+          "required_fields": ["manufacturer", "model", "slug"],
+          "nullable_fields": [],
+          "blank_fields": ["description", "comments"]
+        },
+        "update": {
+          "required_fields": [],
+          "nullable_fields": [],
+          "blank_fields": ["description", "comments"]
+        }
+      },
       "ordering": ["id", "manufacturer", "model", "slug", "u_height", "created", "last_updated"],
       "relationships": ["manufacturer"],
       "delete_behavior": "protect_when_referenced"

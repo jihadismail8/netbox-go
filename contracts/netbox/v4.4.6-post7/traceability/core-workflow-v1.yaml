@@ -3195,6 +3195,12 @@
       "status": "unresolved",
       "reason": "Operation-specific RackRole metadata and the bounded implementation candidate now preserve name, slug, color, and description create/PUT/PATCH presence, defaults, and validation across typed behavior, REST/gRPC, PostgreSQL, generated OpenAPI, and Vue. The pinned differential oracle, retained evidence, project-owner review, remaining RackRole behavior, 13-resource parent, and higher tiers remain pending.",
       "resolution_goal": "CW1-V2-02"
+    },
+    {
+      "id": "unresolved-rack-type-scalar-presence",
+      "status": "unresolved",
+      "reason": "Operation-specific RackType metadata and the bounded implementation candidate now preserve manufacturer, model, slug, form factor, width, height, starting unit, descending-unit, description, and comments create/PUT/PATCH presence, defaults, and validation across typed behavior, REST/gRPC, PostgreSQL, generated OpenAPI, and Vue. The pinned differential oracle, retained evidence, project-owner review, remaining RackType behavior, 13-resource parent, and higher tiers remain pending.",
+      "resolution_goal": "CW1-V2-02"
     }
   ],
   "verification_sets": [
@@ -5325,7 +5331,7 @@
       "capability": "dcim.RackType",
       "operation": "create",
       "reference_set": "dcim.RackType",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-rack-type-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {
@@ -5365,7 +5371,7 @@
       "capability": "dcim.RackType",
       "operation": "replace",
       "reference_set": "dcim.RackType",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-rack-type-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {
@@ -5375,7 +5381,7 @@
       "capability": "dcim.RackType",
       "operation": "update",
       "reference_set": "dcim.RackType",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-rack-type-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {

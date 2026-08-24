@@ -17,7 +17,7 @@ func TestRackTypeNormalizesCompleteStateAndExposesPhysicalAttributes(t *testing.
 
 	rackType, err := dcim.NewRackType(dcim.RackTypeValues{
 		Manufacturer: manufacturerReference(t, 7, "  Acme  ", "acme"),
-		Model:        "  R42  ", Slug: "  r42  ", FormFactor: "  4-post-cabinet  ",
+		Model:        "  R42  ", Slug: "  r42  ", FormFactor: "4-post-cabinet",
 		Width: 19, UHeight: 42, StartingUnit: 1, DescUnits: true,
 		Description: "  Standard rack  ", Comments: "  Notes  ",
 	}, testTime)
@@ -35,6 +35,67 @@ func TestRackTypeNormalizesCompleteStateAndExposesPhysicalAttributes(t *testing.
 		Width: 19, UHeight: 42, StartingUnit: 1, DescUnits: true,
 		Description: "Standard rack", Comments: "Notes",
 	}, rackType.Snapshot())
+}
+
+func TestRackTypeScalarNormalizationContract(t *testing.T) {
+	t.Parallel()
+
+	for _, formFactor := range []dcim.RackFormFactor{
+		dcim.RackFormFactorTwoPostFrame,
+		dcim.RackFormFactorFourPostFrame,
+		dcim.RackFormFactorFourPostCabinet,
+		dcim.RackFormFactorWallFrame,
+		dcim.RackFormFactorWallFrameVertical,
+		dcim.RackFormFactorWallCabinet,
+		dcim.RackFormFactorWallCabinetVertical,
+	} {
+		formFactor := formFactor
+		t.Run(formFactor.String(), func(t *testing.T) {
+			t.Parallel()
+			rackType, err := dcim.NewRackType(dcim.RackTypeValues{
+				Manufacturer: manufacturerReference(t, 7, "Acme", "acme"),
+				Model:        "  R42  ", Slug: "  r42  ", FormFactor: formFactor.String(),
+				Width: 19, UHeight: 42, StartingUnit: 1,
+				Description: "  Standard rack  ", Comments: "  Notes  ",
+			}, testTime)
+			require.NoError(t, err)
+			assert.Equal(t, "R42", rackType.Model())
+			assert.Equal(t, "r42", rackType.Slug().String())
+			assert.Equal(t, formFactor, rackType.FormFactor())
+			assert.Equal(t, "Standard rack", rackType.Description())
+			assert.Equal(t, "Notes", rackType.Comments())
+		})
+	}
+
+	for _, test := range []struct {
+		name        string
+		formFactor  string
+		reason      string
+		description string
+	}{
+		{
+			name: "blank is rejected by the nonblank model contract", formFactor: "",
+			reason: "required", description: "This field may not be blank.",
+		},
+		{
+			name: "choice whitespace is not trimmed", formFactor: " 4-post-cabinet ",
+			reason: "invalid_choice", description: "Select a valid choice.",
+		},
+	} {
+		test := test
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+			_, err := dcim.NewRackType(dcim.RackTypeValues{
+				Manufacturer: manufacturerReference(t, 7, "Acme", "acme"),
+				Model:        "R42", Slug: "r42", FormFactor: test.formFactor,
+				Width: 19, UHeight: 42, StartingUnit: 1,
+			}, testTime)
+			require.Error(t, err)
+			assert.Equal(t, []shared.FieldViolation{{
+				Field: "form_factor", Reason: test.reason, Description: test.description,
+			}}, shared.ViolationsOf(err))
+		})
+	}
 }
 
 func TestRackTypeReturnsEveryProfileValidationViolation(t *testing.T) {

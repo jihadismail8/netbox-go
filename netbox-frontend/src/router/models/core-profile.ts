@@ -501,7 +501,11 @@ export const CORE_PROFILE_MODELS: ModelConfig[] = [
       selectField('form_factor', 'Form Factor', 'Rack Type', rackFormFactors, { required: true }),
       selectField('width', 'Width', 'Rack Type', rackWidths, { default: 19 }),
       numberField('u_height', 'Height (U)', 'Rack Type', { default: 42, min: 1, max: 100 }),
-      numberField('starting_unit', 'Starting Unit', 'Rack Type', { default: 1, min: 1 }),
+      numberField('starting_unit', 'Starting Unit', 'Rack Type', {
+        default: 1,
+        min: 1,
+        max: 32767,
+      }),
       booleanField('desc_units', 'Descending Units', 'Rack Type', { default: false }),
       descriptionField('Rack Type'),
       commentsField('Rack Type'),

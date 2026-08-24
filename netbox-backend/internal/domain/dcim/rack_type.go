@@ -282,6 +282,27 @@ func (rackType *RackType) ApplyPatch(patch RackTypePatch, now shared.Timestamp) 
 			Field: "update_mask", Reason: "required", Description: "At least one writable field must be supplied.",
 		})
 	}
+	return rackType.Replace(rackType.valuesWithPatch(patch), now)
+}
+
+// ValidatePatch checks the state a patch would produce without mutating the
+// aggregate. Empty patches are valid previews; ApplyPatch retains ownership of
+// the public update-mask requirement.
+func (rackType *RackType) ValidatePatch(patch RackTypePatch) error {
+	if rackType == nil {
+		return shared.NewError(
+			shared.ErrorReasonInternal,
+			"Cannot validate a patch for a nil RackType.",
+		)
+	}
+	_, violations := validateRackTypeValues(rackType.valuesWithPatch(patch))
+	if len(violations) > 0 {
+		return shared.NewValidationError(violations...)
+	}
+	return nil
+}
+
+func (rackType RackType) valuesWithPatch(patch RackTypePatch) RackTypeValues {
 	values := rackType.Values()
 	if patch.Manufacturer != nil {
 		values.Manufacturer = *patch.Manufacturer
@@ -297,7 +318,7 @@ func (rackType *RackType) ApplyPatch(patch RackTypePatch, now shared.Timestamp) 
 	}
 	setString(&values.Description, patch.Description)
 	setString(&values.Comments, patch.Comments)
-	return rackType.Replace(values, now)
+	return values
 }
 
 func (rackType RackType) ID() shared.ID                       { return rackType.id }
@@ -369,7 +390,6 @@ type normalizedRackTypeValues struct {
 func validateRackTypeValues(values RackTypeValues) (normalizedRackTypeValues, []shared.FieldViolation) {
 	values.Model = strings.TrimSpace(values.Model)
 	values.Slug = strings.TrimSpace(values.Slug)
-	values.FormFactor = strings.TrimSpace(values.FormFactor)
 	values.Description = strings.TrimSpace(values.Description)
 	values.Comments = strings.TrimSpace(values.Comments)
 	var violations []shared.FieldViolation
@@ -385,7 +405,11 @@ func validateRackTypeValues(values RackTypeValues) (normalizedRackTypeValues, []
 		violations = append(violations, shared.ViolationsOf(err)...)
 	}
 	formFactor, validFactor := ParseRackFormFactor(values.FormFactor)
-	if !validFactor {
+	if values.FormFactor == "" {
+		violations = append(violations, shared.FieldViolation{
+			Field: "form_factor", Reason: "required", Description: "This field may not be blank.",
+		})
+	} else if !validFactor {
 		violations = append(violations, shared.FieldViolation{
 			Field: "form_factor", Reason: "invalid_choice", Description: "Select a valid choice.",
 		})
