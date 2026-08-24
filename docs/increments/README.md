@@ -42,7 +42,7 @@ implementation exists.
 | `CW1-V1-02-I4` | `evidence`    | Codex GPT-5.6 Sol | [Password change and session rotation](CW1-V1-02-I4.md) |
 | `CW1-V2-01`    | `done`        | Codex GPT-5.6 Sol | [Machine-readable traceability](CW1-V2-01.md)           |
 | `CW1-V2-02-I1` | `done`        | Codex GPT-5.6 Sol | [IPAddress scalar write presence](CW1-V2-02-I1.md)      |
-| `CW1-V2-02-I2` | `evidence`*   | Codex GPT-5.6 Sol | [Site scalar write presence](CW1-V2-02-I2.md)           |
+| `CW1-V2-02-I2` | `done`*       | Codex GPT-5.6 Sol | [Site scalar write presence](CW1-V2-02-I2.md)           |
 
 `in-progress` means the packet owns only its explicitly active bounded
 increment; no implementation evidence or parent-goal completion is implied.
@@ -75,9 +75,15 @@ traceability-consumer claim changes.
 `CW1-V2-02-I2` has an exact tested candidate at
 `87863efd38fe71dfa05c818b860b37b7e94d67b4` with green focused, race,
 real-PostgreSQL, complete L4, generated-contract, Vue, pinned repository, and
-independent candidate-CI boundaries. Its `evidence` row is conditional: it
-becomes effective only after the exact claim-only revision carrying this
-transition passes repository CI. The digest-excluded receipt and project-owner
-review then remain. Docker rejected the external differential's temporary
-source bind before oracle execution. Site uniqueness, deletion, list/query
-behavior, full CRUD, the 13-resource parent, and every tier remain open.
+independent candidate-CI boundaries. Its evidence claim and pre-acceptance
+receipt exact-SHA CI are also green. The project owner accepted only this
+bounded result at `2026-08-24T04:46:51Z`. Its `done` row is conditional on the
+exact owner-accepted closeout revision passing repository CI; the excluded
+closeout receipt then remains. Docker rejected the external differential's
+temporary source bind before oracle execution. Site uniqueness, deletion,
+list/query behavior, full CRUD, and the 13-resource parent remain open. I2
+changes no compatibility-tier or traceability-consumer boundary.
+
+The asterisk records that the owner-accepted closeout becomes effective only
+after the exact closeout claim revision's repository CI succeeds. It does not
+weaken or broaden the meaning of `done`.

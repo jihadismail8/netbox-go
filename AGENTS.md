@@ -23,7 +23,7 @@ behavioral precedent.
 
 ## Current operating mode
 
-At the 2026-08-23 audit, `core-workflow-v1` is T1 and pre-publication. The
+At the 2026-08-24 audit, `core-workflow-v1` is T1 and pre-publication. The
 interrupted typed-boundary recovery is structurally closed, ADR 0005's
 dormant-wrapper cleanup is complete, and the new mode-aware `source-v2` digest
 has made the older V0 artifacts historical. The exact source-v2 entry revision
@@ -63,19 +63,21 @@ or traceability consumer. `CW1-V2-02-I2` has an exact tested candidate at
 `87863efd38fe71dfa05c818b860b37b7e94d67b4`, source digest
 `source-v2:sha256:c7c1b86c2bcd768bb719149a54dddbceccf2b5b2e4087dd4b79eec20bef5a37c`
 with 3,022 entries. Its exact-name, affected/race, real-PostgreSQL, complete
-L4, generated-contract, Vue, pinned repository, and independent candidate-CI
-boundaries are green. The current eight-path claim-only transition
-conditionally moves the bounded child to `evidence`; that state becomes
-effective only after the exact claim revision passes repository CI. Its
-digest-excluded receipt and project-owner review then remain. The external
+L4, generated-contract, Vue, pinned repository, independent candidate,
+evidence-claim, and pre-acceptance receipt exact-SHA CI boundaries are green.
+The project owner accepted this bounded result at `2026-08-24T04:46:51Z`.
+The current eight-path closeout records `CW1-V2-02-I2` as `done` only if this
+exact owner-accepted claim revision passes repository CI; its digest-excluded
+closeout receipt then remains. That conditional transition is bounded to Site
+`name`, `slug`, `status`, `facility`, `description`, and `comments`
+create/PUT/PATCH presence, generated request/response contracts, matching
+REST/gRPC semantics, PostgreSQL durability, Vue dirty-field
+serialization/validation, and the eight named focused tests. The external
 differential was unavailable before execution because Docker rejected its
 temporary source bind, so REST T2 and corresponding gRPC T3 remain unearned.
-I2 owns only Site `name`, `slug`, `status`, `facility`, `description`, and
-`comments` create/PUT/PATCH presence, generated request/response contracts,
-matching REST/gRPC semantics, PostgreSQL durability, Vue dirty-field
-serialization/validation, and the eight named focused tests. It does not own
-Site uniqueness, deletion, list/query behavior, full CRUD, a tier, the parent,
-profile promotion, or a later V2 child. Do not begin or merge another
+I2 closes no Site uniqueness, deletion, list/query, full CRUD,
+compatibility-tier, parent, profile, or traceability
+consumer boundary and claims no later V2 child. Do not begin or merge another
 Capability Profile while V0 is red or before `CW1-V6-03`. Once those gates are
 durably closed, follow the next accepted profile in the roadmap and playbook
 rather than this dated snapshot.

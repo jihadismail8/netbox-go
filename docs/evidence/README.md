@@ -44,11 +44,16 @@ generated-contract, Vue, pinned repository, and independent exact-candidate
 CI boundaries. Claim revision
 `65d37902b4111e1f091ff8c9a75548966514082b` also passed its pinned local gate
 and exact-SHA repository CI, making bounded I2 `evidence`. Its
-digest-excluded receipt and project-owner review remain. Docker rejected the
+digest-excluded receipt `eee2b835d9052566d40b1c95af356157029c277b`
+also passed exact-SHA repository CI. The project owner accepted only this
+bounded result at `2026-08-24T04:46:51Z`; the current owner-accepted closeout
+records I2 as `done` only if its exact closeout claim revision passes
+repository CI. The excluded closeout receipt then remains. Docker rejected the
 differential harness's temporary source bind before oracle execution, so no
 T2/T3 claim is made.
 The project owner reviewed and retained the entry V0, CORS, bounded token I1,
-bounded token I2, bounded browser-session I3, and bounded IPAddress I1 results.
+bounded token I2, bounded browser-session I3, bounded IPAddress I1, and bounded
+Site I2 results.
 The
 [2026-08-03 post-cleanup V0](2026-08-03-post-cleanup-v0.md) used the superseded
 mode-blind v1 source digest and is now historical. The 2026-08-01
@@ -62,15 +67,17 @@ parent credential/session matrix remains open. `CW1-V2-02-I1` has an
 effective owner-accepted `done` closeout only for IPAddress scalar
 create/PUT/PATCH presence. The current excluded receipt preserves that fact and
 is evaluated by exact-SHA CI without a self-referential documentation commit.
-`CW1-V2-02-I2` is `evidence` only for Site scalar create/PUT/PATCH presence;
-its receipt CI and project-owner review remain. The external differential,
-REST T2, corresponding gRPC T3, browser T4, and 13-resource `CW1-V2-02` parent
-stay open. Feature work must re-establish V0 after its next owned-source
-change.
+`CW1-V2-02-I2` has an owner-accepted `done` closeout conditional on the current
+exact closeout claim revision's repository CI, only for Site scalar
+create/PUT/PATCH presence. The excluded receipt must then retain that result.
+The external differential, REST T2, corresponding gRPC T3, browser T4, and
+13-resource `CW1-V2-02` parent stay open. I2 promotes no compatibility-tier or
+traceability-consumer boundary. Feature work must re-establish V0 after its
+next owned-source change.
 
 | Evidence                 | Required command or boundary                                  | Current state                                                    |
 | ------------------------ | ------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Repository quality       | Revised `make check` including non-mutating backend coverage  | I4 and V2-I1 boundaries passed; V2-I2 claim passed, receipt pending |
+| Repository quality       | Revised `make check` including non-mutating backend coverage  | I4 and V2-I1 boundaries passed; V2-I2 candidate/evidence claim/receipt passed |
 | Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                          |
 | gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                            |
 | Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, I4, V2-I1, and V2-I2 bounded slices passed; V1/V3 open   |

@@ -1,6 +1,6 @@
 # Project status
 
-Updated: 2026-08-23
+Updated: 2026-08-24
 
 Compatibility baseline: checked-in NetBox source snapshot at commit
 `fbb948d30e79ce657fac62994a22aca72c1770a9`
@@ -77,14 +77,17 @@ states, operation-specific generated API contracts, matching REST/gRPC
 semantics, PostgreSQL durability, Vue dirty-field serialization/validation,
 and eight named focused tests. Its exact-name, affected/race, real-PostgreSQL,
 complete L4, generated-contract, Vue, pinned repository, and independent
-exact-candidate CI boundaries are green. The current eight-path claim-only
-transition conditionally moves the bounded child to `evidence`: that state
-becomes effective only after this exact revision passes repository CI. Its
-digest-excluded receipt and project-owner review then remain. The differential
-harness was unavailable before oracle execution because Docker rejected its
-temporary source bind, so REST T2 and corresponding gRPC T3 remain unearned.
-It does not own Site uniqueness, deletion, list/query behavior, full CRUD, a
-compatibility tier, the parent, or profile promotion.
+exact-candidate CI boundaries are green. Its evidence-claim CI and
+pre-acceptance receipt CI are also green. The project owner accepted only this
+bounded result at `2026-08-24T04:46:51Z`. The current eight-path closeout
+records `CW1-V2-02-I2` as `done` only if this exact owner-accepted closeout
+claim revision passes repository CI; its excluded closeout receipt then
+remains. The differential harness was unavailable before oracle execution
+because Docker rejected its temporary source bind, so REST T2 and
+corresponding gRPC T3 remain unearned. It does not own Site uniqueness,
+deletion, list/query
+behavior, full CRUD, a compatibility tier, the parent, profile promotion, or
+a traceability consumer.
 
 > **Operational boundary:** this is a development build for disposable data.
 > Production TLS, schema upgrades, backup/restore, operational hardening, and
@@ -334,7 +337,7 @@ replacement completes ADR 0004's governing gate and CP-13.
 | ------------------------ | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                     | Refresh for the active source and every later relevant merged digest                                            | Continuous; entry source retained                        |
 | V1 identity/RBAC         | Persisted identity, retained CORS, accepted I1/I2/I3, and retained I4 evidence              | Obtain I4 owner review; complete password-policy/throttle/proxy/streaming plus RBAC/admin/secret work           | I4 evidence; parent open                                 |
-| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, and accepted IPAddress I1             | Execute active Site I2, then remaining presence, invariant, rollback, side-effect, concurrency, and tier cases  | V2-01/I1 done; V2-02-I2 in progress; parent open         |
+| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, and accepted IPAddress I1/Site I2     | Plan the next common-presence child, then remaining invariant, rollback, side-effect, concurrency, and tier cases | V2-01/I1 done; I2 done claim conditional; parent open    |
 | V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, and Compose harness                                   | Dependency-aware HTTP/gRPC readiness, dependency loss/recovery, remaining locking cases, retained external run  | Implementation and evidence pending                      |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                 | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report      | T1; implementation/evidence pending                      |
 | V5 Vue                   | Typed adapters and real-Chrome workflow harness                                             | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes | T1; implementation/evidence pending                      |
