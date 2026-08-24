@@ -97,12 +97,20 @@ real-PostgreSQL, and parity tests passed, as did the exact affected/race,
 generated-contract, 17-test Vue adapter/form, complete L4, pinned repository,
 and independent exact-candidate CI boundaries. Its evidence claim and
 pre-acceptance receipt also passed exact-SHA repository CI. The project owner
-accepted only this bounded result at `2026-08-24T04:46:51Z`; the current
-owner-accepted closeout records I2 as `done` only if its exact closeout claim
-revision passes repository CI. The excluded closeout receipt follows. Docker
+accepted only this bounded result at `2026-08-24T04:46:51Z`; the
+owner-accepted closeout claim and excluded closeout receipt both passed
+exact-SHA repository CI, so I2 is effectively `done`. Docker
 rejected the differential harness's temporary source bind before oracle
 execution. The local transport/parity and Vue results do not substitute for
 that oracle or promote T2, T3, or T4.
+
+`CW1-V2-02-I3` is the active reviewed Manufacturer scalar-presence child from
+accepted-I2 receipt `236591c991ff6558cbc371e93760688a85f5758f`, source digest
+`source-v2:sha256:ecf552ec85a342abf16fbc8d4de10177f3648176f3b1aa3283bb693b2e3fc16f`
+over 3,022 entries. Its required matrix covers only `name`, `slug`, and
+`description` create/PUT/PATCH omitted/null/blank/concrete states across the
+eight fixed domain, application, REST, gRPC, real-PostgreSQL, and parity tests,
+generated OpenAPI, and Vue adapter/form checks. No result is claimed yet.
 
 ## Owned external gates
 
@@ -241,7 +249,7 @@ and exact change-state outcomes remain to be added and retained.
 | ------------------------ | ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage     | `make check` retained green on each exact relevant source digest                                               | Entry source-v2 retained; active-source refresh required |
 | V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests    | Pass I4's exact claim CI, retain its receipt, obtain owner review, then complete the remaining identity matrix | I4 evidence claim conditional; parent open               |
-| V2 profile behavior      | Shared 13-resource service, broad tests, and accepted IPAddress I1/Site I2 | Plan the next common-presence child; trace every remaining invariant, rollback, and external-tier boundary    | I1 done; Site I2 done claim conditional; parent open     |
+| V2 profile behavior      | Shared 13-resource service, broad tests, and accepted IPAddress I1/Site I2 | Execute Manufacturer I3; trace every remaining invariant, rollback, and external-tier boundary                | I1/I2 done; Manufacturer I3 active; parent open          |
 | V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness               | Truthful readiness, loss/recovery, real PostgreSQL and deployment artifacts                                    | Implementation/evidence gap                              |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites          | Complete T2 scenario report, then equivalent T3 report                                                         | T1; implementation gap                                   |
 | V5 Vue workflow          | Typed adapters and real-browser harness                                  | Both workflows and every required negative/state case retained green                                           | T1; implementation gap                                   |

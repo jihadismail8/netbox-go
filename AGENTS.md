@@ -66,18 +66,23 @@ with 3,022 entries. Its exact-name, affected/race, real-PostgreSQL, complete
 L4, generated-contract, Vue, pinned repository, independent candidate,
 evidence-claim, and pre-acceptance receipt exact-SHA CI boundaries are green.
 The project owner accepted this bounded result at `2026-08-24T04:46:51Z`.
-The current eight-path closeout records `CW1-V2-02-I2` as `done` only if this
-exact owner-accepted claim revision passes repository CI; its digest-excluded
-closeout receipt then remains. That conditional transition is bounded to Site
-`name`, `slug`, `status`, `facility`, `description`, and `comments`
+The owner-accepted closeout claim and excluded closeout receipt both passed
+their exact-SHA repository CI boundaries, so I2 is effectively done only for
+Site `name`, `slug`, `status`, `facility`, `description`, and `comments`
 create/PUT/PATCH presence, generated request/response contracts, matching
 REST/gRPC semantics, PostgreSQL durability, Vue dirty-field
 serialization/validation, and the eight named focused tests. The external
 differential was unavailable before execution because Docker rejected its
 temporary source bind, so REST T2 and corresponding gRPC T3 remain unearned.
 I2 closes no Site uniqueness, deletion, list/query, full CRUD,
-compatibility-tier, parent, profile, or traceability
-consumer boundary and claims no later V2 child. Do not begin or merge another
+compatibility-tier, parent, profile, or traceability consumer boundary.
+`CW1-V2-02-I3` is the active reviewed child and owns only Manufacturer `name`,
+`slug`, and `description` create/PUT/PATCH presence, operation-specific
+generated API contracts, matching REST/gRPC semantics, PostgreSQL durability,
+Vue dirty-field serialization/validation, and the eight named focused tests.
+It does not own Manufacturer uniqueness, deletion, list/query behavior, full
+CRUD, another resource, a tier, the parent, or profile promotion. Do not begin
+or merge another
 Capability Profile while V0 is red or before `CW1-V6-03`. Once those gates are
 durably closed, follow the next accepted profile in the roadmap and playbook
 rather than this dated snapshot.
