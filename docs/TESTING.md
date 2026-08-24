@@ -110,12 +110,14 @@ that oracle or promote T2, T3, or T4.
 over 3,029 entries. Its eight named Manufacturer domain, application, REST,
 gRPC, real-PostgreSQL, and parity tests passed, as did the exact
 affected/race, generated-contract, 23-test Vue adapter/form, complete L4,
-pinned repository, and independent exact-candidate CI boundaries. The
-current eight-path claim-only transition records bounded `evidence` only if
-this exact attestation revision passes repository CI; its digest-excluded
-receipt and project-owner review then remain. No retained pinned differential
-accompanies this result. The local transport/parity and Vue results do not
-substitute for that oracle or promote T2, T3, or T4.
+pinned repository, and independent exact-candidate CI boundaries. Its evidence
+claim and pre-acceptance receipt also passed exact-SHA repository CI. The
+project owner's acceptance of only this bounded result was recorded at
+`2026-08-24T10:28:34Z`; the current owner-accepted closeout records I3 as
+`done` only if its exact claim revision passes repository CI. The excluded
+closeout receipt then remains. No retained pinned differential accompanies
+this result. The local transport/parity and Vue results do not substitute for
+that oracle or promote T2, T3, or T4.
 
 ## Owned external gates
 
@@ -254,7 +256,7 @@ and exact change-state outcomes remain to be added and retained.
 | ------------------------ | ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage     | `make check` retained green on each exact relevant source digest                                               | Entry source-v2 retained; active-source refresh required |
 | V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests    | Pass I4's exact claim CI, retain its receipt, obtain owner review, then complete the remaining identity matrix | I4 evidence claim conditional; parent open               |
-| V2 profile behavior      | Shared 13-resource service, broad tests, accepted IPAddress I1/Site I2, and exact Manufacturer I3 candidate | Pass I3 claim CI, retain its receipt, obtain owner review, then trace every remaining invariant, rollback, and external-tier boundary | I1/I2 done; I3 conditional evidence; parent open |
+| V2 profile behavior      | Shared 13-resource service, broad tests, and accepted IPAddress I1/Site I2/Manufacturer I3 | Pass I3 closeout claim CI, retain its receipt, then trace every remaining invariant, rollback, and external-tier boundary | I1/I2 done; I3 done claim conditional; parent open |
 | V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness               | Truthful readiness, loss/recovery, real PostgreSQL and deployment artifacts                                    | Implementation/evidence gap                              |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites          | Complete T2 scenario report, then equivalent T3 report                                                         | T1; implementation gap                                   |
 | V5 Vue workflow          | Typed adapters and real-browser harness                                  | Both workflows and every required negative/state case retained green                                           | T1; implementation gap                                   |

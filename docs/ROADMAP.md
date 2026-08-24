@@ -121,7 +121,7 @@ production release through PROD-1 and PROD-2.
 | 0    | Stable language and decisions       | CONTEXT plus ADR 0001–0005              | `done`                                                         |
 | 1    | Repository/shared-core baseline     | `CW1-G00`                               | `continuous`                                                   |
 | 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01/I1/I2/I3 `done`; I4 `evidence`; parent open              |
-| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01/I1/I2 done; Manufacturer I3 conditional evidence; parent/T2/T3 open |
+| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01/I1/I2 done; Manufacturer I3 done claim conditional; parent/T2/T3 open |
 | 4    | First Core Workflow Profile         | `CW1-V1-*` through `CW1-V6-*`           | T1; active program                                             |
 | 5    | In-scope feature expansion          | `CP-P01`–`CP-P19`, then `MC-01`–`MC-10` | `blocked`                                                      |
 | 6    | Extension Service contracts         | `EXT-01`                                | `blocked` on a named inventory                                 |
@@ -207,12 +207,14 @@ with 3,029 entries. It owns only Manufacturer `name`, `slug`, and
 contracts, matching REST/gRPC semantics, PostgreSQL durability, Vue
 dirty-field serialization/validation, and eight fixed focused tests. Its
 exact tested candidate and independent exact-candidate CI are green. Its
-`evidence` state is conditional on the current claim revision's exact-SHA CI;
-the digest-excluded receipt and project-owner review remain. No retained
-pinned differential accompanies this bounded result, so T2/T3 remain
-unearned. Manufacturer uniqueness, delete protection, list/query behavior,
-full CRUD, every tier, every traceability consumer, and this parent remain
-open.
+evidence claim and pre-acceptance receipt exact-SHA CI are also green. The
+project owner's acceptance of only this bounded result was recorded at
+`2026-08-24T10:28:34Z`; its `done` state is conditional on the current
+owner-accepted closeout revision's exact-SHA CI, followed by the excluded
+closeout receipt. No retained pinned differential accompanies this bounded
+result, so T2/T3 remain unearned. Manufacturer uniqueness, delete protection,
+list/query behavior, full CRUD, every tier, every traceability consumer, and
+this parent remain open.
 
 ## Current execution board
 
@@ -224,10 +226,10 @@ open.
 | `CW1-V1-02-I4`      | `evidence`    | Obtain project-owner review                        | Accepted/done I3 and current `CW1-G00` |
 | `CW1-V1-03`–`V1-04` | `blocked`     | Complete and retain remaining identity/security    | Preceding V1 goal                      |
 | `CW1-V2-01`         | `done`        | Accepted structural rule/scenario traceability     | Fresh source-v2 V0 follows this gate   |
-| `CW1-V2-02`         | `in-progress` | Retain/review bounded Manufacturer I3              | Accepted V2-01 and current `CW1-G00`   |
+| `CW1-V2-02`         | `in-progress` | Plan the next reviewed bounded child               | Accepted V2-01 and current `CW1-G00`   |
 | `CW1-V2-02-I1`      | `done`        | Accepted bounded IPAddress scalar write presence   | Tested candidate and current `CW1-G00` |
 | `CW1-V2-02-I2`      | `done`        | Accepted bounded Site scalar write presence       | Done I1 and current `CW1-G00`          |
-| `CW1-V2-02-I3`      | `evidence`*   | Pass claim CI, retain receipt, obtain owner review | Done I2 and current `CW1-G00`          |
+| `CW1-V2-02-I3`      | `done`*       | Accepted bounded Manufacturer scalar write presence | Done I2 and current `CW1-G00`          |
 | `CW1-V2-03`–`V2-08` | `blocked`     | Close later typed business behavior                | V2-02 and named lane dependencies      |
 | `CW1-V3-01`         | `ready`       | Make HTTP/gRPC readiness dependency-aware          | `CW1-G00`                              |
 | `CW1-V3-02`–`V3-05` | `blocked`     | Close PostgreSQL/deployment evidence               | Named V2/V3 dependencies               |
@@ -432,11 +434,13 @@ Bounded children:
   `name`, `slug`, and `description` create/PUT/PATCH presence,
   operation-specific generated API contracts, matching REST/gRPC semantics,
   PostgreSQL durability, Vue dirty-field serialization/validation, and eight
-  fixed focused regressions. Its exact tested candidate and independent
-  candidate CI are green. Its `evidence` state is conditional on the current
-  claim revision's exact-SHA CI; the digest-excluded receipt and project-owner
-  review remain. No retained pinned differential accompanies this result, so
-  T2/T3 remain unearned. Manufacturer uniqueness, delete protection,
+  fixed focused regressions. Its exact tested candidate, evidence claim, and
+  pre-acceptance receipt exact-SHA CI are green. The project owner's
+  acceptance of only this bounded result was recorded at
+  `2026-08-24T10:28:34Z`; its `done` state is conditional on the current
+  owner-accepted closeout revision's exact-SHA CI, followed by the excluded
+  closeout receipt. No retained pinned differential accompanies this result,
+  so T2/T3 remain unearned. Manufacturer uniqueness, delete protection,
   list/query behavior, full CRUD, tiers, this parent, and every traceability
   consumer remain open.
 

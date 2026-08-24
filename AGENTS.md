@@ -80,19 +80,21 @@ compatibility-tier, parent, profile, or traceability consumer boundary.
 `651d33bc3fb2c8e663b6b14320af405b8501471f`, source digest
 `source-v2:sha256:09499a6618569d2dae224edfb339ac82585bf0248d20e5a4d5ff23d19221fe6f`
 with 3,029 entries. Its exact-name, affected/race, real-PostgreSQL, complete
-L4, generated-contract, Vue, pinned repository, and independent
-exact-candidate CI boundaries are green. The current eight-path claim-only
-transition conditionally moves this bounded child to `evidence`; that state
-becomes effective only after this exact claim revision passes repository CI.
-Its digest-excluded receipt and project-owner review then remain. No retained
-pinned differential accompanies this bounded result, so REST T2 and
-corresponding gRPC T3 remain unearned. I3 owns only Manufacturer `name`,
-`slug`, and `description` create/PUT/PATCH presence, operation-specific
-generated API contracts, matching REST/gRPC semantics, PostgreSQL durability,
-Vue dirty-field serialization/validation, and the eight named focused tests.
-It closes no Manufacturer uniqueness, deletion, list/query, full CRUD,
-compatibility-tier, parent, profile, or traceability-consumer boundary. Do not
-begin or merge another
+L4, generated-contract, Vue, pinned repository, independent exact-candidate,
+evidence-claim, and pre-acceptance receipt exact-SHA CI boundaries are green.
+The project owner's acceptance of this bounded result was recorded at
+`2026-08-24T10:28:34Z`. The current eight-path closeout records
+`CW1-V2-02-I3` as `done` only if this exact owner-accepted claim revision
+passes repository CI; its digest-excluded closeout receipt then remains. That
+conditional transition is bounded to Manufacturer `name`, `slug`, and
+`description` create/PUT/PATCH presence, operation-specific generated API
+contracts, matching REST/gRPC semantics, PostgreSQL durability, Vue
+dirty-field serialization/validation, and the eight named focused tests. No
+retained pinned differential accompanies this result, so REST T2 and
+corresponding gRPC T3 remain unearned. I3 closes no Manufacturer uniqueness,
+deletion, list/query, full CRUD, compatibility-tier, parent, profile, or
+traceability-consumer boundary and claims no later V2 child. Do not begin or
+merge another
 Capability Profile while V0 is red or before `CW1-V6-03`. Once those gates are
 durably closed, follow the next accepted profile in the roadmap and playbook
 rather than this dated snapshot.
