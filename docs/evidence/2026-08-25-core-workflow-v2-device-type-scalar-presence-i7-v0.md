@@ -5,8 +5,8 @@
 - Goal: `CW1-V2-02`.
 - Increment: `CW1-V2-02-I7`.
 - Executor: Codex GPT-5.6 Sol.
-- State: conditional `evidence`; effective only after the exact claim-only
-  revision carrying this artifact passes repository CI.
+- State: `evidence`; effective at exact claim revision
+  `c6ffdec22b5f47b529feba7fc4bb864b95a7ac13` after repository CI.
 - Result: **the bounded source candidate passed every required local,
   real-PostgreSQL, generated-contract, frontend, pinned repository, and
   independent candidate-CI boundary available in this environment**.
@@ -28,9 +28,9 @@ rewrite, or production readiness.
 
 No `netbox-go-evidence-v2` marker is present because this increment promotes
 no tier, profile state, traceability consumer, or completed parent goal. The
-conditional `evidence` state becomes effective only after exact-SHA CI of the
-digest-excluded claim revision. Its receipt and project-owner evidence review
-remain separate later boundaries.
+bounded `evidence` state became effective when exact-SHA CI passed for the
+digest-excluded claim revision. Its source-excluded receipt exact-SHA CI and
+project-owner evidence review remain separate later boundaries.
 
 ## Entry and tested source
 
@@ -329,6 +329,28 @@ tests, all 96 traceability-validator and 157 capability/OpenAPI adversarial
 tests, the 13-resource/three-interface/17-scenario/293-row profile, 33 OpenAPI
 paths and 86 operations, generated outputs, inventory, and all local links.
 
+## Claim exact-SHA CI and receipt boundary
+
+- Workflow: `repository-gate`.
+- Run: [32846837001](https://github.com/jihadismail8/netbox-go/actions/runs/32846837001).
+- Job `check`: [97798381347](https://github.com/jihadismail8/netbox-go/actions/runs/32846837001/job/97798381347).
+- Branch: `work/cw1-v2-02-i7-device-type-presence`.
+- Head SHA: `c6ffdec22b5f47b529feba7fc4bb864b95a7ac13`.
+- Run start/completion: `2026-08-25T12:18:00Z`–`2026-08-25T12:38:06Z`.
+- Job start/completion: `2026-08-25T12:18:02Z`–`2026-08-25T12:38:05Z`.
+- Conclusion: **success**; every setup, repository, post, and completion step
+  succeeded, with no cancellation or non-success conclusion.
+
+This exact-SHA result made only the bounded I7 DeviceType result `evidence`.
+The canonical claim mapping was reconstructed from the tested candidate and
+claim revisions at SHA-256
+`2207b396ae9c154b6a1bcb699a8a24a352bf63929cbdecba7d111702e4e33fc6`;
+the claim commit itself did not embed that mapping. This receipt commit retains
+the full reconstructed claim mapping together with its own two-path mapping.
+Both revisions change only the source-v2-excluded evidence paths listed below,
+so the source digest, complete manifest, and empty derived diff remain
+unchanged. Receipt exact-SHA CI and project-owner evidence review remain.
+
 ## External differential and residual limits
 
 The focused external differential was not run. The compatibility driver
@@ -362,27 +384,28 @@ outside I7.
 - L8 browser: not applicable to this Vue unit/type boundary; no T4 claim is
   made.
 - L9: tested-digest confirmation, pinned repository gates, independent
-  candidate exact-SHA CI, and the digest-excluded claim local replay passed.
-  The exact claim revision requires exact-SHA CI before conditional `evidence`
-  becomes effective, followed by its receipt and project-owner evidence
-  review.
+  candidate exact-SHA CI, the digest-excluded claim local replay, and exact-SHA
+  claim CI passed. Bounded I7 `evidence` is effective. Its source-excluded
+  receipt exact-SHA CI and project-owner evidence review remain.
 
 No skipped or unavailable boundary is implied by the focused, PostgreSQL,
 frontend, local, or CI results.
 
-## Digest-excluded claim boundary
+## Digest-excluded claim and receipt boundary
 
-The current claim changes exactly these two source-v2-excluded evidence paths:
+The claim changed exactly these two source-v2-excluded evidence paths, and this
+receipt changes exactly the same two paths:
 
 1. `docs/evidence/2026-08-25-core-workflow-v2-device-type-scalar-presence-i7-v0.md`
    — new
 2. `docs/evidence/README.md`
 
-The complete manifest retained below represents both the tested candidate and
-the evidence-only claim worktree. Independent reconstruction confirmed that
-they are byte-identical at 3,057 entries and that the complete derived source
-diff is empty. No owned source entry is added, removed, changed, renamed,
-retargeted, type-changed, or made executable.
+The complete manifest retained below represents the tested candidate, claim,
+and receipt worktrees. Independent reconstruction confirmed that they are
+byte-identical at 3,057 entries and that the complete derived source diff is
+empty. Independent review also confirmed the reconstructed canonical claim
+mapping recorded above. No owned source entry is added, removed, changed,
+renamed, retargeted, type-changed, or made executable.
 
 Human review must confirm that the exact two-path mapping changes no behavior,
 route, schema, migration, security policy, contract behavior, scenario,
@@ -392,11 +415,11 @@ rule, tier, profile state, traceability consumer, or parent-goal state.
 No password, session or CSRF value, bearer/API token, authorization or cookie
 header, database credential, complete DSN, private key, provider signature,
 GitHub credential, or complete configuration object is retained here. The
-evidence-only local gate and exact-SHA claim CI have separate boundaries; the
-local gate passes first. The later receipt and project-owner evidence review
-must confirm the bounded proof, the unexecuted differential boundary, and the
-absence of parent/tier/profile/consumer promotion before any later state
-transition.
+evidence-only local gate and exact-SHA claim CI both passed at their separate
+boundaries. The receipt requires exact-SHA repository CI; later project-owner
+evidence review must confirm the bounded proof, the unexecuted differential
+boundary, and the absence of parent/tier/profile/consumer promotion before any
+later state transition.
 
 ## Complete tested source manifest
 
