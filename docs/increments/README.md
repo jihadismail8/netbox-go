@@ -46,7 +46,8 @@ implementation exists.
 | `CW1-V2-02-I3` | `done`        | Codex GPT-5.6 Sol | [Manufacturer scalar write presence](CW1-V2-02-I3.md)   |
 | `CW1-V2-02-I4` | `done`        | Codex GPT-5.6 Sol | [RackRole scalar write presence](CW1-V2-02-I4.md)       |
 | `CW1-V2-02-I5` | `done`        | Codex GPT-5.6 Sol | [RackType scalar write presence](CW1-V2-02-I5.md)       |
-| `CW1-V2-02-I6` | `done`*       | Codex GPT-5.6 Sol | [DeviceRole scalar write presence](CW1-V2-02-I6.md)     |
+| `CW1-V2-02-I6` | `done`        | Codex GPT-5.6 Sol | [DeviceRole scalar write presence](CW1-V2-02-I6.md)     |
+| `CW1-V2-02-I7` | `in-progress` | Codex GPT-5.6 Sol | [DeviceType scalar write presence](CW1-V2-02-I7.md)     |
 
 `in-progress` means the packet owns only its explicitly active bounded
 increment; no implementation evidence or parent-goal completion is implied.
@@ -135,8 +136,8 @@ parent, and every later child remain open.
 real-PostgreSQL, complete L4, generated-contract, Vue, repository,
 candidate-CI, evidence-claim, and pre-acceptance receipt boundaries. The
 project owner accepted only this bounded result at `2026-08-25T08:13:40Z`.
-Its `done` row is conditional on the exact owner-accepted closeout revision
-passing repository CI; its excluded receipt then remains. I6 owns only
+Its owner-accepted closeout claim and excluded receipt passed exact-SHA
+repository CI, so I6 is effectively `done`. I6 owns only
 DeviceRole `parent`, `name`, `slug`, `color`, `vm_role`, `description`, and
 `comments` create/PUT/PATCH presence across operation-specific contracts,
 shared typed semantics, PostgreSQL durability, Vue dirty-field handling, and
@@ -145,6 +146,10 @@ deletion, alternate parent input, list/query behavior, full CRUD, all tiers,
 every consumer, the parent, profile promotion, and every later child remain
 open.
 
-The I6 asterisk records that the owner-accepted closeout becomes effective
-only after the exact closeout-claim revision's repository CI succeeds. It does
-not weaken or broaden the meaning of `done`.
+`CW1-V2-02-I7` is the active reviewed packet for the ten declared DeviceType
+common writable fields across create/PUT/PATCH operation metadata, typed
+domain/application behavior, REST/gRPC semantics, PostgreSQL durability, Vue
+dirty-field serialization, and eight fixed tests. It has no implementation
+evidence at entry. DeviceType uniqueness, positioned-Device height
+transitions, deletion/cascades, list/query behavior, full CRUD, all tiers,
+every consumer, the parent, profile promotion, and later children remain open.

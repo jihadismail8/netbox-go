@@ -143,16 +143,23 @@ open. `CW1-V2-02-I6` has exact tested candidate
 with 3,050 entries. Its focused, race, real-PostgreSQL, complete L4,
 generated-contract, Vue, repository, candidate-CI, evidence-claim, and
 pre-acceptance receipt boundaries are green. The project owner accepted only
-this bounded result at `2026-08-25T08:13:40Z`. Its `done` state is conditional
-on the exact owner-accepted closeout claim passing repository CI; the excluded
-receipt then remains. I6 owns only DeviceRole `parent`, `name`, `slug`,
+this bounded result at `2026-08-25T08:13:40Z`. Its owner-accepted closeout
+claim and excluded receipt passed exact-SHA repository CI, so I6 is effectively
+`done`. I6 owns only DeviceRole `parent`, `name`, `slug`,
 `color`, `vm_role`, `description`, and `comments` common writable-field
 presence across POST/PUT/PATCH, operation-specific generated contracts,
 typed REST/gRPC/application semantics, PostgreSQL durability, Vue dirty-field
 handling, and the eight fixed tests. No retained differential accompanies the
 result, so T2/T3 remain unearned. DeviceRole hierarchy, uniqueness, deletion,
 list/query behavior, full CRUD, every tier/consumer, the parent, profile
-promotion, and every later child remain open.
+promotion, and every later child remain open. `CW1-V2-02-I7` is the active
+reviewed increment for DeviceType `manufacturer`, `model`, `slug`,
+`part_number`, `u_height`, `exclude_from_utilization`, `is_full_depth`,
+`airflow`, `description`, and `comments` common POST/PUT/PATCH presence across
+generated contracts, typed REST/gRPC/application semantics, PostgreSQL, and
+Vue. It claims no implementation evidence yet and excludes uniqueness, height
+transitions, deletion/cascades, list/query behavior, full CRUD, every tier and
+consumer, the parent, and profile promotion.
 
 > **Operational boundary:** this is a development build for disposable data.
 > Production TLS, schema upgrades, backup/restore, operational hardening, and
@@ -402,7 +409,7 @@ replacement completes ADR 0004's governing gate and CP-13.
 | ------------------------ | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
 | V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                                 | Refresh for the active source and every later relevant merged digest                                                             | Continuous; entry source retained          |
 | V1 identity/RBAC         | Persisted identity, retained CORS, accepted I1/I2/I3, and retained I4 evidence                          | Obtain I4 owner review; complete password-policy/throttle/proxy/streaming plus RBAC/admin/secret work                            | I4 evidence; parent open                   |
-| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, accepted IPAddress I1/Site I2/Manufacturer I3/RackRole I4/RackType I5, and owner-accepted DeviceRole I6 | Retain the I6 closeout, then complete remaining invariant, rollback, side-effect, concurrency, and tier cases | I1-I5 done; I6 done claim conditional; parent open |
+| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, accepted IPAddress I1/Site I2/Manufacturer I3/RackRole I4/RackType I5/DeviceRole I6, and active DeviceType I7 | Implement and retain I7, then complete remaining invariant, rollback, side-effect, concurrency, and tier cases | I1-I6 done; I7 active; parent open |
 | V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, and Compose harness                                               | Dependency-aware HTTP/gRPC readiness, dependency loss/recovery, remaining locking cases, retained external run                   | Implementation and evidence pending        |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                             | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report                       | T1; implementation/evidence pending        |
 | V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                         | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes                  | T1; implementation/evidence pending        |
