@@ -143,10 +143,12 @@ passed its exact-name, affected/race, real-PostgreSQL, complete L4,
 generated-contract, Vue, pinned repository, and independent exact-candidate
 CI boundaries on exact revision
 `b216d4c217cf863a8760494fd6499e54899ef368`. Its current two-path,
-source-digest-excluded claim conditionally makes only bounded I8 `evidence`
-after the exact claim revision passes repository CI; its excluded receipt and
-project-owner evidence review then remain. No retained pinned differential
-accompanies this bounded result, so no T2/T3 claim is made.
+source-digest-excluded claim revision
+`537a40ccf55e07a4455ea04e7d654a671f16ccfe` passed its pinned local gates and
+exact-SHA repository CI, making only bounded I8 `evidence`. This
+source-excluded receipt requires exact-SHA repository CI; project-owner
+evidence review remains. No retained pinned differential accompanies this
+bounded result, so no T2/T3 claim is made.
 The project owner reviewed and retained the entry V0, CORS, bounded token I1,
 bounded token I2, bounded browser-session I3, bounded IPAddress I1, and bounded
 Site I2, Manufacturer I3, RackRole I4, RackType I5, DeviceRole I6, and
@@ -202,15 +204,15 @@ exact result without changing source and must pass its own exact-SHA CI. I7
 promotes no compatibility tier, profile state, parent, later child, or
 traceability consumer. Feature work must re-establish V0 after its next
 owned-source change.
-`CW1-V2-02-I8` has a green exact tested candidate and a conditional evidence
-transition only for InterfaceTemplate common scalar create/PUT/PATCH presence.
-Its exact claim CI, excluded receipt, and project-owner evidence review remain.
-I8 promotes no compatibility tier, profile state, parent, later child, or
-traceability consumer.
+`CW1-V2-02-I8` is effective `evidence` at exact claim revision
+`537a40ccf55e07a4455ea04e7d654a671f16ccfe` only for InterfaceTemplate common
+scalar create/PUT/PATCH presence. Its source-excluded receipt exact-SHA CI and
+project-owner evidence review remain. I8 promotes no compatibility tier,
+profile state, parent, later child, or traceability consumer.
 
 | Evidence                 | Required command or boundary                                  | Current state                                                    |
 | ------------------------ | ------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Repository quality       | Revised `make check` including non-mutating backend coverage  | V1-I4 and V2-I1/I2/I3/I4 retained; V2-I5/I6/I7 done; V2-I8 candidate green, claim CI pending |
+| Repository quality       | Revised `make check` including non-mutating backend coverage  | V1-I4 and V2-I1/I2/I3/I4 retained; V2-I5/I6/I7 done; V2-I8 evidence effective, receipt CI pending |
 | Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                          |
 | gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                            |
 | Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, V1-I4, V2-I1/I2/I3/I4/I5/I6, bounded V2-I7, and bounded V2-I8 passed; V1/V3 remain open |
