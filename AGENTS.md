@@ -136,14 +136,23 @@ operation-specific generated contracts, matching REST/gRPC semantics,
 PostgreSQL durability, Vue dirty-field handling, and eight fixed tests. It
 does not close DeviceRole hierarchy, uniqueness, deletion, list/query, full
 CRUD, another resource, a tier/consumer, the parent, the profile, or any later
-child. `CW1-V2-02-I7` is the active rewrite increment and owns only DeviceType
-`manufacturer`, `model`, `slug`, `part_number`, `u_height`,
-`exclude_from_utilization`, `is_full_depth`, `airflow`, `description`, and
-`comments` common create/PUT/PATCH presence, operation-specific generated API
-contracts, matching REST/gRPC semantics, PostgreSQL durability, Vue form
+child. `CW1-V2-02-I7` has exact tested candidate
+`e2ad1acc33b84f20f24418d89b3b881b897b7ed3` at source digest
+`source-v2:sha256:8930fa5fbe487df4c225a301c674db096664cccaf3f0c53df93c51e59edaeba7`
+with 3,057 entries. Its focused, race, real-PostgreSQL, complete L4,
+generated-contract, Vue, repository, candidate-CI, evidence-claim, and
+pre-acceptance receipt boundaries are green. The project owner's acceptance
+of only this bounded result was recorded at `2026-08-25T14:12:13Z`. I7 is
+conditional `done`; that state becomes effective only after the exact
+owner-accepted closeout claim passes repository CI, and its excluded receipt
+must then pass exact-SHA CI. I7 owns only DeviceType `manufacturer`, `model`,
+`slug`, `part_number`, `u_height`, `exclude_from_utilization`,
+`is_full_depth`, `airflow`, `description`, and `comments` common
+create/PUT/PATCH presence, operation-specific generated API contracts,
+matching REST/gRPC semantics, PostgreSQL durability, Vue form
 serialization/validation, and eight fixed tests. It does not close uniqueness,
 height transitions, deletion/cascades, list/query behavior, full CRUD, another
-resource, a tier/consumer, the parent, or the profile. Do not begin or merge
+resource, a tier/consumer, the parent, the profile, or any later child. Do not begin or merge
 another Capability Profile while V0 is red or before `CW1-V6-03`. Once those gates are
 durably closed, follow the next accepted profile in the roadmap and playbook
 rather than this dated snapshot.

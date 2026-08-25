@@ -47,7 +47,7 @@ implementation exists.
 | `CW1-V2-02-I4` | `done`        | Codex GPT-5.6 Sol | [RackRole scalar write presence](CW1-V2-02-I4.md)       |
 | `CW1-V2-02-I5` | `done`        | Codex GPT-5.6 Sol | [RackType scalar write presence](CW1-V2-02-I5.md)       |
 | `CW1-V2-02-I6` | `done`        | Codex GPT-5.6 Sol | [DeviceRole scalar write presence](CW1-V2-02-I6.md)     |
-| `CW1-V2-02-I7` | `in-progress` | Codex GPT-5.6 Sol | [DeviceType scalar write presence](CW1-V2-02-I7.md)     |
+| `CW1-V2-02-I7` | `done`*       | Codex GPT-5.6 Sol | [DeviceType scalar write presence](CW1-V2-02-I7.md)     |
 
 `in-progress` means the packet owns only its explicitly active bounded
 increment; no implementation evidence or parent-goal completion is implied.
@@ -146,10 +146,21 @@ deletion, alternate parent input, list/query behavior, full CRUD, all tiers,
 every consumer, the parent, profile promotion, and every later child remain
 open.
 
-`CW1-V2-02-I7` is the active reviewed packet for the ten declared DeviceType
-common writable fields across create/PUT/PATCH operation metadata, typed
+`CW1-V2-02-I7` has exact tested candidate
+`e2ad1acc33b84f20f24418d89b3b881b897b7ed3` with green focused, race,
+real-PostgreSQL, complete L4, generated-contract, Vue, repository,
+candidate-CI, evidence-claim, and pre-acceptance receipt boundaries. The
+project owner accepted only this bounded result at `2026-08-25T14:12:13Z`.
+Its `done` row is conditional on the exact owner-accepted closeout revision
+passing repository CI; its excluded receipt then remains. I7 owns only the ten
+declared DeviceType fields across create/PUT/PATCH operation metadata, typed
 domain/application behavior, REST/gRPC semantics, PostgreSQL durability, Vue
-dirty-field serialization, and eight fixed tests. It has no implementation
-evidence at entry. DeviceType uniqueness, positioned-Device height
-transitions, deletion/cascades, list/query behavior, full CRUD, all tiers,
-every consumer, the parent, profile promotion, and later children remain open.
+dirty-field serialization, and eight fixed tests. No differential was run.
+DeviceType uniqueness, positioned-Device height transitions,
+deletion/cascades, alternate Manufacturer input, list/query behavior, full
+CRUD, all tiers, every consumer, the parent, profile promotion, and every later
+child remain open.
+
+The I7 asterisk records that the owner-accepted closeout becomes effective
+only after the exact closeout-claim revision's repository CI succeeds. It does
+not weaken or broaden the meaning of `done`.

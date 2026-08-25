@@ -128,12 +128,17 @@ CI boundaries on exact revision
 source-digest-excluded claim revision
 `c6ffdec22b5f47b529feba7fc4bb864b95a7ac13` passed its pinned local gate and
 exact-SHA repository CI, making only bounded I7 `evidence`. This
-source-excluded receipt requires exact-SHA repository CI; project-owner
-evidence review remains. No retained pinned differential accompanies this
-bounded result, so no T2/T3 claim is made.
+source-excluded receipt `2ac51b6fce930d24949343b56a8a4338abaec9ce`
+also passed exact-SHA repository CI. The project owner accepted only this
+bounded result at `2026-08-25T14:12:13Z`. Its `done` state is conditional on
+the exact owner-accepted closeout claim passing repository CI; a two-path
+excluded receipt must then preserve that result and pass its own exact-SHA CI.
+No retained pinned differential accompanies this bounded result, so no T2/T3
+claim is made.
 The project owner reviewed and retained the entry V0, CORS, bounded token I1,
 bounded token I2, bounded browser-session I3, bounded IPAddress I1, and bounded
-Site I2, Manufacturer I3, RackRole I4, RackType I5, and DeviceRole I6 results.
+Site I2, Manufacturer I3, RackRole I4, RackType I5, DeviceRole I6, and
+DeviceType I7 results.
 The
 [2026-08-03 post-cleanup V0](2026-08-03-post-cleanup-v0.md) used the superseded
 mode-blind v1 source digest and is now historical. The 2026-08-01
@@ -141,7 +146,7 @@ repository V0 and recovery-scoped PostgreSQL replay also remain historical in
 the
 [Core Workflow recovery artifact](2026-08-01-core-workflow-v1-v0.md). The
 Profile remains T1 and pre-publication; V1-V6 remain open. `CW1-G00` passed for
-the exact I6 tested source; `CW1-V1-01`, `CW1-V1-02-I1`, `CW1-V1-02-I2`, and
+the exact I7 tested source; `CW1-V1-01`, `CW1-V1-02-I1`, `CW1-V1-02-I2`, and
 `CW1-V1-02-I3` are done. The parent credential/session matrix remains open.
 `CW1-V2-02-I1` has an effective owner-accepted `done` closeout only for
 IPAddress scalar
@@ -178,16 +183,17 @@ promotes no compatibility tier, profile state, parent, later child, or
 traceability consumer. I2 and I3 promote no
 compatibility-tier or traceability-consumer
 boundary.
-`CW1-V2-02-I7` is effective `evidence` at exact claim revision
-`c6ffdec22b5f47b529feba7fc4bb864b95a7ac13` only for DeviceType common scalar
-create/PUT/PATCH presence. Its source-excluded receipt exact-SHA CI and
-project-owner evidence review remain. I7 promotes no compatibility tier,
+`CW1-V2-02-I7` has owner-accepted conditional `done`, only for DeviceType
+common scalar create/PUT/PATCH presence. Its evidence claim and
+pre-acceptance receipt passed exact-SHA repository CI. The closeout becomes
+effective only after the exact owner-accepted claim revision passes repository
+CI; its excluded receipt then remains. I7 promotes no compatibility tier,
 profile state, parent, later child, or traceability consumer. Feature work must
 re-establish V0 after its next owned-source change.
 
 | Evidence                 | Required command or boundary                                  | Current state                                                    |
 | ------------------------ | ------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Repository quality       | Revised `make check` including non-mutating backend coverage  | V1-I4 and V2-I1/I2/I3/I4 retained; V2-I5/I6 done; V2-I7 evidence effective, receipt CI pending |
+| Repository quality       | Revised `make check` including non-mutating backend coverage  | V1-I4 and V2-I1/I2/I3/I4 retained; V2-I5/I6 done; V2-I7 owner-accepted closeout claim conditional |
 | Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                          |
 | gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                            |
 | Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, V1-I4, V2-I1/I2/I3/I4/I5/I6, and bounded V2-I7 passed; V1/V3 remain open |
