@@ -1,6 +1,6 @@
 # Project status
 
-Updated: 2026-08-24
+Updated: 2026-08-25
 
 Compatibility baseline: checked-in NetBox source snapshot at commit
 `fbb948d30e79ce657fac62994a22aca72c1770a9`
@@ -122,13 +122,23 @@ accompanies it, so T2/T3 remain unearned. RackRole uniqueness, deletion,
 list/query behavior, full CRUD, tiers, the parent, profile promotion, and every
 traceability consumer remain open.
 
-`CW1-V2-02-I5` is active for RackType common writable-field presence,
+`CW1-V2-02-I5` has exact tested candidate
+`89507d95d2743de7f97d64ca14cc43f6b834770b` at source digest
+`source-v2:sha256:a8325eaae703aa801ed587deefae7e8d08d9c9e0189c80ff7569da95c36d6f90`
+with 3,043 entries. Its focused, race, real-PostgreSQL, complete L4,
+generated-contract, Vue, repository, candidate-CI, evidence-claim, and
+pre-acceptance receipt boundaries are green. The project owner accepted only
+this bounded result at `2026-08-25T03:56:48Z`. Its `done` state is conditional
+on the exact owner-accepted closeout claim passing repository CI; the excluded
+receipt then remains. I5 owns only RackType common writable-field presence,
 including the numeric-ID Manufacturer envelope and nine scalar fields across
-POST/PUT/PATCH. Its closed packet owns operation-specific generated contracts,
-typed REST/gRPC/application semantics, PostgreSQL durability, and Vue
-dirty-field handling. RackType uniqueness, propagation, deletion, list/query
-behavior, alternate nested Manufacturer inputs, every tier/consumer, and the
-parent remain open.
+POST/PUT/PATCH, operation-specific generated contracts, typed
+REST/gRPC/application semantics, PostgreSQL durability, Vue dirty-field
+handling, and the eight fixed tests. No retained differential accompanies the
+result, so T2/T3 remain unearned. RackType uniqueness, propagation, deletion,
+list/query behavior, alternate nested Manufacturer inputs, every
+tier/consumer, the parent, profile promotion, and every later child remain
+open.
 
 > **Operational boundary:** this is a development build for disposable data.
 > Production TLS, schema upgrades, backup/restore, operational hardening, and
@@ -378,7 +388,7 @@ replacement completes ADR 0004's governing gate and CP-13.
 | ------------------------ | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
 | V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                                 | Refresh for the active source and every later relevant merged digest                                                             | Continuous; entry source retained          |
 | V1 identity/RBAC         | Persisted identity, retained CORS, accepted I1/I2/I3, and retained I4 evidence                          | Obtain I4 owner review; complete password-policy/throttle/proxy/streaming plus RBAC/admin/secret work                            | I4 evidence; parent open                   |
-| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, and accepted IPAddress I1/Site I2/Manufacturer I3/RackRole I4 | Deliver RackType I5, then complete remaining invariant, rollback, side-effect, concurrency, and tier cases | I1/I2/I3/I4 done; I5 active; parent open |
+| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, and accepted IPAddress I1/Site I2/Manufacturer I3/RackRole I4 plus owner-accepted RackType I5 | Retain the I5 closeout, then complete remaining invariant, rollback, side-effect, concurrency, and tier cases | I1/I2/I3/I4 done; I5 done claim conditional; parent open |
 | V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, and Compose harness                                               | Dependency-aware HTTP/gRPC readiness, dependency loss/recovery, remaining locking cases, retained external run                   | Implementation and evidence pending        |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                             | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report                       | T1; implementation/evidence pending        |
 | V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                         | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes                  | T1; implementation/evidence pending        |

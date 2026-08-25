@@ -107,13 +107,22 @@ PostgreSQL durability, Vue serialization/validation, and eight fixed tests.
 No retained differential accompanies it, so T2/T3 remain unearned. I4 closes
 no RackRole uniqueness, deletion, list/query behavior, full CRUD, another
 resource, tier, parent, profile, or traceability-consumer boundary.
-`CW1-V2-02-I5` is the active bounded increment and owns only RackType common
-writable-field create/PUT/PATCH presence, including the numeric-ID
-Manufacturer envelope, operation-specific generated contracts, matching
-REST/gRPC semantics, PostgreSQL durability, Vue dirty-field handling, and its
-focused tests. It excludes RackType uniqueness, Rack propagation semantics,
-deletion, list/query behavior, alternate nested Manufacturer inputs, every
-tier/consumer, and the parent. Do not begin or merge another
+`CW1-V2-02-I5` has exact tested candidate
+`89507d95d2743de7f97d64ca14cc43f6b834770b` at source digest
+`source-v2:sha256:a8325eaae703aa801ed587deefae7e8d08d9c9e0189c80ff7569da95c36d6f90`
+with 3,043 entries. Its focused, race, real-PostgreSQL, complete L4,
+generated-contract, Vue, repository, candidate-CI, evidence-claim, and
+pre-acceptance receipt boundaries are green. The project owner's acceptance
+of only this bounded result was recorded at `2026-08-25T03:56:48Z`. I5 is
+conditional `done`; that state becomes effective only after the exact
+owner-accepted closeout claim passes repository CI, and its excluded receipt
+must then pass exact-SHA CI. I5 owns only RackType common writable-field
+create/PUT/PATCH presence, including the numeric-ID Manufacturer envelope,
+operation-specific generated contracts, matching REST/gRPC semantics,
+PostgreSQL durability, Vue dirty-field handling, and its focused tests. It
+excludes RackType uniqueness, Rack propagation semantics, deletion,
+list/query behavior, alternate nested Manufacturer inputs, every
+tier/consumer, the parent, and any later child. Do not begin or merge another
 Capability Profile while V0 is red or before `CW1-V6-03`. Once those gates are
 durably closed, follow the next accepted profile in the roadmap and playbook
 rather than this dated snapshot.
