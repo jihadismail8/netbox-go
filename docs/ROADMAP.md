@@ -121,7 +121,7 @@ production release through PROD-1 and PROD-2.
 | 0    | Stable language and decisions       | CONTEXT plus ADR 0001–0005              | `done`                                                                   |
 | 1    | Repository/shared-core baseline     | `CW1-G00`                               | `continuous`                                                             |
 | 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01/I1/I2/I3 `done`; I4 `evidence`; parent open                        |
-| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01/I1/I2/I3/I4 done; RackType I5 done claim conditional; parent/T2/T3 open |
+| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01/I1/I2/I3/I4/I5 done; DeviceRole I6 active; parent/T2/T3 open |
 | 4    | First Core Workflow Profile         | `CW1-V1-*` through `CW1-V6-*`           | T1; active program                                                       |
 | 5    | In-scope feature expansion          | `CP-P01`–`CP-P19`, then `MC-01`–`MC-10` | `blocked`                                                                |
 | 6    | Extension Service contracts         | `EXT-01`                                | `blocked` on a named inventory                                           |
@@ -239,12 +239,18 @@ across create/PUT/PATCH operation metadata, typed shared semantics,
 PostgreSQL durability, and Vue dirty-field handling. Its candidate,
 evidence-claim, and pre-acceptance receipt exact-SHA CI boundaries are green.
 The project owner's acceptance of only this bounded result was recorded at
-`2026-08-25T03:56:48Z`; `done` becomes effective when the current
-owner-accepted closeout revision passes exact-SHA CI. Its excluded receipt
-then remains. No retained differential accompanies the result, so T2/T3
+`2026-08-25T03:56:48Z`; its owner-accepted closeout claim and excluded receipt
+both passed exact-SHA CI, so I5 is effectively `done`. No retained differential accompanies the result, so T2/T3
 remain unearned. RackType uniqueness, Rack propagation semantics, deletion,
 list/query behavior, alternate nested Manufacturer inputs, every
 tier/consumer, this parent, and every later child remain open.
+
+[`CW1-V2-02-I6`](increments/CW1-V2-02-I6.md) is the reviewed active child for
+DeviceRole `parent`, `name`, `slug`, `color`, `vm_role`, `description`, and
+`comments` create/PUT/PATCH presence across operation-specific contracts,
+shared typed behavior, PostgreSQL durability, and Vue dirty-field handling.
+It closes no hierarchy, uniqueness, deletion, list/query, tier, consumer,
+parent, or profile boundary.
 
 ## Current execution board
 
@@ -261,7 +267,8 @@ tier/consumer, this parent, and every later child remain open.
 | `CW1-V2-02-I2`      | `done`        | Accepted bounded Site scalar write presence         | Done I1 and current `CW1-G00`          |
 | `CW1-V2-02-I3`      | `done`        | Accepted bounded Manufacturer scalar write presence | Done I2 and current `CW1-G00`          |
 | `CW1-V2-02-I4`      | `done`        | Accepted bounded RackRole scalar write presence     | Done I3 and current `CW1-G00`          |
-| `CW1-V2-02-I5`      | `done`*       | Accepted bounded RackType scalar write presence     | Done I4 and current `CW1-G00`          |
+| `CW1-V2-02-I5`      | `done`        | Accepted bounded RackType scalar write presence     | Done I4 and current `CW1-G00`          |
+| `CW1-V2-02-I6`      | `in-progress` | Implement bounded DeviceRole scalar write presence  | Done I5 and current `CW1-G00`          |
 | `CW1-V2-03`–`V2-08` | `blocked`     | Close later typed business behavior                 | V2-02 and named lane dependencies      |
 | `CW1-V3-01`         | `ready`       | Make HTTP/gRPC readiness dependency-aware           | `CW1-G00`                              |
 | `CW1-V3-02`–`V3-05` | `blocked`     | Close PostgreSQL/deployment evidence                | Named V2/V3 dependencies               |
@@ -494,11 +501,18 @@ Bounded children:
   serialization/validation, and eight fixed focused regressions. RackType
   uniqueness, Rack propagation semantics, deletion, list/query behavior, full
   CRUD, tiers, this parent, and every traceability consumer remain open.
-  Its exact candidate, evidence claim, and pre-acceptance receipt passed
-  exact-SHA CI. The project owner accepted only this bounded result at
-  `2026-08-25T03:56:48Z`; bounded `done` is conditional on the exact
-  owner-accepted closeout claim passing repository CI, after which the
-  excluded two-path receipt must also pass. No later child is claimed.
+  Its exact candidate, evidence claim, pre-acceptance receipt,
+  owner-accepted closeout claim, and excluded receipt passed exact-SHA CI.
+  The project owner accepted only this bounded result at
+  `2026-08-25T03:56:48Z`; bounded I5 is effectively `done`.
+
+- [`CW1-V2-02-I6`](increments/CW1-V2-02-I6.md) owns only DeviceRole `parent`,
+  `name`, `slug`, `color`, `vm_role`, `description`, and `comments`
+  create/PUT/PATCH presence, operation-specific generated API contracts,
+  matching REST/gRPC semantics, PostgreSQL durability, Vue dirty-field
+  serialization/validation, and eight fixed focused regressions. DeviceRole
+  hierarchy, uniqueness, deletion, list/query behavior, full CRUD, tiers,
+  this parent, and every traceability consumer remain open.
 
 - [ ] Represent all 13 resources × list/get/create/PUT/PATCH/delete.
 - [ ] Cover defaults, read-only fields, and nullability.

@@ -113,16 +113,21 @@ resource, tier, parent, profile, or traceability-consumer boundary.
 with 3,043 entries. Its focused, race, real-PostgreSQL, complete L4,
 generated-contract, Vue, repository, candidate-CI, evidence-claim, and
 pre-acceptance receipt boundaries are green. The project owner's acceptance
-of only this bounded result was recorded at `2026-08-25T03:56:48Z`. I5 is
-conditional `done`; that state becomes effective only after the exact
-owner-accepted closeout claim passes repository CI, and its excluded receipt
-must then pass exact-SHA CI. I5 owns only RackType common writable-field
+of only this bounded result was recorded at `2026-08-25T03:56:48Z`. Its
+owner-accepted closeout claim and excluded receipt both passed exact-SHA CI,
+so I5 is effectively `done`. I5 owns only RackType common writable-field
 create/PUT/PATCH presence, including the numeric-ID Manufacturer envelope,
 operation-specific generated contracts, matching REST/gRPC semantics,
 PostgreSQL durability, Vue dirty-field handling, and its focused tests. It
 excludes RackType uniqueness, Rack propagation semantics, deletion,
 list/query behavior, alternate nested Manufacturer inputs, every
-tier/consumer, the parent, and any later child. Do not begin or merge another
+tier/consumer, the parent, and any later child. `CW1-V2-02-I6` is the reviewed
+active increment and owns only DeviceRole `parent`, `name`, `slug`, `color`,
+`vm_role`, `description`, and `comments` create/PUT/PATCH presence,
+operation-specific generated contracts, matching REST/gRPC semantics,
+PostgreSQL durability, Vue dirty-field handling, and eight fixed tests. It
+does not close DeviceRole hierarchy, uniqueness, deletion, list/query, full
+CRUD, another resource, a tier/consumer, the parent, or the profile. Do not begin or merge another
 Capability Profile while V0 is red or before `CW1-V6-03`. Once those gates are
 durably closed, follow the next accepted profile in the roadmap and playbook
 rather than this dated snapshot.
