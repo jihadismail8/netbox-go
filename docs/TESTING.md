@@ -151,10 +151,23 @@ so T2/T3 remain unearned; the Vue boundary earns no T4. RackType uniqueness,
 propagation, deletion, list/query behavior, alternate Manufacturer inputs,
 full CRUD, the parent, profile promotion, and every later child remain open.
 
-`CW1-V2-02-I6` is the reviewed active DeviceRole scalar-presence child. Its
-eight fixed domain/application/REST/gRPC/real-PostgreSQL/parity regressions,
-operation-specific generated contracts, Vue adapter/form checks, and exact
-candidate/evidence ladder remain to be executed; no result is pre-recorded.
+`CW1-V2-02-I6` has exact tested candidate
+`dddd7adbda72f5dd760202c4862ce23b17cdf180` at source digest
+`source-v2:sha256:be2168180bfbbb10406772d57e75210d32e5084051c4b765d4cf2954d958e621`
+over 3,050 entries. Its eight named DeviceRole domain, application, REST,
+gRPC, real-PostgreSQL, and parity tests passed, as did the exact affected/race,
+generated-contract, 41-test Vue adapter/form, complete L4, backend/frontend/
+root, candidate-CI, evidence-claim, and pre-acceptance receipt boundaries. The
+project owner accepted only this bounded result at `2026-08-25T08:13:40Z`.
+`Done` becomes effective when the current owner-accepted closeout claim passes
+exact-SHA CI; its excluded receipt then remains. The matrix is limited to
+DeviceRole `parent`, `name`, `slug`, `color`, `vm_role`, `description`, and
+`comments` create/PUT/PATCH presence, numeric-ID parent input, generated
+OpenAPI, shared REST/gRPC semantics, PostgreSQL durability, and Vue dirty-field
+handling. No differential was run, so T2/T3 remain unearned; the Vue boundary
+earns no T4. DeviceRole hierarchy, uniqueness, deletion, alternate parent
+inputs, list/query behavior, full CRUD, the parent, profile promotion, and
+every later child remain open.
 
 ## Owned external gates
 
@@ -293,7 +306,7 @@ and exact change-state outcomes remain to be added and retained.
 | ------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage                       | `make check` retained green on each exact relevant source digest                                                          | Entry source-v2 retained; active-source refresh required |
 | V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests                      | Pass I4's exact claim CI, retain its receipt, obtain owner review, then complete the remaining identity matrix            | I4 evidence claim conditional; parent open               |
-| V2 profile behavior      | Shared 13-resource service, broad tests, accepted IPAddress I1/Site I2/Manufacturer I3/RackRole I4/RackType I5, and reviewed DeviceRole I6 | Implement and retain I6, then trace every remaining invariant, rollback, and external-tier boundary | I1-I5 done; I6 active; parent open |
+| V2 profile behavior      | Shared 13-resource service, broad tests, accepted IPAddress I1/Site I2/Manufacturer I3/RackRole I4/RackType I5, and owner-accepted DeviceRole I6 | Retain I6 closeout, then trace every remaining invariant, rollback, and external-tier boundary | I1-I5 done; I6 done claim conditional; parent open |
 | V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness                                 | Truthful readiness, loss/recovery, real PostgreSQL and deployment artifacts                                               | Implementation/evidence gap                              |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites                            | Complete T2 scenario report, then equivalent T3 report                                                                    | T1; implementation gap                                   |
 | V5 Vue workflow          | Typed adapters and real-browser harness                                                    | Both workflows and every required negative/state case retained green                                                      | T1; implementation gap                                   |
