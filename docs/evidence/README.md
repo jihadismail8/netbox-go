@@ -102,6 +102,16 @@ exact-SHA repository CI, making only bounded I5 `done`. This two-path excluded
 receipt preserves that result without changing source and requires its own
 exact-SHA CI. No retained pinned differential accompanies this bounded
 result, so no T2/T3 claim is made.
+The
+[bounded DeviceRole scalar write-presence result](2026-08-25-core-workflow-v2-device-role-scalar-presence-i6-v0.md)
+passed its exact-name, affected/race, real-PostgreSQL, complete L4,
+generated-contract, Vue, pinned repository, and independent exact-candidate
+CI boundaries on exact revision
+`dddd7adbda72f5dd760202c4862ce23b17cdf180`. Its current two-path,
+source-digest-excluded claim conditionally makes bounded I6 `evidence` only
+after the exact claim revision passes repository CI; its receipt and
+project-owner evidence review then remain. No retained pinned differential
+accompanies this bounded result, so no T2/T3 claim is made.
 The project owner reviewed and retained the entry V0, CORS, bounded token I1,
 bounded token I2, bounded browser-session I3, bounded IPAddress I1, and bounded
 Site I2, Manufacturer I3, RackRole I4, and RackType I5 results.
@@ -112,7 +122,7 @@ repository V0 and recovery-scoped PostgreSQL replay also remain historical in
 the
 [Core Workflow recovery artifact](2026-08-01-core-workflow-v1-v0.md). The
 Profile remains T1 and pre-publication; V1-V6 remain open. `CW1-G00` passed for
-the exact I5 tested source; `CW1-V1-01`, `CW1-V1-02-I1`, `CW1-V1-02-I2`, and
+the exact I6 tested source; `CW1-V1-01`, `CW1-V1-02-I1`, `CW1-V1-02-I2`, and
 `CW1-V1-02-I3` are done. The parent credential/session matrix remains open.
 `CW1-V2-02-I1` has an effective owner-accepted `done` closeout only for
 IPAddress scalar
@@ -140,18 +150,22 @@ scalar create/PUT/PATCH presence. This excluded receipt preserves that exact
 result without changing source and must pass its own exact-SHA CI. I5 promotes
 no compatibility tier, profile state, parent, later child, or traceability
 consumer. The external differential, REST T2, corresponding gRPC T3, browser
-T4, and
-13-resource `CW1-V2-02` parent stay open. I2 and I3 promote no
+T4, and 13-resource `CW1-V2-02` parent stay open.
+`CW1-V2-02-I6` has a green exact tested candidate and a conditional evidence
+transition only for DeviceRole common scalar create/PUT/PATCH presence. Its
+exact claim CI, receipt, and project-owner evidence review remain. I6 promotes
+no compatibility tier, profile state, parent, later child, or traceability
+consumer. I2 and I3 promote no
 compatibility-tier or traceability-consumer
 boundary. Feature work must re-establish V0 after its next owned-source
 change.
 
 | Evidence                 | Required command or boundary                                  | Current state                                                    |
 | ------------------------ | ------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Repository quality       | Revised `make check` including non-mutating backend coverage  | V1-I4 and V2-I1/I2/I3/I4 retained; V2-I5 closeout claim passed      |
+| Repository quality       | Revised `make check` including non-mutating backend coverage  | V1-I4 and V2-I1/I2/I3/I4 retained; V2-I5 done; V2-I6 candidate green, claim CI pending |
 | Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                          |
 | gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                            |
-| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, V1-I4, V2-I1/I2/I3/I4, and bounded V2-I5 passed; V1/V3 remain open |
+| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, V1-I4, V2-I1/I2/I3/I4/I5, and bounded V2-I6 passed; V1/V3 remain open |
 | Standalone deployment    | `make deployment-smoke`                                       | CORS-scoped exact-commit result retained; V3 still open          |
 | Browser workflow         | `make browser-e2e`                                            | Harness present; current result pending                          |
 
