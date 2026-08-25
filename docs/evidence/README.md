@@ -119,6 +119,16 @@ exact-SHA repository CI, making only bounded I6 `done`. This two-path excluded
 receipt preserves that result without changing source and requires its own
 exact-SHA CI. No retained pinned differential accompanies this bounded
 result, so no T2/T3 claim is made.
+The
+[bounded DeviceType scalar write-presence result](2026-08-25-core-workflow-v2-device-type-scalar-presence-i7-v0.md)
+passed its exact-name, affected/race, real-PostgreSQL, complete L4,
+generated-contract, Vue, pinned repository, and independent exact-candidate
+CI boundaries on exact revision
+`e2ad1acc33b84f20f24418d89b3b881b897b7ed3`. Its current two-path,
+source-digest-excluded claim conditionally makes bounded I7 `evidence` only
+after the exact claim revision passes repository CI; its receipt and
+project-owner evidence review then remain. No retained pinned differential
+accompanies this bounded result, so no T2/T3 claim is made.
 The project owner reviewed and retained the entry V0, CORS, bounded token I1,
 bounded token I2, bounded browser-session I3, bounded IPAddress I1, and bounded
 Site I2, Manufacturer I3, RackRole I4, RackType I5, and DeviceRole I6 results.
@@ -165,15 +175,19 @@ exact result without changing source and must pass its own exact-SHA CI. I6
 promotes no compatibility tier, profile state, parent, later child, or
 traceability consumer. I2 and I3 promote no
 compatibility-tier or traceability-consumer
-boundary. Feature work must re-establish V0 after its next owned-source
-change.
+boundary.
+`CW1-V2-02-I7` has a green exact tested candidate and a conditional evidence
+transition only for DeviceType common scalar create/PUT/PATCH presence. Its
+exact claim CI, receipt, and project-owner evidence review remain. I7 promotes
+no compatibility tier, profile state, parent, later child, or traceability
+consumer. Feature work must re-establish V0 after its next owned-source change.
 
 | Evidence                 | Required command or boundary                                  | Current state                                                    |
 | ------------------------ | ------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Repository quality       | Revised `make check` including non-mutating backend coverage  | V1-I4 and V2-I1/I2/I3/I4 retained; V2-I5 done; V2-I6 closeout claim passed |
+| Repository quality       | Revised `make check` including non-mutating backend coverage  | V1-I4 and V2-I1/I2/I3/I4 retained; V2-I5/I6 done; V2-I7 candidate green, claim CI pending |
 | Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                          |
 | gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                            |
-| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, V1-I4, V2-I1/I2/I3/I4/I5, and bounded V2-I6 passed; V1/V3 remain open |
+| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, V1-I4, V2-I1/I2/I3/I4/I5/I6, and bounded V2-I7 passed; V1/V3 remain open |
 | Standalone deployment    | `make deployment-smoke`                                       | CORS-scoped exact-commit result retained; V3 still open          |
 | Browser workflow         | `make browser-e2e`                                            | Harness present; current result pending                          |
 
