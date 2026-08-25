@@ -190,6 +190,27 @@ const DEVICE_TYPE_FIELD_CONTRACTS = {
   },
 };
 
+const INTERFACE_TEMPLATE_FIELD_CONTRACTS = {
+  response: {
+    nullable_fields: ["created", "last_updated"],
+  },
+  create: {
+    required_fields: ["device_type", "name", "type"],
+    nullable_fields: [],
+    blank_fields: ["label", "description"],
+  },
+  replace: {
+    required_fields: ["device_type", "name", "type"],
+    nullable_fields: [],
+    blank_fields: ["label", "description"],
+  },
+  update: {
+    required_fields: [],
+    nullable_fields: [],
+    blank_fields: ["label", "description"],
+  },
+};
+
 function runNode(script, argument) {
   return spawnSync(process.execPath, [path.join(ROOT, script), argument], {
     cwd: ROOT,
@@ -300,6 +321,16 @@ function withDeviceTypeResourceFixture(mutator, callback) {
     DCIM_RELATIVE_PATH,
     "DeviceType",
     DEVICE_TYPE_FIELD_CONTRACTS,
+    mutator,
+    callback,
+  );
+}
+
+function withInterfaceTemplateResourceFixture(mutator, callback) {
+  withResourceContractFixture(
+    DCIM_RELATIVE_PATH,
+    "InterfaceTemplate",
+    INTERFACE_TEMPLATE_FIELD_CONTRACTS,
     mutator,
     callback,
   );
@@ -452,6 +483,31 @@ function assertDeviceTypeProfileRejected(name, mutator, expectedDiagnostic) {
   });
 }
 
+function assertInterfaceTemplateProfileRejected(
+  name,
+  mutator,
+  expectedDiagnostic,
+) {
+  test(name, () => {
+    withInterfaceTemplateResourceFixture(mutator, (profilePath) => {
+      const result = runNode(
+        "scripts/validate_capability_profile.mjs",
+        profilePath,
+      );
+      assert.notEqual(
+        result.status,
+        0,
+        `expected rejection; ${diagnostics(result)}`,
+      );
+      assert.match(
+        diagnostics(result),
+        expectedDiagnostic,
+        "validator must identify the malformed InterfaceTemplate field contract",
+      );
+    });
+  });
+}
+
 function assertOpenAPIRejected(name, mutator, expectedDiagnostic) {
   test(name, () => {
     const spec = JSON.parse(fs.readFileSync(OPENAPI_PATH, "utf8"));
@@ -549,6 +605,18 @@ test("current capability metadata validates", () => {
     DEVICE_TYPE_FIELD_CONTRACTS,
     "current DeviceType presence metadata must match the independently pinned contract",
   );
+  const interfaceTemplate = dcimMetadata.resources.find(
+    (resource) => resource.name === "InterfaceTemplate",
+  );
+  assert.ok(
+    interfaceTemplate,
+    "current metadata must contain InterfaceTemplate",
+  );
+  assert.deepStrictEqual(
+    interfaceTemplate.field_contracts,
+    INTERFACE_TEMPLATE_FIELD_CONTRACTS,
+    "current InterfaceTemplate presence metadata must match the independently pinned contract",
+  );
 
   const result = runNode(
     "scripts/validate_capability_profile.mjs",
@@ -571,7 +639,7 @@ test("DeviceRole scalar-presence traceability delta remains bounded", () => {
       rows: traceability.rows.length,
     },
     {
-      assessment_sets: 10,
+      assessment_sets: 11,
       reference_sets: 19,
       proof_sets: 15,
       applicability_sets: 15,
@@ -580,7 +648,7 @@ test("DeviceRole scalar-presence traceability delta remains bounded", () => {
       row_applicability: 293,
       rows: 293,
     },
-    "I6 and I7 must add only their bounded assessments without changing reviewed row authority counts",
+    "I6, I7, and I8 must add only their bounded assessments without changing reviewed row authority counts",
   );
 
   const expectedRows = [
@@ -649,6 +717,39 @@ test("DeviceType scalar-presence traceability delta remains bounded", () => {
       .length,
     9,
     "DeviceType get/delete, uniqueness, height-transition, and deletion rules remain unresolved-v2",
+  );
+});
+
+test("InterfaceTemplate scalar-presence traceability delta remains bounded", () => {
+  const traceability = JSON.parse(fs.readFileSync(TRACEABILITY_PATH, "utf8"));
+  const expectedRows = [
+    "operation.dcim.interface-template.create",
+    "operation.dcim.interface-template.replace",
+    "operation.dcim.interface-template.update",
+  ];
+  const assessedRows = traceability.rows
+    .filter(
+      (row) =>
+        row.assessment_set === "unresolved-interface-template-scalar-presence",
+    )
+    .map((row) => row.id)
+    .sort();
+  assert.deepStrictEqual(
+    assessedRows,
+    expectedRows,
+    "I8 must repoint exactly the InterfaceTemplate create/replace/update rows",
+  );
+
+  const interfaceTemplateRows = traceability.rows.filter(
+    (row) => row.capability === "dcim.InterfaceTemplate",
+  );
+  assert.equal(interfaceTemplateRows.length, 11);
+  assert.equal(
+    interfaceTemplateRows.filter(
+      (row) => row.assessment_set === "unresolved-v2",
+    ).length,
+    8,
+    "InterfaceTemplate resource/list/get/delete, ownership, uniqueness, instantiation, and non-retroactivity rules remain unresolved-v2",
   );
 });
 
@@ -970,6 +1071,88 @@ assertDeviceTypeProfileRejected(
     deviceType.field_contracts.update.required_fields.push("manufacturer");
   },
   /dcim\.DeviceType: field_contracts\.update\.required_fields must be empty for PATCH/u,
+);
+
+assertInterfaceTemplateProfileRejected(
+  "InterfaceTemplate field contracts are mandatory",
+  (interfaceTemplate) => {
+    delete interfaceTemplate.field_contracts;
+  },
+  /dcim\.InterfaceTemplate: field_contracts must declare operation-specific presence semantics/u,
+);
+
+assertInterfaceTemplateProfileRejected(
+  "InterfaceTemplate field contracts require every operation",
+  (interfaceTemplate) => {
+    delete interfaceTemplate.field_contracts.replace;
+  },
+  /dcim\.InterfaceTemplate: field_contracts must declare exactly response, create, replace, and update/u,
+);
+
+assertInterfaceTemplateProfileRejected(
+  "InterfaceTemplate operation fields reject undeclared fields",
+  (interfaceTemplate) => {
+    interfaceTemplate.field_contracts.create.required_fields.push("poe_mode");
+  },
+  /dcim\.InterfaceTemplate: field_contracts\.create\.required_fields contains undeclared field poe_mode/u,
+);
+
+assertInterfaceTemplateProfileRejected(
+  "InterfaceTemplate nullable fields remain a writable-field subset",
+  (interfaceTemplate) => {
+    interfaceTemplate.field_contracts.replace.nullable_fields.push("display");
+  },
+  /dcim\.InterfaceTemplate: field_contracts\.replace\.nullable_fields contains undeclared field display/u,
+);
+
+assertInterfaceTemplateProfileRejected(
+  "InterfaceTemplate blank fields remain a writable-field subset",
+  (interfaceTemplate) => {
+    interfaceTemplate.field_contracts.update.blank_fields.push("created");
+  },
+  /dcim\.InterfaceTemplate: field_contracts\.update\.blank_fields contains undeclared field created/u,
+);
+
+assertInterfaceTemplateProfileRejected(
+  "InterfaceTemplate blank fields reject relationship identifiers",
+  (interfaceTemplate) => {
+    interfaceTemplate.field_contracts.create.blank_fields.push("device_type");
+  },
+  /dcim\.InterfaceTemplate: field_contracts\.create\.blank_fields contains non-string field device_type/u,
+);
+
+assertInterfaceTemplateProfileRejected(
+  "InterfaceTemplate blank fields reject booleans",
+  (interfaceTemplate) => {
+    interfaceTemplate.field_contracts.replace.blank_fields.push("enabled");
+  },
+  /dcim\.InterfaceTemplate: field_contracts\.replace\.blank_fields contains non-string field enabled/u,
+);
+
+assertInterfaceTemplateProfileRejected(
+  "InterfaceTemplate operation fields reject duplicates",
+  (interfaceTemplate) => {
+    interfaceTemplate.field_contracts.create.blank_fields.push("label");
+  },
+  /dcim\.InterfaceTemplate: field_contracts\.create\.blank_fields contains duplicate field label/u,
+);
+
+assertInterfaceTemplateProfileRejected(
+  "InterfaceTemplate response and write contracts cannot be conflated",
+  (interfaceTemplate) => {
+    interfaceTemplate.field_contracts.response = structuredClone(
+      interfaceTemplate.field_contracts.create,
+    );
+  },
+  /dcim\.InterfaceTemplate: field_contracts\.response must declare exactly nullable_fields/u,
+);
+
+assertInterfaceTemplateProfileRejected(
+  "InterfaceTemplate PATCH contracts cannot require fields",
+  (interfaceTemplate) => {
+    interfaceTemplate.field_contracts.update.required_fields.push("name");
+  },
+  /dcim\.InterfaceTemplate: field_contracts\.update\.required_fields must be empty for PATCH/u,
 );
 
 assertRackTypeProfileRejected(
@@ -1841,6 +2024,169 @@ assertOpenAPIRejected(
     spec.components.schemas.DeviceType.properties.u_height.format = "int64";
   },
   /DeviceType\.u_height base type must be number/u,
+);
+
+for (const [name, pathName, method, expectedSchema] of [
+  ["POST", "/api/dcim/interface-templates/", "post", "InterfaceTemplateCreate"],
+  [
+    "PUT",
+    "/api/dcim/interface-templates/{id}/",
+    "put",
+    "InterfaceTemplateReplace",
+  ],
+  [
+    "PATCH",
+    "/api/dcim/interface-templates/{id}/",
+    "patch",
+    "InterfaceTemplateUpdate",
+  ],
+]) {
+  assertOpenAPIRejected(
+    `OpenAPI validation rejects a stale InterfaceTemplate ${name} request reference`,
+    (spec) => {
+      spec.paths[pathName][method].requestBody.content[
+        "application/json"
+      ].schema = { $ref: "#/components/schemas/InterfaceTemplateWrite" };
+    },
+    new RegExp(
+      escapeRegExp(
+        `${name} ${pathName} must reference #/components/schemas/${expectedSchema}`,
+      ),
+      "u",
+    ),
+  );
+}
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects a stale shared InterfaceTemplate write schema",
+  (spec) => {
+    spec.components.schemas.InterfaceTemplateWrite = structuredClone(
+      spec.components.schemas.InterfaceTemplateCreate ??
+        spec.components.schemas.InterfaceTemplateWrite,
+    );
+  },
+  /InterfaceTemplate must not retain a conflated shared write schema/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale InterfaceTemplate create requiredness",
+  (spec) => {
+    spec.components.schemas.InterfaceTemplateCreate.required = [];
+  },
+  /InterfaceTemplateCreate required fields must match field_contracts\.create/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale InterfaceTemplate replace requiredness",
+  (spec) => {
+    spec.components.schemas.InterfaceTemplateReplace.required.push("label");
+  },
+  /InterfaceTemplateReplace required fields must match field_contracts\.replace/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale InterfaceTemplate update requiredness",
+  (spec) => {
+    spec.components.schemas.InterfaceTemplateUpdate.required = ["name"];
+  },
+  /InterfaceTemplateUpdate required fields must match field_contracts\.update/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale InterfaceTemplate request nullability",
+  (spec) => {
+    spec.components.schemas.InterfaceTemplateUpdate.properties.label.type = [
+      "string",
+      "null",
+    ];
+  },
+  /InterfaceTemplateUpdate\.label nullability must match field_contracts\.update/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale InterfaceTemplate request blankability",
+  (spec) => {
+    spec.components.schemas.InterfaceTemplateUpdate.properties.description.minLength = 1;
+  },
+  /InterfaceTemplateUpdate\.description blankability must match field_contracts\.update/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale InterfaceTemplate DeviceType identifier types",
+  (spec) => {
+    const deviceType =
+      spec.components.schemas.InterfaceTemplateCreate.properties.device_type;
+    deviceType.type = "string";
+    delete deviceType.format;
+  },
+  /InterfaceTemplateCreate\.device_type base type must be integer/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale InterfaceTemplate choice request shapes",
+  (spec) => {
+    spec.components.schemas.InterfaceTemplateReplace.properties.type.type =
+      "object";
+  },
+  /InterfaceTemplateReplace\.type base type must be string/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale InterfaceTemplate boolean scalar types",
+  (spec) => {
+    spec.components.schemas.InterfaceTemplateUpdate.properties.enabled.type =
+      "string";
+  },
+  /InterfaceTemplateUpdate\.enabled base type must be boolean/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects nullable InterfaceTemplate DeviceType responses",
+  (spec) => {
+    spec.components.schemas.InterfaceTemplate.properties.device_type.oneOf.push(
+      { type: "null" },
+    );
+  },
+  /InterfaceTemplate\.device_type response nullability must match field_contracts\.response/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale InterfaceTemplate DeviceType response references",
+  (spec) => {
+    spec.components.schemas.InterfaceTemplate.properties.device_type.oneOf[0].$ref =
+      "#/components/schemas/InterfaceTemplate";
+  },
+  /InterfaceTemplate\.device_type must reference #\/components\/schemas\/ObjectReference/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale InterfaceTemplate type response envelopes",
+  (spec) => {
+    spec.components.schemas.InterfaceTemplate.properties.type.required = [
+      "value",
+    ];
+  },
+  /InterfaceTemplate\.type choice response must require value and label/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale InterfaceTemplate response timestamp nullability",
+  (spec) => {
+    spec.components.schemas.InterfaceTemplate.properties.created.type =
+      "string";
+  },
+  /InterfaceTemplate\.created response nullability must match field_contracts\.response/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects undeclared InterfaceTemplate response nullability",
+  (spec) => {
+    spec.components.schemas.InterfaceTemplate.properties.description.type = [
+      "string",
+      "null",
+    ];
+  },
+  /InterfaceTemplate\.description response nullability must match field_contracts\.response/u,
 );
 
 for (const [name, pathName, method, expectedSchema] of [

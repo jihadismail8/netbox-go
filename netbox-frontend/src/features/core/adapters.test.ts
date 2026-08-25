@@ -9,6 +9,8 @@ import {
   type DeviceRoleForm,
   type DeviceTypeDTO,
   type DeviceTypeForm,
+  type InterfaceTemplateDTO,
+  type InterfaceTemplateForm,
   type IPAddressDTO,
   type IPAddressForm,
   type ManufacturerDTO,
@@ -792,6 +794,142 @@ describe('typed core resource adapters', () => {
         adapter.mutationFromForm(withFormField(hydrated, field, '') as DeviceTypeForm, true),
       ).toEqual({ [field]: '' })
     }
+  })
+
+  it('preserves InterfaceTemplate create omissions, defaults, IDs, and concrete scalar states', () => {
+    const adapter = getCoreResourceAdapter('interfacetemplate')
+
+    expect(adapter.mutationFromForm({}, false)).toEqual({})
+    expect(adapter.mutationFromForm(adapter.emptyForm(), false)).toEqual({
+      enabled: true,
+      mgmt_only: false,
+    })
+    expect(
+      adapter.mutationFromForm(
+        {
+          device_type: deviceType,
+          name: 'xe-0/0/0',
+          label: '',
+          type: '10gbase-x-sfpp',
+          enabled: false,
+          mgmt_only: false,
+          description: '',
+        },
+        false,
+      ),
+    ).toEqual({
+      device_type: 6,
+      name: 'xe-0/0/0',
+      label: '',
+      type: '10gbase-x-sfpp',
+      enabled: false,
+      mgmt_only: false,
+      description: '',
+    })
+    expect(
+      adapter.mutationFromForm({ device_type: 6, name: 'mgmt0', type: '1000base-t' }, false),
+    ).toEqual({ device_type: 6, name: 'mgmt0', type: '1000base-t' })
+
+    const formWithResponseFields = {
+      device_type: deviceType,
+      name: 'Owned fields only',
+      id: 99,
+      url: '/api/dcim/interface-templates/99/',
+      display: 'Must not leak',
+      created: null,
+      last_updated: null,
+    } as InterfaceTemplateForm
+    expect(adapter.mutationFromForm(formWithResponseFields, false)).toEqual({
+      device_type: 6,
+      name: 'Owned fields only',
+    })
+  })
+
+  it('keeps a private normalized InterfaceTemplate baseline and emits only dirty PATCH fields', () => {
+    const adapter = getCoreResourceAdapter('interfacetemplate')
+    const dto: InterfaceTemplateDTO = {
+      id: 15,
+      url: '/api/dcim/interface-templates/15/',
+      display: 'xe-0/0/0',
+      created: null,
+      last_updated: null,
+      device_type: deviceType,
+      name: 'xe-0/0/0',
+      label: 'Uplink',
+      type: { value: '10gbase-x-sfpp', label: 'SFP+ (10GE)' },
+      enabled: true,
+      mgmt_only: true,
+      description: 'Provider uplink',
+    }
+    const hydrated = adapter.formFromDTO(dto)
+
+    expect(Object.fromEntries(Object.entries(hydrated))).toEqual({
+      device_type: deviceType,
+      name: 'xe-0/0/0',
+      label: 'Uplink',
+      type: '10gbase-x-sfpp',
+      enabled: true,
+      mgmt_only: true,
+      description: 'Provider uplink',
+    })
+    expect(adapter.mutationFromForm({ ...hydrated }, true)).toEqual({})
+    expect(
+      adapter.mutationFromForm(
+        withFormField(hydrated, 'device_type', { ...deviceType }) as InterfaceTemplateForm,
+        true,
+      ),
+    ).toEqual({})
+
+    const otherDeviceType: CoreReference = {
+      id: 12,
+      url: '/api/dcim/device-types/12/',
+      display: 'Acme Core',
+    }
+    expect(
+      adapter.mutationFromForm(
+        withFormField(hydrated, 'device_type', otherDeviceType) as InterfaceTemplateForm,
+        true,
+      ),
+    ).toEqual({ device_type: 12 })
+    expect(
+      adapter.mutationFromForm(
+        withFormField(hydrated, 'device_type', null) as InterfaceTemplateForm,
+        true,
+      ),
+    ).toEqual({ device_type: null })
+    expect(
+      adapter.mutationFromForm(
+        withFormField(hydrated, 'name', 'xe-0/0/1') as InterfaceTemplateForm,
+        true,
+      ),
+    ).toEqual({ name: 'xe-0/0/1' })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'label', '') as InterfaceTemplateForm, true),
+    ).toEqual({ label: '' })
+    expect(
+      adapter.mutationFromForm(
+        withFormField(hydrated, 'type', '1000base-t') as InterfaceTemplateForm,
+        true,
+      ),
+    ).toEqual({ type: '1000base-t' })
+    expect(
+      adapter.mutationFromForm(
+        withFormField(hydrated, 'enabled', false) as InterfaceTemplateForm,
+        true,
+      ),
+    ).toEqual({ enabled: false })
+    expect(
+      adapter.mutationFromForm(
+        withFormField(hydrated, 'mgmt_only', false) as InterfaceTemplateForm,
+        true,
+      ),
+    ).toEqual({ mgmt_only: false })
+    expect(
+      adapter.mutationFromForm(
+        withFormField(hydrated, 'description', '') as InterfaceTemplateForm,
+        true,
+      ),
+    ).toEqual({ description: '' })
   })
 
   it('omits unchanged IPAddress scalars without changing relationship serialization', () => {

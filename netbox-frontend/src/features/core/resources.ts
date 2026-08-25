@@ -151,7 +151,9 @@ export interface DeviceTypeDTO extends Omit<CoreResourceBase, 'created' | 'last_
   interface_template_count: number
 }
 
-export interface InterfaceTemplateDTO extends CoreResourceBase {
+export interface InterfaceTemplateDTO extends Omit<CoreResourceBase, 'created' | 'last_updated'> {
+  created: string | null
+  last_updated: string | null
   device_type: CoreReference
   name: string
   label: string

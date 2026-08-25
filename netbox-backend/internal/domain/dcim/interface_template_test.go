@@ -1,6 +1,7 @@
 package dcim_test
 
 import (
+	"strings"
 	"testing"
 	"time"
 
@@ -54,6 +55,71 @@ func TestInterfaceTemplateCannotMoveBetweenDeviceTypes(t *testing.T) {
 	}}, shared.ViolationsOf(err))
 	assert.Equal(t, original.ID(), template.DeviceType().ID())
 	assert.Equal(t, now, template.LastUpdated())
+}
+
+func TestInterfaceTemplateScalarNormalizationContract(t *testing.T) {
+	now := shared.NewTimestamp(time.Date(2026, time.August, 25, 8, 0, 0, 0, time.UTC))
+	later := shared.NewTimestamp(time.Date(2026, time.August, 25, 9, 0, 0, 0, time.UTC))
+	reference := interfaceTemplateDeviceTypeReference(t, 73, "Router", "router")
+
+	template, err := dcim.NewInterfaceTemplate(dcim.InterfaceTemplateValues{
+		DeviceType:  reference,
+		Name:        "  Ethernet1  ",
+		Label:       "   ",
+		Type:        "bridge",
+		Enabled:     false,
+		MgmtOnly:    false,
+		Description: "  uplink template  ",
+	}, now)
+	require.NoError(t, err)
+	assert.Equal(t, "Ethernet1", template.Name())
+	assert.Empty(t, template.Label())
+	assert.Equal(t, "uplink template", template.Description())
+	assert.False(t, template.Enabled())
+	assert.False(t, template.MgmtOnly())
+
+	unicodeBoundary, err := dcim.NewInterfaceTemplate(dcim.InterfaceTemplateValues{
+		DeviceType:  reference,
+		Name:        strings.Repeat("界", dcim.InterfaceTemplateNameMaxLength),
+		Label:       strings.Repeat("界", dcim.InterfaceTemplateLabelMaxLength),
+		Type:        "bridge",
+		Description: strings.Repeat("界", dcim.InterfaceTemplateDescriptionMaxLength),
+	}, now)
+	require.NoError(t, err)
+	assert.Len(t, []rune(unicodeBoundary.Name()), dcim.InterfaceTemplateNameMaxLength)
+
+	_, err = dcim.NewInterfaceTemplate(dcim.InterfaceTemplateValues{
+		DeviceType: reference, Name: "Ethernet2", Type: " bridge ",
+	}, now)
+	require.Error(t, err)
+	assert.Equal(t, []shared.FieldViolation{{
+		Field: "type", Reason: "invalid_choice", Description: "Select a valid choice.",
+	}}, shared.ViolationsOf(err))
+
+	before := template.State()
+	invalidReference := dcim.DeviceTypeReference{}
+	tooLongName := strings.Repeat("n", dcim.InterfaceTemplateNameMaxLength+1)
+	tooLongLabel := strings.Repeat("l", dcim.InterfaceTemplateLabelMaxLength+1)
+	invalidType := " bridge "
+	tooLongDescription := strings.Repeat("d", dcim.InterfaceTemplateDescriptionMaxLength+1)
+	err = template.ApplyPatch(dcim.InterfaceTemplatePatch{
+		DeviceType:  &invalidReference,
+		Name:        &tooLongName,
+		Label:       &tooLongLabel,
+		Type:        &invalidType,
+		Description: &tooLongDescription,
+	}, later)
+	require.Error(t, err)
+	violations := shared.ViolationsOf(err)
+	require.Len(t, violations, 5)
+	assert.Equal(t, []string{"device_type", "name", "label", "type", "description"}, []string{
+		violations[0].Field,
+		violations[1].Field,
+		violations[2].Field,
+		violations[3].Field,
+		violations[4].Field,
+	})
+	assert.Equal(t, before, template.State(), "a rejected patch must be atomic")
 }
 
 func interfaceTemplateDeviceTypeReference(

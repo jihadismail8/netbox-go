@@ -20,6 +20,7 @@ import {
   type InterfaceForm,
   type InterfaceTemplateDTO,
   type InterfaceTemplateForm,
+  type InterfaceTemplateMutation,
   type IPAddressDTO,
   type IPAddressForm,
   type IPAddressMutation,
@@ -514,27 +515,68 @@ const deviceTypeAdapter: CoreResourceAdapter<'devicetype'> = {
   }),
 }
 
+const interfaceTemplateOriginalMutation = Symbol('interface-template-original-mutation')
+
+const interfaceTemplateMutationFields = [
+  'device_type',
+  'name',
+  'label',
+  'type',
+  'enabled',
+  'mgmt_only',
+  'description',
+] as const satisfies readonly (keyof InterfaceTemplateMutation)[]
+
+type TrackedInterfaceTemplateForm = InterfaceTemplateForm & {
+  [interfaceTemplateOriginalMutation]?: InterfaceTemplateMutation
+}
+
+function interfaceTemplateMutation(form: InterfaceTemplateForm): InterfaceTemplateMutation {
+  const mutation: InterfaceTemplateMutation = {}
+  if (hasFormField(form, 'device_type')) {
+    mutation.device_type = relationID(form.device_type)
+  }
+  if (hasFormField(form, 'name')) mutation.name = form.name
+  if (hasFormField(form, 'label')) mutation.label = form.label
+  if (hasFormField(form, 'type')) mutation.type = form.type
+  if (hasFormField(form, 'enabled')) mutation.enabled = form.enabled
+  if (hasFormField(form, 'mgmt_only')) mutation.mgmt_only = form.mgmt_only
+  if (hasFormField(form, 'description')) mutation.description = form.description
+  return mutation
+}
+
+function interfaceTemplateMutationDelta(
+  current: InterfaceTemplateMutation,
+  original: InterfaceTemplateMutation,
+): InterfaceTemplateMutation {
+  const delta = { ...current }
+  for (const field of interfaceTemplateMutationFields) {
+    if (Object.is(current[field], original[field])) Reflect.deleteProperty(delta, field)
+  }
+  return delta
+}
+
 const interfaceTemplateAdapter: CoreResourceAdapter<'interfacetemplate'> = {
   resource: 'interfacetemplate',
   emptyForm: () => ({ enabled: true, mgmt_only: false }),
-  formFromDTO: (dto: InterfaceTemplateDTO): InterfaceTemplateForm => ({
-    device_type: dto.device_type,
-    name: dto.name,
-    label: dto.label,
-    type: choiceValue(dto.type),
-    enabled: dto.enabled,
-    mgmt_only: dto.mgmt_only,
-    description: dto.description,
-  }),
-  mutationFromForm: (form, editing) => ({
-    ...(!editing ? { device_type: relationID(form.device_type) } : {}),
-    name: form.name,
-    label: form.label,
-    type: form.type,
-    enabled: form.enabled,
-    mgmt_only: form.mgmt_only,
-    description: form.description,
-  }),
+  formFromDTO: (dto: InterfaceTemplateDTO): InterfaceTemplateForm => {
+    const form: TrackedInterfaceTemplateForm = {
+      device_type: dto.device_type,
+      name: dto.name,
+      label: dto.label,
+      type: choiceValue(dto.type),
+      enabled: dto.enabled,
+      mgmt_only: dto.mgmt_only,
+      description: dto.description,
+    }
+    form[interfaceTemplateOriginalMutation] = interfaceTemplateMutation(form)
+    return form
+  },
+  mutationFromForm: (form, editing) => {
+    const mutation = interfaceTemplateMutation(form)
+    const original = (form as TrackedInterfaceTemplateForm)[interfaceTemplateOriginalMutation]
+    return editing && original ? interfaceTemplateMutationDelta(mutation, original) : mutation
+  },
   filtersFromState: (state) => ({
     device_type_id: state.device_type_id,
     name: state.name,

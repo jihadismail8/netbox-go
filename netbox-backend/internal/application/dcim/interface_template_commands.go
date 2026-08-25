@@ -1,6 +1,8 @@
 package dcim
 
 import (
+	"sort"
+
 	"netbox-go/internal/domain/shared"
 )
 
@@ -63,13 +65,9 @@ func (command CreateInterfaceTemplateCommand) values() (interfaceTemplateCommand
 		})
 	}
 	if len(violations) > 0 {
-		return interfaceTemplateCommandValues{}, shared.NewValidationError(violations...)
+		return values, newInterfaceTemplateValidationError(violations)
 	}
 	return values, nil
-}
-
-func (command ReplaceInterfaceTemplateCommand) values() (interfaceTemplateCommandValues, error) {
-	return command.CreateInterfaceTemplateCommand.values()
 }
 
 type interfaceTemplateCommandPatch struct {
@@ -89,15 +87,43 @@ func (patch interfaceTemplateCommandPatch) empty() bool {
 }
 
 func (command UpdateInterfaceTemplateCommand) patch() (interfaceTemplateCommandPatch, error) {
+	return buildInterfaceTemplatePatch(
+		command.DeviceType, command.Name, command.Label, command.Type,
+		command.Enabled, command.MgmtOnly, command.Description, false,
+	)
+}
+
+func (command ReplaceInterfaceTemplateCommand) patch() (interfaceTemplateCommandPatch, error) {
+	return buildInterfaceTemplatePatch(
+		command.DeviceType, command.Name, command.Label, command.Type,
+		command.Enabled, command.MgmtOnly, command.Description, true,
+	)
+}
+
+func buildInterfaceTemplatePatch(
+	deviceType Field[shared.ID],
+	name Field[string],
+	label Field[string],
+	interfaceType Field[string],
+	enabled Field[bool],
+	mgmtOnly Field[bool],
+	description Field[string],
+	replace bool,
+) (interfaceTemplateCommandPatch, error) {
 	var violations []shared.FieldViolation
+	if replace {
+		requireInterfaceTemplateField(&violations, "device_type", deviceType)
+		requireInterfaceTemplateField(&violations, "name", name)
+		requireInterfaceTemplateField(&violations, "type", interfaceType)
+	}
 	patch := interfaceTemplateCommandPatch{
-		deviceTypeID:  patchFieldValue(&violations, "device_type", command.DeviceType),
-		name:          patchValue(&violations, "name", command.Name),
-		label:         patchValue(&violations, "label", command.Label),
-		interfaceType: patchValue(&violations, "type", command.Type),
-		enabled:       patchFieldValue(&violations, "enabled", command.Enabled),
-		mgmtOnly:      patchFieldValue(&violations, "mgmt_only", command.MgmtOnly),
-		description:   patchValue(&violations, "description", command.Description),
+		deviceTypeID:  patchFieldValue(&violations, "device_type", deviceType),
+		name:          patchValue(&violations, "name", name),
+		label:         patchValue(&violations, "label", label),
+		interfaceType: patchValue(&violations, "type", interfaceType),
+		enabled:       patchFieldValue(&violations, "enabled", enabled),
+		mgmtOnly:      patchFieldValue(&violations, "mgmt_only", mgmtOnly),
+		description:   patchValue(&violations, "description", description),
 	}
 	if patch.deviceTypeID != nil && !patch.deviceTypeID.IsValid() {
 		violations = append(violations, shared.FieldViolation{
@@ -105,13 +131,74 @@ func (command UpdateInterfaceTemplateCommand) patch() (interfaceTemplateCommandP
 		})
 	}
 	if len(violations) > 0 {
-		return interfaceTemplateCommandPatch{}, shared.NewValidationError(violations...)
+		return patch, newInterfaceTemplateValidationError(violations)
 	}
 	if patch.empty() {
-		return interfaceTemplateCommandPatch{}, shared.NewValidationError(shared.FieldViolation{
+		return patch, newInterfaceTemplateValidationError([]shared.FieldViolation{{
 			Field: "update_mask", Reason: "required",
 			Description: "At least one writable field must be supplied.",
-		})
+		}})
 	}
 	return patch, nil
+}
+
+func requireInterfaceTemplateField[T any](
+	violations *[]shared.FieldViolation,
+	name string,
+	field Field[T],
+) {
+	if field.State() != FieldOmitted {
+		return
+	}
+	*violations = append(*violations, shared.FieldViolation{
+		Field: name, Reason: "required", Description: "This field is required.",
+	})
+}
+
+var interfaceTemplateValidationFieldOrder = map[string]int{
+	"device_type": 0, "name": 1, "label": 2, "type": 3,
+	"enabled": 4, "mgmt_only": 5, "description": 6, "update_mask": 7,
+}
+
+func newInterfaceTemplateValidationError(violations []shared.FieldViolation) error {
+	ordered := append([]shared.FieldViolation(nil), violations...)
+	sort.SliceStable(ordered, func(left, right int) bool {
+		leftOrder, leftKnown := interfaceTemplateValidationFieldOrder[ordered[left].Field]
+		rightOrder, rightKnown := interfaceTemplateValidationFieldOrder[ordered[right].Field]
+		switch {
+		case leftKnown && rightKnown:
+			return leftOrder < rightOrder
+		case leftKnown:
+			return true
+		case rightKnown:
+			return false
+		default:
+			return false
+		}
+	})
+	return shared.NewValidationError(ordered...)
+}
+
+func mergeInterfaceTemplateMutationErrors(errs ...error) error {
+	for _, err := range errs {
+		if err != nil && !shared.HasReason(err, shared.ErrorReasonValidation) {
+			return err
+		}
+	}
+
+	seenFields := make(map[string]struct{})
+	var merged []shared.FieldViolation
+	for _, err := range errs {
+		for _, violation := range shared.ViolationsOf(err) {
+			if _, duplicate := seenFields[violation.Field]; duplicate {
+				continue
+			}
+			seenFields[violation.Field] = struct{}{}
+			merged = append(merged, violation)
+		}
+	}
+	if len(merged) > 0 {
+		return newInterfaceTemplateValidationError(merged)
+	}
+	return nil
 }

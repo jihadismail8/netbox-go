@@ -78,9 +78,10 @@ func TestInterfaceTemplatePUTResetsDefaultsAndPATCHPreservesPresence(t *testing.
 	)
 	require.NoError(t, err)
 	assert.Equal(t, "Ethernet2", template.Name())
-	assert.True(t, template.Enabled(), "omitted PUT fields reset to their defaults")
-	assert.False(t, template.MgmtOnly())
-	assert.Empty(t, template.Description())
+	assert.Empty(t, template.Label())
+	assert.False(t, template.Enabled(), "omitted PUT fields must be preserved")
+	assert.True(t, template.MgmtOnly())
+	assert.Equal(t, "Old description", template.Description())
 	assert.Len(t, recorder.changes, 3)
 }
 

@@ -1027,7 +1027,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/InterfaceTemplateWrite"
+                "$ref": "#/components/schemas/InterfaceTemplateCreate"
               }
             }
           }
@@ -1097,7 +1097,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/InterfaceTemplateWrite"
+                "$ref": "#/components/schemas/InterfaceTemplateReplace"
               }
             }
           }
@@ -1136,7 +1136,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/InterfaceTemplateWrite"
+                "$ref": "#/components/schemas/InterfaceTemplateUpdate"
               }
             }
           }
@@ -4371,23 +4371,14 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/ObjectReference"
-              },
-              {
-                "type": "null"
               }
             ]
           },
           "name": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "label": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "type": {
             "type": "object",
@@ -4412,10 +4403,7 @@
             "type": "boolean"
           },
           "description": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "id": {
             "type": "integer",
@@ -4426,10 +4414,7 @@
             "format": "uri"
           },
           "display": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "created": {
             "type": [
@@ -4444,6 +4429,41 @@
               "null"
             ],
             "format": "date-time"
+          }
+        }
+      },
+      "InterfaceTemplateCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "device_type",
+          "name",
+          "type"
+        ],
+        "properties": {
+          "device_type": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "mgmt_only": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string"
           }
         }
       },
@@ -4481,31 +4501,29 @@
           }
         }
       },
-      "InterfaceTemplateWrite": {
+      "InterfaceTemplateReplace": {
         "type": "object",
         "additionalProperties": false,
+        "required": [
+          "device_type",
+          "name",
+          "type"
+        ],
         "properties": {
           "device_type": {
-            "type": [
-              "integer",
-              "null"
-            ],
+            "type": "integer",
             "format": "int64"
           },
           "name": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "minLength": 1
           },
           "label": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "type": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "enabled": {
             "type": "boolean"
@@ -4514,10 +4532,37 @@
             "type": "boolean"
           },
           "description": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
+          }
+        }
+      },
+      "InterfaceTemplateUpdate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "device_type": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "mgmt_only": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string"
           }
         }
       },

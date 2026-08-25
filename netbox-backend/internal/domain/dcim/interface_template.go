@@ -262,6 +262,35 @@ func (template *InterfaceTemplate) ApplyPatch(
 			Description: "At least one writable field must be supplied.",
 		})
 	}
+	if err := template.ValidatePatch(patch); err != nil {
+		return err
+	}
+	return template.Replace(template.valuesWithPatch(patch), now)
+}
+
+// ValidatePatch previews a non-mutating replacement. Application services use
+// it to merge command, relationship, and aggregate violations before any
+// repository mutation. An empty preview is valid; the public ApplyPatch entry
+// point owns the update-mask requirement.
+func (template *InterfaceTemplate) ValidatePatch(patch InterfaceTemplatePatch) error {
+	if template == nil {
+		return shared.NewError(shared.ErrorReasonInternal, "Cannot validate a nil InterfaceTemplate.")
+	}
+
+	var violations []shared.FieldViolation
+	if patch.DeviceType != nil && template.deviceType.Valid() && patch.DeviceType.Valid() &&
+		template.deviceType.ID() != patch.DeviceType.ID() {
+		violations = append(violations, shared.ViolationsOf(immutableInterfaceTemplateDeviceType())...)
+	}
+	_, valueViolations := validateInterfaceTemplateValues(template.valuesWithPatch(patch))
+	violations = append(violations, valueViolations...)
+	if len(violations) > 0 {
+		return shared.NewValidationError(violations...)
+	}
+	return nil
+}
+
+func (template InterfaceTemplate) valuesWithPatch(patch InterfaceTemplatePatch) InterfaceTemplateValues {
 	values := template.Values()
 	if patch.DeviceType != nil {
 		values.DeviceType = *patch.DeviceType
@@ -276,7 +305,7 @@ func (template *InterfaceTemplate) ApplyPatch(
 		values.MgmtOnly = *patch.MgmtOnly
 	}
 	setString(&values.Description, patch.Description)
-	return template.Replace(values, now)
+	return values
 }
 
 func immutableInterfaceTemplateDeviceType() error {
@@ -352,15 +381,15 @@ func validateInterfaceTemplateValues(
 	}
 	validateRequiredLength(&violations, "name", values.Name, InterfaceTemplateNameMaxLength)
 	validateOptionalLength(&violations, "label", values.Label, InterfaceTemplateLabelMaxLength)
-	validateOptionalLength(
-		&violations, "description", values.Description, InterfaceTemplateDescriptionMaxLength,
-	)
 	interfaceType, validType := ParseInterfaceType(values.Type)
 	if !validType {
 		violations = append(violations, shared.FieldViolation{
 			Field: "type", Reason: "invalid_choice", Description: "Select a valid choice.",
 		})
 	}
+	validateOptionalLength(
+		&violations, "description", values.Description, InterfaceTemplateDescriptionMaxLength,
+	)
 	return normalizedInterfaceTemplateValues{
 		deviceType: values.DeviceType, name: values.Name, label: values.Label,
 		interfaceType: interfaceType, enabled: values.Enabled, mgmtOnly: values.MgmtOnly,

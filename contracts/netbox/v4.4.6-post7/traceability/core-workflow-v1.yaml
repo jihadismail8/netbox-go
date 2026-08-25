@@ -3213,6 +3213,12 @@
       "status": "unresolved",
       "reason": "Operation-specific DeviceType metadata and the bounded implementation candidate now enforce manufacturer, model, slug, part number, height, utilization exclusion, full-depth, airflow, description, and comments create/PUT/PATCH presence, defaults, and validation across typed behavior, REST/gRPC, PostgreSQL, generated OpenAPI, and Vue. The pinned differential oracle, retained evidence, project-owner review, remaining DeviceType uniqueness, height-transition, deletion, cascade, list/query, and full CRUD behavior, 13-resource parent, and higher tiers remain pending.",
       "resolution_goal": "CW1-V2-02"
+    },
+    {
+      "id": "unresolved-interface-template-scalar-presence",
+      "status": "unresolved",
+      "reason": "Operation-specific InterfaceTemplate metadata and the bounded implementation candidate now enforce device type, name, label, interface type, enabled, management-only, and description create/PUT/PATCH presence, defaults, and validation across typed behavior, REST/gRPC, PostgreSQL, generated OpenAPI, and Vue. The pinned differential oracle, retained evidence, project-owner review, remaining InterfaceTemplate ownership, uniqueness, instantiation, non-retroactivity, bridge, deletion, list/query, and full CRUD behavior, 13-resource parent, and higher tiers remain pending.",
+      "resolution_goal": "CW1-V2-02"
     }
   ],
   "verification_sets": [
@@ -5103,7 +5109,7 @@
       "capability": "dcim.InterfaceTemplate",
       "operation": "create",
       "reference_set": "dcim.InterfaceTemplate",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-interface-template-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {
@@ -5143,7 +5149,7 @@
       "capability": "dcim.InterfaceTemplate",
       "operation": "replace",
       "reference_set": "dcim.InterfaceTemplate",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-interface-template-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {
@@ -5153,7 +5159,7 @@
       "capability": "dcim.InterfaceTemplate",
       "operation": "update",
       "reference_set": "dcim.InterfaceTemplate",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-interface-template-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {

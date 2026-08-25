@@ -4,11 +4,14 @@ import { describe, expect, expectTypeOf, it } from 'vitest'
 import DynamicField from '@/components/form/DynamicField.vue'
 import DynamicForm from '@/components/form/DynamicForm.vue'
 import { getCoreResourceAdapter } from '@/features/core/adapters'
+import { INTERFACE_TYPE_CHOICES } from '@/features/dcim/interface-types'
 import type {
   DeviceRoleDTO,
   DeviceRoleForm,
   DeviceTypeDTO,
   DeviceTypeForm,
+  InterfaceTemplateDTO,
+  InterfaceTemplateForm,
   IPAddressDTO,
   IPAddressForm,
   ManufacturerDTO,
@@ -598,6 +601,110 @@ describe('DeviceType core profile form contract', () => {
 
     const form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as DeviceTypeForm
     expect(adapter.mutationFromForm(form, true)).toEqual({ airflow: null })
+  })
+})
+
+describe('InterfaceTemplate core profile form contract', () => {
+  it('pins owned fields, required inputs, immutable ownership, defaults, and type choices', () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'interfacetemplate')!
+    const fields = new Map(config.fields.map((field) => [field.key, field]))
+
+    expect(config.writableFields).toEqual([
+      'device_type',
+      'name',
+      'label',
+      'type',
+      'enabled',
+      'mgmt_only',
+      'description',
+    ])
+    expect(fields.get('device_type')).toEqual(
+      expect.objectContaining({
+        required: true,
+        immutableOnEdit: true,
+        type: 'api-select',
+        relationResource: 'devicetype',
+      }),
+    )
+    expect(fields.get('name')?.required).toBe(true)
+    expect(fields.get('type')).toEqual(expect.objectContaining({ required: true }))
+    expect(fields.get('type')?.options).toEqual(INTERFACE_TYPE_CHOICES)
+    expect(fields.get('type')?.options).toHaveLength(206)
+    expect(fields.get('enabled')).toEqual(expect.objectContaining({ default: true }))
+    expect(fields.get('mgmt_only')).toEqual(expect.objectContaining({ default: false }))
+    for (const optional of ['label', 'enabled', 'mgmt_only', 'description']) {
+      expect(fields.get(optional), optional).toBeDefined()
+      expect(fields.get(optional)?.required, optional).not.toBe(true)
+    }
+  })
+
+  it('routes field-scoped REST validation to the matching InterfaceTemplate field', () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'interfacetemplate')!
+    const wrapper = mount(DynamicForm, {
+      props: {
+        fields: config.fields.filter((field) => ['name', 'type'].includes(field.key)),
+        modelValue: { name: '', type: '10gbase-x-sfpp' },
+        errors: {
+          name: ['This field may not be blank.'],
+        },
+      },
+    })
+
+    const name = wrapper
+      .findAllComponents(DynamicField)
+      .find((field) => field.props('field').key === 'name')
+    const type = wrapper
+      .findAllComponents(DynamicField)
+      .find((field) => field.props('field').key === 'type')
+    expect(name).toBeDefined()
+    expect(name?.props('error')).toBe('This field may not be blank.')
+    expect(type).toBeDefined()
+    expect(type?.props('error')).toBeUndefined()
+  })
+
+  it('types nullable InterfaceTemplate response timestamps exactly', () => {
+    expectTypeOf<InterfaceTemplateDTO['created']>().toEqualTypeOf<string | null>()
+    expectTypeOf<InterfaceTemplateDTO['last_updated']>().toEqualTypeOf<string | null>()
+  })
+
+  it('preserves the InterfaceTemplate scalar dirty baseline through the real DynamicForm edit flow', async () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'interfacetemplate')!
+    const adapter = getCoreResourceAdapter('interfacetemplate')
+    const dto: InterfaceTemplateDTO = {
+      id: 15,
+      url: '/api/dcim/interface-templates/15/',
+      display: 'xe-0/0/0',
+      created: null,
+      last_updated: null,
+      device_type: {
+        id: 6,
+        url: '/api/dcim/device-types/6/',
+        display: 'Acme Edge',
+      },
+      name: 'xe-0/0/0',
+      label: 'Uplink',
+      type: { value: '10gbase-x-sfpp', label: 'SFP+ (10GE)' },
+      enabled: true,
+      mgmt_only: false,
+      description: 'Provider uplink',
+    }
+    const wrapper = mount(DynamicForm, {
+      props: {
+        fields: config.fields.filter((field) => field.key === 'label'),
+        modelValue: adapter.formFromDTO(dto),
+        editing: true,
+      },
+    })
+
+    const label = wrapper
+      .findAllComponents(DynamicField)
+      .find((field) => field.props('field').key === 'label')
+    expect(label).toBeDefined()
+    label!.vm.$emit('update:modelValue', '')
+    await nextTick()
+
+    const form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as InterfaceTemplateForm
+    expect(adapter.mutationFromForm(form, true)).toEqual({ label: '' })
   })
 })
 

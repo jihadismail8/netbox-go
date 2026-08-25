@@ -288,47 +288,19 @@ func typedInterfaceTemplateUpdateCommand(
 	for _, path := range mask.Paths {
 		switch path {
 		case "device_type":
-			if fields.deviceType.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateInterfaceTemplateCommand{},
-					invalidTypedInterfaceTemplateMask()
-			}
-			command.DeviceType = fields.deviceType
+			command.DeviceType = maskedInterfaceTemplateField(fields.deviceType)
 		case "name":
-			if fields.name.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateInterfaceTemplateCommand{},
-					invalidTypedInterfaceTemplateMask()
-			}
-			command.Name = fields.name
+			command.Name = maskedInterfaceTemplateField(fields.name)
 		case "label":
-			if fields.label.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateInterfaceTemplateCommand{},
-					invalidTypedInterfaceTemplateMask()
-			}
-			command.Label = fields.label
+			command.Label = maskedInterfaceTemplateField(fields.label)
 		case "type":
-			if fields.interfaceType.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateInterfaceTemplateCommand{},
-					invalidTypedInterfaceTemplateMask()
-			}
-			command.Type = fields.interfaceType
+			command.Type = maskedInterfaceTemplateField(fields.interfaceType)
 		case "enabled":
-			if fields.enabled.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateInterfaceTemplateCommand{},
-					invalidTypedInterfaceTemplateMask()
-			}
-			command.Enabled = fields.enabled
+			command.Enabled = maskedInterfaceTemplateField(fields.enabled)
 		case "mgmt_only":
-			if fields.mgmtOnly.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateInterfaceTemplateCommand{},
-					invalidTypedInterfaceTemplateMask()
-			}
-			command.MgmtOnly = fields.mgmtOnly
+			command.MgmtOnly = maskedInterfaceTemplateField(fields.mgmtOnly)
 		case "description":
-			if fields.description.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateInterfaceTemplateCommand{},
-					invalidTypedInterfaceTemplateMask()
-			}
-			command.Description = fields.description
+			command.Description = maskedInterfaceTemplateField(fields.description)
 		default:
 			return applicationdcim.UpdateInterfaceTemplateCommand{},
 				invalidTypedInterfaceTemplateMask()
@@ -337,11 +309,20 @@ func typedInterfaceTemplateUpdateCommand(
 	return command, nil
 }
 
+func maskedInterfaceTemplateField[T any](
+	field applicationdcim.Field[T],
+) applicationdcim.Field[T] {
+	if field.State() == applicationdcim.FieldOmitted {
+		return applicationdcim.NullField[T]()
+	}
+	return field
+}
+
 func invalidTypedInterfaceTemplateMask() error {
 	return shared.NewValidationError(
 		shared.FieldViolation{
 			Field:       "update_mask",
-			Description: "Every update_mask path must name a supported field with an explicit value.",
+			Description: "Every update_mask path must name a supported field.",
 		},
 	)
 }

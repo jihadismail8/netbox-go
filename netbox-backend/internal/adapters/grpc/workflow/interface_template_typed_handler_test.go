@@ -6,8 +6,6 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
 
 	dcimv1 "netbox-go/gen/go/netbox/dcim/v1"
@@ -110,9 +108,9 @@ func TestTypedInterfaceTemplateRPCPreservesFiltersPresenceAndProjection(t *testi
 			UpdateMask: &fieldmaskpb.FieldMask{Paths: []string{"enabled"}},
 		},
 	)
-	require.Error(t, err)
-	assert.Equal(t, codes.InvalidArgument, status.Code(err))
-	assert.Equal(t, 1, spy.updateCalls)
+	require.NoError(t, err)
+	assert.Equal(t, 2, spy.updateCalls)
+	assert.Equal(t, applicationdcim.FieldNull, spy.updateCommand.Enabled.State())
 }
 
 func grpcInterfaceTemplateFixture(t *testing.T) *domaindcim.InterfaceTemplate {

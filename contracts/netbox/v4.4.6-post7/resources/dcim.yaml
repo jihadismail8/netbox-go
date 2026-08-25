@@ -214,6 +214,26 @@
       "writable_fields": ["device_type", "name", "label", "type", "enabled", "mgmt_only", "description"],
       "response_only_fields": ["id", "url", "display", "created", "last_updated"],
       "choice_fields": {"type": {"value_type": "string", "nullable": false}},
+      "field_contracts": {
+        "response": {
+          "nullable_fields": ["created", "last_updated"]
+        },
+        "create": {
+          "required_fields": ["device_type", "name", "type"],
+          "nullable_fields": [],
+          "blank_fields": ["label", "description"]
+        },
+        "replace": {
+          "required_fields": ["device_type", "name", "type"],
+          "nullable_fields": [],
+          "blank_fields": ["label", "description"]
+        },
+        "update": {
+          "required_fields": [],
+          "nullable_fields": [],
+          "blank_fields": ["label", "description"]
+        }
+      },
       "filters": ["device_type_id", "name", "type", "enabled", "mgmt_only"],
       "ordering": ["id", "device_type", "name", "type", "created", "last_updated"],
       "relationships": ["device_type"],

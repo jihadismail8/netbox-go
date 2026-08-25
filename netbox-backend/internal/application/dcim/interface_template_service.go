@@ -157,18 +157,14 @@ func (service *InterfaceTemplateService) CreateInterfaceTemplate(
 	}
 	var template *dcimdomain.InterfaceTemplate
 	err := service.unitOfWork.WithinTransaction(ctx, func(transactionContext context.Context) error {
-		commandValues, valuesErr := command.values()
-		if valuesErr != nil {
-			return valuesErr
-		}
-		values, valuesErr := service.resolveValues(transactionContext, commandValues)
-		if valuesErr != nil {
-			return valuesErr
-		}
+		commandValues, commandErr := command.values()
+		values, relationshipErr := service.resolveValues(transactionContext, commandValues)
 		now := service.clock.Now()
 		candidate, domainErr := dcimdomain.NewInterfaceTemplate(values, now)
-		if domainErr != nil {
-			return domainErr
+		if validationErr := mergeInterfaceTemplateMutationErrors(
+			commandErr, relationshipErr, domainErr,
+		); validationErr != nil {
+			return validationErr
 		}
 		if authorizeErr := service.authorize(
 			transactionContext, principal, authz.Add, candidate,
@@ -220,17 +216,17 @@ func (service *InterfaceTemplateService) ReplaceInterfaceTemplate(
 		); authorizeErr != nil {
 			return authorizeErr
 		}
-		commandValues, valuesErr := command.values()
-		if valuesErr != nil {
-			return valuesErr
-		}
-		values, valuesErr := service.resolveValues(transactionContext, commandValues)
-		if valuesErr != nil {
-			return valuesErr
+		commandPatch, commandErr := command.patch()
+		patch, relationshipErr := service.resolvePatch(transactionContext, commandPatch)
+		domainErr := loaded.ValidatePatch(patch)
+		if validationErr := mergeInterfaceTemplateMutationErrors(
+			commandErr, relationshipErr, domainErr,
+		); validationErr != nil {
+			return validationErr
 		}
 		before := loaded.Snapshot()
 		now := service.clock.Now()
-		if replaceErr := loaded.Replace(values, now); replaceErr != nil {
+		if replaceErr := loaded.ApplyPatch(patch, now); replaceErr != nil {
 			return replaceErr
 		}
 		if updateErr := service.repository.Update(transactionContext, loaded); updateErr != nil {
@@ -272,13 +268,13 @@ func (service *InterfaceTemplateService) UpdateInterfaceTemplate(
 		); authorizeErr != nil {
 			return authorizeErr
 		}
-		commandPatch, patchErr := command.patch()
-		if patchErr != nil {
-			return patchErr
-		}
-		patch, patchErr := service.resolvePatch(transactionContext, commandPatch)
-		if patchErr != nil {
-			return patchErr
+		commandPatch, commandErr := command.patch()
+		patch, relationshipErr := service.resolvePatch(transactionContext, commandPatch)
+		domainErr := loaded.ValidatePatch(patch)
+		if validationErr := mergeInterfaceTemplateMutationErrors(
+			commandErr, relationshipErr, domainErr,
+		); validationErr != nil {
+			return validationErr
 		}
 		before := loaded.Snapshot()
 		now := service.clock.Now()
@@ -345,15 +341,19 @@ func (service *InterfaceTemplateService) resolveValues(
 	ctx context.Context,
 	values interfaceTemplateCommandValues,
 ) (dcimdomain.InterfaceTemplateValues, error) {
+	domainValues := dcimdomain.InterfaceTemplateValues{
+		Name: values.name, Label: values.label, Type: values.interfaceType,
+		Enabled: values.enabled, MgmtOnly: values.mgmtOnly, Description: values.description,
+	}
+	if !values.deviceTypeID.IsValid() {
+		return domainValues, nil
+	}
 	reference, err := service.resolveDeviceType(ctx, values.deviceTypeID)
 	if err != nil {
-		return dcimdomain.InterfaceTemplateValues{}, err
+		return domainValues, err
 	}
-	return dcimdomain.InterfaceTemplateValues{
-		DeviceType: reference, Name: values.name, Label: values.label,
-		Type: values.interfaceType, Enabled: values.enabled, MgmtOnly: values.mgmtOnly,
-		Description: values.description,
-	}, nil
+	domainValues.DeviceType = reference
+	return domainValues, nil
 }
 
 func (service *InterfaceTemplateService) resolvePatch(
@@ -365,9 +365,12 @@ func (service *InterfaceTemplateService) resolvePatch(
 		Enabled: patch.enabled, MgmtOnly: patch.mgmtOnly, Description: patch.description,
 	}
 	if patch.deviceTypeID != nil {
+		if !patch.deviceTypeID.IsValid() {
+			return domainPatch, nil
+		}
 		reference, err := service.resolveDeviceType(ctx, *patch.deviceTypeID)
 		if err != nil {
-			return dcimdomain.InterfaceTemplatePatch{}, err
+			return domainPatch, err
 		}
 		domainPatch.DeviceType = &reference
 	}
