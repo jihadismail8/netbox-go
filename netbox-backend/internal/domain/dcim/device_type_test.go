@@ -1,6 +1,7 @@
 package dcim_test
 
 import (
+	"strings"
 	"testing"
 	"time"
 
@@ -21,8 +22,17 @@ func TestDeviceHeightUsesExactHalfUnitRepresentation(t *testing.T) {
 	}{
 		{input: "0", halfUnits: 0, rendered: "0"},
 		{input: "0.5", halfUnits: 1, rendered: "0.5"},
+		{input: ".5", halfUnits: 1, rendered: "0.5"},
+		{input: "5e-1", halfUnits: 1, rendered: "0.5"},
 		{input: "1", halfUnits: 2, rendered: "1"},
+		{input: "1.", halfUnits: 2, rendered: "1"},
 		{input: "1.5", halfUnits: 3, rendered: "1.5"},
+		{input: "١.٥", halfUnits: 3, rendered: "1.5"},
+		{input: "１.５", halfUnits: 3, rendered: "1.5"},
+		{input: "𝟙.𝟝", halfUnits: 3, rendered: "1.5"},
+		{input: "1_0", halfUnits: 20, rendered: "10"},
+		{input: "-0", halfUnits: 0, rendered: "0"},
+		{input: "-0.0", halfUnits: 0, rendered: "0"},
 		{input: "999.5", halfUnits: 1999, rendered: "999.5"},
 	} {
 		test := test
@@ -36,7 +46,10 @@ func TestDeviceHeightUsesExactHalfUnitRepresentation(t *testing.T) {
 		})
 	}
 
-	for _, invalid := range []string{"-0.5", "0.1", "1.25", "999.9", "1000", "NaN", "Inf"} {
+	for _, invalid := range []string{
+		"-0.5", "0.1", "1e-1", "1.00", "1.25", "50e-2", "999.9", "1000",
+		"1e3", "NaN", "Inf",
+	} {
 		invalid := invalid
 		t.Run("invalid_"+invalid, func(t *testing.T) {
 			t.Parallel()
@@ -47,7 +60,7 @@ func TestDeviceHeightUsesExactHalfUnitRepresentation(t *testing.T) {
 	}
 }
 
-func TestDeviceTypeNormalizesAndPreservesNullVersusBlankAirflow(t *testing.T) {
+func TestDeviceTypeScalarNormalizationContract(t *testing.T) {
 	t.Parallel()
 
 	deviceType, err := dcim.NewDeviceType(dcim.DeviceTypeValues{
@@ -77,6 +90,27 @@ func TestDeviceTypeNormalizesAndPreservesNullVersusBlankAirflow(t *testing.T) {
 	assert.True(t, deviceType.Airflow().IsNull())
 	assert.Nil(t, deviceType.Snapshot().Airflow)
 	assert.Equal(t, updatedAt, deviceType.LastUpdated())
+
+	t.Run("combined violations retain deterministic field order", func(t *testing.T) {
+		t.Parallel()
+		_, validationErr := dcim.NewDeviceType(dcim.DeviceTypeValues{
+			Model: " ", Slug: "invalid slug!",
+			PartNumber:  strings.Repeat("p", dcim.DeviceTypePartNumberMaxLength+1),
+			UHeight:     "1.00",
+			Airflow:     dcim.NonNullDeviceAirflow(" front-to-rear "),
+			Description: strings.Repeat("d", dcim.DeviceTypeDescriptionMaxLength+1),
+		}, testTime)
+		require.Error(t, validationErr)
+		violations := shared.ViolationsOf(validationErr)
+		fields := make([]string, len(violations))
+		for index, violation := range violations {
+			fields[index] = violation.Field
+		}
+		assert.Equal(t, []string{
+			"manufacturer", "model", "slug", "part_number", "u_height", "airflow",
+			"description",
+		}, fields)
+	})
 }
 
 func TestDeviceTypePatchIsAtomicAndPreservesCounters(t *testing.T) {

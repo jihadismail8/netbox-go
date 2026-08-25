@@ -134,7 +134,9 @@ export interface DeviceRoleDTO extends Omit<CoreResourceBase, 'created' | 'last_
   _depth: number
 }
 
-export interface DeviceTypeDTO extends CoreResourceBase {
+export interface DeviceTypeDTO extends Omit<CoreResourceBase, 'created' | 'last_updated'> {
+  created: string | null
+  last_updated: string | null
   manufacturer: CoreReference
   model: string
   slug: string

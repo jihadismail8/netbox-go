@@ -7,6 +7,8 @@ import { getCoreResourceAdapter } from '@/features/core/adapters'
 import type {
   DeviceRoleDTO,
   DeviceRoleForm,
+  DeviceTypeDTO,
+  DeviceTypeForm,
   IPAddressDTO,
   IPAddressForm,
   ManufacturerDTO,
@@ -460,6 +462,142 @@ describe('DeviceRole core profile form contract', () => {
 
     const form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as DeviceRoleForm
     expect(adapter.mutationFromForm(form, true)).toEqual({ parent: null })
+  })
+})
+
+describe('DeviceType core profile form contract', () => {
+  it('pins owned fields, required inputs, defaults, airflow choices, and height metadata', () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'devicetype')!
+    const fields = new Map(config.fields.map((field) => [field.key, field]))
+
+    expect(config.writableFields).toEqual([
+      'manufacturer',
+      'model',
+      'slug',
+      'part_number',
+      'u_height',
+      'exclude_from_utilization',
+      'is_full_depth',
+      'airflow',
+      'description',
+      'comments',
+    ])
+    expect(fields.get('manufacturer')).toEqual(
+      expect.objectContaining({
+        required: true,
+        type: 'api-select',
+        relationResource: 'manufacturer',
+      }),
+    )
+    expect(fields.get('model')?.required).toBe(true)
+    expect(fields.get('slug')).toEqual(
+      expect.objectContaining({ required: true, type: 'slug', slugSource: 'model' }),
+    )
+    expect(fields.get('u_height')).toEqual(
+      expect.objectContaining({ default: 1, min: 0, max: 999.9, step: 0.5 }),
+    )
+    expect(fields.get('exclude_from_utilization')).toEqual(
+      expect.objectContaining({ default: false }),
+    )
+    expect(fields.get('is_full_depth')).toEqual(expect.objectContaining({ default: true }))
+    expect(fields.get('airflow')?.options?.map((option) => option.value)).toEqual([
+      'front-to-rear',
+      'rear-to-front',
+      'left-to-right',
+      'right-to-left',
+      'side-to-rear',
+      'rear-to-side',
+      'bottom-to-top',
+      'top-to-bottom',
+      'passive',
+      'mixed',
+    ])
+    for (const optional of [
+      'part_number',
+      'u_height',
+      'exclude_from_utilization',
+      'is_full_depth',
+      'airflow',
+      'description',
+      'comments',
+    ]) {
+      expect(fields.get(optional), optional).toBeDefined()
+      expect(fields.get(optional)?.required, optional).not.toBe(true)
+    }
+  })
+
+  it('routes field-scoped REST validation to the matching DeviceType field', () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'devicetype')!
+    const wrapper = mount(DynamicForm, {
+      props: {
+        fields: config.fields.filter((field) => ['u_height', 'airflow'].includes(field.key)),
+        modelValue: { u_height: 0.25, airflow: null },
+        errors: {
+          u_height: ['Height must be a whole or half unit.'],
+        },
+      },
+    })
+
+    const height = wrapper
+      .findAllComponents(DynamicField)
+      .find((field) => field.props('field').key === 'u_height')
+    const airflow = wrapper
+      .findAllComponents(DynamicField)
+      .find((field) => field.props('field').key === 'airflow')
+    expect(height).toBeDefined()
+    expect(height?.props('error')).toBe('Height must be a whole or half unit.')
+    expect(airflow).toBeDefined()
+    expect(airflow?.props('error')).toBeUndefined()
+  })
+
+  it('types nullable DeviceType response timestamps exactly', () => {
+    expectTypeOf<DeviceTypeDTO['created']>().toEqualTypeOf<string | null>()
+    expectTypeOf<DeviceTypeDTO['last_updated']>().toEqualTypeOf<string | null>()
+  })
+
+  it('preserves the DeviceType scalar dirty baseline through the real DynamicForm edit flow', async () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'devicetype')!
+    const adapter = getCoreResourceAdapter('devicetype')
+    const dto: DeviceTypeDTO = {
+      id: 6,
+      url: '/api/dcim/device-types/6/',
+      display: 'Acme Edge',
+      created: null,
+      last_updated: null,
+      manufacturer: {
+        id: 2,
+        url: '/api/dcim/manufacturers/2/',
+        display: 'Acme',
+      },
+      model: 'Edge',
+      slug: 'edge',
+      part_number: 'PN-1',
+      u_height: 1,
+      exclude_from_utilization: false,
+      is_full_depth: true,
+      airflow: { value: 'front-to-rear', label: 'Front to rear' },
+      description: 'Edge appliance',
+      comments: 'Operator note',
+      device_count: 3,
+      interface_template_count: 8,
+    }
+    const wrapper = mount(DynamicForm, {
+      props: {
+        fields: config.fields.filter((field) => field.key === 'airflow'),
+        modelValue: adapter.formFromDTO(dto),
+        editing: true,
+      },
+    })
+
+    const airflow = wrapper
+      .findAllComponents(DynamicField)
+      .find((field) => field.props('field').key === 'airflow')
+    expect(airflow).toBeDefined()
+    airflow!.vm.$emit('update:modelValue', null)
+    await nextTick()
+
+    const form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as DeviceTypeForm
+    expect(adapter.mutationFromForm(form, true)).toEqual({ airflow: null })
   })
 })
 

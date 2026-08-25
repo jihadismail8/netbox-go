@@ -1,6 +1,8 @@
 package dcim
 
 import (
+	"sort"
+
 	dcimdomain "netbox-go/internal/domain/dcim"
 	"netbox-go/internal/domain/shared"
 )
@@ -82,13 +84,9 @@ func (command CreateDeviceTypeCommand) values() (deviceTypeCommandValues, error)
 		})
 	}
 	if len(violations) > 0 {
-		return deviceTypeCommandValues{}, shared.NewValidationError(violations...)
+		return values, newDeviceTypeValidationError(violations)
 	}
 	return values, nil
-}
-
-func (command ReplaceDeviceTypeCommand) values() (deviceTypeCommandValues, error) {
-	return command.CreateDeviceTypeCommand.values()
 }
 
 func fullDeviceTypeAirflow(
@@ -130,20 +128,57 @@ func (patch deviceTypeCommandPatch) empty() bool {
 }
 
 func (command UpdateDeviceTypeCommand) patch() (deviceTypeCommandPatch, error) {
+	return buildDeviceTypePatch(
+		command.Manufacturer, command.Model, command.Slug, command.PartNumber,
+		command.UHeight, command.ExcludeFromUtilization, command.IsFullDepth,
+		command.Airflow, command.Description, command.Comments, false,
+	)
+}
+
+func (command ReplaceDeviceTypeCommand) patch() (deviceTypeCommandPatch, error) {
+	return buildDeviceTypePatch(
+		command.Manufacturer, command.Model, command.Slug, command.PartNumber,
+		command.UHeight, command.ExcludeFromUtilization, command.IsFullDepth,
+		command.Airflow, command.Description, command.Comments, true,
+	)
+}
+
+func buildDeviceTypePatch(
+	manufacturer Field[shared.ID],
+	model Field[string],
+	slug Field[string],
+	partNumber Field[string],
+	uHeight Field[string],
+	excludeFromUtilization Field[bool],
+	isFullDepth Field[bool],
+	airflow Field[string],
+	description Field[string],
+	comments Field[string],
+	replace bool,
+) (deviceTypeCommandPatch, error) {
 	var violations []shared.FieldViolation
+	if replace {
+		requireDeviceTypeField(&violations, "manufacturer", manufacturer)
+		requireDeviceTypeField(&violations, "model", model)
+		requireDeviceTypeField(&violations, "slug", slug)
+	}
 	patch := deviceTypeCommandPatch{
-		manufacturerID: patchFieldValue(&violations, "manufacturer", command.Manufacturer),
-		model:          patchValue(&violations, "model", command.Model),
-		slug:           patchValue(&violations, "slug", command.Slug),
-		partNumber:     patchValue(&violations, "part_number", command.PartNumber),
-		uHeight:        patchValue(&violations, "u_height", command.UHeight),
+		manufacturerID: patchFieldValue(&violations, "manufacturer", manufacturer),
+		model:          patchValue(&violations, "model", model),
+		slug:           patchValue(&violations, "slug", slug),
+		partNumber:     patchValue(&violations, "part_number", partNumber),
+		uHeight:        patchValue(&violations, "u_height", uHeight),
 		excludeFromUtilization: patchFieldValue(
-			&violations, "exclude_from_utilization", command.ExcludeFromUtilization,
+			&violations, "exclude_from_utilization", excludeFromUtilization,
 		),
-		isFullDepth: patchFieldValue(&violations, "is_full_depth", command.IsFullDepth),
-		airflow:     patchDeviceTypeAirflow(command.Airflow),
-		description: patchValue(&violations, "description", command.Description),
-		comments:    patchValue(&violations, "comments", command.Comments),
+		isFullDepth: patchFieldValue(&violations, "is_full_depth", isFullDepth),
+		airflow:     patchDeviceTypeAirflow(airflow),
+		description: patchValue(&violations, "description", description),
+		comments:    patchValue(&violations, "comments", comments),
+	}
+	if replace && uHeight.State() == FieldOmitted {
+		defaultHeight := dcimdomain.DeviceTypeDefaultHeight
+		patch.uHeight = &defaultHeight
 	}
 	if patch.manufacturerID != nil && !patch.manufacturerID.IsValid() {
 		violations = append(violations, shared.FieldViolation{
@@ -151,15 +186,28 @@ func (command UpdateDeviceTypeCommand) patch() (deviceTypeCommandPatch, error) {
 		})
 	}
 	if len(violations) > 0 {
-		return deviceTypeCommandPatch{}, shared.NewValidationError(violations...)
+		return patch, newDeviceTypeValidationError(violations)
 	}
 	if patch.empty() {
-		return deviceTypeCommandPatch{}, shared.NewValidationError(shared.FieldViolation{
+		return patch, newDeviceTypeValidationError([]shared.FieldViolation{{
 			Field: "update_mask", Reason: "required",
 			Description: "At least one writable field must be supplied.",
-		})
+		}})
 	}
 	return patch, nil
+}
+
+func requireDeviceTypeField[T any](
+	violations *[]shared.FieldViolation,
+	name string,
+	field Field[T],
+) {
+	if field.State() != FieldOmitted {
+		return
+	}
+	*violations = append(*violations, shared.FieldViolation{
+		Field: name, Reason: "required", Description: "This field is required.",
+	})
 }
 
 func patchDeviceTypeAirflow(
@@ -176,4 +224,53 @@ func patchDeviceTypeAirflow(
 		return nil
 	}
 	return &value
+}
+
+var deviceTypeValidationFieldOrder = map[string]int{
+	"manufacturer": 0, "model": 1, "slug": 2, "part_number": 3,
+	"u_height": 4, "exclude_from_utilization": 5, "is_full_depth": 6,
+	"airflow": 7, "description": 8, "comments": 9, "update_mask": 10,
+}
+
+func newDeviceTypeValidationError(violations []shared.FieldViolation) error {
+	ordered := append([]shared.FieldViolation(nil), violations...)
+	sort.SliceStable(ordered, func(left, right int) bool {
+		leftOrder, leftKnown := deviceTypeValidationFieldOrder[ordered[left].Field]
+		rightOrder, rightKnown := deviceTypeValidationFieldOrder[ordered[right].Field]
+		switch {
+		case leftKnown && rightKnown:
+			return leftOrder < rightOrder
+		case leftKnown:
+			return true
+		case rightKnown:
+			return false
+		default:
+			return false
+		}
+	})
+	return shared.NewValidationError(ordered...)
+}
+
+func mergeDeviceTypeMutationErrors(errs ...error) error {
+	for _, err := range errs {
+		if err != nil && !shared.HasReason(err, shared.ErrorReasonValidation) {
+			return err
+		}
+	}
+
+	seenFields := make(map[string]struct{})
+	var merged []shared.FieldViolation
+	for _, err := range errs {
+		for _, violation := range shared.ViolationsOf(err) {
+			if _, duplicate := seenFields[violation.Field]; duplicate {
+				continue
+			}
+			seenFields[violation.Field] = struct{}{}
+			merged = append(merged, violation)
+		}
+	}
+	if len(merged) > 0 {
+		return newDeviceTypeValidationError(merged)
+	}
+	return nil
 }

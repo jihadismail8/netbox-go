@@ -156,18 +156,14 @@ func (service *DeviceTypeService) CreateDeviceType(
 	}
 	var result *dcimdomain.DeviceType
 	err := service.unitOfWork.WithinTransaction(ctx, func(transactionContext context.Context) error {
-		commandValues, err := command.values()
-		if err != nil {
-			return err
-		}
-		values, err := service.resolveValues(transactionContext, commandValues)
-		if err != nil {
-			return err
-		}
+		commandValues, commandErr := command.values()
+		values, relationshipErr := service.resolveValues(transactionContext, commandValues)
 		now := service.clock.Now()
-		candidate, err := dcimdomain.NewDeviceType(values, now)
-		if err != nil {
-			return err
+		candidate, domainErr := dcimdomain.NewDeviceType(values, now)
+		if validationErr := mergeDeviceTypeMutationErrors(
+			commandErr, relationshipErr, domainErr,
+		); validationErr != nil {
+			return validationErr
 		}
 		if err := service.authorize(transactionContext, principal, authz.Add, candidate); err != nil {
 			return err
@@ -202,15 +198,15 @@ func (service *DeviceTypeService) ReplaceDeviceType(
 			loaded *dcimdomain.DeviceType,
 			now shared.Timestamp,
 		) error {
-			commandValues, err := command.values()
-			if err != nil {
-				return err
+			commandPatch, commandErr := command.patch()
+			patch, relationshipErr := service.resolvePatch(transactionContext, commandPatch)
+			domainErr := loaded.ValidatePatch(patch)
+			if validationErr := mergeDeviceTypeMutationErrors(
+				commandErr, relationshipErr, domainErr,
+			); validationErr != nil {
+				return validationErr
 			}
-			values, err := service.resolveValues(transactionContext, commandValues)
-			if err != nil {
-				return err
-			}
-			return loaded.Replace(values, now)
+			return loaded.ApplyPatch(patch, now)
 		},
 		"replace",
 	)
@@ -228,13 +224,13 @@ func (service *DeviceTypeService) UpdateDeviceType(
 			loaded *dcimdomain.DeviceType,
 			now shared.Timestamp,
 		) error {
-			commandPatch, err := command.patch()
-			if err != nil {
-				return err
-			}
-			patch, err := service.resolvePatch(transactionContext, commandPatch)
-			if err != nil {
-				return err
+			commandPatch, commandErr := command.patch()
+			patch, relationshipErr := service.resolvePatch(transactionContext, commandPatch)
+			domainErr := loaded.ValidatePatch(patch)
+			if validationErr := mergeDeviceTypeMutationErrors(
+				commandErr, relationshipErr, domainErr,
+			); validationErr != nil {
+				return validationErr
 			}
 			return loaded.ApplyPatch(patch, now)
 		},
@@ -369,17 +365,22 @@ func (service *DeviceTypeService) resolveValues(
 	ctx context.Context,
 	values deviceTypeCommandValues,
 ) (dcimdomain.DeviceTypeValues, error) {
-	manufacturer, err := service.resolveManufacturer(ctx, values.manufacturerID)
-	if err != nil {
-		return dcimdomain.DeviceTypeValues{}, err
-	}
-	return dcimdomain.DeviceTypeValues{
-		Manufacturer: manufacturer, Model: values.model, Slug: values.slug,
+	domainValues := dcimdomain.DeviceTypeValues{
+		Model: values.model, Slug: values.slug,
 		PartNumber: values.partNumber, UHeight: values.uHeight,
 		ExcludeFromUtilization: values.excludeFromUtilization,
 		IsFullDepth:            values.isFullDepth, Airflow: values.airflow,
 		Description: values.description, Comments: values.comments,
-	}, nil
+	}
+	if !values.manufacturerID.IsValid() {
+		return domainValues, nil
+	}
+	manufacturer, err := service.resolveManufacturer(ctx, values.manufacturerID)
+	if err != nil {
+		return domainValues, err
+	}
+	domainValues.Manufacturer = manufacturer
+	return domainValues, nil
 }
 
 func (service *DeviceTypeService) resolvePatch(
@@ -394,9 +395,12 @@ func (service *DeviceTypeService) resolvePatch(
 		Description: patch.description, Comments: patch.comments,
 	}
 	if patch.manufacturerID != nil {
+		if !patch.manufacturerID.IsValid() {
+			return domainPatch, nil
+		}
 		manufacturer, err := service.resolveManufacturer(ctx, *patch.manufacturerID)
 		if err != nil {
-			return dcimdomain.DeviceTypePatch{}, err
+			return domainPatch, err
 		}
 		domainPatch.Manufacturer = &manufacturer
 	}

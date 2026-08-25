@@ -3116,7 +3116,7 @@
         },
         {
           "path": "contracts/netbox/v4.4.6-post7/resources/dcim.yaml",
-          "anchor": "\"choice_fields\": {\"airflow\": {\"value_type\": \"string\", \"nullable\": true}},\n      \"filters\": [\"manufacturer_id\", \"manufacturer_slug\", \"model\", \"slug\"]"
+          "anchor": "\"filters\": [\"manufacturer_id\", \"manufacturer_slug\", \"model\", \"slug\"],\n      \"ordering\": [\"id\", \"manufacturer\", \"model\", \"slug\", \"u_height\", \"created\", \"last_updated\"],\n      \"relationships\": [\"manufacturer\"],\n      \"delete_behavior\": \"protect_when_device_references_and_cascade_templates\""
         },
         {
           "path": "contracts/netbox/v4.4.6-post7/resources/dcim.yaml",
@@ -3206,6 +3206,12 @@
       "id": "unresolved-device-role-scalar-presence",
       "status": "unresolved",
       "reason": "Operation-specific DeviceRole metadata and the bounded implementation candidate now enforce parent, name, slug, color, VM-role, description, and comments create/PUT/PATCH presence, defaults, and validation across typed behavior, REST/gRPC, PostgreSQL, generated OpenAPI, and Vue. The pinned differential oracle, retained evidence, project-owner review, remaining DeviceRole hierarchy and deletion behavior, 13-resource parent, and higher tiers remain pending.",
+      "resolution_goal": "CW1-V2-02"
+    },
+    {
+      "id": "unresolved-device-type-scalar-presence",
+      "status": "unresolved",
+      "reason": "Operation-specific DeviceType metadata and the bounded implementation candidate now enforce manufacturer, model, slug, part number, height, utilization exclusion, full-depth, airflow, description, and comments create/PUT/PATCH presence, defaults, and validation across typed behavior, REST/gRPC, PostgreSQL, generated OpenAPI, and Vue. The pinned differential oracle, retained evidence, project-owner review, remaining DeviceType uniqueness, height-transition, deletion, cascade, list/query, and full CRUD behavior, 13-resource parent, and higher tiers remain pending.",
       "resolution_goal": "CW1-V2-02"
     }
   ],
@@ -4977,7 +4983,7 @@
       "capability": "dcim.DeviceType",
       "operation": "create",
       "reference_set": "dcim.DeviceType",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-device-type-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {
@@ -5017,7 +5023,7 @@
       "capability": "dcim.DeviceType",
       "operation": "replace",
       "reference_set": "dcim.DeviceType",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-device-type-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {
@@ -5027,7 +5033,7 @@
       "capability": "dcim.DeviceType",
       "operation": "update",
       "reference_set": "dcim.DeviceType",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-device-type-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {

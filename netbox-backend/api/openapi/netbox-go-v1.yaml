@@ -507,7 +507,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DeviceTypeWrite"
+                "$ref": "#/components/schemas/DeviceTypeCreate"
               }
             }
           }
@@ -577,7 +577,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DeviceTypeWrite"
+                "$ref": "#/components/schemas/DeviceTypeReplace"
               }
             }
           }
@@ -616,7 +616,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DeviceTypeWrite"
+                "$ref": "#/components/schemas/DeviceTypeUpdate"
               }
             }
           }
@@ -3837,29 +3837,17 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/ObjectReference"
-              },
-              {
-                "type": "null"
               }
             ]
           },
           "model": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "slug": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "part_number": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "u_height": {
             "type": "number",
@@ -3895,16 +3883,10 @@
             ]
           },
           "description": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "comments": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "id": {
             "type": "integer",
@@ -3915,10 +3897,7 @@
             "format": "uri"
           },
           "display": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "created": {
             "type": [
@@ -3941,6 +3920,54 @@
           "interface_template_count": {
             "type": "integer",
             "format": "int64"
+          }
+        }
+      },
+      "DeviceTypeCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "manufacturer",
+          "model",
+          "slug"
+        ],
+        "properties": {
+          "manufacturer": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "model": {
+            "type": "string",
+            "minLength": 1
+          },
+          "slug": {
+            "type": "string",
+            "minLength": 1
+          },
+          "part_number": {
+            "type": "string"
+          },
+          "u_height": {
+            "type": "number",
+            "format": "double"
+          },
+          "exclude_from_utilization": {
+            "type": "boolean"
+          },
+          "is_full_depth": {
+            "type": "boolean"
+          },
+          "airflow": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "comments": {
+            "type": "string"
           }
         }
       },
@@ -3978,34 +4005,29 @@
           }
         }
       },
-      "DeviceTypeWrite": {
+      "DeviceTypeReplace": {
         "type": "object",
         "additionalProperties": false,
+        "required": [
+          "manufacturer",
+          "model",
+          "slug"
+        ],
         "properties": {
           "manufacturer": {
-            "type": [
-              "integer",
-              "null"
-            ],
+            "type": "integer",
             "format": "int64"
           },
           "model": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "minLength": 1
           },
           "slug": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "minLength": 1
           },
           "part_number": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "u_height": {
             "type": "number",
@@ -4024,16 +4046,53 @@
             ]
           },
           "description": {
+            "type": "string"
+          },
+          "comments": {
+            "type": "string"
+          }
+        }
+      },
+      "DeviceTypeUpdate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "manufacturer": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "model": {
+            "type": "string",
+            "minLength": 1
+          },
+          "slug": {
+            "type": "string",
+            "minLength": 1
+          },
+          "part_number": {
+            "type": "string"
+          },
+          "u_height": {
+            "type": "number",
+            "format": "double"
+          },
+          "exclude_from_utilization": {
+            "type": "boolean"
+          },
+          "is_full_depth": {
+            "type": "boolean"
+          },
+          "airflow": {
             "type": [
               "string",
               "null"
             ]
           },
+          "description": {
+            "type": "string"
+          },
           "comments": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           }
         }
       },

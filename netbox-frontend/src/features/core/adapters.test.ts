@@ -7,6 +7,8 @@ import {
   type CoreReference,
   type DeviceRoleDTO,
   type DeviceRoleForm,
+  type DeviceTypeDTO,
+  type DeviceTypeForm,
   type IPAddressDTO,
   type IPAddressForm,
   type ManufacturerDTO,
@@ -645,6 +647,151 @@ describe('typed core resource adapters', () => {
     expect(
       adapter.mutationFromForm(withFormField(hydrated, 'comments', '') as DeviceRoleForm, true),
     ).toEqual({ comments: '' })
+  })
+
+  it('preserves DeviceType create omissions, defaults, IDs, and concrete scalar states', () => {
+    const adapter = getCoreResourceAdapter('devicetype')
+
+    expect(adapter.mutationFromForm({}, false)).toEqual({})
+    expect(adapter.mutationFromForm(adapter.emptyForm(), false)).toEqual({
+      u_height: 1,
+      exclude_from_utilization: false,
+      is_full_depth: true,
+    })
+    expect(
+      adapter.mutationFromForm(
+        {
+          manufacturer,
+          model: 'Edge',
+          slug: 'edge',
+          part_number: '',
+          u_height: 0,
+          exclude_from_utilization: false,
+          is_full_depth: false,
+          airflow: null,
+          description: '',
+          comments: '',
+        },
+        false,
+      ),
+    ).toEqual({
+      manufacturer: 2,
+      model: 'Edge',
+      slug: 'edge',
+      part_number: '',
+      u_height: 0,
+      exclude_from_utilization: false,
+      is_full_depth: false,
+      airflow: null,
+      description: '',
+      comments: '',
+    })
+    expect(
+      adapter.mutationFromForm(
+        {
+          manufacturer: 2,
+          model: 'Core',
+          slug: 'core',
+          airflow: 'front-to-rear',
+        },
+        false,
+      ),
+    ).toEqual({ manufacturer: 2, model: 'Core', slug: 'core', airflow: 'front-to-rear' })
+
+    const formWithResponseFields = {
+      manufacturer,
+      model: 'Owned fields only',
+      slug: 'owned-fields-only',
+      id: 99,
+      url: '/api/dcim/device-types/99/',
+      display: 'Must not leak',
+      device_count: 12,
+      interface_template_count: 4,
+    } as DeviceTypeForm
+    expect(adapter.mutationFromForm(formWithResponseFields, false)).toEqual({
+      manufacturer: 2,
+      model: 'Owned fields only',
+      slug: 'owned-fields-only',
+    })
+  })
+
+  it('keeps a private normalized DeviceType baseline and emits only dirty PATCH fields', () => {
+    const adapter = getCoreResourceAdapter('devicetype')
+    const dto: DeviceTypeDTO = {
+      id: 6,
+      url: '/api/dcim/device-types/6/',
+      display: 'Acme Edge',
+      created: null,
+      last_updated: null,
+      manufacturer,
+      model: 'Edge',
+      slug: 'edge',
+      part_number: 'PN-1',
+      u_height: 1,
+      exclude_from_utilization: true,
+      is_full_depth: true,
+      airflow: { value: 'front-to-rear', label: 'Front to rear' },
+      description: 'Edge appliance',
+      comments: 'Operator note',
+      device_count: 3,
+      interface_template_count: 8,
+    }
+    const hydrated = adapter.formFromDTO(dto)
+
+    expect(Object.fromEntries(Object.entries(hydrated))).toEqual({
+      manufacturer,
+      model: 'Edge',
+      slug: 'edge',
+      part_number: 'PN-1',
+      u_height: 1,
+      exclude_from_utilization: true,
+      is_full_depth: true,
+      airflow: 'front-to-rear',
+      description: 'Edge appliance',
+      comments: 'Operator note',
+    })
+    expect(adapter.mutationFromForm({ ...hydrated }, true)).toEqual({})
+    expect(
+      adapter.mutationFromForm(
+        withFormField(hydrated, 'manufacturer', { ...manufacturer }) as DeviceTypeForm,
+        true,
+      ),
+    ).toEqual({})
+
+    const otherManufacturer: CoreReference = {
+      id: 12,
+      url: '/api/dcim/manufacturers/12/',
+      display: 'Globex',
+    }
+    expect(
+      adapter.mutationFromForm(
+        withFormField(hydrated, 'manufacturer', otherManufacturer) as DeviceTypeForm,
+        true,
+      ),
+    ).toEqual({ manufacturer: 12 })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'u_height', 0) as DeviceTypeForm, true),
+    ).toEqual({ u_height: 0 })
+    expect(
+      adapter.mutationFromForm(
+        withFormField(hydrated, 'exclude_from_utilization', false) as DeviceTypeForm,
+        true,
+      ),
+    ).toEqual({ exclude_from_utilization: false })
+    expect(
+      adapter.mutationFromForm(
+        withFormField(hydrated, 'is_full_depth', false) as DeviceTypeForm,
+        true,
+      ),
+    ).toEqual({ is_full_depth: false })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'airflow', null) as DeviceTypeForm, true),
+    ).toEqual({ airflow: null })
+    for (const field of ['part_number', 'description', 'comments'] as const) {
+      expect(
+        adapter.mutationFromForm(withFormField(hydrated, field, '') as DeviceTypeForm, true),
+      ).toEqual({ [field]: '' })
+    }
   })
 
   it('omits unchanged IPAddress scalars without changing relationship serialization', () => {

@@ -254,55 +254,25 @@ func typedDeviceTypeUpdateCommand(
 	for _, path := range mask.Paths {
 		switch path {
 		case "manufacturer":
-			if fields.manufacturer.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateDeviceTypeCommand{}, invalidTypedDeviceTypeMask()
-			}
-			command.Manufacturer = fields.manufacturer
+			command.Manufacturer = maskedDeviceTypeField(fields.manufacturer)
 		case "model":
-			if fields.model.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateDeviceTypeCommand{}, invalidTypedDeviceTypeMask()
-			}
-			command.Model = fields.model
+			command.Model = maskedDeviceTypeField(fields.model)
 		case "slug":
-			if fields.slug.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateDeviceTypeCommand{}, invalidTypedDeviceTypeMask()
-			}
-			command.Slug = fields.slug
+			command.Slug = maskedDeviceTypeField(fields.slug)
 		case "part_number":
-			if fields.partNumber.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateDeviceTypeCommand{}, invalidTypedDeviceTypeMask()
-			}
-			command.PartNumber = fields.partNumber
+			command.PartNumber = maskedDeviceTypeField(fields.partNumber)
 		case "u_height":
-			if fields.uHeight.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateDeviceTypeCommand{}, invalidTypedDeviceTypeMask()
-			}
-			command.UHeight = fields.uHeight
+			command.UHeight = maskedDeviceTypeField(fields.uHeight)
 		case "exclude_from_utilization":
-			if fields.excludeFromUtilization.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateDeviceTypeCommand{}, invalidTypedDeviceTypeMask()
-			}
-			command.ExcludeFromUtilization = fields.excludeFromUtilization
+			command.ExcludeFromUtilization = maskedDeviceTypeField(fields.excludeFromUtilization)
 		case "is_full_depth":
-			if fields.isFullDepth.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateDeviceTypeCommand{}, invalidTypedDeviceTypeMask()
-			}
-			command.IsFullDepth = fields.isFullDepth
+			command.IsFullDepth = maskedDeviceTypeField(fields.isFullDepth)
 		case "airflow":
-			if fields.airflow.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateDeviceTypeCommand{}, invalidTypedDeviceTypeMask()
-			}
-			command.Airflow = fields.airflow
+			command.Airflow = maskedDeviceTypeField(fields.airflow)
 		case "description":
-			if fields.description.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateDeviceTypeCommand{}, invalidTypedDeviceTypeMask()
-			}
-			command.Description = fields.description
+			command.Description = maskedDeviceTypeField(fields.description)
 		case "comments":
-			if fields.comments.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateDeviceTypeCommand{}, invalidTypedDeviceTypeMask()
-			}
-			command.Comments = fields.comments
+			command.Comments = maskedDeviceTypeField(fields.comments)
 		default:
 			return applicationdcim.UpdateDeviceTypeCommand{}, invalidTypedDeviceTypeMask()
 		}
@@ -310,11 +280,18 @@ func typedDeviceTypeUpdateCommand(
 	return command, nil
 }
 
+func maskedDeviceTypeField[T any](field applicationdcim.Field[T]) applicationdcim.Field[T] {
+	if field.State() == applicationdcim.FieldOmitted {
+		return applicationdcim.NullField[T]()
+	}
+	return field
+}
+
 func invalidTypedDeviceTypeMask() error {
 	return shared.NewValidationError(
 		shared.FieldViolation{
 			Field:       "update_mask",
-			Description: "Every update_mask path must name a supported field with an explicit value.",
+			Description: "Every update_mask path must name a supported field.",
 		},
 	)
 }

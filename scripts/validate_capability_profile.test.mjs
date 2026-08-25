@@ -169,6 +169,27 @@ const DEVICE_ROLE_FIELD_CONTRACTS = {
   },
 };
 
+const DEVICE_TYPE_FIELD_CONTRACTS = {
+  response: {
+    nullable_fields: ["airflow", "created", "last_updated"],
+  },
+  create: {
+    required_fields: ["manufacturer", "model", "slug"],
+    nullable_fields: ["airflow"],
+    blank_fields: ["part_number", "airflow", "description", "comments"],
+  },
+  replace: {
+    required_fields: ["manufacturer", "model", "slug"],
+    nullable_fields: ["airflow"],
+    blank_fields: ["part_number", "airflow", "description", "comments"],
+  },
+  update: {
+    required_fields: [],
+    nullable_fields: ["airflow"],
+    blank_fields: ["part_number", "airflow", "description", "comments"],
+  },
+};
+
 function runNode(script, argument) {
   return spawnSync(process.execPath, [path.join(ROOT, script), argument], {
     cwd: ROOT,
@@ -269,6 +290,16 @@ function withDeviceRoleResourceFixture(mutator, callback) {
     DCIM_RELATIVE_PATH,
     "DeviceRole",
     DEVICE_ROLE_FIELD_CONTRACTS,
+    mutator,
+    callback,
+  );
+}
+
+function withDeviceTypeResourceFixture(mutator, callback) {
+  withResourceContractFixture(
+    DCIM_RELATIVE_PATH,
+    "DeviceType",
+    DEVICE_TYPE_FIELD_CONTRACTS,
     mutator,
     callback,
   );
@@ -400,6 +431,27 @@ function assertDeviceRoleProfileRejected(name, mutator, expectedDiagnostic) {
   });
 }
 
+function assertDeviceTypeProfileRejected(name, mutator, expectedDiagnostic) {
+  test(name, () => {
+    withDeviceTypeResourceFixture(mutator, (profilePath) => {
+      const result = runNode(
+        "scripts/validate_capability_profile.mjs",
+        profilePath,
+      );
+      assert.notEqual(
+        result.status,
+        0,
+        `expected rejection; ${diagnostics(result)}`,
+      );
+      assert.match(
+        diagnostics(result),
+        expectedDiagnostic,
+        "validator must identify the malformed DeviceType field contract",
+      );
+    });
+  });
+}
+
 function assertOpenAPIRejected(name, mutator, expectedDiagnostic) {
   test(name, () => {
     const spec = JSON.parse(fs.readFileSync(OPENAPI_PATH, "utf8"));
@@ -488,6 +540,15 @@ test("current capability metadata validates", () => {
     DEVICE_ROLE_FIELD_CONTRACTS,
     "current DeviceRole presence metadata must match the independently pinned contract",
   );
+  const deviceType = dcimMetadata.resources.find(
+    (resource) => resource.name === "DeviceType",
+  );
+  assert.ok(deviceType, "current metadata must contain DeviceType");
+  assert.deepStrictEqual(
+    deviceType.field_contracts,
+    DEVICE_TYPE_FIELD_CONTRACTS,
+    "current DeviceType presence metadata must match the independently pinned contract",
+  );
 
   const result = runNode(
     "scripts/validate_capability_profile.mjs",
@@ -497,9 +558,7 @@ test("current capability metadata validates", () => {
 });
 
 test("DeviceRole scalar-presence traceability delta remains bounded", () => {
-  const traceability = JSON.parse(
-    fs.readFileSync(TRACEABILITY_PATH, "utf8"),
-  );
+  const traceability = JSON.parse(fs.readFileSync(TRACEABILITY_PATH, "utf8"));
   assert.deepStrictEqual(
     {
       assessment_sets: traceability.assessment_sets.length,
@@ -512,7 +571,7 @@ test("DeviceRole scalar-presence traceability delta remains bounded", () => {
       rows: traceability.rows.length,
     },
     {
-      assessment_sets: 9,
+      assessment_sets: 10,
       reference_sets: 19,
       proof_sets: 15,
       applicability_sets: 15,
@@ -521,7 +580,7 @@ test("DeviceRole scalar-presence traceability delta remains bounded", () => {
       row_applicability: 293,
       rows: 293,
     },
-    "I6 must add one assessment without changing any reviewed row authority counts",
+    "I6 and I7 must add only their bounded assessments without changing reviewed row authority counts",
   );
 
   const expectedRows = [
@@ -532,8 +591,7 @@ test("DeviceRole scalar-presence traceability delta remains bounded", () => {
   ];
   const assessedRows = traceability.rows
     .filter(
-      (row) =>
-        row.assessment_set === "unresolved-device-role-scalar-presence",
+      (row) => row.assessment_set === "unresolved-device-role-scalar-presence",
     )
     .map((row) => row.id)
     .sort();
@@ -552,6 +610,45 @@ test("DeviceRole scalar-presence traceability delta remains bounded", () => {
       .length,
     9,
     "DeviceRole list/get/delete and hierarchy, uniqueness, and deletion rules remain unresolved-v2",
+  );
+});
+
+test("DeviceType scalar-presence traceability delta remains bounded", () => {
+  const traceability = JSON.parse(fs.readFileSync(TRACEABILITY_PATH, "utf8"));
+  const expectedRows = [
+    "operation.dcim.device-type.create",
+    "operation.dcim.device-type.replace",
+    "operation.dcim.device-type.update",
+  ];
+  const assessedRows = traceability.rows
+    .filter(
+      (row) => row.assessment_set === "unresolved-device-type-scalar-presence",
+    )
+    .map((row) => row.id)
+    .sort();
+  assert.deepStrictEqual(
+    assessedRows,
+    expectedRows,
+    "I7 must repoint exactly the DeviceType create/replace/update rows",
+  );
+
+  const deviceTypeRows = traceability.rows.filter(
+    (row) => row.capability === "dcim.DeviceType",
+  );
+  assert.equal(deviceTypeRows.length, 14);
+  assert.deepStrictEqual(
+    deviceTypeRows
+      .filter((row) => row.assessment_set === "contradicted-dcim-filter-names")
+      .map((row) => row.id)
+      .sort(),
+    ["operation.dcim.device-type.list", "resource.dcim.device-type.contract"],
+    "DeviceType resource/list filter contradictions must remain unchanged",
+  );
+  assert.equal(
+    deviceTypeRows.filter((row) => row.assessment_set === "unresolved-v2")
+      .length,
+    9,
+    "DeviceType get/delete, uniqueness, height-transition, and deletion rules remain unresolved-v2",
   );
 });
 
@@ -783,6 +880,96 @@ assertDeviceRoleProfileRejected(
     deviceRole.field_contracts.update.required_fields.push("name");
   },
   /dcim\.DeviceRole: field_contracts\.update\.required_fields must be empty for PATCH/u,
+);
+
+assertDeviceTypeProfileRejected(
+  "DeviceType field contracts are mandatory",
+  (deviceType) => {
+    delete deviceType.field_contracts;
+  },
+  /dcim\.DeviceType: field_contracts must declare operation-specific presence semantics/u,
+);
+
+assertDeviceTypeProfileRejected(
+  "DeviceType field contracts require every operation",
+  (deviceType) => {
+    delete deviceType.field_contracts.replace;
+  },
+  /dcim\.DeviceType: field_contracts must declare exactly response, create, replace, and update/u,
+);
+
+assertDeviceTypeProfileRejected(
+  "DeviceType operation fields reject undeclared fields",
+  (deviceType) => {
+    deviceType.field_contracts.create.required_fields.push("default_platform");
+  },
+  /dcim\.DeviceType: field_contracts\.create\.required_fields contains undeclared field default_platform/u,
+);
+
+assertDeviceTypeProfileRejected(
+  "DeviceType nullable fields remain a writable-field subset",
+  (deviceType) => {
+    deviceType.field_contracts.replace.nullable_fields.push("display");
+  },
+  /dcim\.DeviceType: field_contracts\.replace\.nullable_fields contains undeclared field display/u,
+);
+
+assertDeviceTypeProfileRejected(
+  "DeviceType blank fields remain a writable-field subset",
+  (deviceType) => {
+    deviceType.field_contracts.update.blank_fields.push("device_count");
+  },
+  /dcim\.DeviceType: field_contracts\.update\.blank_fields contains undeclared field device_count/u,
+);
+
+assertDeviceTypeProfileRejected(
+  "DeviceType blank fields reject relationship identifiers",
+  (deviceType) => {
+    deviceType.field_contracts.create.blank_fields.push("manufacturer");
+  },
+  /dcim\.DeviceType: field_contracts\.create\.blank_fields contains non-string field manufacturer/u,
+);
+
+assertDeviceTypeProfileRejected(
+  "DeviceType blank fields reject decimal heights",
+  (deviceType) => {
+    deviceType.field_contracts.replace.blank_fields.push("u_height");
+  },
+  /dcim\.DeviceType: field_contracts\.replace\.blank_fields contains non-string field u_height/u,
+);
+
+assertDeviceTypeProfileRejected(
+  "DeviceType blank fields reject booleans",
+  (deviceType) => {
+    deviceType.field_contracts.update.blank_fields.push("is_full_depth");
+  },
+  /dcim\.DeviceType: field_contracts\.update\.blank_fields contains non-string field is_full_depth/u,
+);
+
+assertDeviceTypeProfileRejected(
+  "DeviceType operation fields reject duplicates",
+  (deviceType) => {
+    deviceType.field_contracts.create.blank_fields.push("airflow");
+  },
+  /dcim\.DeviceType: field_contracts\.create\.blank_fields contains duplicate field airflow/u,
+);
+
+assertDeviceTypeProfileRejected(
+  "DeviceType response and write contracts cannot be conflated",
+  (deviceType) => {
+    deviceType.field_contracts.response = structuredClone(
+      deviceType.field_contracts.create,
+    );
+  },
+  /dcim\.DeviceType: field_contracts\.response must declare exactly nullable_fields/u,
+);
+
+assertDeviceTypeProfileRejected(
+  "DeviceType PATCH contracts cannot require fields",
+  (deviceType) => {
+    deviceType.field_contracts.update.required_fields.push("manufacturer");
+  },
+  /dcim\.DeviceType: field_contracts\.update\.required_fields must be empty for PATCH/u,
 );
 
 assertRackTypeProfileRejected(
@@ -1376,8 +1563,7 @@ assertOpenAPIRejected(
 assertOpenAPIRejected(
   "OpenAPI validation rejects stale DeviceRole parent request nullability",
   (spec) => {
-    spec.components.schemas.DeviceRoleUpdate.properties.parent.type =
-      "integer";
+    spec.components.schemas.DeviceRoleUpdate.properties.parent.type = "integer";
   },
   /DeviceRoleUpdate\.parent nullability must match field_contracts\.update/u,
 );
@@ -1385,8 +1571,7 @@ assertOpenAPIRejected(
 assertOpenAPIRejected(
   "OpenAPI validation rejects stale DeviceRole request blankability",
   (spec) => {
-    spec.components.schemas.DeviceRoleUpdate.properties.description.minLength =
-      1;
+    spec.components.schemas.DeviceRoleUpdate.properties.description.minLength = 1;
   },
   /DeviceRoleUpdate\.description blankability must match field_contracts\.update/u,
 );
@@ -1445,6 +1630,217 @@ assertOpenAPIRejected(
     spec.components.schemas.DeviceRole.properties._depth.type = "string";
   },
   /DeviceRole\._depth base type must be integer/u,
+);
+
+for (const [name, pathName, method, expectedSchema] of [
+  ["POST", "/api/dcim/device-types/", "post", "DeviceTypeCreate"],
+  ["PUT", "/api/dcim/device-types/{id}/", "put", "DeviceTypeReplace"],
+  ["PATCH", "/api/dcim/device-types/{id}/", "patch", "DeviceTypeUpdate"],
+]) {
+  assertOpenAPIRejected(
+    `OpenAPI validation rejects a stale DeviceType ${name} request reference`,
+    (spec) => {
+      spec.paths[pathName][method].requestBody.content[
+        "application/json"
+      ].schema = { $ref: "#/components/schemas/DeviceTypeWrite" };
+    },
+    new RegExp(
+      escapeRegExp(
+        `${name} ${pathName} must reference #/components/schemas/${expectedSchema}`,
+      ),
+      "u",
+    ),
+  );
+}
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects a stale shared DeviceType write schema",
+  (spec) => {
+    spec.components.schemas.DeviceTypeWrite = structuredClone(
+      spec.components.schemas.DeviceTypeCreate ??
+        spec.components.schemas.DeviceTypeWrite,
+    );
+  },
+  /DeviceType must not retain a conflated shared write schema/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale DeviceType create requiredness",
+  (spec) => {
+    const schema = structuredClone(
+      spec.components.schemas.DeviceTypeCreate ??
+        spec.components.schemas.DeviceTypeWrite,
+    );
+    schema.required = [];
+    spec.components.schemas.DeviceTypeCreate = schema;
+  },
+  /DeviceTypeCreate required fields must match field_contracts\.create/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale DeviceType replace requiredness",
+  (spec) => {
+    const schema = structuredClone(
+      spec.components.schemas.DeviceTypeReplace ??
+        spec.components.schemas.DeviceTypeWrite,
+    );
+    schema.required = ["manufacturer", "model", "slug", "part_number"];
+    spec.components.schemas.DeviceTypeReplace = schema;
+  },
+  /DeviceTypeReplace required fields must match field_contracts\.replace/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale DeviceType airflow request nullability",
+  (spec) => {
+    const schema = structuredClone(
+      spec.components.schemas.DeviceTypeUpdate ??
+        spec.components.schemas.DeviceTypeWrite,
+    );
+    schema.properties.airflow.type = "string";
+    spec.components.schemas.DeviceTypeUpdate = schema;
+  },
+  /DeviceTypeUpdate\.airflow nullability must match resource metadata/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale DeviceType request blankability",
+  (spec) => {
+    const schema = structuredClone(
+      spec.components.schemas.DeviceTypeUpdate ??
+        spec.components.schemas.DeviceTypeWrite,
+    );
+    schema.properties.description.minLength = 1;
+    spec.components.schemas.DeviceTypeUpdate = schema;
+  },
+  /DeviceTypeUpdate\.description blankability must match field_contracts\.update/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale DeviceType Manufacturer identifier types",
+  (spec) => {
+    const schema = structuredClone(
+      spec.components.schemas.DeviceTypeCreate ??
+        spec.components.schemas.DeviceTypeWrite,
+    );
+    schema.properties.manufacturer.type = "string";
+    delete schema.properties.manufacturer.format;
+    spec.components.schemas.DeviceTypeCreate = schema;
+  },
+  /DeviceTypeCreate\.manufacturer base type must be integer/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale DeviceType decimal height types",
+  (spec) => {
+    const schema = structuredClone(
+      spec.components.schemas.DeviceTypeReplace ??
+        spec.components.schemas.DeviceTypeWrite,
+    );
+    schema.properties.u_height.type = "integer";
+    schema.properties.u_height.format = "int64";
+    spec.components.schemas.DeviceTypeReplace = schema;
+  },
+  /DeviceTypeReplace\.u_height base type must be number/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale DeviceType decimal height formats",
+  (spec) => {
+    const schema = structuredClone(
+      spec.components.schemas.DeviceTypeUpdate ??
+        spec.components.schemas.DeviceTypeWrite,
+    );
+    delete schema.properties.u_height.format;
+    spec.components.schemas.DeviceTypeUpdate = schema;
+  },
+  /DeviceTypeUpdate\.u_height format must be double/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale DeviceType boolean scalar types",
+  (spec) => {
+    const schema = structuredClone(
+      spec.components.schemas.DeviceTypeReplace ??
+        spec.components.schemas.DeviceTypeWrite,
+    );
+    schema.properties.is_full_depth.type = "string";
+    spec.components.schemas.DeviceTypeReplace = schema;
+  },
+  /DeviceTypeReplace\.is_full_depth base type must be boolean/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects nullable DeviceType Manufacturer responses",
+  (spec) => {
+    const manufacturer =
+      spec.components.schemas.DeviceType.properties.manufacturer;
+    if (!manufacturer.oneOf.some((candidate) => candidate.type === "null")) {
+      manufacturer.oneOf.push({ type: "null" });
+    }
+  },
+  /DeviceType\.manufacturer response nullability must match field_contracts\.response/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale DeviceType Manufacturer response references",
+  (spec) => {
+    const manufacturer =
+      spec.components.schemas.DeviceType.properties.manufacturer;
+    manufacturer.oneOf.find((candidate) => candidate.$ref).$ref =
+      "#/components/schemas/DeviceType";
+  },
+  /DeviceType\.manufacturer must reference #\/components\/schemas\/ObjectReference/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects non-null DeviceType airflow responses",
+  (spec) => {
+    const airflow = spec.components.schemas.DeviceType.properties.airflow;
+    airflow.oneOf = airflow.oneOf.filter(
+      (candidate) => candidate.type !== "null",
+    );
+  },
+  /DeviceType\.airflow response nullability must match resource metadata/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale DeviceType airflow response envelopes",
+  (spec) => {
+    const airflow = spec.components.schemas.DeviceType.properties.airflow;
+    airflow.oneOf.find((candidate) => candidate.type === "object").required = [
+      "value",
+    ];
+  },
+  /DeviceType\.airflow choice response must require value and label/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale DeviceType response timestamp nullability",
+  (spec) => {
+    spec.components.schemas.DeviceType.properties.created.type = "string";
+  },
+  /DeviceType\.created response nullability must match field_contracts\.response/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects undeclared DeviceType response nullability",
+  (spec) => {
+    spec.components.schemas.DeviceType.properties.description.type = [
+      "string",
+      "null",
+    ];
+  },
+  /DeviceType\.description response nullability must match field_contracts\.response/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale DeviceType response decimal height shapes",
+  (spec) => {
+    spec.components.schemas.DeviceType.properties.u_height.type = "integer";
+    spec.components.schemas.DeviceType.properties.u_height.format = "int64";
+  },
+  /DeviceType\.u_height base type must be number/u,
 );
 
 for (const [name, pathName, method, expectedSchema] of [

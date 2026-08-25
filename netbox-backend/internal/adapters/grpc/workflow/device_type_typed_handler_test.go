@@ -95,7 +95,7 @@ func TestTypedDeviceTypeGRPCCreatePreservesDefaultsHeightAndExplicitFalse(t *tes
 	assert.Equal(t, int64(41), response.DeviceType.Id)
 }
 
-func TestTypedDeviceTypeGRPCUpdateMaskRequiresExplicitValueAndAllowsBlankAirflow(t *testing.T) {
+func TestTypedDeviceTypeGRPCUpdateMaskCarriesNullAndAllowsBlankAirflow(t *testing.T) {
 	service := &deviceTypeGRPCServiceSpy{deviceType: grpcDeviceTypeFixture(t)}
 	handler := NewDeviceTypeRPCHandler(service)
 
@@ -106,9 +106,9 @@ func TestTypedDeviceTypeGRPCUpdateMaskRequiresExplicitValueAndAllowsBlankAirflow
 			UpdateMask: &fieldmaskpb.FieldMask{Paths: []string{"airflow"}},
 		},
 	)
-	require.Error(t, err)
-	assert.Equal(t, codes.InvalidArgument, status.Code(err))
-	assert.Zero(t, service.updateCalls)
+	require.NoError(t, err)
+	assert.Equal(t, 1, service.updateCalls)
+	assert.Equal(t, applicationdcim.FieldNull, service.updateCommand.Airflow.State())
 
 	blankAirflow := ""
 	height := "2.5"
@@ -122,7 +122,7 @@ func TestTypedDeviceTypeGRPCUpdateMaskRequiresExplicitValueAndAllowsBlankAirflow
 		},
 	)
 	require.NoError(t, err)
-	assert.Equal(t, 1, service.updateCalls)
+	assert.Equal(t, 2, service.updateCalls)
 	assert.Equal(t, shared.ID(41), service.updateCommand.ID)
 	assert.Equal(t, applicationdcim.FieldPresent, service.updateCommand.Airflow.State())
 	assert.Equal(t, applicationdcim.FieldPresent, service.updateCommand.UHeight.State())

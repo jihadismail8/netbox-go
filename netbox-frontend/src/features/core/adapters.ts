@@ -15,6 +15,7 @@ import {
   type DeviceRoleMutation,
   type DeviceTypeDTO,
   type DeviceTypeForm,
+  type DeviceTypeMutation,
   type InterfaceDTO,
   type InterfaceForm,
   type InterfaceTemplateDTO,
@@ -434,22 +435,77 @@ const deviceRoleAdapter: CoreResourceAdapter<'devicerole'> = {
   filtersFromState: (state) => ({ name: state.name, slug: state.slug }),
 }
 
+const deviceTypeOriginalMutation = Symbol('device-type-original-mutation')
+
+const deviceTypeMutationFields = [
+  'manufacturer',
+  'model',
+  'slug',
+  'part_number',
+  'u_height',
+  'exclude_from_utilization',
+  'is_full_depth',
+  'airflow',
+  'description',
+  'comments',
+] as const satisfies readonly (keyof DeviceTypeMutation)[]
+
+type TrackedDeviceTypeForm = DeviceTypeForm & {
+  [deviceTypeOriginalMutation]?: DeviceTypeMutation
+}
+
+function deviceTypeMutation(form: DeviceTypeForm): DeviceTypeMutation {
+  const mutation: DeviceTypeMutation = {}
+  if (hasFormField(form, 'manufacturer')) mutation.manufacturer = relationID(form.manufacturer)
+  if (hasFormField(form, 'model')) mutation.model = form.model
+  if (hasFormField(form, 'slug')) mutation.slug = form.slug
+  if (hasFormField(form, 'part_number')) mutation.part_number = form.part_number
+  if (hasFormField(form, 'u_height')) mutation.u_height = form.u_height
+  if (hasFormField(form, 'exclude_from_utilization')) {
+    mutation.exclude_from_utilization = form.exclude_from_utilization
+  }
+  if (hasFormField(form, 'is_full_depth')) mutation.is_full_depth = form.is_full_depth
+  if (hasFormField(form, 'airflow')) mutation.airflow = form.airflow
+  if (hasFormField(form, 'description')) mutation.description = form.description
+  if (hasFormField(form, 'comments')) mutation.comments = form.comments
+  return mutation
+}
+
+function deviceTypeMutationDelta(
+  current: DeviceTypeMutation,
+  original: DeviceTypeMutation,
+): DeviceTypeMutation {
+  const delta = { ...current }
+  for (const field of deviceTypeMutationFields) {
+    if (Object.is(current[field], original[field])) Reflect.deleteProperty(delta, field)
+  }
+  return delta
+}
+
 const deviceTypeAdapter: CoreResourceAdapter<'devicetype'> = {
   resource: 'devicetype',
   emptyForm: () => ({ u_height: 1, exclude_from_utilization: false, is_full_depth: true }),
-  formFromDTO: (dto: DeviceTypeDTO): DeviceTypeForm => ({
-    manufacturer: dto.manufacturer,
-    model: dto.model,
-    slug: dto.slug,
-    part_number: dto.part_number,
-    u_height: dto.u_height,
-    exclude_from_utilization: dto.exclude_from_utilization,
-    is_full_depth: dto.is_full_depth,
-    airflow: choiceValue(dto.airflow),
-    description: dto.description,
-    comments: dto.comments,
-  }),
-  mutationFromForm: (form) => ({ ...form, manufacturer: relationID(form.manufacturer) }),
+  formFromDTO: (dto: DeviceTypeDTO): DeviceTypeForm => {
+    const form: TrackedDeviceTypeForm = {
+      manufacturer: dto.manufacturer,
+      model: dto.model,
+      slug: dto.slug,
+      part_number: dto.part_number,
+      u_height: dto.u_height,
+      exclude_from_utilization: dto.exclude_from_utilization,
+      is_full_depth: dto.is_full_depth,
+      airflow: choiceValue(dto.airflow),
+      description: dto.description,
+      comments: dto.comments,
+    }
+    form[deviceTypeOriginalMutation] = deviceTypeMutation(form)
+    return form
+  },
+  mutationFromForm: (form, editing) => {
+    const mutation = deviceTypeMutation(form)
+    const original = (form as TrackedDeviceTypeForm)[deviceTypeOriginalMutation]
+    return editing && original ? deviceTypeMutationDelta(mutation, original) : mutation
+  },
   filtersFromState: (state) => ({
     manufacturer_id: state.manufacturer_id,
     manufacturer_slug: state.manufacturer_slug,

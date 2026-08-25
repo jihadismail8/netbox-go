@@ -2,9 +2,10 @@ package dcim
 
 import (
 	"fmt"
-	"math"
 	"strconv"
 	"strings"
+	"unicode"
+	"unicode/utf8"
 
 	"netbox-go/internal/domain/shared"
 )
@@ -25,24 +26,210 @@ type DeviceHeight struct {
 }
 
 func ParseDeviceHeight(value string) (DeviceHeight, error) {
-	value = strings.TrimSpace(value)
-	number, err := strconv.ParseFloat(value, 64)
-	if err != nil || math.IsNaN(number) || math.IsInf(number, 0) || number < 0 {
+	parsed, ok := parseDeviceHeightDecimal(value)
+	if !ok {
 		return DeviceHeight{}, deviceHeightViolation("Must be a non-negative number.")
 	}
-	doubled := number * 2
-	if math.Trunc(doubled) != doubled {
+	if description := parsed.precisionViolation(); description != "" {
+		return DeviceHeight{}, deviceHeightViolation(description)
+	}
+	if parsed.negative && parsed.digits != "0" {
+		return DeviceHeight{}, deviceHeightViolation("Must be a non-negative number.")
+	}
+	halfUnits, ok := parsed.halfUnits()
+	if !ok {
 		return DeviceHeight{}, deviceHeightViolation("Device height must be a multiple of 0.5U.")
 	}
-	if number > 999.9 {
-		return DeviceHeight{}, deviceHeightViolation("Device height must not exceed 999.9U.")
+	return DeviceHeightFromHalfUnits(halfUnits)
+}
+
+type deviceHeightDecimal struct {
+	digits   string
+	exponent int
+	negative bool
+}
+
+func parseDeviceHeightDecimal(value string) (deviceHeightDecimal, bool) {
+	value = strings.TrimSpace(value)
+	if value == "" || utf8.RuneCountInString(value) > 1000 {
+		return deviceHeightDecimal{}, false
 	}
-	return DeviceHeight{halfUnits: uint16(doubled)}, nil
+	value = strings.ReplaceAll(value, "_", "")
+	if value == "" {
+		return deviceHeightDecimal{}, false
+	}
+
+	negative := false
+	switch value[0] {
+	case '+':
+		value = value[1:]
+	case '-':
+		negative = true
+		value = value[1:]
+	}
+	if value == "" {
+		return deviceHeightDecimal{}, false
+	}
+
+	coefficient := value
+	exponent := 0
+	if exponentIndex := strings.IndexAny(value, "eE"); exponentIndex >= 0 {
+		coefficient = value[:exponentIndex]
+		exponentText := value[exponentIndex+1:]
+		if strings.ContainsAny(exponentText, "eE") {
+			return deviceHeightDecimal{}, false
+		}
+		var ok bool
+		exponent, ok = parseDeviceHeightExponent(exponentText)
+		if !ok {
+			return deviceHeightDecimal{}, false
+		}
+	}
+
+	digits, decimalPlaces, ok := parseDeviceHeightCoefficient(coefficient)
+	if !ok {
+		return deviceHeightDecimal{}, false
+	}
+	digits = strings.TrimLeft(digits, "0")
+	if digits == "" {
+		digits = "0"
+	}
+	return deviceHeightDecimal{
+		digits: digits, exponent: exponent - decimalPlaces, negative: negative,
+	}, true
+}
+
+func parseDeviceHeightExponent(value string) (int, bool) {
+	if value == "" {
+		return 0, false
+	}
+	sign := 1
+	switch value[0] {
+	case '+':
+		value = value[1:]
+	case '-':
+		sign = -1
+		value = value[1:]
+	}
+	if value == "" {
+		return 0, false
+	}
+
+	exponent := 0
+	for _, character := range value {
+		digit, ok := deviceHeightDecimalDigit(character)
+		if !ok {
+			return 0, false
+		}
+		if exponent < 1000 {
+			exponent = exponent*10 + int(digit)
+			if exponent > 1000 {
+				exponent = 1000
+			}
+		}
+	}
+	return sign * exponent, true
+}
+
+func parseDeviceHeightCoefficient(value string) (string, int, bool) {
+	digits := make([]byte, 0, len(value))
+	decimalPlaces := 0
+	decimalPointSeen := false
+	for _, character := range value {
+		if character == '.' {
+			if decimalPointSeen {
+				return "", 0, false
+			}
+			decimalPointSeen = true
+			continue
+		}
+		digit, ok := deviceHeightDecimalDigit(character)
+		if !ok {
+			return "", 0, false
+		}
+		digits = append(digits, '0'+digit)
+		if decimalPointSeen {
+			decimalPlaces++
+		}
+	}
+	if len(digits) == 0 {
+		return "", 0, false
+	}
+	return string(digits), decimalPlaces, true
+}
+
+func deviceHeightDecimalDigit(character rune) (byte, bool) {
+	for _, decimalRange := range unicode.Digit.R16 {
+		if character < rune(decimalRange.Lo) {
+			break
+		}
+		if character <= rune(decimalRange.Hi) &&
+			(character-rune(decimalRange.Lo))%rune(decimalRange.Stride) == 0 {
+			index := (character - rune(decimalRange.Lo)) / rune(decimalRange.Stride)
+			return byte(index % 10), true
+		}
+	}
+	for _, decimalRange := range unicode.Digit.R32 {
+		if character < rune(decimalRange.Lo) {
+			break
+		}
+		if character <= rune(decimalRange.Hi) &&
+			(character-rune(decimalRange.Lo))%rune(decimalRange.Stride) == 0 {
+			index := (character - rune(decimalRange.Lo)) / rune(decimalRange.Stride)
+			return byte(index % 10), true
+		}
+	}
+	return 0, false
+}
+
+func (value deviceHeightDecimal) precisionViolation() string {
+	totalDigits := len(value.digits)
+	var wholeDigits int
+	decimalPlaces := 0
+	if value.exponent >= 0 {
+		totalDigits += value.exponent
+		wholeDigits = totalDigits
+	} else if totalDigits > -value.exponent {
+		wholeDigits = totalDigits + value.exponent
+		decimalPlaces = -value.exponent
+	} else {
+		totalDigits = -value.exponent
+		wholeDigits = 0
+		decimalPlaces = totalDigits
+	}
+
+	switch {
+	case totalDigits > 4:
+		return "Ensure that there are no more than 4 digits in total."
+	case decimalPlaces > 1:
+		return "Ensure that there are no more than 1 decimal places."
+	case wholeDigits > 3:
+		return "Ensure that there are no more than 3 digits before the decimal point."
+	default:
+		return ""
+	}
+}
+
+func (value deviceHeightDecimal) halfUnits() (uint16, bool) {
+	coefficient, err := strconv.ParseUint(value.digits, 10, 16)
+	if err != nil {
+		return 0, false
+	}
+	if value.exponent == -1 {
+		if coefficient%5 != 0 {
+			return 0, false
+		}
+		return uint16(coefficient / 5), true
+	}
+	for range value.exponent {
+		coefficient *= 10
+	}
+	return uint16(coefficient * 2), true
 }
 
 func DeviceHeightFromHalfUnits(halfUnits uint16) (DeviceHeight, error) {
 	if halfUnits > 1999 {
-		return DeviceHeight{}, deviceHeightViolation("Device height must not exceed 999.9U.")
+		return DeviceHeight{}, deviceHeightViolation("Device height must not exceed 999.5U.")
 	}
 	return DeviceHeight{halfUnits: halfUnits}, nil
 }
@@ -299,6 +486,27 @@ func (deviceType *DeviceType) ApplyPatch(patch DeviceTypePatch, now shared.Times
 			Description: "At least one writable field must be supplied.",
 		})
 	}
+	return deviceType.Replace(deviceType.valuesWithPatch(patch), now)
+}
+
+// ValidatePatch checks the state a patch would produce without mutating the
+// aggregate. Empty patches are valid previews; ApplyPatch retains ownership of
+// the public update-mask requirement.
+func (deviceType *DeviceType) ValidatePatch(patch DeviceTypePatch) error {
+	if deviceType == nil {
+		return shared.NewError(
+			shared.ErrorReasonInternal,
+			"Cannot validate a patch for a nil DeviceType.",
+		)
+	}
+	_, violations := validateDeviceTypeValues(deviceType.valuesWithPatch(patch))
+	if len(violations) > 0 {
+		return shared.NewValidationError(violations...)
+	}
+	return nil
+}
+
+func (deviceType DeviceType) valuesWithPatch(patch DeviceTypePatch) DeviceTypeValues {
 	values := deviceType.Values()
 	if patch.Manufacturer != nil {
 		values.Manufacturer = *patch.Manufacturer
@@ -318,7 +526,7 @@ func (deviceType *DeviceType) ApplyPatch(patch DeviceTypePatch, now shared.Times
 	}
 	setString(&values.Description, patch.Description)
 	setString(&values.Comments, patch.Comments)
-	return deviceType.Replace(values, now)
+	return values
 }
 
 func (deviceType DeviceType) ID() shared.ID                       { return deviceType.id }
@@ -416,12 +624,11 @@ func validateDeviceTypeValues(
 		})
 	}
 	validateRequiredLength(&violations, "model", values.Model, DeviceTypeModelMaxLength)
-	validateOptionalLength(&violations, "part_number", values.PartNumber, DeviceTypePartNumberMaxLength)
-	validateOptionalLength(&violations, "description", values.Description, DeviceTypeDescriptionMaxLength)
 	slug, err := shared.ParseSlug(values.Slug, DeviceTypeSlugMaxLength)
 	if err != nil {
 		violations = append(violations, shared.ViolationsOf(err)...)
 	}
+	validateOptionalLength(&violations, "part_number", values.PartNumber, DeviceTypePartNumberMaxLength)
 	height, err := ParseDeviceHeight(values.UHeight)
 	if err != nil {
 		violations = append(violations, shared.ViolationsOf(err)...)
@@ -434,6 +641,7 @@ func validateDeviceTypeValues(
 			})
 		}
 	}
+	validateOptionalLength(&violations, "description", values.Description, DeviceTypeDescriptionMaxLength)
 	return normalizedDeviceTypeValues{
 		manufacturer: values.Manufacturer, model: values.Model, slug: slug,
 		partNumber: values.PartNumber, uHeight: height,
