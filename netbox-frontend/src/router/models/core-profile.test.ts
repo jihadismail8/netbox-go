@@ -5,6 +5,8 @@ import DynamicField from '@/components/form/DynamicField.vue'
 import DynamicForm from '@/components/form/DynamicForm.vue'
 import { getCoreResourceAdapter } from '@/features/core/adapters'
 import type {
+  DeviceRoleDTO,
+  DeviceRoleForm,
   IPAddressDTO,
   IPAddressForm,
   ManufacturerDTO,
@@ -368,6 +370,96 @@ describe('RackType core profile form contract', () => {
 
     const form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as RackTypeForm
     expect(adapter.mutationFromForm(form, true)).toEqual({ description: '' })
+  })
+})
+
+describe('DeviceRole core profile form contract', () => {
+  it('pins required fields, create defaults, and optional parent and text fields', () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'devicerole')!
+    const fields = new Map(config.fields.map((field) => [field.key, field]))
+
+    expect(fields.get('parent')).toEqual(
+      expect.objectContaining({ type: 'api-select', relationResource: 'devicerole' }),
+    )
+    expect(fields.get('name')?.required).toBe(true)
+    expect(fields.get('slug')?.required).toBe(true)
+    expect(fields.get('color')).toEqual(expect.objectContaining({ default: '9e9e9e' }))
+    expect(fields.get('vm_role')).toEqual(expect.objectContaining({ default: true }))
+    for (const optional of ['parent', 'color', 'vm_role', 'description', 'comments']) {
+      expect(fields.get(optional), optional).toBeDefined()
+      expect(fields.get(optional)?.required, optional).not.toBe(true)
+    }
+  })
+
+  it('routes field-scoped REST validation to the matching DeviceRole field', () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'devicerole')!
+    const wrapper = mount(DynamicForm, {
+      props: {
+        fields: config.fields,
+        modelValue: { name: 'Access', slug: 'access', color: '' },
+        errors: {
+          color: ['This field may not be blank.'],
+        },
+      },
+    })
+
+    const color = wrapper
+      .findAllComponents(DynamicField)
+      .find((field) => field.props('field').key === 'color')
+    const slug = wrapper
+      .findAllComponents(DynamicField)
+      .find((field) => field.props('field').key === 'slug')
+    expect(color).toBeDefined()
+    expect(color?.props('error')).toBe('This field may not be blank.')
+    expect(slug).toBeDefined()
+    expect(slug?.props('error')).toBeUndefined()
+  })
+
+  it('types nullable DeviceRole response timestamps exactly', () => {
+    expectTypeOf<DeviceRoleDTO['created']>().toEqualTypeOf<string | null>()
+    expectTypeOf<DeviceRoleDTO['last_updated']>().toEqualTypeOf<string | null>()
+  })
+
+  it('preserves the DeviceRole scalar dirty baseline through the real DynamicForm edit flow', async () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'devicerole')!
+    const adapter = getCoreResourceAdapter('devicerole')
+    const dto: DeviceRoleDTO = {
+      id: 13,
+      url: '/api/dcim/device-roles/13/',
+      display: 'Access',
+      created: null,
+      last_updated: null,
+      parent: {
+        id: 7,
+        url: '/api/dcim/device-roles/7/',
+        display: 'Infrastructure',
+      },
+      name: 'Access',
+      slug: 'access',
+      color: '9e9e9e',
+      vm_role: true,
+      description: 'Access devices',
+      comments: 'Operator note',
+      device_count: 4,
+      _depth: 1,
+    }
+    const wrapper = mount(DynamicForm, {
+      props: {
+        fields: config.fields.filter((field) => field.key === 'parent'),
+        modelValue: adapter.formFromDTO(dto),
+        editing: true,
+      },
+    })
+
+    const parent = wrapper
+      .findAllComponents(DynamicField)
+      .find((field) => field.props('field').key === 'parent')
+    expect(parent).toBeDefined()
+    parent!.vm.$emit('update:modelValue', null)
+    await nextTick()
+
+    const form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as DeviceRoleForm
+    expect(adapter.mutationFromForm(form, true)).toEqual({ parent: null })
   })
 })
 

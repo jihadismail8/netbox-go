@@ -12,6 +12,7 @@ import {
   type DeviceForm,
   type DeviceRoleDTO,
   type DeviceRoleForm,
+  type DeviceRoleMutation,
   type DeviceTypeDTO,
   type DeviceTypeForm,
   type InterfaceDTO,
@@ -370,19 +371,66 @@ const rackAdapter: CoreResourceAdapter<'rack'> = {
   }),
 }
 
+const deviceRoleOriginalMutation = Symbol('device-role-original-mutation')
+
+const deviceRoleMutationFields = [
+  'parent',
+  'name',
+  'slug',
+  'color',
+  'vm_role',
+  'description',
+  'comments',
+] as const satisfies readonly (keyof DeviceRoleMutation)[]
+
+type TrackedDeviceRoleForm = DeviceRoleForm & {
+  [deviceRoleOriginalMutation]?: DeviceRoleMutation
+}
+
+function deviceRoleMutation(form: DeviceRoleForm): DeviceRoleMutation {
+  const mutation: DeviceRoleMutation = {}
+  if (hasFormField(form, 'parent')) mutation.parent = relationID(form.parent)
+  if (hasFormField(form, 'name')) mutation.name = form.name
+  if (hasFormField(form, 'slug')) mutation.slug = form.slug
+  if (hasFormField(form, 'color')) mutation.color = form.color
+  if (hasFormField(form, 'vm_role')) mutation.vm_role = form.vm_role
+  if (hasFormField(form, 'description')) mutation.description = form.description
+  if (hasFormField(form, 'comments')) mutation.comments = form.comments
+  return mutation
+}
+
+function deviceRoleMutationDelta(
+  current: DeviceRoleMutation,
+  original: DeviceRoleMutation,
+): DeviceRoleMutation {
+  const delta = { ...current }
+  for (const field of deviceRoleMutationFields) {
+    if (Object.is(current[field], original[field])) Reflect.deleteProperty(delta, field)
+  }
+  return delta
+}
+
 const deviceRoleAdapter: CoreResourceAdapter<'devicerole'> = {
   resource: 'devicerole',
   emptyForm: () => ({ color: '9e9e9e', vm_role: true }),
-  formFromDTO: (dto: DeviceRoleDTO): DeviceRoleForm => ({
-    parent: dto.parent,
-    name: dto.name,
-    slug: dto.slug,
-    color: dto.color,
-    vm_role: dto.vm_role,
-    description: dto.description,
-    comments: dto.comments,
-  }),
-  mutationFromForm: (form) => ({ ...form, parent: relationID(form.parent) }),
+  formFromDTO: (dto: DeviceRoleDTO): DeviceRoleForm => {
+    const form: TrackedDeviceRoleForm = {
+      parent: dto.parent,
+      name: dto.name,
+      slug: dto.slug,
+      color: dto.color,
+      vm_role: dto.vm_role,
+      description: dto.description,
+      comments: dto.comments,
+    }
+    form[deviceRoleOriginalMutation] = deviceRoleMutation(form)
+    return form
+  },
+  mutationFromForm: (form, editing) => {
+    const mutation = deviceRoleMutation(form)
+    const original = (form as TrackedDeviceRoleForm)[deviceRoleOriginalMutation]
+    return editing && original ? deviceRoleMutationDelta(mutation, original) : mutation
+  },
   filtersFromState: (state) => ({ name: state.name, slug: state.slug }),
 }
 

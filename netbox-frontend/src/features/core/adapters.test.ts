@@ -5,6 +5,8 @@ import {
   resourceField,
   withFormField,
   type CoreReference,
+  type DeviceRoleDTO,
+  type DeviceRoleForm,
   type IPAddressDTO,
   type IPAddressForm,
   type ManufacturerDTO,
@@ -536,6 +538,112 @@ describe('typed core resource adapters', () => {
     ).toEqual({ description: '' })
     expect(
       adapter.mutationFromForm(withFormField(hydrated, 'comments', '') as RackTypeForm, true),
+    ).toEqual({ comments: '' })
+  })
+
+  it('preserves DeviceRole create omissions, defaults, IDs, and concrete scalar states', () => {
+    const adapter = getCoreResourceAdapter('devicerole')
+
+    expect(adapter.mutationFromForm({}, false)).toEqual({})
+    expect(adapter.mutationFromForm(adapter.emptyForm(), false)).toEqual({
+      color: '9e9e9e',
+      vm_role: true,
+    })
+    expect(
+      adapter.mutationFromForm(
+        {
+          parent: deviceRole,
+          name: 'Access',
+          slug: 'access',
+          color: '00ff00',
+          vm_role: true,
+          description: 'Access devices',
+          comments: 'Operator note',
+        },
+        false,
+      ),
+    ).toEqual({
+      parent: 7,
+      name: 'Access',
+      slug: 'access',
+      color: '00ff00',
+      vm_role: true,
+      description: 'Access devices',
+      comments: 'Operator note',
+    })
+    expect(
+      adapter.mutationFromForm(
+        {
+          parent: null,
+          color: '',
+          vm_role: false,
+          description: '',
+          comments: '',
+        },
+        false,
+      ),
+    ).toEqual({
+      parent: null,
+      color: '',
+      vm_role: false,
+      description: '',
+      comments: '',
+    })
+  })
+
+  it('omits unchanged DeviceRole fields and emits one normalized dirty PATCH field', () => {
+    const adapter = getCoreResourceAdapter('devicerole')
+    const dto: DeviceRoleDTO = {
+      id: 13,
+      url: '/api/dcim/device-roles/13/',
+      display: 'Access',
+      created: null,
+      last_updated: null,
+      parent: deviceRole,
+      name: 'Access',
+      slug: 'access',
+      color: '9e9e9e',
+      vm_role: true,
+      description: 'Access devices',
+      comments: 'Operator note',
+      device_count: 4,
+      _depth: 1,
+    }
+    const hydrated = adapter.formFromDTO(dto)
+
+    expect(adapter.mutationFromForm({ ...hydrated }, true)).toEqual({})
+
+    const otherParent: CoreReference = {
+      id: 14,
+      url: '/api/dcim/device-roles/14/',
+      display: 'Infrastructure',
+    }
+    expect(
+      adapter.mutationFromForm(
+        withFormField(hydrated, 'parent', otherParent) as DeviceRoleForm,
+        true,
+      ),
+    ).toEqual({ parent: 14 })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'parent', null) as DeviceRoleForm, true),
+    ).toEqual({ parent: null })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'name', 'Edge') as DeviceRoleForm, true),
+    ).toEqual({ name: 'Edge' })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'slug', 'edge') as DeviceRoleForm, true),
+    ).toEqual({ slug: 'edge' })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'color', '00ff00') as DeviceRoleForm, true),
+    ).toEqual({ color: '00ff00' })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'vm_role', false) as DeviceRoleForm, true),
+    ).toEqual({ vm_role: false })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'description', '') as DeviceRoleForm, true),
+    ).toEqual({ description: '' })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'comments', '') as DeviceRoleForm, true),
     ).toEqual({ comments: '' })
   })
 

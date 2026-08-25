@@ -150,6 +150,26 @@
       "grpc_prefix": "DeviceRole",
       "writable_fields": ["parent", "name", "slug", "color", "vm_role", "description", "comments"],
       "response_only_fields": ["id", "url", "display", "created", "last_updated", "device_count", "_depth"],
+      "field_contracts": {
+        "response": {
+          "nullable_fields": ["parent", "created", "last_updated"]
+        },
+        "create": {
+          "required_fields": ["name", "slug"],
+          "nullable_fields": ["parent"],
+          "blank_fields": ["description", "comments"]
+        },
+        "replace": {
+          "required_fields": ["name", "slug"],
+          "nullable_fields": ["parent"],
+          "blank_fields": ["description", "comments"]
+        },
+        "update": {
+          "required_fields": [],
+          "nullable_fields": ["parent"],
+          "blank_fields": ["description", "comments"]
+        }
+      },
       "filters": ["name", "slug"],
       "ordering": ["id", "name", "slug", "created", "last_updated"],
       "relationships": ["parent"],

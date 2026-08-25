@@ -120,7 +120,9 @@ export interface RackDTO extends CoreResourceBase {
   device_count: number
 }
 
-export interface DeviceRoleDTO extends CoreResourceBase {
+export interface DeviceRoleDTO extends Omit<CoreResourceBase, 'created' | 'last_updated'> {
+  created: string | null
+  last_updated: string | null
   parent: CoreReference | null
   name: string
   slug: string

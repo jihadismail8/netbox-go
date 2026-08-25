@@ -112,35 +112,41 @@ func typedDeviceRoleUpdateCommand(
 				command.Parent = fields.parent
 			}
 		case "name":
-			if fields.name.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateDeviceRoleCommand{}, invalidTypedDeviceRoleMask()
+			field := fields.name
+			if field.State() == applicationdcim.FieldOmitted {
+				field = applicationdcim.NullField[string]()
 			}
-			command.Name = fields.name
+			command.Name = field
 		case "slug":
-			if fields.slug.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateDeviceRoleCommand{}, invalidTypedDeviceRoleMask()
+			field := fields.slug
+			if field.State() == applicationdcim.FieldOmitted {
+				field = applicationdcim.NullField[string]()
 			}
-			command.Slug = fields.slug
+			command.Slug = field
 		case "color":
-			if fields.color.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateDeviceRoleCommand{}, invalidTypedDeviceRoleMask()
+			field := fields.color
+			if field.State() == applicationdcim.FieldOmitted {
+				field = applicationdcim.NullField[string]()
 			}
-			command.Color = fields.color
+			command.Color = field
 		case "vm_role":
-			if fields.vmRole.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateDeviceRoleCommand{}, invalidTypedDeviceRoleMask()
+			field := fields.vmRole
+			if field.State() == applicationdcim.FieldOmitted {
+				field = applicationdcim.NullField[bool]()
 			}
-			command.VMRole = fields.vmRole
+			command.VMRole = field
 		case "description":
-			if fields.description.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateDeviceRoleCommand{}, invalidTypedDeviceRoleMask()
+			field := fields.description
+			if field.State() == applicationdcim.FieldOmitted {
+				field = applicationdcim.NullField[string]()
 			}
-			command.Description = fields.description
+			command.Description = field
 		case "comments":
-			if fields.comments.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateDeviceRoleCommand{}, invalidTypedDeviceRoleMask()
+			field := fields.comments
+			if field.State() == applicationdcim.FieldOmitted {
+				field = applicationdcim.NullField[string]()
 			}
-			command.Comments = fields.comments
+			command.Comments = field
 		default:
 			return applicationdcim.UpdateDeviceRoleCommand{}, invalidTypedDeviceRoleMask()
 		}
@@ -152,7 +158,7 @@ func invalidTypedDeviceRoleMask() error {
 	return shared.NewValidationError(
 		shared.FieldViolation{
 			Field:       "update_mask",
-			Description: "Every update_mask path must name a supported field with an explicit value.",
+			Description: "Every update_mask path must name a supported field.",
 		},
 	)
 }

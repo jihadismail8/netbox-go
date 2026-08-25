@@ -150,9 +150,11 @@ func (service *DeviceRoleService) CreateDeviceRole(
 	}
 	var created *dcimdomain.DeviceRole
 	err := service.unitOfWork.WithinTransaction(ctx, func(transactionContext context.Context) error {
-		values, valuesErr := command.values()
-		if valuesErr != nil {
-			return valuesErr
+		values, commandErr := command.values()
+		now := service.clock.Now()
+		candidate, domainErr := dcimdomain.NewDeviceRole(values, now)
+		if validationErr := mergeDeviceRoleMutationErrors(commandErr, domainErr); validationErr != nil {
+			return validationErr
 		}
 		hierarchy, hierarchyErr := service.repository.ListHierarchyForUpdate(transactionContext)
 		if hierarchyErr != nil {
@@ -160,11 +162,6 @@ func (service *DeviceRoleService) CreateDeviceRole(
 		}
 		if validationErr := validateDeviceRolePlacement(0, values, hierarchy); validationErr != nil {
 			return validationErr
-		}
-		now := service.clock.Now()
-		candidate, domainErr := dcimdomain.NewDeviceRole(values, now)
-		if domainErr != nil {
-			return domainErr
 		}
 		if authorizeErr := service.authorize(transactionContext, principal, authz.Add, candidate); authorizeErr != nil {
 			return authorizeErr
@@ -198,15 +195,13 @@ func (service *DeviceRoleService) ReplaceDeviceRole(
 	if err := service.authorize(ctx, principal, authz.Change, nil); err != nil {
 		return nil, err
 	}
-	if err := validatePersistedID(command.ID); err != nil {
-		return nil, err
-	}
-	values, err := command.values()
-	if err != nil {
-		return nil, err
-	}
 	return service.mutateDeviceRole(ctx, principal, command.ID, func(role *dcimdomain.DeviceRole, now shared.Timestamp) error {
-		return role.Replace(values, now)
+		patch, commandErr := command.patch()
+		domainErr := role.ValidatePatch(patch)
+		if validationErr := mergeDeviceRoleMutationErrors(commandErr, domainErr); validationErr != nil {
+			return validationErr
+		}
+		return role.ApplyPatch(patch, now)
 	})
 }
 
@@ -218,14 +213,12 @@ func (service *DeviceRoleService) UpdateDeviceRole(
 	if err := service.authorize(ctx, principal, authz.Change, nil); err != nil {
 		return nil, err
 	}
-	if err := validatePersistedID(command.ID); err != nil {
-		return nil, err
-	}
-	patch, err := command.patch()
-	if err != nil {
-		return nil, err
-	}
 	return service.mutateDeviceRole(ctx, principal, command.ID, func(role *dcimdomain.DeviceRole, now shared.Timestamp) error {
+		patch, commandErr := command.patch()
+		domainErr := role.ValidatePatch(patch)
+		if validationErr := mergeDeviceRoleMutationErrors(commandErr, domainErr); validationErr != nil {
+			return validationErr
+		}
 		return role.ApplyPatch(patch, now)
 	})
 }
@@ -238,6 +231,9 @@ func (service *DeviceRoleService) mutateDeviceRole(
 ) (*dcimdomain.DeviceRole, error) {
 	var updated *dcimdomain.DeviceRole
 	err := service.unitOfWork.WithinTransaction(ctx, func(transactionContext context.Context) error {
+		if validationErr := validatePersistedID(id); validationErr != nil {
+			return validationErr
+		}
 		hierarchy, hierarchyErr := service.repository.ListHierarchyForUpdate(transactionContext)
 		if hierarchyErr != nil {
 			return hierarchyErr

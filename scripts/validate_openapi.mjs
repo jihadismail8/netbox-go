@@ -94,6 +94,35 @@ const contractedResourceShapes = {
       manufacturer: "#/components/schemas/ObjectReference",
     },
   },
+  DeviceRole: {
+    request: {
+      parent: { type: "integer", format: "int64" },
+      name: { type: "string" },
+      slug: { type: "string" },
+      color: { type: "string" },
+      vm_role: { type: "boolean" },
+      description: { type: "string" },
+      comments: { type: "string" },
+    },
+    response: {
+      name: { type: "string" },
+      slug: { type: "string" },
+      color: { type: "string" },
+      vm_role: { type: "boolean" },
+      description: { type: "string" },
+      comments: { type: "string" },
+      id: { type: "integer", format: "int64" },
+      url: { type: "string", format: "uri" },
+      display: { type: "string" },
+      created: { type: "string", format: "date-time" },
+      last_updated: { type: "string", format: "date-time" },
+      device_count: { type: "integer", format: "int64" },
+      _depth: { type: "integer", format: "int64" },
+    },
+    responseReferences: {
+      parent: "#/components/schemas/ObjectReference",
+    },
+  },
   Site: {
     request: {
       name: { type: "string" },

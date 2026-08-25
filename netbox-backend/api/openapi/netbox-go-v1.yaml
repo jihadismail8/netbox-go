@@ -268,7 +268,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DeviceRoleWrite"
+                "$ref": "#/components/schemas/DeviceRoleCreate"
               }
             }
           }
@@ -338,7 +338,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DeviceRoleWrite"
+                "$ref": "#/components/schemas/DeviceRoleReplace"
               }
             }
           }
@@ -377,7 +377,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DeviceRoleWrite"
+                "$ref": "#/components/schemas/DeviceRoleUpdate"
               }
             }
           }
@@ -3633,37 +3633,22 @@
             ]
           },
           "name": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "slug": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "color": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "vm_role": {
             "type": "boolean"
           },
           "description": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "comments": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "id": {
             "type": "integer",
@@ -3674,10 +3659,7 @@
             "format": "uri"
           },
           "display": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "created": {
             "type": [
@@ -3700,6 +3682,44 @@
           "_depth": {
             "type": "integer",
             "format": "int64"
+          }
+        }
+      },
+      "DeviceRoleCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "slug"
+        ],
+        "properties": {
+          "parent": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "slug": {
+            "type": "string",
+            "minLength": 1
+          },
+          "color": {
+            "type": "string",
+            "minLength": 1
+          },
+          "vm_role": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string"
+          },
+          "comments": {
+            "type": "string"
           }
         }
       },
@@ -3737,7 +3757,45 @@
           }
         }
       },
-      "DeviceRoleWrite": {
+      "DeviceRoleReplace": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "slug"
+        ],
+        "properties": {
+          "parent": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "slug": {
+            "type": "string",
+            "minLength": 1
+          },
+          "color": {
+            "type": "string",
+            "minLength": 1
+          },
+          "vm_role": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string"
+          },
+          "comments": {
+            "type": "string"
+          }
+        }
+      },
+      "DeviceRoleUpdate": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -3749,37 +3807,25 @@
             "format": "int64"
           },
           "name": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "minLength": 1
           },
           "slug": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "minLength": 1
           },
           "color": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "minLength": 1
           },
           "vm_role": {
             "type": "boolean"
           },
           "description": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "comments": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           }
         }
       },

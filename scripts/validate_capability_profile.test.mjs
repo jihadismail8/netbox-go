@@ -15,6 +15,10 @@ const OPENAPI_PATH = path.join(
   ROOT,
   "netbox-backend/api/openapi/netbox-go-v1.yaml",
 );
+const TRACEABILITY_PATH = path.join(
+  CONTRACT_ROOT,
+  "traceability/core-workflow-v1.yaml",
+);
 
 const IP_ADDRESS_FIELD_CONTRACTS = {
   response: {
@@ -144,6 +148,27 @@ const RACK_TYPE_FIELD_CONTRACTS = {
   },
 };
 
+const DEVICE_ROLE_FIELD_CONTRACTS = {
+  response: {
+    nullable_fields: ["parent", "created", "last_updated"],
+  },
+  create: {
+    required_fields: ["name", "slug"],
+    nullable_fields: ["parent"],
+    blank_fields: ["description", "comments"],
+  },
+  replace: {
+    required_fields: ["name", "slug"],
+    nullable_fields: ["parent"],
+    blank_fields: ["description", "comments"],
+  },
+  update: {
+    required_fields: [],
+    nullable_fields: ["parent"],
+    blank_fields: ["description", "comments"],
+  },
+};
+
 function runNode(script, argument) {
   return spawnSync(process.execPath, [path.join(ROOT, script), argument], {
     cwd: ROOT,
@@ -234,6 +259,16 @@ function withRackTypeResourceFixture(mutator, callback) {
     DCIM_RELATIVE_PATH,
     "RackType",
     RACK_TYPE_FIELD_CONTRACTS,
+    mutator,
+    callback,
+  );
+}
+
+function withDeviceRoleResourceFixture(mutator, callback) {
+  withResourceContractFixture(
+    DCIM_RELATIVE_PATH,
+    "DeviceRole",
+    DEVICE_ROLE_FIELD_CONTRACTS,
     mutator,
     callback,
   );
@@ -344,6 +379,27 @@ function assertRackTypeProfileRejected(name, mutator, expectedDiagnostic) {
   });
 }
 
+function assertDeviceRoleProfileRejected(name, mutator, expectedDiagnostic) {
+  test(name, () => {
+    withDeviceRoleResourceFixture(mutator, (profilePath) => {
+      const result = runNode(
+        "scripts/validate_capability_profile.mjs",
+        profilePath,
+      );
+      assert.notEqual(
+        result.status,
+        0,
+        `expected rejection; ${diagnostics(result)}`,
+      );
+      assert.match(
+        diagnostics(result),
+        expectedDiagnostic,
+        "validator must identify the malformed DeviceRole field contract",
+      );
+    });
+  });
+}
+
 function assertOpenAPIRejected(name, mutator, expectedDiagnostic) {
   test(name, () => {
     const spec = JSON.parse(fs.readFileSync(OPENAPI_PATH, "utf8"));
@@ -423,12 +479,80 @@ test("current capability metadata validates", () => {
     RACK_TYPE_FIELD_CONTRACTS,
     "current RackType presence metadata must match the independently pinned contract",
   );
+  const deviceRole = dcimMetadata.resources.find(
+    (resource) => resource.name === "DeviceRole",
+  );
+  assert.ok(deviceRole, "current metadata must contain DeviceRole");
+  assert.deepStrictEqual(
+    deviceRole.field_contracts,
+    DEVICE_ROLE_FIELD_CONTRACTS,
+    "current DeviceRole presence metadata must match the independently pinned contract",
+  );
 
   const result = runNode(
     "scripts/validate_capability_profile.mjs",
     path.join(CONTRACT_ROOT, PROFILE_RELATIVE_PATH),
   );
   assert.equal(result.status, 0, diagnostics(result));
+});
+
+test("DeviceRole scalar-presence traceability delta remains bounded", () => {
+  const traceability = JSON.parse(
+    fs.readFileSync(TRACEABILITY_PATH, "utf8"),
+  );
+  assert.deepStrictEqual(
+    {
+      assessment_sets: traceability.assessment_sets.length,
+      reference_sets: traceability.reference_sets.length,
+      proof_sets: traceability.proof_sets.length,
+      applicability_sets: traceability.applicability_sets.length,
+      verification_sets: traceability.verification_sets.length,
+      row_proofs: Object.keys(traceability.row_proofs).length,
+      row_applicability: Object.keys(traceability.row_applicability).length,
+      rows: traceability.rows.length,
+    },
+    {
+      assessment_sets: 9,
+      reference_sets: 19,
+      proof_sets: 15,
+      applicability_sets: 15,
+      verification_sets: 3,
+      row_proofs: 293,
+      row_applicability: 293,
+      rows: 293,
+    },
+    "I6 must add one assessment without changing any reviewed row authority counts",
+  );
+
+  const expectedRows = [
+    "operation.dcim.device-role.create",
+    "operation.dcim.device-role.replace",
+    "operation.dcim.device-role.update",
+    "resource.dcim.device-role.contract",
+  ];
+  const assessedRows = traceability.rows
+    .filter(
+      (row) =>
+        row.assessment_set === "unresolved-device-role-scalar-presence",
+    )
+    .map((row) => row.id)
+    .sort();
+  assert.deepStrictEqual(
+    assessedRows,
+    expectedRows,
+    "I6 must repoint exactly the DeviceRole contract/create/replace/update rows",
+  );
+
+  const deviceRoleRows = traceability.rows.filter(
+    (row) => row.capability === "dcim.DeviceRole",
+  );
+  assert.equal(deviceRoleRows.length, 13);
+  assert.equal(
+    deviceRoleRows.filter((row) => row.assessment_set === "unresolved-v2")
+      .length,
+    9,
+    "DeviceRole list/get/delete and hierarchy, uniqueness, and deletion rules remain unresolved-v2",
+  );
 });
 
 assertSiteProfileRejected(
@@ -577,6 +701,88 @@ assertRackTypeProfileRejected(
     delete rackType.field_contracts;
   },
   /dcim\.RackType: field_contracts must declare operation-specific presence semantics/u,
+);
+
+assertDeviceRoleProfileRejected(
+  "DeviceRole field contracts are mandatory",
+  (deviceRole) => {
+    delete deviceRole.field_contracts;
+  },
+  /dcim\.DeviceRole: field_contracts must declare operation-specific presence semantics/u,
+);
+
+assertDeviceRoleProfileRejected(
+  "DeviceRole field contracts require every operation",
+  (deviceRole) => {
+    delete deviceRole.field_contracts.replace;
+  },
+  /dcim\.DeviceRole: field_contracts must declare exactly response, create, replace, and update/u,
+);
+
+assertDeviceRoleProfileRejected(
+  "DeviceRole operation fields reject undeclared fields",
+  (deviceRole) => {
+    deviceRole.field_contracts.create.required_fields.push("config_template");
+  },
+  /dcim\.DeviceRole: field_contracts\.create\.required_fields contains undeclared field config_template/u,
+);
+
+assertDeviceRoleProfileRejected(
+  "DeviceRole nullable fields remain a writable-field subset",
+  (deviceRole) => {
+    deviceRole.field_contracts.replace.nullable_fields.push("display");
+  },
+  /dcim\.DeviceRole: field_contracts\.replace\.nullable_fields contains undeclared field display/u,
+);
+
+assertDeviceRoleProfileRejected(
+  "DeviceRole blank fields remain a writable-field subset",
+  (deviceRole) => {
+    deviceRole.field_contracts.update.blank_fields.push("device_count");
+  },
+  /dcim\.DeviceRole: field_contracts\.update\.blank_fields contains undeclared field device_count/u,
+);
+
+assertDeviceRoleProfileRejected(
+  "DeviceRole blank fields reject relationship identifiers",
+  (deviceRole) => {
+    deviceRole.field_contracts.create.blank_fields.push("parent");
+  },
+  /dcim\.DeviceRole: field_contracts\.create\.blank_fields contains non-string field parent/u,
+);
+
+assertDeviceRoleProfileRejected(
+  "DeviceRole blank fields reject boolean fields",
+  (deviceRole) => {
+    deviceRole.field_contracts.replace.blank_fields.push("vm_role");
+  },
+  /dcim\.DeviceRole: field_contracts\.replace\.blank_fields contains non-string field vm_role/u,
+);
+
+assertDeviceRoleProfileRejected(
+  "DeviceRole operation fields reject duplicates",
+  (deviceRole) => {
+    deviceRole.field_contracts.create.blank_fields.push("description");
+  },
+  /dcim\.DeviceRole: field_contracts\.create\.blank_fields contains duplicate field description/u,
+);
+
+assertDeviceRoleProfileRejected(
+  "DeviceRole response and write contracts cannot be conflated",
+  (deviceRole) => {
+    deviceRole.field_contracts.response = structuredClone(
+      deviceRole.field_contracts.create,
+    );
+  },
+  /dcim\.DeviceRole: field_contracts\.response must declare exactly nullable_fields/u,
+);
+
+assertDeviceRoleProfileRejected(
+  "DeviceRole PATCH contracts cannot require fields",
+  (deviceRole) => {
+    deviceRole.field_contracts.update.required_fields.push("name");
+  },
+  /dcim\.DeviceRole: field_contracts\.update\.required_fields must be empty for PATCH/u,
 );
 
 assertRackTypeProfileRejected(
@@ -1118,6 +1324,127 @@ assertOpenAPIRejected(
     spec.components.schemas.RackType.properties.desc_units.type = "string";
   },
   /RackType\.desc_units base type must be boolean/u,
+);
+
+for (const [name, pathName, method, expectedSchema] of [
+  ["POST", "/api/dcim/device-roles/", "post", "DeviceRoleCreate"],
+  ["PUT", "/api/dcim/device-roles/{id}/", "put", "DeviceRoleReplace"],
+  ["PATCH", "/api/dcim/device-roles/{id}/", "patch", "DeviceRoleUpdate"],
+]) {
+  assertOpenAPIRejected(
+    `OpenAPI validation rejects a stale DeviceRole ${name} request reference`,
+    (spec) => {
+      spec.paths[pathName][method].requestBody.content[
+        "application/json"
+      ].schema = { $ref: "#/components/schemas/DeviceRoleWrite" };
+    },
+    new RegExp(
+      escapeRegExp(
+        `${name} ${pathName} must reference #/components/schemas/${expectedSchema}`,
+      ),
+      "u",
+    ),
+  );
+}
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects a stale shared DeviceRole write schema",
+  (spec) => {
+    spec.components.schemas.DeviceRoleWrite = structuredClone(
+      spec.components.schemas.DeviceRoleCreate,
+    );
+  },
+  /DeviceRole must not retain a conflated shared write schema/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale DeviceRole create requiredness",
+  (spec) => {
+    spec.components.schemas.DeviceRoleCreate.required = [];
+  },
+  /DeviceRoleCreate required fields must match field_contracts\.create/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale DeviceRole replace requiredness",
+  (spec) => {
+    spec.components.schemas.DeviceRoleReplace.required.push("color");
+  },
+  /DeviceRoleReplace required fields must match field_contracts\.replace/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale DeviceRole parent request nullability",
+  (spec) => {
+    spec.components.schemas.DeviceRoleUpdate.properties.parent.type =
+      "integer";
+  },
+  /DeviceRoleUpdate\.parent nullability must match field_contracts\.update/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale DeviceRole request blankability",
+  (spec) => {
+    spec.components.schemas.DeviceRoleUpdate.properties.description.minLength =
+      1;
+  },
+  /DeviceRoleUpdate\.description blankability must match field_contracts\.update/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale DeviceRole parent identifier types",
+  (spec) => {
+    spec.components.schemas.DeviceRoleCreate.properties.parent.type = [
+      "string",
+      "null",
+    ];
+    delete spec.components.schemas.DeviceRoleCreate.properties.parent.format;
+  },
+  /DeviceRoleCreate\.parent base type must be integer/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale DeviceRole boolean scalar types",
+  (spec) => {
+    spec.components.schemas.DeviceRoleReplace.properties.vm_role.type =
+      "string";
+  },
+  /DeviceRoleReplace\.vm_role base type must be boolean/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects non-null DeviceRole parent responses",
+  (spec) => {
+    spec.components.schemas.DeviceRole.properties.parent = {
+      $ref: "#/components/schemas/ObjectReference",
+    };
+  },
+  /DeviceRole\.parent response nullability must match field_contracts\.response/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale DeviceRole parent response references",
+  (spec) => {
+    spec.components.schemas.DeviceRole.properties.parent.oneOf[0].$ref =
+      "#/components/schemas/DeviceRole";
+  },
+  /DeviceRole\.parent must reference #\/components\/schemas\/ObjectReference/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale DeviceRole response timestamp nullability",
+  (spec) => {
+    spec.components.schemas.DeviceRole.properties.created.type = "string";
+  },
+  /DeviceRole\.created response nullability must match field_contracts\.response/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale DeviceRole response scalar types",
+  (spec) => {
+    spec.components.schemas.DeviceRole.properties._depth.type = "string";
+  },
+  /DeviceRole\._depth base type must be integer/u,
 );
 
 for (const [name, pathName, method, expectedSchema] of [

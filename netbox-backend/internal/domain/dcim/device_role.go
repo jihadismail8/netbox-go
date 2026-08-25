@@ -215,6 +215,27 @@ func (role *DeviceRole) ApplyPatch(patch DeviceRolePatch, now shared.Timestamp) 
 			Field: "update_mask", Reason: "required", Description: "At least one writable field must be supplied.",
 		})
 	}
+	return role.Replace(role.valuesWithPatch(patch), now)
+}
+
+// ValidatePatch checks the state a patch would produce without mutating the
+// aggregate. Empty patches are valid previews; ApplyPatch retains ownership of
+// the public update-mask requirement.
+func (role *DeviceRole) ValidatePatch(patch DeviceRolePatch) error {
+	if role == nil {
+		return shared.NewError(
+			shared.ErrorReasonInternal,
+			"Cannot validate a patch for a nil DeviceRole.",
+		)
+	}
+	_, violations := validateDeviceRoleValues(role.valuesWithPatch(patch))
+	if len(violations) > 0 {
+		return shared.NewValidationError(violations...)
+	}
+	return nil
+}
+
+func (role DeviceRole) valuesWithPatch(patch DeviceRolePatch) DeviceRoleValues {
 	values := role.Values()
 	if patch.Parent != nil {
 		values.Parent = *patch.Parent
@@ -227,7 +248,7 @@ func (role *DeviceRole) ApplyPatch(patch DeviceRolePatch, now shared.Timestamp) 
 	}
 	setString(&values.Description, patch.Description)
 	setString(&values.Comments, patch.Comments)
-	return role.Replace(values, now)
+	return values
 }
 
 func (role DeviceRole) ID() shared.ID                 { return role.id }
@@ -304,7 +325,6 @@ func validateDeviceRoleValues(values DeviceRoleValues) (normalizedDeviceRoleValu
 		})
 	}
 	validateRequiredLength(&violations, "name", values.Name, DeviceRoleNameMaxLength)
-	validateOptionalLength(&violations, "description", values.Description, DeviceRoleDescriptionMaxLength)
 	slug, err := shared.ParseSlug(values.Slug, DeviceRoleSlugMaxLength)
 	if err != nil {
 		violations = append(violations, shared.ViolationsOf(err)...)
@@ -313,6 +333,7 @@ func validateDeviceRoleValues(values DeviceRoleValues) (normalizedDeviceRoleValu
 	if err != nil {
 		violations = append(violations, shared.ViolationsOf(err)...)
 	}
+	validateOptionalLength(&violations, "description", values.Description, DeviceRoleDescriptionMaxLength)
 	return normalizedDeviceRoleValues{
 		parent: values.Parent, name: values.Name, slug: slug, color: color,
 		vmRole: values.VMRole, description: values.Description, comments: values.Comments,

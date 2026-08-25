@@ -348,6 +348,10 @@ if (profile && baseline && oracle && schema) {
     metadataResources.get("dcim.RackType")?.field_contracts !== undefined,
     "dcim.RackType: field_contracts must declare operation-specific presence semantics",
   );
+  assert(
+    metadataResources.get("dcim.DeviceRole")?.field_contracts !== undefined,
+    "dcim.DeviceRole: field_contracts must declare operation-specific presence semantics",
+  );
   for (const resource of profile.resources ?? []) {
     const key = `${resource.module}.${resource.name}`;
     const metadata = metadataResources.get(key);

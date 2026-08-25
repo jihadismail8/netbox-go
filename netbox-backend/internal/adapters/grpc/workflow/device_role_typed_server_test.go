@@ -7,8 +7,6 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
 
 	dcimv1 "netbox-go/gen/go/netbox/dcim/v1"
@@ -45,7 +43,7 @@ func TestTypedDeviceRoleGRPCListPreservesPresenceAndHierarchyProjection(t *testi
 	assert.Equal(t, uint64(1), response.Page.Count)
 }
 
-func TestTypedDeviceRoleGRPCUpdateMaskSupportsParentClearAndRequiresValues(t *testing.T) {
+func TestTypedDeviceRoleGRPCUpdateMaskCarriesExplicitNullIntent(t *testing.T) {
 	service := &deviceRoleGRPCServiceSpy{role: restoredGRPCDeviceRole(t, false)}
 	server := NewDCIMDeviceRoleServer(service)
 	ctx := deviceRoleGRPCContext(t)
@@ -54,9 +52,9 @@ func TestTypedDeviceRoleGRPCUpdateMaskSupportsParentClearAndRequiresValues(t *te
 		Id: 8, DeviceRole: &dcimv1.DeviceRoleInput{},
 		UpdateMask: &fieldmaskpb.FieldMask{Paths: []string{"color"}},
 	})
-	require.Error(t, err)
-	assert.Equal(t, codes.InvalidArgument, status.Code(err))
-	assert.Zero(t, service.updateCalls)
+	require.NoError(t, err)
+	assert.Equal(t, 1, service.updateCalls)
+	assert.Equal(t, applicationdcim.FieldNull, service.update.Color.State())
 
 	vmRole := false
 	response, err := server.UpdateDeviceRole(ctx, &dcimv1.UpdateDeviceRoleRequest{
@@ -64,7 +62,7 @@ func TestTypedDeviceRoleGRPCUpdateMaskSupportsParentClearAndRequiresValues(t *te
 		UpdateMask: &fieldmaskpb.FieldMask{Paths: []string{"parent", "vm_role"}},
 	})
 	require.NoError(t, err)
-	assert.Equal(t, 1, service.updateCalls)
+	assert.Equal(t, 2, service.updateCalls)
 	assert.Equal(t, applicationdcim.FieldNull, service.update.Parent.State())
 	value, present := service.update.VMRole.Get()
 	require.True(t, present)
