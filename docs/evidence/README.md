@@ -155,6 +155,16 @@ receipt preserves that result without changing source and requires its own
 exact-SHA CI.
 No retained pinned differential accompanies this bounded result, so no T2/T3
 claim is made.
+The
+[bounded Rack scalar write-presence result](2026-08-26-core-workflow-v2-rack-scalar-presence-i9-v0.md)
+passed its exact-name, affected/race, real-PostgreSQL, complete L4,
+generated-contract, Vue, pinned repository, and independent exact-candidate
+CI boundaries on exact revision
+`9c257b04b7cf798199c5aa4b7ae076cebbbbdff1`. Its current two-path,
+source-digest-excluded claim conditionally makes only bounded I9 `evidence`
+after the exact claim revision passes repository CI; its excluded receipt and
+project-owner evidence review then remain. No retained pinned differential
+accompanies this bounded result, so no T2/T3 claim is made.
 The project owner reviewed and retained the entry V0, CORS, bounded token I1,
 bounded token I2, bounded browser-session I3, bounded IPAddress I1, and bounded
 Site I2, Manufacturer I3, RackRole I4, RackType I5, DeviceRole I6, DeviceType

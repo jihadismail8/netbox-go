@@ -1,0 +1,21928 @@
+# Core Workflow Rack scalar write presence — 2026-08-26
+
+## Claim boundary
+
+- Goal: `CW1-V2-02`.
+- Increment: `CW1-V2-02-I9`.
+- Executor: Codex GPT-5.6 Sol.
+- State: conditional `evidence`; effective only after the exact evidence-claim
+  revision carrying this artifact passes repository CI.
+- Result: **the bounded source candidate passed every required local,
+  real-PostgreSQL, generated-contract, frontend, pinned repository, and
+  independent candidate-CI boundary available in this environment**.
+- Capability Profile: `core-workflow-v1`, still T1 and pre-publication.
+
+This artifact proves only `dcim.Rack` common writable-field create/PUT/PATCH
+presence for `site`, `name`, `facility_id`, `rack_type`, `status`, `role`,
+`serial`, `asset_tag`, `form_factor`, `width`, `u_height`, `starting_unit`,
+`desc_units`, `airflow`, `description`, and `comments`, as bounded by the
+reviewed [`CW1-V2-02-I9` packet](../increments/CW1-V2-02-I9.md).
+
+It does not complete Rack resource/list/get/delete behavior, Location-scoped
+name/facility uniqueness, asset-tag uniqueness, placement, occupancy,
+mounted-device protection, RackType-update propagation, Device site
+propagation, alternate relationship grammar, full CRUD, `CW1-V2-02`, V2, any
+compatibility tier, profile state, traceability consumer, deployment,
+publication, the rewrite, or production readiness.
+
+No `netbox-go-evidence-v2` marker is present because I9 promotes no tier,
+profile state, traceability consumer, or completed parent goal. Conditional
+`evidence` becomes effective only after exact-SHA CI of the source-v2-excluded
+claim revision. Its excluded receipt and project-owner review remain separate
+later boundaries.
+
+## Entry and tested source
+
+- Entry revision:
+  `98c95e7442078c0c3931fe97f77f3fbc068a4b1d`.
+- Entry source digest:
+  `source-v2:sha256:75c7bf7d02294ec5e3550c846fcd987791c0e3936e088121ddbabaae49fdb3b2`
+  with 3,064 entries.
+- Entry source-manifest output SHA-256:
+  `aed970496d17e4dc86af2c24fb084f13cd77d18ae30f095c1f06e89bc9cae422`.
+- Reviewed packet revision:
+  `45662b2d082a037b238c7a99a30964f3188b7f0a`.
+- Packet source digest:
+  `source-v2:sha256:02f2ae1a1a214a8f05865d77cde73b28938328aac4bd240a5ed377a1b9994da3`
+  with 3,065 entries.
+- Packet source-manifest output SHA-256:
+  `360894d3bb3b4671e06fcbc8973327467eeca582ded1809a08c9da52d19cf60c`.
+- Reviewed packet CI: run
+  [32930060102](https://github.com/jihadismail8/netbox-go/actions/runs/32930060102),
+  job
+  [98060447801](https://github.com/jihadismail8/netbox-go/actions/runs/32930060102/job/98060447801),
+  with job success from `2026-08-26T04:23:51Z` through
+  `2026-08-26T04:43:35Z`.
+- Tested source candidate:
+  `9c257b04b7cf798199c5aa4b7ae076cebbbbdff1`.
+- Tested source digest:
+  `source-v2:sha256:343a1767534de69acad81e7fdfbf8bd23cf1e7a22450c00df70b038c4c54c152`.
+- Tested owned entries: 3,071.
+- Canonical source-manifest output SHA-256:
+  `d09547b0a96e2918ceaf8d1e80bb8b26d56b0629ca7c02c0c025de161617cc91`.
+- Complete derived source-manifest diff SHA-256:
+  `5658e978b4e8e2f65f8e20b220d6548db4e746962bc702ce8110d9559fdad030`.
+- Pinned NetBox oracle revision:
+  `fbb948d30e79ce657fac62994a22aca72c1770a9`
+  (`v4.4.6-7-gfbb948d30`).
+- Go: `go1.26.0 linux/amd64`.
+- Node.js: `v24.18.0`.
+- npm: `11.16.0`.
+
+The packet was authored and independently reviewed before behavior editing,
+then passed exact-SHA packet CI. Three implementation slices used disjoint
+closed-file scopes. Three read-only cross-reviews found and verified the
+resolution of gRPC masked-absence routing, PUT RackType precedence, and the
+durable REST airflow-null proof; no issue remains. The preserved
+`codex-cw1-v2-02-i1-pre-main-rebase-20260823` stash was not applied, changed,
+or dropped. The feature branch was pushed normally; `main` was not changed.
+
+## Implemented boundary
+
+- Operation metadata generates distinct `RackCreate`, `RackReplace`, and
+  `RackUpdate` request schemas. Create and replace require Site and name;
+  update requires no field. Request relationships are numeric identifiers,
+  response relationships are object references, choices preserve their
+  transport-specific shapes, and timestamps are nullable.
+- POST applies the 16-field pinned default/presence matrix. PUT requires Site
+  and name, resets only omitted facility ID and RackType to null, and preserves
+  every other optional omission. PATCH preserves every omission. Explicit
+  null, blank, false, zero, and concrete values stay distinct where declared.
+- REST explicit-null airflow normalizes to present blank, while omitted create
+  airflow remains database null. Status, form factor, and airflow choice input
+  is intentionally not whitespace-trimmed. Starting unit accepts 1 through
+  32,767 and rejects 32,768.
+- Site, RackType, and RackRole remain inside the positive numeric-ID envelope.
+  Relationship and scalar violations aggregate once in deterministic field
+  order without resolving invalid identifiers or mutating valid sibling
+  intent.
+- A non-null RackType owns form factor, width, U height, starting unit, and
+  descending-units state on every direct Rack mutation. Its snapshot wins over
+  conflicting POST/PUT/PATCH input. Clearing RackType stops copying and
+  preserves the snapshot unless direct physical replacements are supplied.
+- The shared application transaction owns relationship resolution,
+  authorization, validation, persistence, timestamp changes, and exactly one
+  typed Rack object change. Validation and recorder failures preserve
+  aggregate, raw row, timestamp, repository, and audit state.
+- REST preserves the declared write grammar. Supported gRPC update-mask paths
+  with absent optional values become explicit-null intent and reach shared
+  application validation; unknown paths fail closed before service mutation.
+  Protobuf was not changed or regenerated.
+- Real PostgreSQL reloads normalized scalar, relationship, RackType snapshot,
+  and airflow state; proves exact change deltas and rollback; and keeps Site
+  stable with zero Devices. Existing schema, row, and repository production
+  code required no change.
+- Vue uses nullable response timestamps, numeric relationship IDs, exact Rack
+  choices and starting-unit bounds, a private normalized edit baseline, `{}`
+  for unchanged edits, and exact dirty-field deltas. RackType-controlled
+  physical fields stay suppressed without becoming spuriously dirty when the
+  relationship is cleared.
+- Traceability adds one unresolved Rack scalar-presence assessment and remaps
+  exactly create, replace, and update. Every other Rack row, verification set,
+  tier, consumer, and parent remains open.
+
+## Changed tested-source files
+
+The candidate differs from the accepted I8 entry across exactly 30 regular
+mode-`100644` paths, with 4,488 insertions and 253 deletions:
+
+1. `AGENTS.md`
+2. `contracts/netbox/v4.4.6-post7/resources/dcim.yaml`
+3. `contracts/netbox/v4.4.6-post7/traceability/core-workflow-v1.yaml`
+4. `docs/ROADMAP.md`
+5. `docs/STATUS.md`
+6. `docs/TESTING.md`
+7. `docs/increments/CW1-V2-02-I8.md`
+8. `docs/increments/CW1-V2-02-I9.md` — new
+9. `docs/increments/README.md`
+10. `netbox-backend/api/openapi/netbox-go-v1.yaml`
+11. `netbox-backend/internal/adapters/grpc/workflow/rack_typed_handler.go`
+12. `netbox-backend/internal/adapters/grpc/workflow/rack_typed_handler_test.go`
+13. `netbox-backend/internal/adapters/grpc/workflow/rack_typed_mapper_test.go` — new
+14. `netbox-backend/internal/adapters/postgres/dcim/rack_service_real_postgres_test.go` — new
+15. `netbox-backend/internal/adapters/rest/netbox/workflow/rack_scalar_presence_test.go` — new
+16. `netbox-backend/internal/application/dcim/rack_commands.go`
+17. `netbox-backend/internal/application/dcim/rack_commands_test.go` — new
+18. `netbox-backend/internal/application/dcim/rack_service.go`
+19. `netbox-backend/internal/application/dcim/rack_service_presence_test.go` — new
+20. `netbox-backend/internal/domain/dcim/rack.go`
+21. `netbox-backend/internal/domain/dcim/rack_test.go`
+22. `netbox-backend/test/parity/rack_scalar_presence_test.go` — new
+23. `netbox-frontend/src/features/core/adapters.test.ts`
+24. `netbox-frontend/src/features/core/adapters.ts`
+25. `netbox-frontend/src/features/core/resources.ts`
+26. `netbox-frontend/src/router/models/core-profile.test.ts`
+27. `netbox-frontend/src/router/models/core-profile.ts`
+28. `scripts/validate_capability_profile.mjs`
+29. `scripts/validate_capability_profile.test.mjs`
+30. `scripts/validate_openapi.mjs`
+
+Seven paths are new: the reviewed packet and six fixed test files. No path was
+deleted, renamed, retargeted, type-changed, mode-changed, or made executable.
+The seven entry-governance paths only record effective I8 closeout, active I9
+scope, and the exact green packet receipt; they change no I8 behavior.
+
+## Fixed regression and review boundary
+
+The exact eight packet-named tests exist once each and passed:
+
+```text
+TestRackScalarNormalizationContract
+TestRackScalarCommandPresenceMatrix
+TestReplaceRackAppliesPinnedOmissionDefaultsAndPreservesOptionalState
+TestRackScalarValidationLeavesStateUnchanged
+TestRackRESTScalarPresenceMatrix
+TestRackGRPCScalarPresenceMatrix
+TestPostgresRackScalarPresenceDurability
+TestRackScalarPresenceRESTGRPCParity
+```
+
+They span domain, application, REST, gRPC, PostgreSQL, and parity packages.
+Independent reviews of backend behavior, generated contracts/Vue, and the
+PostgreSQL/transport tests found no remaining issue. The pre-I9 PUT omission,
+gRPC masked-absence, RackType precedence, and Vue full-serialization defects
+were reproduced and corrected. No test, comparator, normalizer, security
+control, lint rule, coverage floor, generated check, or evidence requirement
+was weakened.
+
+## Focused, race, PostgreSQL, and full-L4 results
+
+An exact committed, timestamped replay found the eight tests once each, passed
+the seven hermetic fixed tests while the real-PostgreSQL test skipped without
+its DSN, then passed the affected non-PostgreSQL packages and race-enabled
+replay. It ran from `2026-08-26T05:35:18Z` through
+`2026-08-26T05:38:28Z`, exited 0, completed parity in 13.782 seconds without
+race instrumentation and 174.402 seconds with it, and has SHA-256
+`8eb88ebfdfdd472db59fca7c543ca335e653a21a16e762a59adb289e97a6ea59`.
+
+The exact committed real-PostgreSQL session ran from
+`2026-08-26T05:37:22Z` through `2026-08-26T05:38:00Z` and exited 0. The focused
+durability test passed without skip in 0.301 seconds, including every named
+success and rejection case. Its credential-free log has SHA-256
+`ca97fe7a172cfa883113d43a548ba1104e5313aeb151562be5014c8bbf408350`.
+
+The same unchanged session passed complete L4:
+
+| Package                                | Result  |
+| -------------------------------------- | ------: |
+| `internal/database`                    |  2.392s |
+| `internal/adapters/postgres/bootstrap` |  0.041s |
+| `internal/adapters/postgres/dcim`      |  3.427s |
+| `internal/adapters/postgres/dcim/row`  |  0.347s |
+| `internal/adapters/postgres/ipam`      |  1.728s |
+| `internal/adapters/postgres/ipam/row`  |  0.416s |
+| `internal/adapters/postgres/changelog` |  0.004s |
+| `internal/application/dcim`            |  0.006s |
+| `internal/application/ipam`            |  0.067s |
+| `internal/application/identity`        | 35.223s |
+| `cmd/netbox_go_admin`                  |  6.585s |
+
+The L4 log has SHA-256
+`65ac120044c571b92ed3167f47e3818ceee6356d56b56b96bea01ad9de77ba09`.
+The run used exact disposable database and role `netbox_i9_20260826` in the
+existing local PostgreSQL container. A random password existed ephemerally in
+the orchestration environment and was unset after use. Explicit cleanup
+succeeded, with a failure-fallback trap armed. Recorded preflight, creation,
+and post-cleanup queries returned role/database counts `0|0`, `1|1`, and
+`0|0`, respectively. No credential or complete DSN is retained. The
+credential-free receipt has SHA-256
+`6571d470628575fda4ae67939d0c8814dc8f518ad85f1d6c9c1c1588c84248f1`.
+
+## Generated contracts and frontend results
+
+The exact committed candidate passed:
+
+- all 96 traceability-validator tests;
+- all 219 capability-profile/OpenAPI adversarial tests;
+- profile validation at 13 resources, three interfaces, 17 scenarios, and 293
+  traceability rows;
+- generated consistency for OpenAPI plus two contract documents;
+- OpenAPI validation at 33 paths and 86 operations;
+- inventory at 155 baseline REST, 123 current REST, 179 current gRPC, and 13
+  current Vue entries;
+- 59 focused Vue adapter/form tests plus production and test typechecks; and
+- the complete frontend gate: 29 files and 179 tests, 65.03% statement/line,
+  82.72% branch, and 67.08% function coverage, formatting, lint, typechecks,
+  and a 291-module production build.
+
+The focused contract/Vue replay ran from `2026-08-26T05:36:26Z` through
+`2026-08-26T05:36:38Z`, exited 0, and has SHA-256
+`6f802717da190125ebb4e2e339089d893de4249d1f3bd9588a51e66179ea266e`.
+The OpenAPI file is generator output and was not hand edited. The locked
+frontend dependency audit reports three high-severity findings; dependency
+changes are outside I9 and no finding is represented as resolved.
+
+## Whole-repository result
+
+The exact committed candidate passed this pinned command from
+`2026-08-26T05:39:23Z` through `2026-08-26T05:44:25Z` with exit 0:
+
+```bash
+env \
+  PATH=/home/jihad/.nvm/versions/node/v24.18.0/bin:/home/jihad/.local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
+  GOCACHE=/tmp/go-cache GOFLAGS=-buildvcs=false make check
+```
+
+It retained:
+
+- zero backend lint issues;
+- all hermetic backend packages under the race detector, including parity in
+  175.180 seconds;
+- backend coverage at 12.9748% (37,830/291,566), above the retained 12.4001%
+  (36,013/290,425) floor, with 54 measured packages and one reviewed
+  exclusion;
+- every contract, profile, frontend, generated, inventory, and link result
+  above; and
+- 175 Markdown files with valid local links.
+
+The exact committed log has SHA-256
+`bf2cd47af15c057bee5eb6fb94a3844ed6597ea85a7d517754d4bca22e447da2`.
+Every retained candidate log passed a credential/DSN/header pattern scan.
+Temporary log paths are diagnostic provenance only; the durable result is
+this committed summary plus exact candidate CI.
+
+Final source digest and complete manifest confirmation completed at
+`2026-08-26T05:44:38Z`. The digest, 3,071-entry manifest, and canonical
+manifest-output hash remained byte-identical across commit and push.
+
+## Independent candidate CI
+
+- Workflow: `repository-gate`.
+- Run:
+  [32935254288](https://github.com/jihadismail8/netbox-go/actions/runs/32935254288).
+- Job `check`:
+  [98075152520](https://github.com/jihadismail8/netbox-go/actions/runs/32935254288/job/98075152520).
+- Branch: `work/cw1-v2-02-i9-rack-presence`.
+- Head SHA: `9c257b04b7cf798199c5aa4b7ae076cebbbbdff1`.
+- Run start/completion: `2026-08-26T05:44:54Z`–`2026-08-26T06:03:25Z`.
+- Job start/completion: `2026-08-26T05:44:57Z`–`2026-08-26T06:03:24Z`.
+- Conclusion: **success**; every setup, repository, post, and completion step
+  succeeded, with no cancellation or non-success conclusion.
+
+This independent result exercised exact tested source candidate
+`9c257b04b7cf798199c5aa4b7ae076cebbbbdff1`, not a merge revision or later
+behavior source.
+
+## Digest-excluded claim local gate
+
+The evidence assembly changes only the two source-v2-excluded paths listed
+below. It reproduces the tested digest, 3,071-entry manifest, canonical
+manifest-output hash, and empty derived diff exactly.
+
+The assembly passed the pinned full repository gate from
+`2026-08-26T06:07:13Z` through `2026-08-26T06:12:18Z` with exit 0. It retained
+zero backend lint issues, coverage above the unchanged floor, all backend
+race/coverage checks, 96 traceability tests, 219 capability/OpenAPI
+adversarial tests, 29 frontend files and 179 frontend tests, generated and
+inventory checks, the `13/3/17/293` profile boundary, `33/86` OpenAPI shape,
+and valid local links across 176 Markdown files. Its credential-free log has
+SHA-256
+`887634a7ac3e2da9e2eef9fc4b6b100a96488249a4f61e547ce95b8786abc893`.
+
+After this result is recorded, the two evidence paths must be frozen for a
+final no-later-edit `make check`. That final gate and the canonical two-path
+mapping are retained in claim-commit provenance; exact-SHA claim CI remains
+the external boundary that makes conditional evidence effective.
+
+## External differential and residual limits
+
+The focused pinned differential was not run. The compatibility driver passed
+syntax validation and its oracle source-materializer self-test passed, but
+neither result proves Rack's complete presence matrix against the pinned
+NetBox runtime. No local adapter/parity/PostgreSQL test substitutes for that
+boundary. REST T2 and corresponding gRPC T3 remain unearned; Vue unit/type
+tests earn no browser T4.
+
+Numeric-string or nested-object relationships, malformed generic payloads,
+empty PATCH, uniqueness/races, Location-scoped identity, mounted-device
+protection, placement/occupancy, RackType-update propagation, Device site
+propagation, deletion/list/query, broader RBAC, full CRUD, the 13-resource
+parent, every later tier, profile publication, deployment, rewrite completion,
+and production readiness remain open.
+
+The first sandbox-only aggregate attempts failed solely because child Git,
+esbuild, and loopback test processes were denied (`EPERM`/socket permission);
+the approved exact commands then passed. These were environment restrictions,
+not product failures, and no command was weakened. A preliminary manifest
+reconstruction used an incorrect abbreviated SHA and stopped before producing
+any result; the immediate exact full-SHA replay under pinned Node passed and is
+the only manifest result retained above.
+
+## Gate disposition
+
+- L0–L3: passed for the bounded domain/application, REST, generated-contract,
+  gRPC parity regression, and Vue unit/type boundary on one tested source.
+- L4 real PostgreSQL: passed without skip; the exact disposable database and
+  role were removed afterward.
+- L5 differential REST: not run; no T2 claim is made.
+- L6 gRPC T3: unearned because corresponding REST T2 is absent. Shared-core
+  parity passed only as a pre-T2 regression.
+- L7 deployment: not applicable because deployment/configuration wiring did
+  not change.
+- L8 browser: not applicable to this Vue unit/type boundary; no T4 claim is
+  made.
+- L9: source confirmation, pinned repository gates, exact candidate CI, and
+  claim-assembly local replay passed. The final no-edit claim replay and
+  exact-SHA claim CI, its excluded receipt, and project-owner review remain
+  later boundaries.
+
+No skipped or unavailable boundary is implied by focused, PostgreSQL,
+frontend, local, or candidate-CI results.
+
+## Digest-excluded evidence claim boundary
+
+The evidence claim changes exactly two source-v2-excluded paths:
+
+1. `docs/evidence/2026-08-26-core-workflow-v2-rack-scalar-presence-i9-v0.md`
+   — new
+2. `docs/evidence/README.md`
+
+The complete manifest retained below represents both the tested candidate and
+the evidence-only claim worktree. Independent reconstruction confirms they are
+byte-identical at 3,071 entries and the complete derived source diff is empty.
+No owned source entry is added, removed, changed, renamed, retargeted,
+type-changed, or made executable.
+
+Human review must confirm that the exact two-path mapping changes no behavior,
+route, schema, migration, security policy, contract behavior, scenario,
+fixture, comparator, normalizer, permission, dependency, toolchain, coverage
+rule, tier, profile state, traceability consumer, or parent-goal state.
+
+No password, session or CSRF value, bearer/API token, authorization or cookie
+header, database credential, complete DSN, private key, provider signature,
+GitHub credential, or complete configuration object is retained. Exact-SHA
+claim CI, its excluded receipt, and project-owner evidence review remain
+separate boundaries.
+
+## Complete tested source manifest
+
+The block below is the exact canonical output for tested revision
+`9c257b04b7cf798199c5aa4b7ae076cebbbbdff1`. Because both evidence paths are
+source-v2-excluded, the evidence-only claim reconstructs the same bytes.
+
+```json
+{
+  "schema_version": 2,
+  "digest": "source-v2:sha256:343a1767534de69acad81e7fdfbf8bd23cf1e7a22450c00df70b038c4c54c152",
+  "files": 3071,
+  "entries": [
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": ".dockerignore",
+      "size": 871,
+      "sha256": "sha256:619e930556e1ab3b236510ef35afc24772b101d34499e960840535a2d70fdb2f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": ".editorconfig",
+      "size": 279,
+      "sha256": "sha256:d8af15905178b56ef0bfe71fd6c0e1606f05fcc51f952f3088754c3427391e8a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": ".gitattributes",
+      "size": 363,
+      "sha256": "sha256:6fadff3661a341c0aa4f49be8e56910d4fcea4ffaa24dae0c53f3eeda43d769e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": ".github/workflows/ci.yml",
+      "size": 1452,
+      "sha256": "sha256:2ea4073e44dad6fbbf107fd5f91266b6ec46a6afe44df60bb0de8a5f85953bc1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": ".gitignore",
+      "size": 875,
+      "sha256": "sha256:887753852788c6e20aff26c7a0175850be06c84c50138e83115d73aef684ef4a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": ".gitmodules",
+      "size": 90,
+      "sha256": "sha256:1e01c5f429426b388a052717ef02240774e8f599ae799176c3dd754456ce3687"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": ".go-version",
+      "size": 7,
+      "sha256": "sha256:acef448c3973160e815171b20f8788735d99b01e7bf551b3619bbde1ae1db7a8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": ".node-version",
+      "size": 8,
+      "sha256": "sha256:55075b5ec4e8b31936cbbc282b8829116d1fd48f2f2f1856dee592a6650700ce"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": ".nvmrc",
+      "size": 8,
+      "sha256": "sha256:55075b5ec4e8b31936cbbc282b8829116d1fd48f2f2f1856dee592a6650700ce"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "AGENTS.md",
+      "size": 15477,
+      "sha256": "sha256:bea92d5422e4f853596abdec71fce7eb111d6f43b19a751fb524f0e1ad490768"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "CONTEXT.md",
+      "size": 5309,
+      "sha256": "sha256:69eeb08551d321e70fdef348fdde875b3e9f254db13a46e08ac78931725352b9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "CONTRIBUTING.md",
+      "size": 4485,
+      "sha256": "sha256:188879487246fa98311e353c25f78e39267d8f6eaa0d619e0ac9e939314d7ad8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "Dockerfile",
+      "size": 1988,
+      "sha256": "sha256:46f8ba8c503b2b6fdde4499431c2ad87eba2e02b81f02375e9fabdfaaaf9d9a9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "LICENSE",
+      "size": 11357,
+      "sha256": "sha256:c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "Makefile",
+      "size": 3828,
+      "sha256": "sha256:da0f97348e445647a37b241ee323bcb13b6f15a100996a4311fb16a9d131e3da"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "README.md",
+      "size": 9028,
+      "sha256": "sha256:fbaf212045f6562327af348f68804fcb3779f3ab0904c5af78e5f43df20f9c1b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "REWRITE_PLAN.md",
+      "size": 4108,
+      "sha256": "sha256:742264e9b5e7af2a341c2f5eb26bf42aa06cbf5cc2d93beb24f0f613a64883bc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "THIRD_PARTY_NOTICES.md",
+      "size": 3897,
+      "sha256": "sha256:75f45bbd8f16fe3ab30860956248f85083edf36c38639cb23cf65bab9be846e3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "contracts/netbox/v4.4.6-post7/baseline.yaml",
+      "size": 378,
+      "sha256": "sha256:31e5c065ed4a7dabe5a740161d3563826053024433cc682b7932d5d80e90ad3b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "contracts/netbox/v4.4.6-post7/inventory/baseline-rest.yaml",
+      "size": 62022,
+      "sha256": "sha256:147a4085a959db0014649d8e7eb6b470188e5d20fb3ebaeb482ad9f591da68bf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "contracts/netbox/v4.4.6-post7/inventory/current-grpc.yaml",
+      "size": 114164,
+      "sha256": "sha256:47d1e836d92692d6259d204fd7cf4502f99f4bbb81c8a18f8baefec9a8832554"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "contracts/netbox/v4.4.6-post7/inventory/current-rest.yaml",
+      "size": 62302,
+      "sha256": "sha256:49b35d34735b53c72e7bcee0525f92fad70d527e7b8550320ead41a1fe9d6908"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "contracts/netbox/v4.4.6-post7/inventory/current-vue.yaml",
+      "size": 5252,
+      "sha256": "sha256:c44f84b86a4a31c323c794341e8c330f464029c6e23125a5c5afcd9032e3ef9f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "contracts/netbox/v4.4.6-post7/normalizers.yaml",
+      "size": 1073,
+      "sha256": "sha256:73e48e0f8878d462863231977e679cf6e98e237c076fb0642d81947d3c3c34fb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "contracts/netbox/v4.4.6-post7/oracle-profile.yaml",
+      "size": 447,
+      "sha256": "sha256:04b0adb181be0733b11cc521576fd040485b9a1728ec0b3213535f4401c51edb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "contracts/netbox/v4.4.6-post7/profiles/core-workflow-v1.yaml",
+      "size": 5683,
+      "sha256": "sha256:54b40001b1ef1690099c2fcf47cdf5a682cba156a3c4af97f9a12063ff5617b9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "contracts/netbox/v4.4.6-post7/resources/dcim.yaml",
+      "size": 12956,
+      "sha256": "sha256:c7202c94595137d5f9f331f606735c8afc965b57c341484e6c0a0441f16fb934"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "contracts/netbox/v4.4.6-post7/resources/identity.yaml",
+      "size": 2202,
+      "sha256": "sha256:18fd3b25cfb1ac78c30cee591e90f8a63e449801cfd6cb96dc50cc27c1b8ff97"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "contracts/netbox/v4.4.6-post7/resources/ipam.yaml",
+      "size": 3562,
+      "sha256": "sha256:3365248db161cace5fdad28950abc50a42dfc33c1051c62e3c793ae5240b006d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "contracts/netbox/v4.4.6-post7/scenarios/contract.yaml",
+      "size": 979,
+      "sha256": "sha256:e00e77d8c13d427365439708005460b19ef7e4aab3a035a9cf616e2f9751cbe6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "contracts/netbox/v4.4.6-post7/scenarios/dcim-workflow.yaml",
+      "size": 1667,
+      "sha256": "sha256:29f261338369fb113b18bb683f6931384402cb1e88712562d6cafb1106e2db2e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "contracts/netbox/v4.4.6-post7/scenarios/identity.yaml",
+      "size": 1803,
+      "sha256": "sha256:e04a5909ed2eeac6c51d7bee126eaca50a14f2697955df2bcd635dd42182d1b0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "contracts/netbox/v4.4.6-post7/scenarios/ipam-workflow.yaml",
+      "size": 1620,
+      "sha256": "sha256:3e773365ae9a45a30e1a1ba8027b4c5ef120d86bfbfcf1f615fefab58ad0551a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "contracts/netbox/v4.4.6-post7/schema/profile.schema.json",
+      "size": 3939,
+      "sha256": "sha256:d18451db3fd05bbb10d6233ee5411eb36f84a9b37dc2bf6ef44f0e9d106562d3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "contracts/netbox/v4.4.6-post7/schema/traceability.schema.json",
+      "size": 15863,
+      "sha256": "sha256:20c3c38c05faf110f4648676b9adb9a177bbd8e81bb532eabf815da31232d5ed"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "contracts/netbox/v4.4.6-post7/traceability/core-workflow-v1.yaml",
+      "size": 312127,
+      "sha256": "sha256:ca8b3719690d33fef4d927643c7b160918fc9a477dd4c499564091f6de1774fa"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docker-compose.yml",
+      "size": 2363,
+      "sha256": "sha256:8559d7047963ee301ab91e3b324b1dd1a1ae019db5452dfe643179dea988616f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/API_IMPLEMENTATION_PLAN.md",
+      "size": 18401,
+      "sha256": "sha256:74d1b1e0ab37800cd1ff52e3e8672e8f8971ee61275bbb5fb578ed26680ef993"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/ARCHITECTURE.md",
+      "size": 28492,
+      "sha256": "sha256:2aeac6666261c7fd9b75c68ac3b03f9e7ad3ee34c561dada9e5585f86d6ca06e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/CODING_STANDARDS.md",
+      "size": 15744,
+      "sha256": "sha256:a88b410960277492204f24bed084a8546a3aa71f9ad1de7bdc49a00a85b9543e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/COMPATIBILITY.md",
+      "size": 11912,
+      "sha256": "sha256:6b730b83503bcd8bb848ec3d4b7b4c60de1e9a79827e9cc340717c4ae1dacc09"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/CRUD_PARADIGM.md",
+      "size": 30323,
+      "sha256": "sha256:240569b1d49d3b08fc245e20402ecee370d18af7fc2d17eb51c35d51b39f8662"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/FRONTEND_ANALYSIS.md",
+      "size": 24326,
+      "sha256": "sha256:87e9b06a03ba715f28414cbbe5319fd2302898fa4d0e6b45f641f5b23fb2114e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/FRONTEND_COMPLETION_PLAN.md",
+      "size": 9245,
+      "sha256": "sha256:cb6f0470768bdab57b3b3541381943e7ba0f7c2305fbf8e066da5347727ab70c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/FRONTEND_PLAN.md",
+      "size": 33587,
+      "sha256": "sha256:81f0fe7ecbd517255eb4c2d74660d5a9f6aca4243fe29cc4d110d7eda1d48968"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/IMPLEMENTATION_EXECUTION_PLAYBOOK.md",
+      "size": 125405,
+      "sha256": "sha256:256bb3a739096868604bd23c70b12720f41518e211893e5b197d6efe996b87e9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/IMPLEMENTATION_PLAN.md",
+      "size": 88617,
+      "sha256": "sha256:09cd15ad9ed3e98656b9083f9ef47fb585a119937aa44893f0ce55e2b17292ae"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/README.md",
+      "size": 5878,
+      "sha256": "sha256:62f1c46d5c3d00cb765e995804dea3ff3bd533d3e07483f374d2343ebf849835"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/ROADMAP.md",
+      "size": 94061,
+      "sha256": "sha256:7328e27b652f9d97917451ae19298a0fdc72cca925722ad5881f823715537e39"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/STATUS.md",
+      "size": 33283,
+      "sha256": "sha256:7990180a72eecf0e1955d4119cfb4b44e0d5cebbc1a9c0995d309078a38c6219"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/TESTING.md",
+      "size": 24054,
+      "sha256": "sha256:bcb059856924ada70a4d172c5328855eb2ef84413c8bae6d3ce4ba61ef69fccb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/TEST_PLAN.md",
+      "size": 23270,
+      "sha256": "sha256:2e5e44f0f3a0828ce896cb08c226858b7b58e6480951faa6af82a939eff01a9b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/adr/0001-netbox-compatibility-and-interface-parity.md",
+      "size": 2248,
+      "sha256": "sha256:0bc243832d180373cc2b7074923898cd50738f6277b5431595f17d62d7983e11"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/adr/0002-replace-python-plugins-with-extension-services.md",
+      "size": 1215,
+      "sha256": "sha256:98490d3ecc89a867fa4a56d7d00332d68fb32eebefd03259680e5b29ec284f54"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/adr/0003-unified-authentication-and-authorization.md",
+      "size": 2528,
+      "sha256": "sha256:e9f8a9318620af1cfa7710c3caeb22cf320ee76c420840ffd4bc265d92b919f1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/adr/0004-generated-scaffolding-is-immutable-and-transitional.md",
+      "size": 2726,
+      "sha256": "sha256:8e14bde40c3369f05125db1154eb2213ba005d11e6cf97a2297d3272842df3a7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/adr/0005-retire-dormant-sponge-http-wrappers.md",
+      "size": 3280,
+      "sha256": "sha256:017abd6d92f0f396f51e71ce17bf654dd3ad6fe0319742089a4d2ffb69224f6d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/adr/README.md",
+      "size": 2194,
+      "sha256": "sha256:6fdad1f71cbf50af7fa41c9aed35f4bd7847523a76e96a9f538d0952fc3cacf2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/apis/README.md",
+      "size": 788,
+      "sha256": "sha256:042aceea4b6c4621cbb7a28438b23bf2efbcc1ebf4d97ad430f1b3184c46e9c9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/business-logic/README.md",
+      "size": 5107,
+      "sha256": "sha256:f494b3c31c68995092279e44f1d14b347b5daf4232ded2477c7f8bb8e116fb3e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/business-logic/api-patterns.md",
+      "size": 10895,
+      "sha256": "sha256:4a5532d1274742b841f7ec947b4d99a732444b73795bfd07ef54013bf55db7e4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/business-logic/dcim-models.md",
+      "size": 34177,
+      "sha256": "sha256:66ee93818cf4efee3eb8edcd2b55267fc496f00228669c5c9f19d85e686b67c8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/business-logic/filtersets.md",
+      "size": 17963,
+      "sha256": "sha256:ff63654604efd0db8c62e3f3a46bf0afe4a9ef2ceb9d24a91cc6cb4347b2a083"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/business-logic/ipam-models.md",
+      "size": 20535,
+      "sha256": "sha256:01abc772c3eead88bb108a7710053219140cb2ee2adef1c317d731d679e55c2c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/contracts/core-workflow-v1.md",
+      "size": 1708,
+      "sha256": "sha256:02c0496cd36b7129181b23d815e93c7424a0296ac1944a449013163468098274"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/contracts/grpc-v1.md",
+      "size": 2048,
+      "sha256": "sha256:c91847bb2e05a481cc333627654d44c71cfe428a1d2ca3c6d455a834e6b22430"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/README.md",
+      "size": 2491,
+      "sha256": "sha256:b5e200d67f1556f0c9068d8d157c687cf254446e1ef78e69603632009a64ddc1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/circuits/circuitsAccount.md",
+      "size": 1239,
+      "sha256": "sha256:64503d20fe222361f5fcb82dc40ebc7a41afbb4987e3f656682c4ed5e3fdda22"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/circuits/circuitsCircuit.md",
+      "size": 1771,
+      "sha256": "sha256:7db661e66305a2dcd288bc7e0c8cd34903e1878e8695af187775159ab05e93cc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/circuits/circuitsCircuittermination.md",
+      "size": 2147,
+      "sha256": "sha256:c58dc11f10a79fcd2c125a527e750d488e861b9070e6c1dfd2bdae9354003dd8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/circuits/circuitsCircuittype.md",
+      "size": 977,
+      "sha256": "sha256:fcd3a2e5b61d3ccadd6b41c77b98043e281610725e00551ea0668599c46bc6fe"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/circuits/circuitsProvider.md",
+      "size": 1389,
+      "sha256": "sha256:4e2d779e1581efeb1dca055007b24b204b36137af374ddfe12277c1578a6afe4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/circuits/circuitsProvidernetwork.md",
+      "size": 1228,
+      "sha256": "sha256:05a277d0a446b20b35391d44419d8794fc72e90c62566f3ccb1d9759dd51c26f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/core/coreDatafile.md",
+      "size": 965,
+      "sha256": "sha256:1d48220265cf4f77cd3356ab7e662692a340a49597f47d0c0fd4c7445ed1b8df"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/core/coreDatasource.md",
+      "size": 1027,
+      "sha256": "sha256:b0fb17423ccd557f72c99ffbc0ea2292d5ee82d417358923510467889886cb40"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/core/coreJob.md",
+      "size": 1284,
+      "sha256": "sha256:d22deb92575ef9ff69c707ec6279cd012ba35fd0d403f24699ea55810c179f94"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/core/coreObjectchange.md",
+      "size": 1412,
+      "sha256": "sha256:28090d723bbcadd0f0520e0705c49b845036746bf69c7bdebf6e896f3c2b5cc6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/core/coreObjecttype.md",
+      "size": 961,
+      "sha256": "sha256:6ab940a5086be9ef356d711602bf5746a7af04c6644c5093c6e7e63077c78453"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/README.md",
+      "size": 2107,
+      "sha256": "sha256:49309b839c486dfb5e3aee212330931bfaf27d33ac70428999d2a906fc9b62a8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimCable.md",
+      "size": 4307,
+      "sha256": "sha256:b79c013131c01baec7d3593a759294b3de5be7a700666d0b44d86f13cafaf2af"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimCablepath.md",
+      "size": 1849,
+      "sha256": "sha256:652deb2d50962ffdeecb3741d99ae16ad28d87a4c6040081aefa38bfec639f7a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimCabletermination.md",
+      "size": 2578,
+      "sha256": "sha256:f8a4740a08b18e30049955997eea7f91a2e25b36ed30214c9e2b129bd5c3ed29"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimConsoleport.md",
+      "size": 4358,
+      "sha256": "sha256:626735f71520e66f595ccfba7702a0750df7434b40f08a353c8231556d8c3c4c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimConsoleporttemplate.md",
+      "size": 2485,
+      "sha256": "sha256:89b0bade19f691999136eaddb48fbe73f5895a4713d93a1746d9041af4274a6c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimConsoleserverport.md",
+      "size": 4966,
+      "sha256": "sha256:cb59a7b27cfefe6cb3546e7a43cd6d8eead490405a7b02674ef6bc0f7c811dc5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimConsoleserverporttemplate.md",
+      "size": 2541,
+      "sha256": "sha256:ca274bc3be4773bf3c77aecf225bd0c1fbdb1d1a3ad3b397eaa0a8a22ef72d79"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimDevice.md",
+      "size": 9004,
+      "sha256": "sha256:bb876e165670d78e0da7d8238c4904245e7a3a7ffed2249328a20e3d867fd06e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimDevicebay.md",
+      "size": 4278,
+      "sha256": "sha256:520c6333fa026026597b2c80849247215285b8746f7fb948d6fe8b512960adfb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimDevicebaytemplate.md",
+      "size": 2316,
+      "sha256": "sha256:de8346f66bae7018c9c9864b069d138454beb5e96af2c2c156a70fa5bb3d634b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimDevicerole.md",
+      "size": 2561,
+      "sha256": "sha256:344d74945c1b21338bfda5fd9c3e03a3b0cb03f334520915c543493422aac3c9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimDevicetype.md",
+      "size": 6077,
+      "sha256": "sha256:39b5b37cf7c16db41c67b871de7ae651baa01528ee051b929197bfed86947794"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimFrontport.md",
+      "size": 4947,
+      "sha256": "sha256:4e502918ce7ef5fa76888597db6b869a0c5eb81422e656934cc30322ce388a5b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimFrontporttemplate.md",
+      "size": 2711,
+      "sha256": "sha256:d751f2208a6ea7d18170bc4f291126796c4758e365e191c37aa7d90289fc8a92"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimInterface.md",
+      "size": 7236,
+      "sha256": "sha256:eda4d8081596542098ba1f3b141af9b80826349158b509c7acd37fd6356ce290"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimInterfacetemplate.md",
+      "size": 2581,
+      "sha256": "sha256:679865682634290b85279c2d8070e752af65c2eaab4370becfade4ddd89512f6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimInventoryitem.md",
+      "size": 4039,
+      "sha256": "sha256:83b432e65f883799342df341f22e1cac3939655b22bf7b3ff1abccc905285d56"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimInventoryitemrole.md",
+      "size": 1944,
+      "sha256": "sha256:1ddbe5a4145a938a941c05ca649562546fb1d41c2582913c4ea4ef7d398453f7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimInventoryitemtemplate.md",
+      "size": 2633,
+      "sha256": "sha256:eac1d16954103805452b841546e8b050d41d266a05a3180d3bb452622c8dabcf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimLocation.md",
+      "size": 3235,
+      "sha256": "sha256:2cbd35f978e4a5740934327a32a800ddab5c4c27dbd7f0633b04d943c124a7f0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimMacaddress.md",
+      "size": 2217,
+      "sha256": "sha256:795532b184d4792be6e40583e0a346e84f645f2f7ae7f5ade735c0f4cc8dc2ca"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimManufacturer.md",
+      "size": 2787,
+      "sha256": "sha256:3ca817165eadee3def25cbfc8c29797c500b6ace75834127f0789f9f85fa4b21"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimModule.md",
+      "size": 3401,
+      "sha256": "sha256:a0f906ef061c0a60f1385fed2da130a8abc20f6580c4ad87ac4873a2f6de5f31"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimModulebay.md",
+      "size": 3159,
+      "sha256": "sha256:da483e28264c09a4361a99a2fae551a639de55646343fab141e4ad60a72dec3e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimModulebaytemplate.md",
+      "size": 2360,
+      "sha256": "sha256:9b80e13d8c1a58c22990bff7e3703fd05d42204225893e29f2717edc689e8602"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimModuletype.md",
+      "size": 2665,
+      "sha256": "sha256:a63f96e16a8d7df539726fcfaf927c20d6ae19866409a486ab35da19a3902c48"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimModuletypeprofile.md",
+      "size": 1729,
+      "sha256": "sha256:9852df0c31283ad5278bd89ce52df0bca59eb54c255feff8dddef4254ff3574e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimPlatform.md",
+      "size": 2511,
+      "sha256": "sha256:3352841c8723467c410e2658fba06df4eac675738e579cf0d77989eed3eb3a21"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimPowerfeed.md",
+      "size": 3439,
+      "sha256": "sha256:ccfed09999dda75328a318e1e3a6cc9a597d887beaceca32c6d1d596a4642e14"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimPoweroutlet.md",
+      "size": 5066,
+      "sha256": "sha256:3d028794d429c83c8f3d1b8f392c23932add2e0bc5f675f1ea74a40c7c9e60a5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimPoweroutlettemplate.md",
+      "size": 2738,
+      "sha256": "sha256:b48312899a9426a76b1f0fbc7e7154f6cfe81a2454ae565457e8184db6f5e789"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimPowerpanel.md",
+      "size": 2324,
+      "sha256": "sha256:5c7d814f8d23524a8a8b54159898de8dc1364619e5148a6d526eed54c6a0c714"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimPowerport.md",
+      "size": 5037,
+      "sha256": "sha256:fc10effbe39ae13e9519e5aab00a5cbe82f523d5f27c45692dbc81644eec6ac4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimPowerporttemplate.md",
+      "size": 2601,
+      "sha256": "sha256:eecc4313d93eea218a071a2e859188638abc083b86c27d4e58e14a791b2b9e55"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimRack.md",
+      "size": 6131,
+      "sha256": "sha256:86d11b63523e0811b81ab8cd92d526ee3947727aa8ba8067178891a300f1c571"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimRackreservation.md",
+      "size": 2374,
+      "sha256": "sha256:711f989a67961b2a89caba06ee6282bfb4776c1e18de36aeeb2f79538c437fc6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimRackrole.md",
+      "size": 2195,
+      "sha256": "sha256:94b565edf4c0ab2709c6d043279f7767faa477847d6f4aaf208b73e251c8672e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimRacktype.md",
+      "size": 2912,
+      "sha256": "sha256:2c61c9e8f8422e208817cec43dc6720a135e48188ec114e1ee1347940aca9ab1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimRearport.md",
+      "size": 4773,
+      "sha256": "sha256:f539237acd073b0788d92b43b95aef893030ffc3c88287e336adf920897dc4cf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimRearporttemplate.md",
+      "size": 2516,
+      "sha256": "sha256:a1218b7fb7be8cb668022c4ef8c95bd43d6db7c962a6c521305f703e217352ea"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimRegion.md",
+      "size": 3547,
+      "sha256": "sha256:a88b8d70a65c42db51501cd7d1da7c0d43f0a859c53e0e52e81482a60828325f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimSite.md",
+      "size": 5828,
+      "sha256": "sha256:94e80d02df288084a0bb7e647cc1921e3612617a5c2fb9411447855146516660"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimSitegroup.md",
+      "size": 2999,
+      "sha256": "sha256:bb671b4cf5c37053b6e2e654c9382f4db7197d9a0536f6aa797c242d0749bbea"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimVirtualchassis.md",
+      "size": 2380,
+      "sha256": "sha256:c959e981acdf750edaac88f975cb84a14ba17c73c8f5ddf6f0275ef44e883148"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/dcim/dcimVirtualdevicecontext.md",
+      "size": 2747,
+      "sha256": "sha256:fc7b6b546da8720494bb13fde34b9321790421a24b462864cc73eb86911e843b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/extras/extrasConfigcontext.md",
+      "size": 1223,
+      "sha256": "sha256:26e58a7f73c0a1b9c518b8bde9b80685643d54aac8a304e29ac552474bc92b24"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/extras/extrasConfigtemplate.md",
+      "size": 1209,
+      "sha256": "sha256:e0f2925e162a889f3707d5a7d056caceb6e7c9c5793dca72a9b9de53816abc09"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/extras/extrasCustomfield.md",
+      "size": 1737,
+      "sha256": "sha256:a9a9058770435385d507ccd923af8ce955933a26209c7afcdbf32f5c862169e0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/extras/extrasCustomfieldchoiceset.md",
+      "size": 969,
+      "sha256": "sha256:8abfcc720dabcbd6ff834a3c19a53bcc28267d883f392b869793c883fa6ca7c5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/extras/extrasImageattachment.md",
+      "size": 1208,
+      "sha256": "sha256:d4a9905e4176d034427a1f13425dd8651563dbf7e7d1e233bf2506461c8b51bc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/extras/extrasJournalentry.md",
+      "size": 1299,
+      "sha256": "sha256:90147d303e8f45c93793ed375cfc84811bb7d9a19bc8cf4dbb2ad2dc292578ea"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/extras/extrasTag.md",
+      "size": 959,
+      "sha256": "sha256:27c1a5eb56908d94c3cdb2464da1aa5d9f6c56a99aa53ac9104c82f4935832f2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/extras/extrasWebhook.md",
+      "size": 1111,
+      "sha256": "sha256:ffaef6b77c0c25c4d0c933cc864ef8087684c67d99f4a06edebba9018ec0a4c9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/ipam/README.md",
+      "size": 777,
+      "sha256": "sha256:f980956e7c9c96f40a9c61ab72a7683ab2cbe7125fb44ba1f3dbc3fde553285a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/ipam/ipamAggregate.md",
+      "size": 1776,
+      "sha256": "sha256:35a163efb4c290a495e814af9377233f4d9cda3c6e143247148b0cc5a3950193"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/ipam/ipamAsn.md",
+      "size": 1429,
+      "sha256": "sha256:5fb73b4d2d3e46569f7569ee03d6f71f69532d42d10e474205e80f6b2457b03b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/ipam/ipamAsnrange.md",
+      "size": 1400,
+      "sha256": "sha256:420e7ade46335ae94e1a8a8f7a3c9891703b0bdddd5efcfce9e75b3a43c1148c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/ipam/ipamFhrpgroup.md",
+      "size": 1609,
+      "sha256": "sha256:730e80816e6ec368e76aa2e46e9159d72f7c9292b0e5089c36483075723b151f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/ipam/ipamFhrpgroupassignment.md",
+      "size": 1342,
+      "sha256": "sha256:3cc5ef1d3c5314f08dc1fb9a8bdb8849f080003f48c8111b77419ab438745258"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/ipam/ipamIpaddress.md",
+      "size": 3517,
+      "sha256": "sha256:44b5d187e79de27b07bb9b6fdef4a6fa7fdcf639664ce3a23b3ff5556ee06b83"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/ipam/ipamIprange.md",
+      "size": 2159,
+      "sha256": "sha256:c66c2414f1d673d3aeca283b923669cc7b92dc2ed1b0ef0587cbfe3c9491cc10"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/ipam/ipamPrefix.md",
+      "size": 3847,
+      "sha256": "sha256:39d28735e56f51a0e4b98c329470351913bc2df1702be69c9833da7213b45b48"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/ipam/ipamRir.md",
+      "size": 1502,
+      "sha256": "sha256:73621940a77f81b559aced6ecf464031c0f9829afd37d02abd7aeb57b1fb0909"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/ipam/ipamRole.md",
+      "size": 1457,
+      "sha256": "sha256:6f583a0524600071c974900812bcb7f9679ca6c972402e65b1e0a977dc593120"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/ipam/ipamRoutetarget.md",
+      "size": 1638,
+      "sha256": "sha256:cee2d0644948ced15ae591212c15dfeaa8a6de79f96c5d90a527f577109878be"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/ipam/ipamService.md",
+      "size": 1587,
+      "sha256": "sha256:c03f24f19032cb1bef2e2444cc884d6ca98a4347fe5bb9f82102f0cc80602413"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/ipam/ipamServicetemplate.md",
+      "size": 1077,
+      "sha256": "sha256:987f5e8f035865db8c64a5a66dd6cdc5a4366a55bea5b66decb3eb2e3e94149a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/ipam/ipamVlan.md",
+      "size": 2087,
+      "sha256": "sha256:1decb2225d559bb4573eed896c2bb84e5b71fcf8c07207da7c81e193a06c4771"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/ipam/ipamVlangroup.md",
+      "size": 1734,
+      "sha256": "sha256:149eab51405f18de1d0caed983ddee1e5d7d8b8290b715bc6ee6fd51239eabb7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/ipam/ipamVlantranslationpolicy.md",
+      "size": 1191,
+      "sha256": "sha256:c0a1fcc161ef2d1b4b5c39688c099f0f44ccd17bebdb0b418c505eb068eb9c75"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/ipam/ipamVlantranslationrule.md",
+      "size": 1176,
+      "sha256": "sha256:14df9fc4ec3237536a6e91f6071190367a4850607a87fb662e0b60b82220aa56"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/ipam/ipamVrf.md",
+      "size": 2456,
+      "sha256": "sha256:804793878a6e72fd58c3fb72c4ac8d0c9d168a743baa45ae325ba1fbb32b22be"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/tenancy/tenancyContact.md",
+      "size": 1371,
+      "sha256": "sha256:1d31af896fc6eab9a8290b2f50e4001c8d00bda0e10d9fa8df3a9956e35e9830"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/tenancy/tenancyContactassignment.md",
+      "size": 1504,
+      "sha256": "sha256:279cbbd9bed31eeadabd12a8828713f3cd4c80c6a2cce3267beb3d0df8114284"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/tenancy/tenancyContactgroup.md",
+      "size": 1347,
+      "sha256": "sha256:156a03e75d985cbd76335a913e30293bc3586afb137f651cfe21af5dfacf6562"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/tenancy/tenancyContactrole.md",
+      "size": 964,
+      "sha256": "sha256:36d97057486d55804d18e958611a025e82c7b17f39d835f1f5f52b24c22aa7c2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/tenancy/tenancyTenant.md",
+      "size": 1581,
+      "sha256": "sha256:a84fd7edad8fa3887eae609103aee35f4d5e8d6f28bac740f2c61a530e6b52dc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/tenancy/tenancyTenantgroup.md",
+      "size": 1531,
+      "sha256": "sha256:81f173808aa8a778cc4875d0a8069b824e5a49e5a433247f1f0187c64666ff2b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/users/usersGroup.md",
+      "size": 587,
+      "sha256": "sha256:d2cc9f8669d48be1984bb03b0797783e453e7a84fca6a085f789bf697c28dcd3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/users/usersToken.md",
+      "size": 1092,
+      "sha256": "sha256:4a87e9153f210ac89afb7313abba12d92b909bbed5d15a89c91ae77557b34503"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/users/usersUser.md",
+      "size": 1079,
+      "sha256": "sha256:752a5a684bb0da734ea44d036733c50d33bf5b829342cea7377c594406ecb177"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/virtualization/virtualizationCluster.md",
+      "size": 1440,
+      "sha256": "sha256:24f3ad15cac65d7c0edab83d62b243988f7e034beefb782a71dfab6881715966"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/virtualization/virtualizationClustergroup.md",
+      "size": 737,
+      "sha256": "sha256:1f4fd5159f0de27fbdff4d0fd6e1415a51b9c105c648e2458c17f4ac7552c84f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/virtualization/virtualizationClustertype.md",
+      "size": 763,
+      "sha256": "sha256:27f978fc9386a727ee7f8f75e3849ceb6abc77a7d612cac943aab2c656876e59"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/virtualization/virtualizationVirtualmachine.md",
+      "size": 2555,
+      "sha256": "sha256:7c9cb180f895b23806c630cfd5049f5d86609c657d19e869b70b560749d5004d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/virtualization/virtualizationVminterface.md",
+      "size": 2356,
+      "sha256": "sha256:6fcce33d96981ffed1b526790e24c9abbc476c1b60e010838acacdf52dcc280f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/vpn/vpnIpsecprofile.md",
+      "size": 1327,
+      "sha256": "sha256:229d2a7ef38364972a8e99b7ec04df98578a2a24d51d86fbeefcb2362b219c5b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/vpn/vpnL2vpn.md",
+      "size": 1022,
+      "sha256": "sha256:be40f40636250fb08cfd56ae2e0a03d731f6ee0ee83f7b2aef70ff258b2740e2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/vpn/vpnL2vpntermination.md",
+      "size": 976,
+      "sha256": "sha256:62dbde581b66078aabdbdac30d3ba53c24c14a0dd7e939375b5f443682b5537c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/vpn/vpnTunnel.md",
+      "size": 1236,
+      "sha256": "sha256:fa32170a637381e3f2f0b705c6c8ce0cee57746c98dba4df604b09133cf0ab19"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/vpn/vpnTunneltermination.md",
+      "size": 1105,
+      "sha256": "sha256:9747d4d0e767952d9961bc1dbf915b8bacc3805e6045ee9b3549d0b26acfe6fd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/wireless/wirelessWirelesslan.md",
+      "size": 1533,
+      "sha256": "sha256:7737f423c71f904a25250d1f3b05042e2964c64f9ebe12362b32c42be5c9ae9f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/wireless/wirelessWirelesslangroup.md",
+      "size": 890,
+      "sha256": "sha256:36f84e4e09e9c046a60b2ff8cfbf0c022b577e52ca1224faef786540ccbbeb0c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/entities/wireless/wirelessWirelesslink.md",
+      "size": 1502,
+      "sha256": "sha256:1cc4d605321156dc5a42241fadf037722623bd4bbf2a92f2d0511a6f25645d02"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/increments/CW1-V1-01.md",
+      "size": 57404,
+      "sha256": "sha256:a1b321c6dd951a33b2c0014205248c95d9e4b7f985d5eee98586efb074659fdc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/increments/CW1-V1-02-I2.md",
+      "size": 33331,
+      "sha256": "sha256:b4745e81599822e2559e8c240832824d217f76dc2f19d1a5c21ab7a290f2d634"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/increments/CW1-V1-02-I3.md",
+      "size": 37995,
+      "sha256": "sha256:47f3402ec90cda4dc82d0d331e2d17eb47a805ebdd0981024d52afe90f1d85ed"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/increments/CW1-V1-02-I4.md",
+      "size": 84605,
+      "sha256": "sha256:44056d50e32912249baa4f19143ea75583e0826ca6b651e45ab7210a67100251"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/increments/CW1-V1-02.md",
+      "size": 35588,
+      "sha256": "sha256:80865b1ce57c386706c25e7f6734897d4322d87f6f227f6532c17b6b6b65f9ef"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/increments/CW1-V2-01.md",
+      "size": 20928,
+      "sha256": "sha256:f8723882a71112c2413d23be21384926852cc467fffc3327a4ba269f52664780"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/increments/CW1-V2-02-I1.md",
+      "size": 22115,
+      "sha256": "sha256:d083af0c6cb3a7f9eba37b0a0d967ffde6cf31bea5306edfae6bc6d1edd1927d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/increments/CW1-V2-02-I2.md",
+      "size": 23104,
+      "sha256": "sha256:f9397365e7ff2b947d9e508dec23e0fae653ae24c447d196860fe10faee3391c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/increments/CW1-V2-02-I3.md",
+      "size": 22878,
+      "sha256": "sha256:5b78df49834ad40b382bede170b1ab61c69b212db5f9c3191227834da6159bf1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/increments/CW1-V2-02-I4.md",
+      "size": 27494,
+      "sha256": "sha256:272f8305b369ed0fd6f7e81c31439b2b4eb1265b353ef61206c986eca0595740"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/increments/CW1-V2-02-I5.md",
+      "size": 26886,
+      "sha256": "sha256:c2887f3b4efb527ff331dc3db741b3bdbe9fd3893e49ceb4601b6aa0d1630575"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/increments/CW1-V2-02-I6.md",
+      "size": 26132,
+      "sha256": "sha256:0014d08ad89c13b077db2295e47b70e7a6c432b26161cca06aba26e1a080100a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/increments/CW1-V2-02-I7.md",
+      "size": 28550,
+      "sha256": "sha256:20e2cc9a573cb3e9f1f5089d6a0739c66052068e4a030d66dd3dcceb1e9554e5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/increments/CW1-V2-02-I8.md",
+      "size": 28235,
+      "sha256": "sha256:6a5df44760a15537c8a681a75a85ace6f4f600f2aa4074f9525d5026966fd2a3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/increments/CW1-V2-02-I9.md",
+      "size": 27527,
+      "sha256": "sha256:f2bb41d4083271d97ce232b27f876c04da8a6d3f937dd3e25f390c88217f2efa"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "docs/increments/README.md",
+      "size": 12035,
+      "sha256": "sha256:52274d3787318e552c1a9b1d47e1aff2477ef56dc09f5f99615aad9febd31547"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/.golangci.yml",
+      "size": 1227,
+      "sha256": "sha256:013ea152d3cd47c30153a4149eb7253cc5100a3610f112d3b4cb3ba08d36d61b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/Dockerfile",
+      "size": 981,
+      "sha256": "sha256:bd9a6b107af718237ec07b69cd2127f3f81b25e1ffdaa18b5f09d5b745a1ca10"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/Jenkinsfile",
+      "size": 8815,
+      "sha256": "sha256:129be5c779835d844082832b110d8705e8daadacace905201a118ee26ac73162"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/Makefile",
+      "size": 15964,
+      "sha256": "sha256:78c81f41b45c87df0d9f7baa1ce1a688b68f4400c5594b425130448efab17c08"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/authGroup.pb.go",
+      "size": 36400,
+      "sha256": "sha256:2c665638ea2069ca3f778a20ae9909cf49f3f9ceface02c565c59306aacb7848"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/authGroup.pb.validate.go",
+      "size": 65328,
+      "sha256": "sha256:f4d517ceb51a666f460b380b5d4613b8c6377e921295d4120b5a5dda69306a5c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/authGroup.proto",
+      "size": 6773,
+      "sha256": "sha256:46d8ecdeae4ee296de4daeded8e1ac30f2f33b4270a920c01a0b8c0f0e914dde"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/authGroupPermissions.pb.go",
+      "size": 42243,
+      "sha256": "sha256:76893cef8193c3bfb9fb90665b3563c043a146eb9e216bfcad5e9709171e630e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/authGroupPermissions.pb.validate.go",
+      "size": 71386,
+      "sha256": "sha256:a8e2e399b804428a3985141e53b9e4394bd13ba42b4970d3866b07682067e78c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/authGroupPermissions.proto",
+      "size": 7641,
+      "sha256": "sha256:e893a9c956d6f5873339488e99e36f13443f67b816a4a02da93f4951edcd6d56"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/authGroupPermissions_grpc.pb.go",
+      "size": 20854,
+      "sha256": "sha256:5d42aba7664c1a2de5739d5e5edf0cd039a34574605ceaa591e4e7a4266a0542"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/authGroupPermissions_router.pb.go",
+      "size": 12445,
+      "sha256": "sha256:813447487e14997010015295c7b224d7505170b2f05711b10bf29446fdf74956"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/authGroup_grpc.pb.go",
+      "size": 18214,
+      "sha256": "sha256:d5ef06dc6795ec0658b1ed0774857677abafa6b0f3b184f12d52927cd34365d6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/authGroup_router.pb.go",
+      "size": 11383,
+      "sha256": "sha256:4b50d48826cdf425bd81b6c7aae0cbea1aca0727369b14acc702fea570b65a02"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/authPermission.pb.go",
+      "size": 40251,
+      "sha256": "sha256:16ad6166e764adc006fd2051eafc30b91460ff27402a4924052cfceb5d38665e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/authPermission.pb.validate.go",
+      "size": 68253,
+      "sha256": "sha256:31537131ab4542309dc53c71d1b6a4f09e3b74b40032e9db7ec424b2d7ff8038"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/authPermission.proto",
+      "size": 7272,
+      "sha256": "sha256:5db3aa035af4090c61884e4e47c1fbe16046ed643b64fc35e3d3ac9b42b408c3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/authPermission_grpc.pb.go",
+      "size": 19414,
+      "sha256": "sha256:44df44f1233f5325216cc3df0821be18ca06b158af8061351a31ad47bfbd46b8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/authPermission_router.pb.go",
+      "size": 11851,
+      "sha256": "sha256:ede25f1e36d08f130ff7697cc5b16ea19f89948f4fb44f68017f85709468340e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsCircuit.pb.go",
+      "size": 54569,
+      "sha256": "sha256:aadb2cfcd82d106446d3b6115a7dbfa7a768b9c6037ca5ec14093dc1251e343c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsCircuit.pb.validate.go",
+      "size": 70758,
+      "sha256": "sha256:2bf91f982ce7e7a54fc86d42a709abdf292cb84a472645f5dff9c44e646994a4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsCircuit.proto",
+      "size": 8584,
+      "sha256": "sha256:29fc908020ddc61c60219792e207a0f71e4bda63d35cdc1f4ee148429852ea97"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsCircuit_grpc.pb.go",
+      "size": 19654,
+      "sha256": "sha256:b7e9ad9b82bca7e58b40261f94f76cb4c90e6c885442674c543331a4c3e6d34a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsCircuit_router.pb.go",
+      "size": 11941,
+      "sha256": "sha256:2a291b02763afd3353511632ac3c86a0cc6e8b9ba51fa476389fd806a2f36dbe"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsCircuitgroup.pb.go",
+      "size": 46345,
+      "sha256": "sha256:eb06b9a5c9fe943c859752484134992df96e40d40b4d552b1f1760a053220c57"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsCircuitgroup.pb.validate.go",
+      "size": 71959,
+      "sha256": "sha256:44013e604fcfefbc8210104ddb2827fea3fbad5c8d57c235f272ca7e45279f68"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsCircuitgroup.proto",
+      "size": 7956,
+      "sha256": "sha256:de4211eb5d070d886b83c9a0111adc46b1f6c8417d1862634bf63ed0deff6e4e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsCircuitgroup_grpc.pb.go",
+      "size": 20854,
+      "sha256": "sha256:09623803700422662e1f51813d86f868615978bd50b5f3ea8b2cc6cf05598b50"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsCircuitgroup_router.pb.go",
+      "size": 12373,
+      "sha256": "sha256:bb32d003346d31988342acacf287b6db4b3d67374064b78e086680aff60e402a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsCircuitgroupassignment.pb.go",
+      "size": 51244,
+      "sha256": "sha256:a84d1eebb4eb89dd017f3bfca2003795323693480ab3aee92a039f4ab801b432"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsCircuitgroupassignment.pb.validate.go",
+      "size": 77360,
+      "sha256": "sha256:dcfe344c8a82baf69fcf1b3147a0480752b543b13a013b432159ff57f8d555a1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsCircuitgroupassignment.proto",
+      "size": 8654,
+      "sha256": "sha256:3dd80f4f862652705e9e30266b1ce65b14ce89ae71abd563e75519b414d0f376"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsCircuitgroupassignment_grpc.pb.go",
+      "size": 23216,
+      "sha256": "sha256:da9b37942dcc4d28ad889233d6f0caa169ebfbd0676c848542dd080400314fba"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsCircuitgroupassignment_router.pb.go",
+      "size": 13273,
+      "sha256": "sha256:c392bfd40cb00b8d38d5f628b1945e24fb3d1261f211d469164a4d0f4ef0f46d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsCircuittermination.pb.go",
+      "size": 61200,
+      "sha256": "sha256:f17760a2ea94d5c87aa07cef559138ec62e07e8e0b87b0dd5794c2dc48b679bc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsCircuittermination.pb.validate.go",
+      "size": 76808,
+      "sha256": "sha256:6208b2e000c26e184a951e92db7a200e3cc0564e0af301f6b6282405b7c3f222"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsCircuittermination.proto",
+      "size": 9410,
+      "sha256": "sha256:773567635721231afd0002280d08001a02cd08e63a0b0e1163f6dafd77f19a16"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsCircuittermination_grpc.pb.go",
+      "size": 22260,
+      "sha256": "sha256:fe03c85b17f9849fbd6cbbb21ddf9b91b036845585b75994e0372017fc4f97c7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsCircuittermination_router.pb.go",
+      "size": 12931,
+      "sha256": "sha256:4d042797ccb9e92f12477548c56888669bf0c730a29d3e1285511c81db683295"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsCircuittype.pb.go",
+      "size": 45825,
+      "sha256": "sha256:29ab6e1460f42381c4fbf7d611614a8d8b771d53c56c6001bf2660116b380d75"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsCircuittype.pb.validate.go",
+      "size": 71416,
+      "sha256": "sha256:4b63c7fefaa6aba8af74b7d1e21cfd2b265fb9f3d089168e9de8fcaa3dce7d3b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsCircuittype.proto",
+      "size": 7882,
+      "sha256": "sha256:9b2ea1b8add8b1298d40adc5ad2c2c7b06a976b8395770e4827a6eb69e0838f0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsCircuittype_grpc.pb.go",
+      "size": 20614,
+      "sha256": "sha256:34b6d6adfb0d4e57265804b1cb215c275d2b05b79af510f68037641c1443e7bb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsCircuittype_router.pb.go",
+      "size": 12301,
+      "sha256": "sha256:3ca6e04288abb4e9db4bfcbe2356bd520dc50f9b2780b908662a856dd0162b5d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsProvider.pb.go",
+      "size": 44458,
+      "sha256": "sha256:0d0711c1863f95a9636f7703e09c64a3c02088b8828436b51dd9ca5d4ef34db6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsProvider.pb.validate.go",
+      "size": 69807,
+      "sha256": "sha256:4d1d2ef9399a9df1274eec53af04a7be12845007bfb0df3771a63429511f8353"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsProvider.proto",
+      "size": 7687,
+      "sha256": "sha256:44a66c005a3b8e071976dfe32e0250cd0c7893422aaba5befbf534ad682b0fb6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsProviderAsns.pb.go",
+      "size": 42249,
+      "sha256": "sha256:c6800f7a1dbedbbce4a9cf10866759df984bae0857af17132118cdaa81b25117"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsProviderAsns.pb.validate.go",
+      "size": 71374,
+      "sha256": "sha256:15bf555e213eb506731103896163483e41320d9719a3df4995f1113f5db20943"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsProviderAsns.proto",
+      "size": 7656,
+      "sha256": "sha256:46f033ef77ecc2edeecac2791f1cc6ca23239c23df2cd6b8755ad8e5aeb78684"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsProviderAsns_grpc.pb.go",
+      "size": 20854,
+      "sha256": "sha256:3e785cadcbb2736cca7bd6fb23e1c9cd2fb033eaec095e9a280ab3dc9a89848e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsProviderAsns_router.pb.go",
+      "size": 12517,
+      "sha256": "sha256:01b6370c2acbe08a2178268638248f89c1a098bb820017ca30f5c0138fca5091"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsProvider_grpc.pb.go",
+      "size": 19894,
+      "sha256": "sha256:a80eb1d1ef0a4d966f2261a1e8f3f499f100df013277ac6b1766725df1c59ff9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsProvider_router.pb.go",
+      "size": 12031,
+      "sha256": "sha256:68e2e1571bd03728c7fa2c2f745602867c32c69c422034396790650a876951e8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsProvideraccount.pb.go",
+      "size": 48719,
+      "sha256": "sha256:65dc20eaf633ceadc6f4aa999c51f6153edad44877a57d3d4cb40216ec5761ca"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsProvideraccount.pb.validate.go",
+      "size": 73705,
+      "sha256": "sha256:e072e0e37f222e2cc657dc3d3a29362d695b17080cce57cd8dfeb287f46483c9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsProvideraccount.proto",
+      "size": 8244,
+      "sha256": "sha256:632cc7e392f256a4467ed182552bc724299c206f8a331168ccd96dbbc5b76daf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsProvideraccount_grpc.pb.go",
+      "size": 21543,
+      "sha256": "sha256:851d08ba16d067c70c0d25d4bb1d829f98b554c6b78b12cba9c4253ed0d52582"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsProvideraccount_router.pb.go",
+      "size": 12661,
+      "sha256": "sha256:9e4d52d5c54ed731a06455fcff9cb7c9943443f6959b3760eb537411efcd9fff"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsProvidernetwork.pb.go",
+      "size": 48755,
+      "sha256": "sha256:3c878a01e5d29825058668e5ee7052a9a5c13c5e8d060088d645d0d5b8a13557"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsProvidernetwork.pb.validate.go",
+      "size": 73711,
+      "sha256": "sha256:0c88fa06fb67ac0890fd254940ef97c9bce6f417accaa4e38d1d1918bb4aaa1d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsProvidernetwork.proto",
+      "size": 8250,
+      "sha256": "sha256:11c8147c84feba62e7eac0669182e2df14f1ad5511e3f872d913ba97997e5b29"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsProvidernetwork_grpc.pb.go",
+      "size": 21543,
+      "sha256": "sha256:ed530aa3d2886b6e5f2c3c0fce7ef18e95fde065ede2021b52bcf34edb2ad54a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsProvidernetwork_router.pb.go",
+      "size": 12661,
+      "sha256": "sha256:a4560eb77c9d7a84f0f9841098300c7ae049f2e785cef3f3b9e393cf2403834f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsVirtualcircuit.pb.go",
+      "size": 51012,
+      "sha256": "sha256:171e8ac1899999614d18ef980c6a91567540334f7707ed6964e539ce80b6a339"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsVirtualcircuit.pb.validate.go",
+      "size": 73543,
+      "sha256": "sha256:9444df5205de268007563a1e4c5038772a25b0ff6611218803a759c766243365"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsVirtualcircuit.proto",
+      "size": 8418,
+      "sha256": "sha256:2f17fa40d40dc282f808fd123401e3d7e7b57aa84563d2fb0142c1067bc150cf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsVirtualcircuit_grpc.pb.go",
+      "size": 21304,
+      "sha256": "sha256:e120f12bb557cf6b47ad3283c9e1c758fbb2c80b65e8ed7460c4b8b952642d16"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsVirtualcircuit_router.pb.go",
+      "size": 12571,
+      "sha256": "sha256:0ae2892767ae5ec531c967c71ea0f2a49ccba4317ff170b6bfd14c7c39f1b821"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsVirtualcircuittermination.pb.go",
+      "size": 52859,
+      "sha256": "sha256:a0618829650d9b2c4d0dd3a3151a6a16d94dfbea5ea25d38146b381d20dd92ee"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsVirtualcircuittermination.pb.validate.go",
+      "size": 79011,
+      "sha256": "sha256:f5be7d8654eb7449af1e8dac635f613ff8633ac3abf8968f25b51efe582c8a78"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsVirtualcircuittermination.proto",
+      "size": 8882,
+      "sha256": "sha256:e08420eba623236c747404aadd27945fc48858df57a2155528c0ffa98070e573"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsVirtualcircuittermination_grpc.pb.go",
+      "size": 23933,
+      "sha256": "sha256:32c4918c426a390e752f24a9e744d7f2cdecbff97f18d88fe725b36318e5203a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsVirtualcircuittermination_router.pb.go",
+      "size": 13561,
+      "sha256": "sha256:3a9b4dd09aa1a71ea243087d2a09b672b55a0aaa0ae45229d341a92a897e96d1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsVirtualcircuittype.pb.go",
+      "size": 49194,
+      "sha256": "sha256:164d6a0def39a937f997234ecd0012334d4e61952c5859cd5c9d6f02dfd918aa"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsVirtualcircuittype.pb.validate.go",
+      "size": 75167,
+      "sha256": "sha256:636be418ae5a1b4f4c2e9627ecda6b31c7224a2b23df9a089fc98128198e8294"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsVirtualcircuittype.proto",
+      "size": 8358,
+      "sha256": "sha256:50d97a558082048f10e85803d6ad52c0746f715396b97c2171e1dc1cfd82b228"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsVirtualcircuittype_grpc.pb.go",
+      "size": 22260,
+      "sha256": "sha256:550c7ff929cb526bcfa5947738f6e445e2e12d8b39995c3700b33db7b55f7673"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/circuitsVirtualcircuittype_router.pb.go",
+      "size": 12931,
+      "sha256": "sha256:d7b95c1d3e71408d9b792781280fac1a297ea105dc2a0bce4e873b28c120ff87"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreAutosyncrecord.pb.go",
+      "size": 42189,
+      "sha256": "sha256:97d99b4448900aafcb0ea993e5224826d3ca5c61c8e95c4c970b5a6520dfb810"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreAutosyncrecord.pb.validate.go",
+      "size": 70438,
+      "sha256": "sha256:34c420170ace4fe8ef2d403d37d00f5d95599e7981571f61d658b1cafbf032bf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreAutosyncrecord.proto",
+      "size": 7544,
+      "sha256": "sha256:695e79c05d3fa2a049b51cbd3d8416e10dbdfb889bb31c7b4293d81aee6ae9a1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreAutosyncrecord_grpc.pb.go",
+      "size": 20374,
+      "sha256": "sha256:ecc8420357ec96ed5ab249ce27d1a4b1fdaf7b72440b790c2b935dad92d70dcd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreAutosyncrecord_router.pb.go",
+      "size": 12211,
+      "sha256": "sha256:bb5fb2a7a970a36714588f2244cab1e1cbe02bbc891a3b171b61526e19912356"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreConfigrevision.pb.go",
+      "size": 42729,
+      "sha256": "sha256:f51fdcea8922f7bf7b676943263a55d7c692b5f05952ce61602080bbb2a7a460"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreConfigrevision.pb.validate.go",
+      "size": 70510,
+      "sha256": "sha256:1df15dc8eaeff5ffb4925424ca69b68f935065981361ed9b267d0b51e51ffaab"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreConfigrevision.proto",
+      "size": 7574,
+      "sha256": "sha256:fcdea520cf032b5b08b7ce3cdf0924f28dd9e0aee54dda956dad129569438914"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreConfigrevision_grpc.pb.go",
+      "size": 20374,
+      "sha256": "sha256:b1fda21bef32f2f6e2db66f812ba9efa5e1659de7383336513732492eef015e3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreConfigrevision_router.pb.go",
+      "size": 12211,
+      "sha256": "sha256:52e4f14c6eff4d8b9b6e004f0289aa0bd1fd3f04ab5869d9d9989fbe4fca877f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreDatafile.pb.go",
+      "size": 42243,
+      "sha256": "sha256:fabeb86c3f16a54730ab55ffeb5500283e5ea752332c455d452cd7b5b4af811b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreDatafile.pb.validate.go",
+      "size": 67584,
+      "sha256": "sha256:fde146a4fda3ac558c9b69446202a1d1b766b87e20e8f7537bb518e93edbdb50"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreDatafile.proto",
+      "size": 7355,
+      "sha256": "sha256:d011b6a8cc74b07be0f9a30b1186c945ee2fcffdd5652dfb7db2043d8696b07a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreDatafile_grpc.pb.go",
+      "size": 18934,
+      "sha256": "sha256:cd5106387fd1492d7ecda7be58b69360604db8e1cfd6c2fec4736632e176a437"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreDatafile_router.pb.go",
+      "size": 11671,
+      "sha256": "sha256:d67eb369abbf0dbfb56bc9bac1ddb39c3dcbb08a1b8ba397da2d19ad0efa99ab"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreDatasource.pb.go",
+      "size": 49342,
+      "sha256": "sha256:1cff1d488d20198f5904773ecda57230030cbd45675fd14bbc2c7d31196b116e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreDatasource.pb.validate.go",
+      "size": 69543,
+      "sha256": "sha256:f683ba985879185a1d0d8fdfa6beec9e9c984e881c16e2b62200cbaf15d4e6f4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreDatasource.proto",
+      "size": 8069,
+      "sha256": "sha256:8e3226f7c951e918f4abada3245bdae8e7d7ac59378442ebc0ecdb4679367136"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreDatasource_grpc.pb.go",
+      "size": 19414,
+      "sha256": "sha256:055bb277767f02865ba86e200c4cb5d620068268f33727bdc07a7c9f351496ec"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreDatasource_router.pb.go",
+      "size": 11851,
+      "sha256": "sha256:99b44d7260e19847584414dfc01fddbbe5f5f8412ac50077d607f8018d1716b7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreJob.pb.go",
+      "size": 45458,
+      "sha256": "sha256:4d67cad506178e68dcdb6c38d21392a7e25395a49fa2babff05303a41c4c152c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreJob.pb.validate.go",
+      "size": 65723,
+      "sha256": "sha256:15f07ba3677f9d07772f198ae46609b0fa1ede8e8f75ee018c59d1e930370b98"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreJob.proto",
+      "size": 7515,
+      "sha256": "sha256:490f4dc1bbf6af75b1fdec829afa7e72ad80a74294df1002f65e5205bd729349"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreJob_grpc.pb.go",
+      "size": 17734,
+      "sha256": "sha256:2045e87afb825e5d42da93a8ee47e880b6cbb7093c5de3fd90350c47f49c51d9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreJob_router.pb.go",
+      "size": 11221,
+      "sha256": "sha256:ea1f926b6c4b4631a0625f4b661c761b1d31969424435c2cb3b2bcc7444fe398"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreManagedfile.pb.go",
+      "size": 45882,
+      "sha256": "sha256:4bf1bc184d0c0a19c1d260a8d7a81636b141b1a340c66fd65626cec9f312d243"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreManagedfile.pb.validate.go",
+      "size": 69531,
+      "sha256": "sha256:1b7f575a0da7a0a098698800646487cc914624fe751cdbaa53bf318b9668ebd5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreManagedfile.proto",
+      "size": 7786,
+      "sha256": "sha256:df274a63aa64264e82addddecf42e7052719568bd7712140ebebd188d6b7f6d3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreManagedfile_grpc.pb.go",
+      "size": 19654,
+      "sha256": "sha256:6d4aa54e9512249a09f4f5bc33961c8c40d1bd15efb1e90862242561afa38ff8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreManagedfile_router.pb.go",
+      "size": 11941,
+      "sha256": "sha256:ed1735074f87340c46ced2072721212f39baf5f5149d9ee0fc713adefb664085"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreObjectchange.pb.go",
+      "size": 50214,
+      "sha256": "sha256:462a98cb2239f8bffa816dd10413f0017b54d9fba257e2b849f0b9704fd74dce"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreObjectchange.pb.validate.go",
+      "size": 70602,
+      "sha256": "sha256:8a73c0e6870dd61da6cda0db943e8ec803abb275c67560e031f09b53ffbed3fc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreObjectchange.proto",
+      "size": 8211,
+      "sha256": "sha256:3b93295b39ef6756916385b6cb7d7b9e3563c1d7787464dde8e016e49f5901b1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreObjectchange_grpc.pb.go",
+      "size": 19894,
+      "sha256": "sha256:8923a99dd27231ed98502fe46553ea6147e573eb59beb1c1ebb2e491f7294c37"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreObjectchange_router.pb.go",
+      "size": 12031,
+      "sha256": "sha256:753a4f681710c859538715b4f79c56a1a40b5e615e3de6a1c7549b3ac5974692"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreObjecttype.pb.go",
+      "size": 43403,
+      "sha256": "sha256:473d8a767ee4946ad7e6a5cae79ad460892514a2a2f485a92f0983d23d9e28fd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreObjecttype.pb.validate.go",
+      "size": 72894,
+      "sha256": "sha256:11af651b16c984df68bf2be262d215a661f15c46d98e7c32b9f075d98403a03f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreObjecttype.proto",
+      "size": 8001,
+      "sha256": "sha256:86c6b11310a9bea9bec1fa728bdd09f4c32cc66e3996dd673a0880a0b648013f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreObjecttype_grpc.pb.go",
+      "size": 21704,
+      "sha256": "sha256:bbc229cfd7f8346a743ef08bbe9515d11d594a87830331f4e1da4ad81187b664"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/coreObjecttype_router.pb.go",
+      "size": 12517,
+      "sha256": "sha256:46ab3ca47de48ff241c57181d9fe3cc30e1d208568ce070377783631d377e9ea"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimCable.pb.go",
+      "size": 46015,
+      "sha256": "sha256:ebf542a87d981d1c6dba0db574d97943172bcca419197abca4773611a587b7d4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimCable.pb.validate.go",
+      "size": 66714,
+      "sha256": "sha256:c5377588d67a4608911451ce15e4b5c76c82b44c58749f185ad656df2a5d9c1c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimCable.proto",
+      "size": 7630,
+      "sha256": "sha256:621e2612c5ff3ab586ad5decdf0e69d306e4efcf8a5e1a149116917a57bd1ff3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimCable_grpc.pb.go",
+      "size": 18214,
+      "sha256": "sha256:05ec95ec217059f8e7caa7181e69bd6bc996773456b1e7a6b4767caf55a37890"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimCable_router.pb.go",
+      "size": 11401,
+      "sha256": "sha256:aa56822ceb633ccbfedce2b0aa82e21147d770c9542708d834c40a570da1ad00"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimCablepath.pb.go",
+      "size": 41354,
+      "sha256": "sha256:97328a04036089bd6e633b483849c7e89e96a3dc7d02e692df9ada621e7c6f9a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimCablepath.pb.validate.go",
+      "size": 67929,
+      "sha256": "sha256:72cd58cfb2d9a203c519163c01358508e963923a60d206d6d1bd9fe926e45c5f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimCablepath.proto",
+      "size": 7300,
+      "sha256": "sha256:6016cf7282bcb74f7c5e60e3f3d5f686beda285358426a7e8dbb6cc0c78770bf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimCablepath_grpc.pb.go",
+      "size": 19174,
+      "sha256": "sha256:78f28dd28c318f706d3006de4df01cf9fcc4436052c63a2154e28feaca6a3eb0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimCablepath_router.pb.go",
+      "size": 11761,
+      "sha256": "sha256:6ac9ab5caba30f54eee90f143e6d539cd448fdeea0cf9085643fd8ccc3e60140"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimCabletermination.pb.go",
+      "size": 49090,
+      "sha256": "sha256:63fd0ac3ffb56388ce827903631cf8bbe87dc197382be79f4b6a1c3cef8b42de"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimCabletermination.pb.validate.go",
+      "size": 72340,
+      "sha256": "sha256:e2a3fcbdf5b765068acedf4573862a7089cf1ad7c83c971225aeccadf023374b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimCabletermination.proto",
+      "size": 8189,
+      "sha256": "sha256:58667af5b70f0a2c95f4288af2468e49fd7a9ba1892fd334694b552e228d121c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimCabletermination_grpc.pb.go",
+      "size": 20854,
+      "sha256": "sha256:b39fb7e511227c670df9702975bdefc09ee60ffd4bd0fb78eea57e74b64f1ece"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimCabletermination_router.pb.go",
+      "size": 12391,
+      "sha256": "sha256:7811c3f12048615e9b272619b14d45585f0fca12a24097eb3d2074d2a51ef8d1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimConsoleport.pb.go",
+      "size": 51979,
+      "sha256": "sha256:bd5bf1fbac54f413c6d93441ca847d7b935f259e6c2c11b48a47c7072e2b107b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimConsoleport.pb.validate.go",
+      "size": 70398,
+      "sha256": "sha256:5800a05cf49f580d1058151a16cb90d3e00cf93ddfae21e80214e29bd3a951e6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimConsoleport.proto",
+      "size": 8299,
+      "sha256": "sha256:460305b4bb7b8c65efe239ae73443a7e43e00c572493d7205cbb564233eff1e9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimConsoleport_grpc.pb.go",
+      "size": 19654,
+      "sha256": "sha256:f82bc451bc2f4c15d2e20d0125a02a16fe241f0bec56f821e14a06476a8e1d3b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimConsoleport_router.pb.go",
+      "size": 11941,
+      "sha256": "sha256:0216d861327dc08023c532ca7fbaa16bb3cd2bf179fd50dae3870000c87df55a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimConsoleporttemplate.pb.go",
+      "size": 48499,
+      "sha256": "sha256:e7f2faf09a30d860c44d0e13228295bf2e0a22c5de28dd262b2e5e33f4fd3efb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimConsoleporttemplate.pb.validate.go",
+      "size": 73684,
+      "sha256": "sha256:7867db3fa30468ca4397902bdc355586278d4fe4ac05672a1b752093c461e9bf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimConsoleporttemplate.proto",
+      "size": 8220,
+      "sha256": "sha256:37b15dc1373630be6b863eb9070170a27772d1e6c13d8e9ae01b19b4d7c3fd74"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimConsoleporttemplate_grpc.pb.go",
+      "size": 21543,
+      "sha256": "sha256:3ec011f48f0e1360dc3febb4217afc51dc5673bf8ec95f1dd66412c09f61dfff"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimConsoleporttemplate_router.pb.go",
+      "size": 12661,
+      "sha256": "sha256:589a33e8a84a781220fc8da8f41cd2013019644740755f30dbd5ffa225744dcd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimConsoleserverport.pb.go",
+      "size": 54991,
+      "sha256": "sha256:80e8e92ac12e323b6392f59c0f10e8505835790813d90553881b994e7e399a0e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimConsoleserverport.pb.validate.go",
+      "size": 73639,
+      "sha256": "sha256:f4ddb07733413f837eee5953ea2b3d90b074bf8f267e62ec13a99115c190444c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimConsoleserverport.proto",
+      "size": 8707,
+      "sha256": "sha256:333c0c8fe9e7f99f839e0720b3712a2eff88bdb322a326bd865346c574c30224"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimConsoleserverport_grpc.pb.go",
+      "size": 21094,
+      "sha256": "sha256:b7ee1aec68e77f82036374d750b92e883e18f24f89d59c03cc6a6c564234c9c0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimConsoleserverport_router.pb.go",
+      "size": 12481,
+      "sha256": "sha256:85efd47315bc03838447e0adcce55eead6892e1a00add644530d62ad08b76e84"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimConsoleserverporttemplate.pb.go",
+      "size": 51359,
+      "sha256": "sha256:7fbdf5a2507b4876ff6320ff2d948d6473b37c0b85598b0d83a342df01bfc034"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimConsoleserverporttemplate.pb.validate.go",
+      "size": 76907,
+      "sha256": "sha256:9c3c3b09274b622131f0fcfecb0672a902b42023d88bd2ce3a76453c6d613b3e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimConsoleserverporttemplate.proto",
+      "size": 8628,
+      "sha256": "sha256:ab7826a9ea1d6b05a788d6d774649b3d10ce2abfda5de22583114f034be1c013"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimConsoleserverporttemplate_grpc.pb.go",
+      "size": 22977,
+      "sha256": "sha256:233184e0580ffcf82b8127cee5b7298f6901fefbb6539f0e31e6a8bcd4e9784d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimConsoleserverporttemplate_router.pb.go",
+      "size": 13201,
+      "sha256": "sha256:a19581ee22ba0467dd816df2cee157faf282089223fe15cdc210ebf56f15a604"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimDevicebay.pb.go",
+      "size": 46538,
+      "sha256": "sha256:c3adf735e4fc7959053571d468a5492f125db69de0a9d915ee7cec7cf4f3427a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimDevicebay.pb.validate.go",
+      "size": 68673,
+      "sha256": "sha256:8d9a8598451c7896880d08838808ed60515a57ce6a7e2a809c5309d47ce8d9f7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimDevicebay.proto",
+      "size": 7785,
+      "sha256": "sha256:c10c1630fdd898187d7793ca3e020185bb024eccbf355463ec3509a0c487d1c3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimDevicebay_grpc.pb.go",
+      "size": 19174,
+      "sha256": "sha256:055f83b93afc968c23995dbedf06955169101b6007c72d7173d5db288cf2b1d3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimDevicebay_router.pb.go",
+      "size": 11761,
+      "sha256": "sha256:ce5129ba43baa23d7cf862eec1c9ab749f50de9deefd1f1d3c37cf1334fe9668"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimDevicebaytemplate.pb.go",
+      "size": 45909,
+      "sha256": "sha256:df5d2981c360ce75189a71c545452f9d8a24c6ed92f7d0d10f964f4d25958bc0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimDevicebaytemplate.pb.validate.go",
+      "size": 72385,
+      "sha256": "sha256:2d4469f0386b15d2f1bb0ff0aa1c9408383fed4e4b8f028663e7751228430784"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimDevicebaytemplate.proto",
+      "size": 7949,
+      "sha256": "sha256:473c48fda0d4c6301875f17645915cc30c1f9758c5e9d2342077fe4b7fe0fb52"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimDevicebaytemplate_grpc.pb.go",
+      "size": 21094,
+      "sha256": "sha256:c0aecb873d68f8d5123582b6bbd5535e62258827c1b3da5f32c01ab1a4c671fa"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimDevicebaytemplate_router.pb.go",
+      "size": 12481,
+      "sha256": "sha256:963c049870d1e9408420f9cc232559a6e4f55042fd881fb163728c593bb0d657"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimFrontport.pb.go",
+      "size": 52102,
+      "sha256": "sha256:61f89324fd87cd0b1d5704062caa6904d6b90687c2a3d9b6cc2a009fab01172b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimFrontport.pb.validate.go",
+      "size": 69465,
+      "sha256": "sha256:f87c52dc078700342fbcad22f1fda842e48e589fee0ebbd671d0c33107e24723"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimFrontport.proto",
+      "size": 8268,
+      "sha256": "sha256:e140b163a58379b0306a47c649b95fb492b223baf9ea89e0bfeb822fb743be02"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimFrontport_grpc.pb.go",
+      "size": 19174,
+      "sha256": "sha256:f7f5b39321910a4eaad075265a26af345020605439cb2918d7bb771a72a19b85"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimFrontport_router.pb.go",
+      "size": 11761,
+      "sha256": "sha256:3a610b4e611b65e086adf5c11939f3cfb6e68b1d31f95594e37e8584ac1e3d20"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimFrontporttemplate.pb.go",
+      "size": 50279,
+      "sha256": "sha256:5796355648baf277d68e9b84e1dabcd736a0b39c3f13ea076d20504bd5586323"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimFrontporttemplate.pb.validate.go",
+      "size": 72976,
+      "sha256": "sha256:ab44a2cb505d43eb7ad7cca01096ff8895cfb69522c0dba118f793577a944f19"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimFrontporttemplate.proto",
+      "size": 8314,
+      "sha256": "sha256:6639c306cfc957362fbf1dc3a9b43e9d0f54e3634217f3d217a4322d07ff4e2a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimFrontporttemplate_grpc.pb.go",
+      "size": 21094,
+      "sha256": "sha256:7f31d058a5b424f1b05eeb5afc3cf998617861ad193c1444c06212225782421b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimFrontporttemplate_router.pb.go",
+      "size": 12481,
+      "sha256": "sha256:3f2556beeddc66cdcb07ea130c3449acf77074940bd4854fa1aa8c4ef516c83e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInterfaceTaggedVlans.pb.go",
+      "size": 44076,
+      "sha256": "sha256:1fc3ecbeb74880b58e16b4e41e8a9d25861825dd3e25e185efdd2d9e3007a64a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInterfaceTaggedVlans.pb.validate.go",
+      "size": 73529,
+      "sha256": "sha256:681b6756dbe1f42663ecded9f37028ebab26385fb99d7a558fed38aeb4eb9fd1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInterfaceTaggedVlans.proto",
+      "size": 7898,
+      "sha256": "sha256:510258514b5aa0a42c2ee1290f570cce4dd08a46801410bf6014f4e8c9685f45"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInterfaceTaggedVlans_grpc.pb.go",
+      "size": 21782,
+      "sha256": "sha256:761d40cc49220f61f7b8a65f0f9d8402896f0c182397750781e23bc17707f7ba"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInterfaceTaggedVlans_router.pb.go",
+      "size": 12805,
+      "sha256": "sha256:0ae17826e65f232ef243ec763050c8f58e9c2698e81a424f443e4ad14dcbb87f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInterfaceVdcs.pb.go",
+      "size": 41248,
+      "sha256": "sha256:6a259ae85725dcd149d0179de263c6316ab3b928bce897ee586759caf5e635ec"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInterfaceVdcs.pb.validate.go",
+      "size": 69817,
+      "sha256": "sha256:4e42df27ac2e98a064d1b8bf340fe2b0d58d2960aafeace831de6a4fa9ea9f70"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInterfaceVdcs.proto",
+      "size": 7470,
+      "sha256": "sha256:be256edaacf421a2a1f0670e4640db9bf1640aabc3e66addd6a993ccde545129"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInterfaceVdcs_grpc.pb.go",
+      "size": 20134,
+      "sha256": "sha256:9f1109bad9515d877abfe1af5eeee31fc9fdaf58e721b89db32e3f1c2c19cc31"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInterfaceVdcs_router.pb.go",
+      "size": 12175,
+      "sha256": "sha256:e311f7d922c3303a2ea137623724106c627d3363660461ab4d7316facfcfccc4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInterfaceWirelessLans.pb.go",
+      "size": 44651,
+      "sha256": "sha256:1d75369228ebef91c681df431e1f5c16c6c48e92e4244ab856a08a2aeedd9c87"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInterfaceWirelessLans.pb.validate.go",
+      "size": 74084,
+      "sha256": "sha256:7d84f6d5487eac8b67070995952bb188df50d804da21d3ca2b308d6f1d84a7b7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInterfaceWirelessLans.proto",
+      "size": 7987,
+      "sha256": "sha256:1b275539b5bb1c316c0e5352a2fd7b7ad9cffd8cb9968b00328b6a1f6cce8d84"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInterfaceWirelessLans_grpc.pb.go",
+      "size": 22021,
+      "sha256": "sha256:16dbe2c4ebf9ec8de5bc19f8fa5d09cd37e4fe4a11eea14b72b886172e6097cb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInterfaceWirelessLans_router.pb.go",
+      "size": 12895,
+      "sha256": "sha256:a75fa60f87014bcec497c27041547327e69d95bbfca88d85a17a51476cb9f082"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInventoryitem.pb.go",
+      "size": 58753,
+      "sha256": "sha256:ab685c4faab3fb468c346d13f568567c46b655720ff98612d9337d76c780436e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInventoryitem.pb.validate.go",
+      "size": 72280,
+      "sha256": "sha256:12a7d052965505b92339f8fc384c5af4b255ea57ca047bc3a815d93c63e94ddc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInventoryitem.proto",
+      "size": 8924,
+      "sha256": "sha256:3914539c645a8664cc54ff6d1689ded4135fe6063cf924e5d87d7f8c401d5165"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInventoryitem_grpc.pb.go",
+      "size": 20134,
+      "sha256": "sha256:5e4d9a1857498fa0c6e520b27e826f478005c344489d15c09dc00f36aa633b41"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInventoryitem_router.pb.go",
+      "size": 12121,
+      "sha256": "sha256:e47a8154f05f77c25dd98ae54f1083f46e850e290707a1f53e1709a263e8d610"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInventoryitemrole.pb.go",
+      "size": 46777,
+      "sha256": "sha256:b578c44dd4a338c0865fb86c1e4851ffb504fba6cade7dafe4fd933a7ed8defb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInventoryitemrole.pb.validate.go",
+      "size": 72496,
+      "sha256": "sha256:1913213948ea2def73f7afc556d235eb7ebdcc0c5ea022c57329322dd19c9f9b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInventoryitemrole.proto",
+      "size": 8018,
+      "sha256": "sha256:7a5014ab251c5622451d934162a50fc8f6a371f894c18d6b18fdf28f89ee7722"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInventoryitemrole_grpc.pb.go",
+      "size": 21094,
+      "sha256": "sha256:e660df2b0387665b0fcdf1da1aa351225ff2505bf1e7a4a74417c8ab681bda02"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInventoryitemrole_router.pb.go",
+      "size": 12481,
+      "sha256": "sha256:0627f2e2d22b46a72f588f8939b7070d4c09fab57be7323e0f7b98ba33a02a53"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInventoryitemtemplate.pb.go",
+      "size": 56231,
+      "sha256": "sha256:68d7720338c793a1cdd4c71da7d97c6da8f055f24ff80679e7558a508dda5989"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInventoryitemtemplate.pb.validate.go",
+      "size": 75656,
+      "sha256": "sha256:11cf11a6485542f0573f2b15c3ba84f48296044b8775257bf24d18442f98a983"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInventoryitemtemplate.proto",
+      "size": 8901,
+      "sha256": "sha256:f1665323a499de3b6ccbac37b931792b3c06a4e4c8fc909cfc7d50cc2e4f06b1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInventoryitemtemplate_grpc.pb.go",
+      "size": 22021,
+      "sha256": "sha256:bfc483cb93135dbdd95909bdc12ca3a5db8fd340afb1551939a3ce7266283aa2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimInventoryitemtemplate_router.pb.go",
+      "size": 12841,
+      "sha256": "sha256:18a3a6d2db9cdfbebee4e571bd1ab798b51c4559aaa107e9a2db30a2826bdd33"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimLocation.pb.go",
+      "size": 49474,
+      "sha256": "sha256:358ee0356d02f4e0cbd931c8b2d63153a1089a5598bd7f6e15f1300200731f15"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimLocation.pb.validate.go",
+      "size": 68610,
+      "sha256": "sha256:08ba6f144be2ca535262d8cfe126b7ada35af5901048d72fa4ed6f69dfef39a0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimLocation.proto",
+      "size": 7984,
+      "sha256": "sha256:c70bed58d872b35ddef1aaadd81320d3a759bfa39aa3bed22e3b81e300755dbf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimLocation_grpc.pb.go",
+      "size": 18934,
+      "sha256": "sha256:4be1ccfeaca319913a0bda6b223f46eed79ebdbd3e44e5892cb558884c1d9713"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimLocation_router.pb.go",
+      "size": 11671,
+      "sha256": "sha256:b718866e398f0dfa8807ea68593669dd65acc20d79eb08ff3e7e9187b815b3f7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimMacaddress.pb.go",
+      "size": 45058,
+      "sha256": "sha256:7e86f24e33adb509c5ce89ab94e774ab5e4436bb1d405327e07618cad18e66e4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimMacaddress.pb.validate.go",
+      "size": 68922,
+      "sha256": "sha256:af1b1cac8addfe457d44a1a4f6dfb91f19706913b1721db9b27cd6dc9790c0f6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimMacaddress.proto",
+      "size": 7695,
+      "sha256": "sha256:9b701bd3cd8e6ea83a32678ce51091a21b75ed33d70cf0c97f6dd586ecd88784"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimMacaddress_grpc.pb.go",
+      "size": 19414,
+      "sha256": "sha256:66259fd07fa0610dcc4e218501e1eb9d914c9d13ab797aed0ae233a622eb469f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimMacaddress_router.pb.go",
+      "size": 11833,
+      "sha256": "sha256:29ea72747dbc672e2a2770318af05232e73c7529c78cc47b57e17aae0a03ac8e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimModule.pb.go",
+      "size": 46014,
+      "sha256": "sha256:0f856de4ac80553f9bbe32a20a38c630ebda9a929057d900a4c4516fc0595c41"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimModule.pb.validate.go",
+      "size": 67197,
+      "sha256": "sha256:618c2b742e2f2d479e0802c8bafd39e3e75b4eaf7bd211ed88f17d2a15adc63a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimModule.proto",
+      "size": 7683,
+      "sha256": "sha256:6ab4ca973be829aa82ea7e9a68f7e4cc7639c844d4552b3ba8581c99dd5ab373"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimModule_grpc.pb.go",
+      "size": 18454,
+      "sha256": "sha256:e61dd3c91f5e6f14f6409170d2da40ee68798d6383c09300589689e7475def2f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimModule_router.pb.go",
+      "size": 11497,
+      "sha256": "sha256:98465be74ddf865c01111c8f0c59508cbd41084cdc434ad607ec52e1e619c2b2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimModulebay.pb.go",
+      "size": 50858,
+      "sha256": "sha256:5c65b7d0fa57aa5f1c56a5cb4c0dcc5ac10c19377902a5ded0e85aad9ed9ec97"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimModulebay.pb.validate.go",
+      "size": 69288,
+      "sha256": "sha256:400f67d1174f56793067e935a5e64563444fadb5627f6ef02bfd120b3e4bbaf1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimModulebay.proto",
+      "size": 8133,
+      "sha256": "sha256:2da55ab02cc32227005c5b925f0d2cf8a2ad5c0ee54113477631b6b350dbca36"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimModulebay_grpc.pb.go",
+      "size": 19174,
+      "sha256": "sha256:f3cf679fcc322c5f163bf6dc9eb7df5db9964e325eba6f7381ba2d4ebca1d819"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimModulebay_router.pb.go",
+      "size": 11761,
+      "sha256": "sha256:2076edaffa65b74c3058bd3f8df88a2a716d8c00924f14a3e1fb0d253ae22214"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimModulebaytemplate.pb.go",
+      "size": 47586,
+      "sha256": "sha256:f854408be42189966792bce00ab34b033ea9d220638cc56d93d627b1d10d5c98"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimModulebaytemplate.pb.validate.go",
+      "size": 72625,
+      "sha256": "sha256:f1fc79e1fb31fb0d0e6ccfacc14d03a3938f0745ee2506699c76573d8f09f9c4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimModulebaytemplate.proto",
+      "size": 8096,
+      "sha256": "sha256:199f735e2a1cf9a9ffe8612ad930f75b8b130d739821727e9df4f551ae7ab102"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimModulebaytemplate_grpc.pb.go",
+      "size": 21094,
+      "sha256": "sha256:2dc5a6f51c627abc06cd7690d52af9c3f8c06f0b1dcb69becab857c98e1f8578"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimModulebaytemplate_router.pb.go",
+      "size": 12481,
+      "sha256": "sha256:89db41cb1e53a0d6dce712b55559437b15784481e853656b72a46017d6875690"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimModuletype.pb.go",
+      "size": 49573,
+      "sha256": "sha256:c93f6c8c0b1e51e2ebe4482e9f7b29753a164382361b8d07c36fe04e9a18e92a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimModuletype.pb.validate.go",
+      "size": 69576,
+      "sha256": "sha256:517784b4eb42665987c3f375d4bcfc947c77988509951263e41966d8d182da09"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimModuletype.proto",
+      "size": 8102,
+      "sha256": "sha256:319964dfcf0252be6e0d5a4cbf40c3135a04ab7c7299871e0857f969d51c190d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimModuletype_grpc.pb.go",
+      "size": 19414,
+      "sha256": "sha256:1955d6de77db4fc637097844ef58781497393306442e141a47e6e0643381dd87"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimModuletype_router.pb.go",
+      "size": 11869,
+      "sha256": "sha256:a577f2960ac146d7540f3454e1893219a19a8f1535e115b159e349044a103ddb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimModuletypeprofile.pb.go",
+      "size": 46855,
+      "sha256": "sha256:c3d8c4eec1ef39c525f3a5a45e9356688745208a18b9d2147f7ab231e8e39990"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimModuletypeprofile.pb.validate.go",
+      "size": 72511,
+      "sha256": "sha256:1ce017fd1526a679e8912cdd4272923ab52f8f2a1cb41b94ecf7c49e63b5f051"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimModuletypeprofile.proto",
+      "size": 8033,
+      "sha256": "sha256:a1157bfe76664e9cc995f97272ba3d823854f0b771f702371e4e932412328e3a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimModuletypeprofile_grpc.pb.go",
+      "size": 21094,
+      "sha256": "sha256:846402c62bfb09c121d5faf3f7ab33bc28057a11941474a76497ce27fb093e76"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimModuletypeprofile_router.pb.go",
+      "size": 12499,
+      "sha256": "sha256:a604660e0519c8c5741e9e23d9140d7843e65fca88d10511f3ef72acfc793d78"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPlatform.pb.go",
+      "size": 48249,
+      "sha256": "sha256:b7e09b409f5746c7843ab06d2d0ecb11f40e7eb30532aa1f4454dfa72d6418c5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPlatform.pb.validate.go",
+      "size": 68436,
+      "sha256": "sha256:ab8a77a36d9660fdddd7f03735caa4748f43c9b86b0bd87022e336ab68252d50"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPlatform.proto",
+      "size": 7894,
+      "sha256": "sha256:a75025e1924c1def864be9fbc444942ee20ff440de62098390894e47254e3c73"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPlatform_grpc.pb.go",
+      "size": 18934,
+      "sha256": "sha256:be5bce6cde878d67ab7b61e58ae24c229a184f98953812aeb068ba893180d7f0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPlatform_router.pb.go",
+      "size": 11689,
+      "sha256": "sha256:18ec7e5c63a6909a9a773cbc239eef7ba18d327ab03281982fdd5ea9be2dbaa2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPowerfeed.pb.go",
+      "size": 54419,
+      "sha256": "sha256:d629a3b9976bc65f1192a3c66e4d1055c9770e4161b0f631484f303ecab99ded"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPowerfeed.pb.validate.go",
+      "size": 69807,
+      "sha256": "sha256:681025937687a8e5cd81c9f8a41eb373a7525f5a2e9828c5c2c883d68a25737e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPowerfeed.proto",
+      "size": 8481,
+      "sha256": "sha256:0a427d9a176240e546d5b64b827b531177c5b7e3c871613fe9657796cb127862"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPowerfeed_grpc.pb.go",
+      "size": 19174,
+      "sha256": "sha256:4cac769ca03eea538af45c59e5910de428f204a4649ff0ed2a6723ea6e16bc5e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPowerfeed_router.pb.go",
+      "size": 11779,
+      "sha256": "sha256:78f72c5a1284ccacd9a9a30cde561acc97dff029dde68b6438cf3582ab3174d4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPoweroutlet.pb.go",
+      "size": 54385,
+      "sha256": "sha256:79a987a40dad151f843a5dde76850aef64f06f71430c93bddaa483a813e264ad"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPoweroutlet.pb.validate.go",
+      "size": 70740,
+      "sha256": "sha256:7ad7fbdc19909756fb73fc0d30e7be9c32a208e75d440a2ae14e2917e607a6be"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPoweroutlet.proto",
+      "size": 8515,
+      "sha256": "sha256:69d22569da798fe05276e88280eb024929eaeaf14433dd209703a822b45386e1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPoweroutlet_grpc.pb.go",
+      "size": 19654,
+      "sha256": "sha256:c8f7bb6e43b1403d8fc037311cea9f50418d4053e353773001a84efce2670382"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPoweroutlet_router.pb.go",
+      "size": 11959,
+      "sha256": "sha256:ad5070353a56a62913f64a55984c8064b90963dab2308c2f6b7a66b7a02e8361"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPoweroutlettemplate.pb.go",
+      "size": 50172,
+      "sha256": "sha256:5811f46963f1d3d373acb8df0bf4e9905de493724d079057834e202617314f41"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPoweroutlettemplate.pb.validate.go",
+      "size": 73918,
+      "sha256": "sha256:91d4028e3ba6c573d2fae76c3a4de94e3dda67d46b9b4b71fb112beed433bfc8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPoweroutlettemplate.proto",
+      "size": 8366,
+      "sha256": "sha256:8cb6f71006fadaf615063f3c8c637533a1b072a47759d0ca183a538f9f3fc1d8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPoweroutlettemplate_grpc.pb.go",
+      "size": 21543,
+      "sha256": "sha256:004d3ff0bd8b1021903ecbc4dc9a0225958199eb5004b417ac460011b2c7b98e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPoweroutlettemplate_router.pb.go",
+      "size": 12679,
+      "sha256": "sha256:954a8965068afde8ec3f306b946af8e4f0ea98ba7046ae8b65c6a63721951d70"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPowerpanel.pb.go",
+      "size": 44437,
+      "sha256": "sha256:dc36a77aa89d3cce54e28d0017120c5158127d4813a0c4498fc9ab164b279290"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPowerpanel.pb.validate.go",
+      "size": 68844,
+      "sha256": "sha256:5a33df41eafbce4cae11b0cb741994b171120a72d112aa54b00acc74f6887914"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPowerpanel.proto",
+      "size": 7626,
+      "sha256": "sha256:0c33848bb7348c3980cd237a8587928d6ad753e3255226a8a418b1ce0df7c21e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPowerpanel_grpc.pb.go",
+      "size": 19414,
+      "sha256": "sha256:8b3f33e75f028b82a23466ea20f2eda3fcefebf1557c0112d8446e00e71b8cfc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPowerpanel_router.pb.go",
+      "size": 11869,
+      "sha256": "sha256:564b5cc8db9173fcc4acd1ed16abadc7c3439723acfff704c0828f0ba6b3fad8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPowerport.pb.go",
+      "size": 51971,
+      "sha256": "sha256:f71e5b098517fa345367e4d3ae63bd186a2825b1f26c22ddcc184e9c761fa468"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPowerport.pb.validate.go",
+      "size": 69465,
+      "sha256": "sha256:67c0ba1409a12e1b0ba73fb7c48727b330fe4ee164ee7bd6420fe2ff661af8f6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPowerport.proto",
+      "size": 8265,
+      "sha256": "sha256:9d9ef2b575dbf97cf726597e612b9fca4bd595979ce88fdb15c8ce3cfe2e275c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPowerport_grpc.pb.go",
+      "size": 19174,
+      "sha256": "sha256:4ef25248e10570f43f60c82c32b3a389605144b25b5b5b46f3e2543e67a700d6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPowerport_router.pb.go",
+      "size": 11779,
+      "sha256": "sha256:e4af6dd25ee324c1bde8157ac6c238485c2d700bd6cbbc86b38685768fe790cf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPowerporttemplate.pb.go",
+      "size": 49289,
+      "sha256": "sha256:8f2e1c09ec336e99c6378c505260f8a3901414b12758a00f74eb2d34838fa48c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPowerporttemplate.pb.validate.go",
+      "size": 72865,
+      "sha256": "sha256:f8ba1f5c928767a2298e52d843e6b0642a37489e83a5f7e2aa5538a83a2177e7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPowerporttemplate.proto",
+      "size": 8245,
+      "sha256": "sha256:5eaa6d4b39de9d2880c98a8e5b7572d44269acedabd9191bd8d7f408713b9bf3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPowerporttemplate_grpc.pb.go",
+      "size": 21094,
+      "sha256": "sha256:825cffe48a1f3d8b08e8d8bdb68781a8d77f013e58a034539a5d36ad645fdb81"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimPowerporttemplate_router.pb.go",
+      "size": 12499,
+      "sha256": "sha256:968b3417fa696b678d529f8d963b7a6c92658a3183b61cffffd6936863fc5faf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimRackreservation.pb.go",
+      "size": 48317,
+      "sha256": "sha256:8886b49b78ba8368fbcc8e0f5e8565b3830920a0a8c14fd3f7e83a0aa3cd0cae"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimRackreservation.pb.validate.go",
+      "size": 71764,
+      "sha256": "sha256:3b0cb8901ba81134e4d13d33bcfb0f46693f0393f963f687e853483e8d9817d3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimRackreservation.proto",
+      "size": 8091,
+      "sha256": "sha256:7b975d716f0e42b2de7929a3187fedce61485492d0e636adc8ce466c1dd2af4a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimRackreservation_grpc.pb.go",
+      "size": 20614,
+      "sha256": "sha256:40e7ec6e3e1d0ea994ee5e377922a9afd04d8cfce3507778da40a9806484c23c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimRackreservation_router.pb.go",
+      "size": 12319,
+      "sha256": "sha256:7e6dc4d6c5048ea4b52434a61e485b68e36371e8593ab41373f02aaf8fe9f550"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimRearport.pb.go",
+      "size": 50530,
+      "sha256": "sha256:beb7bf30c40e6a3e7d884773f17e72ee2576158a907bde9959f684a060f74c86"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimRearport.pb.validate.go",
+      "size": 68778,
+      "sha256": "sha256:db3683d6b2a9d1525b61612f67c399247356469770437e3889c3a4f2f81c3711"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimRearport.proto",
+      "size": 8104,
+      "sha256": "sha256:7cdab32c2f4f6a88d4abb44520f0cefdc15f4f375c7081f3bcf209f05d36e653"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimRearport_grpc.pb.go",
+      "size": 18934,
+      "sha256": "sha256:831407dc9d23b69d00c19b8dbf7d6b052bb939eb3777532767499c9c68f5d912"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimRearport_router.pb.go",
+      "size": 11689,
+      "sha256": "sha256:9a8d4579d3beb07facf5270bf6d4c8b3383da0ec4035ec442a65793156b1f4a7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimRearporttemplate.pb.go",
+      "size": 48650,
+      "sha256": "sha256:8b7f6e5fb678d5f2f9c87df08f29bfb45dea656dc4b4c97d6acc02558270ca26"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimRearporttemplate.pb.validate.go",
+      "size": 72289,
+      "sha256": "sha256:b0421d31cdcf67a6380201c05e2113a6bf607d67f2c8d0f904efe82592a03c77"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimRearporttemplate.proto",
+      "size": 8150,
+      "sha256": "sha256:e025b65a4cea9abfd408f2138f91cbaa1eb8599697fbd9108499230b2fc92a95"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimRearporttemplate_grpc.pb.go",
+      "size": 20854,
+      "sha256": "sha256:6737965069b82d8aa1eaddf69e8db21057f1829b999f626666ca41dd134f25f0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimRearporttemplate_router.pb.go",
+      "size": 12409,
+      "sha256": "sha256:547c9ecdd8ddd2d00d574f4cce93dd27964321b5fd01b2a9bca6f85e59db9b28"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimRegion.pb.go",
+      "size": 45439,
+      "sha256": "sha256:5057aa099f0d8136218f58a42924639217731198a1fbb26ceec85438499fe0c5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimRegion.pb.validate.go",
+      "size": 67098,
+      "sha256": "sha256:e2c33612e5aed3d1f5d6cc7103320c0cfe1391714bb4869e9b43fe2989027df8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimRegion.proto",
+      "size": 7578,
+      "sha256": "sha256:0ab3cebe7bde62404aaf77141b848b880f425165030e8f7cbe9040b251272817"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimRegion_grpc.pb.go",
+      "size": 18454,
+      "sha256": "sha256:23456f5afa829357f963981f02e58c62493c04028bf0172a28f24811b4ca985a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimRegion_router.pb.go",
+      "size": 11509,
+      "sha256": "sha256:18e9c0eb26a45a078391fadb17d16945b50ea91cd8d5c9bfa9bb75e9eedc24a5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimSiteAsns.pb.go",
+      "size": 38479,
+      "sha256": "sha256:c007a28c45865a8189bb1d4ab6e3b8293761176a77daf8e70d9207344b68cd4e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimSiteAsns.pb.validate.go",
+      "size": 67041,
+      "sha256": "sha256:9b4f32a7710ff48559fd7d47eee51d318286a16f5ac637a48abaafa6a4936112"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimSiteAsns.proto",
+      "size": 7064,
+      "sha256": "sha256:3244a943180877cd1935038d608cdcefb5e7dc5330c79a083c38360735ed9e77"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimSiteAsns_grpc.pb.go",
+      "size": 18934,
+      "sha256": "sha256:7a20638944e4368fb07ef476242a069727b3468ca13a60ed822cff7afe1cc863"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimSiteAsns_router.pb.go",
+      "size": 11743,
+      "sha256": "sha256:8c3a5164217beea40822ac3e3b539b26a208aad4f6021aed487033ae3a0afc4d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimSitegroup.pb.go",
+      "size": 46843,
+      "sha256": "sha256:470dec5b1ea05265fffe9c1999d093070ca9634d8c271c56ff364d101124864b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimSitegroup.pb.validate.go",
+      "size": 68712,
+      "sha256": "sha256:5f78a6967e9497ea054e47b5d0f04b5016e849d7a330fedfc6e3938c84c4b07b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimSitegroup.proto",
+      "size": 7782,
+      "sha256": "sha256:2fc0092bdebcb59136e44227a457d57761159a6a84a67688a71e9721eba7b12d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimSitegroup_grpc.pb.go",
+      "size": 19174,
+      "sha256": "sha256:32e9de2c977679b08e6141c448b00a39a54140f039f1d443fb45ea9b5d8beadc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimSitegroup_router.pb.go",
+      "size": 11779,
+      "sha256": "sha256:c209bc88d88b919a3d521e4a4a73f2c3c65d64b97ce8f838ba3af2d8c6822f06"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimVirtualchassis.pb.go",
+      "size": 47083,
+      "sha256": "sha256:09a04f564ac43722827606a44fdb46ceeb337991bd9d004fc546c02b939fb3fd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimVirtualchassis.pb.validate.go",
+      "size": 71131,
+      "sha256": "sha256:4593a9a130f29289b7879b787b3ee2b6b235da52cb0aa18c097ee74a83998519"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimVirtualchassis.proto",
+      "size": 7963,
+      "sha256": "sha256:ce535c10126626d9c775508a1bafacbb7b8d5b43f70b40d42c718368525c1603"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimVirtualchassis_grpc.pb.go",
+      "size": 20374,
+      "sha256": "sha256:73e84599e6d5689f5b9463ee4a785fd45a3abc460c03124c092c0b2c16266ff3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimVirtualchassis_router.pb.go",
+      "size": 12211,
+      "sha256": "sha256:dd40e8489af5fad1981b71bb8d29e17497d1e4dd3bf7092081da5a9ddaaf041d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimVirtualdevicecontext.pb.go",
+      "size": 52649,
+      "sha256": "sha256:68a6bfca379bab8d036cb71bda138ac7cf27a3634a3cb39d4ed84ddf0a3c0b93"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimVirtualdevicecontext.pb.validate.go",
+      "size": 74714,
+      "sha256": "sha256:8ce46839c5191db46e068dceee3056eb2c4a871fbf70dd1542803c8080a1120f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimVirtualdevicecontext.proto",
+      "size": 8608,
+      "sha256": "sha256:e39fec3ecb475d1a4b0409aa380fbfcf6a83ebbaa2bbedef11565ce1e030e855"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimVirtualdevicecontext_grpc.pb.go",
+      "size": 21782,
+      "sha256": "sha256:80e9fedeb7f4ac6eec7d2aa7776b9bd4af87e099635c14b9d61cc2b2595da794"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/dcimVirtualdevicecontext_router.pb.go",
+      "size": 12769,
+      "sha256": "sha256:5943ecd817d3ab1d464ea280529116ecc3839c3859c09d0275a2f2f09e59750b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/djangoContentType.pb.go",
+      "size": 40709,
+      "sha256": "sha256:18ee0583d6769f68373ec8ce1fdd777724c53d9e8d40293b81cb610caf7fa2bc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/djangoContentType.pb.validate.go",
+      "size": 69757,
+      "sha256": "sha256:022086d030c317268cd8709f430468c0567ff00a19ff32b4f88c7e3c8b2257cb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/djangoContentType.proto",
+      "size": 7344,
+      "sha256": "sha256:b6d8779b74b351105a3ab987f0798408e07acaf1a26c891921dc67be3b6fab45"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/djangoContentType_grpc.pb.go",
+      "size": 20134,
+      "sha256": "sha256:a81ce7891a9c209926688443dddc86755c3580d77c9c9515d4391196b2f3bfe5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/djangoContentType_router.pb.go",
+      "size": 12049,
+      "sha256": "sha256:0b5e7cf974e7a2e8e272610d89d461b6499f6acd5030a8f91585c8f2e764d869"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/djangoMigrations.pb.go",
+      "size": 40965,
+      "sha256": "sha256:b6833fc142086c6686cb66497cb9c3fc1cd65d462df44e607a7dd33cf877a631"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/djangoMigrations.pb.validate.go",
+      "size": 69309,
+      "sha256": "sha256:e5c6b157cd9717769e4c14a42ef3be747a6526e67290e5ceaf9dc0efdccabaeb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/djangoMigrations.proto",
+      "size": 7360,
+      "sha256": "sha256:a7ea4f96a4f65f0be0ab54360507b14023c6d65b7d3db89c64611b453475213f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/djangoMigrations_grpc.pb.go",
+      "size": 19894,
+      "sha256": "sha256:f72197616137256976a95f38473bb451dba616882d51698eaa357dd89db1fb8e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/djangoMigrations_router.pb.go",
+      "size": 12031,
+      "sha256": "sha256:dad80067af5539db3942b71a055279c20e18aa1d67372286777dc36b7b2af199"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/djangoSession.pb.go",
+      "size": 41333,
+      "sha256": "sha256:efe58842c4e6fd515d4cdd0555cd4d699f4378f58c21d28ca50b8164b57b70f5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/djangoSession.pb.validate.go",
+      "size": 70461,
+      "sha256": "sha256:1fdae02f882d87f8bde71ab4c9325e52f9e2a28d365b20e1de6f8236e92c225b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/djangoSession.proto",
+      "size": 7631,
+      "sha256": "sha256:6cbae69226a3208ff443c01edc750cbfdcf5b4749dce606063df2598ba039858"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/djangoSession_grpc.pb.go",
+      "size": 20474,
+      "sha256": "sha256:9d8eea8ac47938f86c5d417043a9b6c32a4d4374b759e5a80b3005ea85013121"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/djangoSession_router.pb.go",
+      "size": 12073,
+      "sha256": "sha256:4fb33342e54dd5ba63946ecb85b1b38c13ec757e8772f0d996bc01632d05aba6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasBookmark.pb.go",
+      "size": 41065,
+      "sha256": "sha256:f49d593f83d4de8b9bf82818a1b1095dfa216aad53d05f0852f4ce1ec74b6b79"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasBookmark.pb.validate.go",
+      "size": 68367,
+      "sha256": "sha256:9394e4cde0b2fd7100702d967d320040e96af0a350fe63d3d5b133f36f09c775"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasBookmark.proto",
+      "size": 7326,
+      "sha256": "sha256:d2c5a0f952af6c472bb8062f7b360c1fe036d5a277d2f16be1bc55d54231a591"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasBookmark_grpc.pb.go",
+      "size": 19414,
+      "sha256": "sha256:2a2e797d690d4235859e9aea188041cf7d3d63c726dcb6af16a3adfbc68d6475"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasBookmark_router.pb.go",
+      "size": 11869,
+      "sha256": "sha256:e69ec7544f193d8507c206c88af05d7c0af68dcb6fe5bb311a8e354f6006ce3d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCachedvalue.pb.go",
+      "size": 44663,
+      "sha256": "sha256:2f86218dbc61fab38983bde1a02f3f82739593b8c145875aea7568d50e105539"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCachedvalue.pb.validate.go",
+      "size": 70411,
+      "sha256": "sha256:c409acc59cb2fe0149e340829de842269571706258696cc80e9414507eab3075"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCachedvalue.proto",
+      "size": 7798,
+      "sha256": "sha256:fd1a393007e28ff2c1d0f34e565de50676ce25d51dc8f143bf3ffeeb045ceed7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCachedvalue_grpc.pb.go",
+      "size": 20132,
+      "sha256": "sha256:cca1e6f9f630453efbab312cc94a3a9bdc33bb4603a41e4faba58c46a6372037"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCachedvalue_router.pb.go",
+      "size": 12139,
+      "sha256": "sha256:a35403252efce515b83fd23938c1bc5cb5041df41ee5d1353755d78185ae34c8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontext.pb.go",
+      "size": 50955,
+      "sha256": "sha256:45e01b47e58d241abd1bf662bfcbb812e8613faa4d501004e00b9b3bdd42cd98"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontext.pb.validate.go",
+      "size": 72130,
+      "sha256": "sha256:213e9c89c95573e66ce01e5b992adcf86d7769b1c91eb69b1b8637cd2c1c4671"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontext.proto",
+      "size": 8316,
+      "sha256": "sha256:dd51bae98b84d21f173b900be49497c425ccee0785841aae6d52df0339852a59"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextClusterGroups.pb.go",
+      "size": 48040,
+      "sha256": "sha256:070af5e01f91a0784efff751b8b292e7e3a2b9ef6fa6f9d0733884afdf88984e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextClusterGroups.pb.validate.go",
+      "size": 77878,
+      "sha256": "sha256:8454935868412501de02d856f216c92aacc0af6f7cd980c59767027e57c0b258"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextClusterGroups.proto",
+      "size": 8496,
+      "sha256": "sha256:47cfc0ad3629bf330850adebdbcf3412adf334c073d322fa220579b1c0b84449"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextClusterGroups_grpc.pb.go",
+      "size": 23694,
+      "sha256": "sha256:2d2b8799da5e44292e36bc3ace74e7696dadd38b5f3c917b65a6e188753e8a2a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextClusterGroups_router.pb.go",
+      "size": 13579,
+      "sha256": "sha256:cb924b6c34d1e68af95cc85980441b9dfc43fa0c5112846be05c3f8a206b22a3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextClusterTypes.pb.go",
+      "size": 47531,
+      "sha256": "sha256:b88adc6992d042fe68155d13256ef98e603b89d06d2de28211c2fb2a4c37f68a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextClusterTypes.pb.validate.go",
+      "size": 77331,
+      "sha256": "sha256:ba19fbafac401a0bc1c9c5a8087495fa3ef845ceeed9ec03e0bc0bbaf984b730"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextClusterTypes.proto",
+      "size": 8425,
+      "sha256": "sha256:1c7ffaf9308f1b9b07efc05487245ca08f70d2079a17c5d28bead6bc89867b95"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextClusterTypes_grpc.pb.go",
+      "size": 23455,
+      "sha256": "sha256:4609a9e0c75f7bfd9cc56abcde9b502d3259d0bab377d90304a60e9b25e2b4d2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextClusterTypes_router.pb.go",
+      "size": 13489,
+      "sha256": "sha256:929eee8cfa8ef3da5bf51277ccb3830e72010bd74504633c228abf469303242a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextClusters.pb.go",
+      "size": 45665,
+      "sha256": "sha256:d018714d16f3f70736c0415c2fa18e85d1b63c8fa1048db7253f8fd50779bf87"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextClusters.pb.validate.go",
+      "size": 75163,
+      "sha256": "sha256:0fad788d1448e7aae175bad6f48e0482a141e73d059e9c697c03f8d49804adbd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextClusters.proto",
+      "size": 8141,
+      "sha256": "sha256:9d81492a64959e3ac725e6b58873abc9e3c82b74f327572d1445dfad0fdd4fa0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextClusters_grpc.pb.go",
+      "size": 22499,
+      "sha256": "sha256:cab42e4dd349cffd137a657081a9d80618f35b6f97b1ca0335845b0a11697979"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextClusters_router.pb.go",
+      "size": 13129,
+      "sha256": "sha256:efec78b57da6ada6f3bc93767636d7b55934c7ff2af0c31eaf8eed234fb59653"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextDeviceTypes.pb.go",
+      "size": 47058,
+      "sha256": "sha256:852d040f7d259e859aace7ee7ad928da33dc7a3ce7a85af4c447b5f254b2b957"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextDeviceTypes.pb.validate.go",
+      "size": 76787,
+      "sha256": "sha256:d740761c27f44ae4c98fb4ddad1e1e8ab21871f8350bdb7d45be99d3be2770d4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextDeviceTypes.proto",
+      "size": 8354,
+      "sha256": "sha256:d11dbf49165b9abd6520c21200a2e5dfdc79642efa7b5beb1d0fdba55f043e92"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextDeviceTypes_grpc.pb.go",
+      "size": 23216,
+      "sha256": "sha256:5f28bf8ee7b3e17ed05a488310281754b0b3c7d3f815c0cd2a6da54b8b0d73b3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextDeviceTypes_router.pb.go",
+      "size": 13399,
+      "sha256": "sha256:d97bc4347abf45c7b6cb9c7c7889f0d8ce715ef97be2061b50bd97610b762ada"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextLocations.pb.go",
+      "size": 46126,
+      "sha256": "sha256:60068c3ad627d38546f6341c6206a20f68dbc3a16638ac53e1274bfdbe3e4ce2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextLocations.pb.validate.go",
+      "size": 75702,
+      "sha256": "sha256:1878ce7fcf8c4a9e7e3fead0bc1337de5e449d7079b4bd3a24a92c026b86afe0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextLocations.proto",
+      "size": 8212,
+      "sha256": "sha256:0854ff5119634814a9143e022cbabf065151c9e38048f9738d1f08e990c514b5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextLocations_grpc.pb.go",
+      "size": 22738,
+      "sha256": "sha256:1e6c74b07b3911c91ff1dd1e0c58b5840737e65e6615f844efd39a0f397f73bb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextLocations_router.pb.go",
+      "size": 13219,
+      "sha256": "sha256:08dcf38965bd1b322b5772cc0e70d7cda621541868155aa68a3bea5ccab56686"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextPlatforms.pb.go",
+      "size": 46126,
+      "sha256": "sha256:d78706fd7687aff2c16a892a2ec3e5714eeb8125c983ce4cf1853098a9d572fa"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextPlatforms.pb.validate.go",
+      "size": 75702,
+      "sha256": "sha256:37a8e63976dae70861e96f408851bed24e178075ad30e84c1d7a71042fedb1d8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextPlatforms.proto",
+      "size": 8212,
+      "sha256": "sha256:7135fe5b8801016dcdf26897acb630078381e12bb9b487e4b323efc9865d746e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextPlatforms_grpc.pb.go",
+      "size": 22738,
+      "sha256": "sha256:d5db2e0e93e9d375130c2ad43455223f459ad8dbbd26b4b8cceee8dc14d8f955"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextPlatforms_router.pb.go",
+      "size": 13219,
+      "sha256": "sha256:3a24a4c99111d624897c6f8c72602198c718844ffb7c38d0f98fb2279c8a8861"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextRegions.pb.go",
+      "size": 45176,
+      "sha256": "sha256:29892670a8806b6f8164eaf304e527d5933502d791b57840f80792f4e0a3c1a0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextRegions.pb.validate.go",
+      "size": 74615,
+      "sha256": "sha256:0d5c8486a63bdd743b42af9bc0a795ea650141ea7ed279570d2939b75d4e490e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextRegions.proto",
+      "size": 8070,
+      "sha256": "sha256:5d4358c3cfc6777095de904bf6a091888367f5509f620d521d347cc461837358"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextRegions_grpc.pb.go",
+      "size": 22260,
+      "sha256": "sha256:f5a85be14ccef5980480138bef7126303151fb039f01f0141ad8ec99b658c5c9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextRegions_router.pb.go",
+      "size": 13039,
+      "sha256": "sha256:cb5be33e826bf3ef355d8239731e7f3771b0fb35cf3e6ce180c0f5b41c2ad231"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextRoles.pb.go",
+      "size": 44300,
+      "sha256": "sha256:28b4d47c4717c7d0733c2b02cf9f240b19d75818fc4b667ee3072523621af33c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextRoles.pb.validate.go",
+      "size": 73559,
+      "sha256": "sha256:c7761fe0e9e9d213836f3af85b647afaf99d29dc80ab270d5949f8508469a3ff"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextRoles.proto",
+      "size": 7946,
+      "sha256": "sha256:8b3866a05b3f95ef9761e614e7245bfc8712a4999bec9855d3f7e63235ff5d87"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextRoles_grpc.pb.go",
+      "size": 21782,
+      "sha256": "sha256:32b500b5c1a61e5af867aaf625e2d2cb8593f8cc8f0a801c8033d71edee3a16c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextRoles_router.pb.go",
+      "size": 12859,
+      "sha256": "sha256:8d47f09e5badbadac84859119dea83d08de63d839872a2559c6651818737b5bf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextSiteGroups.pb.go",
+      "size": 46568,
+      "sha256": "sha256:a422731db6ec04082e29bf1b12d65b1da00bc4b9a8eebaa4bdb32004d15a2a91"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextSiteGroups.pb.validate.go",
+      "size": 76247,
+      "sha256": "sha256:d74c84d7da31ee043df690f253c0320497227f0e91e81adef52da11cc098044c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextSiteGroups.proto",
+      "size": 8283,
+      "sha256": "sha256:75bcbf4f6a004f0138d96d4c6f49f6f8679053202bfaf2eda469b7868524da7d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextSiteGroups_grpc.pb.go",
+      "size": 22977,
+      "sha256": "sha256:b70eb9425db4ddac5c291cc8cfa86b9bc96427b96805422c4fd9c831b8adbd4d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextSiteGroups_router.pb.go",
+      "size": 13309,
+      "sha256": "sha256:559ff03db95b4792e73bf53714a08dbc1257e54023728b3044771a3b2b079e64"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextSites.pb.go",
+      "size": 44210,
+      "sha256": "sha256:593e77360498016fd845ad605437ab6a4fc76300f1fd55344736c7f89dcf7d08"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextSites.pb.validate.go",
+      "size": 73541,
+      "sha256": "sha256:6eadb21b8b3cbbc598e4148a2458f413394dcecb1b4e1ec90b5250f3894ed5b9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextSites.proto",
+      "size": 7928,
+      "sha256": "sha256:0758af378c414dd8a18500112ebcf32e593d24480d7f909a0e4578e35ccbc6c5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextSites_grpc.pb.go",
+      "size": 21782,
+      "sha256": "sha256:4105387eafafb02255d4ccace891391ac114bdd41b085eaa356dcc566509bb7a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextSites_router.pb.go",
+      "size": 12859,
+      "sha256": "sha256:587c2438ff020cf8640f32fe7a63e5ebba5ea0a7b6543286cd0e331c0b373f9e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextTags.pb.go",
+      "size": 43723,
+      "sha256": "sha256:e02ee505f7b75d971ef29366df8d96d959d667744b003a48fc953085b21687ef"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextTags.pb.validate.go",
+      "size": 73006,
+      "sha256": "sha256:822ee629a6cc553473f673e944da332b6213c681822b30286fc7d3398fe46724"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextTags.proto",
+      "size": 7857,
+      "sha256": "sha256:72087c0706aac5e61a58b52df439137d0647dc1355630b6f4f1ef860dd619021"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextTags_grpc.pb.go",
+      "size": 21543,
+      "sha256": "sha256:200fa5de493da1a666be037a3a16b4d253082af4c26509e944c49daacd6f0bfe"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextTags_router.pb.go",
+      "size": 12769,
+      "sha256": "sha256:eb324295faf4d77022208ccbcb5c0a6a58a96691d6bf8b37be3ba285210cee13"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextTenantGroups.pb.go",
+      "size": 47531,
+      "sha256": "sha256:6ca7f9ce8a4ce3dc5c3e57430394af4119c5422e566fec2cc54b1ac459015908"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextTenantGroups.pb.validate.go",
+      "size": 77331,
+      "sha256": "sha256:67dbdd86b1b03b5df6e6bc69cd593a49066a76c73b1cbd026e6189be2d507ba7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextTenantGroups.proto",
+      "size": 8425,
+      "sha256": "sha256:803b609f5a3aa815953b073ec17b111c8a3052109cc9637509824a43af1ebf1c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextTenantGroups_grpc.pb.go",
+      "size": 23455,
+      "sha256": "sha256:74624a83a2d5d470b255215e74602cfa73406bd1d87bedd6281fd5265a2c8481"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextTenantGroups_router.pb.go",
+      "size": 13489,
+      "sha256": "sha256:4a314bbd0fa535bc7064166fddb34e5a63a91061798ca7b94382bbc3c9c140ab"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextTenants.pb.go",
+      "size": 45176,
+      "sha256": "sha256:9c20d26afab788979e60cc83282c70c8532e0baf5ea3c7fedc8adb7730c17114"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextTenants.pb.validate.go",
+      "size": 74615,
+      "sha256": "sha256:1b1e1847f627b3bc53369669350008268c2d1fdd31f7a2a9fb55c25acec4946c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextTenants.proto",
+      "size": 8070,
+      "sha256": "sha256:581d1688fded6eba266bb04dd2e437e23de484515906b5ba3f3902798a2f14df"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextTenants_grpc.pb.go",
+      "size": 22260,
+      "sha256": "sha256:c6a0825ce7c4f380a6f63255108e4b02f5e357ab08539b8820b1bd02e2b6f8fc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextTenants_router.pb.go",
+      "size": 13039,
+      "sha256": "sha256:e93cc1cd934dd614fc30651c99d7a6bc3fc172ff6f6928486989d6768fdabf46"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontext_grpc.pb.go",
+      "size": 20614,
+      "sha256": "sha256:24ed8c6ee62f198320fec4c53e1b7fe1b0e5083137bd5b162a38bacad0123a0c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontext_router.pb.go",
+      "size": 12319,
+      "sha256": "sha256:2422a57ab632ae6578e7e0d5596d7946e24b40704ed60d4150341907f288b5fb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextprofile.pb.go",
+      "size": 53777,
+      "sha256": "sha256:c9971451552a2ddd6aa710ca2f18a6dc71d74a18ffffa5c9e4e9501474c94621"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextprofile.pb.validate.go",
+      "size": 75797,
+      "sha256": "sha256:64570ae75c8042a1fdfa21dde24041b6a1460f4302671de320743ed86a255142"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextprofile.proto",
+      "size": 8762,
+      "sha256": "sha256:064214cabb1611de3b8bcc2010b4a6ed457f1c3a802fad1099c48c57437189fc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextprofile_grpc.pb.go",
+      "size": 22260,
+      "sha256": "sha256:edfbc26bcc720aca4853cdb57291ef35afb4056212fd1fd2b3f497e5290d36d9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigcontextprofile_router.pb.go",
+      "size": 12949,
+      "sha256": "sha256:85e44a7ab4de6c56176370fc85ee3f7cd999868daa31215bf1caf0f248632ecf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigtemplate.pb.go",
+      "size": 53630,
+      "sha256": "sha256:34475da082ba074e1fd1957d7dfbea0d589df007b802bbff2d6370e0045e1fa2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigtemplate.pb.validate.go",
+      "size": 72973,
+      "sha256": "sha256:b639fece790df690ccee380ad92490e37aaed7c24c4c63079e6ae8337923b3b2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigtemplate.proto",
+      "size": 8615,
+      "sha256": "sha256:7eabbf463d631d512e9805dc502930a43828f0ec4a76275d815a37b86a1f2a7f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigtemplate_grpc.pb.go",
+      "size": 20854,
+      "sha256": "sha256:1ad7a050e599f7555cf76a85332b25cea8bb19eb1620612f136544d66e95875c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasConfigtemplate_router.pb.go",
+      "size": 12409,
+      "sha256": "sha256:d11c01c0efc95eba30b2b84779b962bd6eec4cdd10c6b5e36db147630ae26746"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCustomfield.pb.go",
+      "size": 59100,
+      "sha256": "sha256:e9fc79650bd269897b8266fb9a032259df906e6ca344c7aeadddbd20b31097da"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCustomfield.pb.validate.go",
+      "size": 72319,
+      "sha256": "sha256:69307abfe2335d7bad4cca88d4c02c9bcfe6d5e25763077f0b354f875eedc14f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCustomfield.proto",
+      "size": 9020,
+      "sha256": "sha256:0a5b86b81f196092d668057857026ca6d01319e6f5aaf52a4018f23141fe647e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCustomfieldObjectTypes.pb.go",
+      "size": 46053,
+      "sha256": "sha256:e1e6c08b311596bc203b0dd92e283f7598caecc8b041c59760c56157630a08f6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCustomfieldObjectTypes.pb.validate.go",
+      "size": 75705,
+      "sha256": "sha256:84441ec7fdcc7eb37f3aff19d9ac35e4374964ad873e0f28ac41acf2d91ac6d7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCustomfieldObjectTypes.proto",
+      "size": 8215,
+      "sha256": "sha256:baeac0b3136d2588bc0630225851664b7b6f19db0f782cda25f25bd6369caa7e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCustomfieldObjectTypes_grpc.pb.go",
+      "size": 22738,
+      "sha256": "sha256:ff1ade57bc26c38fb791a1957bdaeab063018a37690e7a3b4a8590bc2ab60e5b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCustomfieldObjectTypes_router.pb.go",
+      "size": 13219,
+      "sha256": "sha256:be52417193e58632a1d84c8e0c8d8653a80d6ef7f01bd187a8c02605f48d2cda"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCustomfield_grpc.pb.go",
+      "size": 20134,
+      "sha256": "sha256:25fdaee545a200a3aea4c054d7389204138c8c248f4721585b17fa9a754af400"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCustomfield_router.pb.go",
+      "size": 12139,
+      "sha256": "sha256:20b0528cdcde64982061adea2ed0db4473986d0c81b48afd81ec7baa69bc9ce2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCustomfieldchoiceset.pb.go",
+      "size": 49613,
+      "sha256": "sha256:f5b70939daab1b3b5e7d73710db109d8130b15a41177d8b2f6097d88bce432a9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCustomfieldchoiceset.pb.validate.go",
+      "size": 75221,
+      "sha256": "sha256:a5651e508bc388fbb5c9535aa7f2514eae1bf73a708fdf218b0d23d1e72a9342"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCustomfieldchoiceset.proto",
+      "size": 8406,
+      "sha256": "sha256:2ccbf3719e9ab16a776a89524db29e81b9031fabdcd556b78849d9d5a629cf97"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCustomfieldchoiceset_grpc.pb.go",
+      "size": 22260,
+      "sha256": "sha256:c9b93eb1007dedcc5bccdf29d6580ad71a8b94f7dc041062571b83f42c33e415"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCustomfieldchoiceset_router.pb.go",
+      "size": 12949,
+      "sha256": "sha256:2c72c625644fe2eba001f3477be2c28f585e354d24333ac0f13806e9f4892cff"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCustomlink.pb.go",
+      "size": 46706,
+      "sha256": "sha256:323b1ec44ef414365224710c5790c5191b56dd235d6e4dec9d2bfd21ba0b746a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCustomlink.pb.validate.go",
+      "size": 70134,
+      "sha256": "sha256:e443aa7d753a12d263ecccb7394d3468b4ee06acf069f89b0fa23595f2ff3612"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCustomlink.proto",
+      "size": 7869,
+      "sha256": "sha256:89a270f4c60abdea0f6ad0e1ae7b9e7c94f35cf4835a308330bcffbbd26b28af"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCustomlinkObjectTypes.pb.go",
+      "size": 45631,
+      "sha256": "sha256:d94b17b21a703fc5ee80f868a447eab33f9be0ce07913bb9e579c39fcefa0712"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCustomlinkObjectTypes.pb.validate.go",
+      "size": 75166,
+      "sha256": "sha256:ac25d7c39e53cd330e96b22940d65890d764a3776e278d2cc541807c6c41582c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCustomlinkObjectTypes.proto",
+      "size": 8144,
+      "sha256": "sha256:34e21fcf4d53d95dd2c6f02f0736a669477c1d7e2ebd79cb04fd3cd8845ea481"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCustomlinkObjectTypes_grpc.pb.go",
+      "size": 22499,
+      "sha256": "sha256:65e63b961c8e6f82327ad488dc388d987c7f558754972758a9d8c0ae0537bfaf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCustomlinkObjectTypes_router.pb.go",
+      "size": 13129,
+      "sha256": "sha256:b3a83a6804b0d5e4bd11b1aea4293b1b0d68b7fe20eedffe1ccd66ab0af7cd9a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCustomlink_grpc.pb.go",
+      "size": 19894,
+      "sha256": "sha256:195ad262657525b94546ab8514edb1989f7ce9a6ca8a786a8ebeb53c635879cb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasCustomlink_router.pb.go",
+      "size": 12049,
+      "sha256": "sha256:e96e3f44065a66ed26c3df3c2ea62f0b2b76167d71c2ed9d881657ba8cfd62b5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasDashboard.pb.go",
+      "size": 40601,
+      "sha256": "sha256:3810ab284835dd0559d111357ddbb881cabb12e12f0f4edebcbe4b3944b74ed6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasDashboard.pb.validate.go",
+      "size": 68778,
+      "sha256": "sha256:59c472ddc9c3578cef6a17198e8dc79ed8c5c58391049668cb13bfb3e15f4326"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasDashboard.proto",
+      "size": 7310,
+      "sha256": "sha256:6f03fe3d8d12b263cc7e442b0529f96df360694662fb745cb0d0d824a421a09b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasDashboard_grpc.pb.go",
+      "size": 19654,
+      "sha256": "sha256:340c6651f76a94ed50758d0c59f0f6105deb642a33a889705e210c8428c3a449"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasDashboard_router.pb.go",
+      "size": 11959,
+      "sha256": "sha256:01022e1f29778dab10ccead69610bbc511def114cabbf8f5b3568b56a8e25e7c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasEventrule.pb.go",
+      "size": 49561,
+      "sha256": "sha256:534ee205078b9267e95e0d0f2f6e4beb7da5787941af8b9e85c8ca512a366e68"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasEventrule.pb.validate.go",
+      "size": 70029,
+      "sha256": "sha256:0723bb6daeb65f78ee3a691a34aad31dd0a9ceac6a9a2b0cd7ca5e01e2c3ebc7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasEventrule.proto",
+      "size": 8116,
+      "sha256": "sha256:8dd035763d513e1d2023a59eee5526fac53035e829a4e427c8744fbac2821d38"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasEventruleObjectTypes.pb.go",
+      "size": 45139,
+      "sha256": "sha256:76a921e70279cc68f42b52355181cffff71b8de5af200a61e7a8b7f0860fdcf1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasEventruleObjectTypes.pb.validate.go",
+      "size": 74618,
+      "sha256": "sha256:e3892774acef508729a0f1cc817eab653aa32d2afe2c670e9db4a00ca68fb450"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasEventruleObjectTypes.proto",
+      "size": 8073,
+      "sha256": "sha256:07e9d3e825b7eac4ab7cc64872a190f8261b739ff145d200ec73b68944f467b5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasEventruleObjectTypes_grpc.pb.go",
+      "size": 22260,
+      "sha256": "sha256:75cb488ae358d098b89256f63aec2107966a25e436a781703c5b30b48c42a613"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasEventruleObjectTypes_router.pb.go",
+      "size": 13039,
+      "sha256": "sha256:d267ca2d7f5b565dff5e717b77efca94748fe196d57aa71c6cdd189ce7ff2bcd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasEventrule_grpc.pb.go",
+      "size": 19654,
+      "sha256": "sha256:195c492bd8158c3caf07adb4c63cb103f06b887add43fe711d8a8d8346b41b7d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasEventrule_router.pb.go",
+      "size": 11959,
+      "sha256": "sha256:6092792b2941303bc4b4647d1d314151035b83866b8e4e8f10c3e0a224a670cd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasExporttemplate.pb.go",
+      "size": 53630,
+      "sha256": "sha256:eac79d51064f8771c6014e5940d156b230822acc0b6225fd19b25f935a45318a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasExporttemplate.pb.validate.go",
+      "size": 72973,
+      "sha256": "sha256:75bb3130a614e9c42c89e0095e22c056d8e0464ae5eb48a08fdf6fa2d51786c0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasExporttemplate.proto",
+      "size": 8615,
+      "sha256": "sha256:c7fce4ba681683ebafb9df4ef5805ed6b4bf5d767666afd8e22918c21a3238ff"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasExporttemplateObjectTypes.pb.go",
+      "size": 47573,
+      "sha256": "sha256:d40a5cb2f5c2d767d69cb003fc246e2b5c1541ee6f5afd0026d4d790b9d3033b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasExporttemplateObjectTypes.pb.validate.go",
+      "size": 77334,
+      "sha256": "sha256:2de02b8023db1ae72cd36794666c1554cb82ff3eb1d742612546f8c36096eae4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasExporttemplateObjectTypes.proto",
+      "size": 8428,
+      "sha256": "sha256:bd6671cc59f823bd40f368303c5e83026c989fc30d8c5c24eec1f4f7430f8be6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasExporttemplateObjectTypes_grpc.pb.go",
+      "size": 23455,
+      "sha256": "sha256:38f5aeb0a81ef04b424f92c8052f438689424768157bb309533f3912f07a11d3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasExporttemplateObjectTypes_router.pb.go",
+      "size": 13489,
+      "sha256": "sha256:292a5b6d9de65441c11836310606b2a27b74e0e967eb2dfc6e2400505871384b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasExporttemplate_grpc.pb.go",
+      "size": 20854,
+      "sha256": "sha256:025eb3d12469ac6cc1643624178d10683df2308e1eaf2a92a1acdfa4918a0054"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasExporttemplate_router.pb.go",
+      "size": 12409,
+      "sha256": "sha256:89eaec7b327f4277b6fb0861dbf2ce671f39b20920a4bea5419242b2d1cc1f82"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasImageattachment.pb.go",
+      "size": 48461,
+      "sha256": "sha256:ca4d99d5a1c2f0801c64b76ca9ed7826383de4fefa429e0b0624cf1dbfa64e38"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasImageattachment.pb.validate.go",
+      "size": 72742,
+      "sha256": "sha256:16cb7e54219ccab18f849ae7d27b09361e0bf94130e629691f9f9c78f8345b82"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasImageattachment.proto",
+      "size": 8164,
+      "sha256": "sha256:7a8d8e8bd563cf49b418a4c89ca0c422b13153b5fcdb767f7e862814bf6a9a13"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasImageattachment_grpc.pb.go",
+      "size": 21094,
+      "sha256": "sha256:0c84835449355671bee4fc5903b1b5d1f50b28dfba696001de0118113891bbb1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasImageattachment_router.pb.go",
+      "size": 12499,
+      "sha256": "sha256:e897e243ea344414021f59eb217771db4aff27bf76f049d77b10a2dbbefa14e8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasJournalentry.pb.go",
+      "size": 46792,
+      "sha256": "sha256:95936cbf4930bc19b95a9fee1546e76f3193f7df104f1af5054c542bfaaf68a3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasJournalentry.pb.validate.go",
+      "size": 71074,
+      "sha256": "sha256:511c5cd29e8d8a716f4b3373c628fa1daa9480bbd6cf4eb9bc6f9663d9355399"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasJournalentry.proto",
+      "size": 7955,
+      "sha256": "sha256:5db483882a20bb79b70817f4e0252597f54de69d1b98b4badc79dbcece0abec9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasJournalentry_grpc.pb.go",
+      "size": 20374,
+      "sha256": "sha256:d02974f4ea738c7d679acacdf17490836711d87795006565a8887c873e532c24"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasJournalentry_router.pb.go",
+      "size": 12229,
+      "sha256": "sha256:d2b2a5aa63becc50b6bb58ee90c07a59f6d71b7864960749a8d9af25bf1042c4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasNotification.pb.go",
+      "size": 45299,
+      "sha256": "sha256:2c82887b34c8812a9b824dfebb4bc6f45440a82b50ff3627d15087186b9cfac4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasNotification.pb.validate.go",
+      "size": 70876,
+      "sha256": "sha256:37bb3d7ae62833e212e4d8a22d14eaa3e64cbdcaffcbe1c06027ca649b2bb7f8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasNotification.proto",
+      "size": 7802,
+      "sha256": "sha256:68957304432b3172725b8c1019a34859490ed61837e33464654d7acd6e7dce0b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasNotification_grpc.pb.go",
+      "size": 20374,
+      "sha256": "sha256:66a3c51a9e91719f73fd87f6b445b59f6c033b18f27ae652c4295142d3807a45"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasNotification_router.pb.go",
+      "size": 12229,
+      "sha256": "sha256:d84438698991264875e8e97ad72300ee5d7620c059aad7edb14c216f6e08130b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasNotificationgroup.pb.go",
+      "size": 45215,
+      "sha256": "sha256:7e89b845ac157e2676c707efef7d4766a150eb8bc33aae64f63f408195de7d5f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasNotificationgroup.pb.validate.go",
+      "size": 73225,
+      "sha256": "sha256:6b33aae661f76ab7b5e06f40fab6a31aba355b052e637cfc6a6dc9451ef45c9e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasNotificationgroup.proto",
+      "size": 7947,
+      "sha256": "sha256:a8cafc7e4a38353e916f109a4b10eada100bcea5b4f8c51b0c58e8989da70ee7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasNotificationgroupGroups.pb.go",
+      "size": 46645,
+      "sha256": "sha256:9f2ab9d6240a9d137ce66adaf73e60ba747533d0c8801f71478a6fc89e6e25a3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasNotificationgroupGroups.pb.validate.go",
+      "size": 76247,
+      "sha256": "sha256:e357d790568d12752959487a9d6fafd80e6310c5f45be01644091930d3c0c6eb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasNotificationgroupGroups.proto",
+      "size": 8283,
+      "sha256": "sha256:99e2d523a78d57bb2944e58a793fdd7480a2b55f5bccf79513f42b6144f76480"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasNotificationgroupGroups_grpc.pb.go",
+      "size": 22977,
+      "sha256": "sha256:c06b5547563954a0de32cffa3d4d194099c2fd7a0c2dcb7de013d0c60d585ce2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasNotificationgroupGroups_router.pb.go",
+      "size": 13309,
+      "sha256": "sha256:52db9571f5cc3ce1eaad1b78675d8f3581850302d3d9d06837c898ee9e4a296d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasNotificationgroupUsers.pb.go",
+      "size": 46170,
+      "sha256": "sha256:e895d70b9847b3dc779fc164e5165e1e040e28c5610afbc79cad2784b6c8f130"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasNotificationgroupUsers.pb.validate.go",
+      "size": 75702,
+      "sha256": "sha256:cc7fe6cb8d1e6095fd56c657ced28fb564cb858c4aebea5bfcb04a4cda8df34d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasNotificationgroupUsers.proto",
+      "size": 8212,
+      "sha256": "sha256:78fb8d0d4bef58995ed3ecf1b7a0ac7ab10480d6d0eaebe164f9d11a23dac351"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasNotificationgroupUsers_grpc.pb.go",
+      "size": 22738,
+      "sha256": "sha256:a26c490bb6bfa11237c1d7b47b38cb0062ad69eaadea76c7f48d270902f46fdf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasNotificationgroupUsers_router.pb.go",
+      "size": 13219,
+      "sha256": "sha256:d28ccc5afab79b180ee21d71e5ba6b17bd18c24c5e74639536e26a4355e5065f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasNotificationgroup_grpc.pb.go",
+      "size": 21543,
+      "sha256": "sha256:ed2a60e0b0c6930794505a9fa046c11743ab2ad785dd21fc6d1a14869f9d16b0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasNotificationgroup_router.pb.go",
+      "size": 12679,
+      "sha256": "sha256:9e7f123b3cbb7ca275d348ef4f687535dd80967c3b778ece167990267444eda4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasSavedfilter.pb.go",
+      "size": 47129,
+      "sha256": "sha256:85825a8ddb3ec21bac320d082c1de45a378d69ba39b1406544e977073f46627d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasSavedfilter.pb.validate.go",
+      "size": 70654,
+      "sha256": "sha256:ee33766b9ab341279a9f56feb46f3254d6ab7e229610ca3d6943f1c9991414b8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasSavedfilter.proto",
+      "size": 7913,
+      "sha256": "sha256:b6fed9ec4c60e7226b6b9c76d84835a606f6f577b22638b61ae89afec2d28d7b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasSavedfilterObjectTypes.pb.go",
+      "size": 46053,
+      "sha256": "sha256:014a0a93719bc20f0c9f94fe54274bdcba7a2cce6f86609730e02619322e7241"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasSavedfilterObjectTypes.pb.validate.go",
+      "size": 75705,
+      "sha256": "sha256:dac5028ece5ebec19ffbff231791e5a14db324b4fe792c0dc7e94457e990ef95"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasSavedfilterObjectTypes.proto",
+      "size": 8215,
+      "sha256": "sha256:d118bb0a751f45e2e3b66fdad8207e9c2176a6095cc53c3325037c52543d23bc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasSavedfilterObjectTypes_grpc.pb.go",
+      "size": 22738,
+      "sha256": "sha256:8f739ff355c68b694e0112d2bcfb7796278b57ba6d96ff3df66cb8bc97b5bbe0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasSavedfilterObjectTypes_router.pb.go",
+      "size": 13219,
+      "sha256": "sha256:532eae43a41b9dede27385ce06e66facdf71424c6a0d16a9c920c2ab51126efc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasSavedfilter_grpc.pb.go",
+      "size": 20134,
+      "sha256": "sha256:6dacee4277b10e175064c8cdd2f5eed5713ceda39702b334e4d0a7d35f87194d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasSavedfilter_router.pb.go",
+      "size": 12139,
+      "sha256": "sha256:f031374dbf530e735e25316697f87b53c76ff195965a8497ce3656a92826362f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasScript.pb.go",
+      "size": 39329,
+      "sha256": "sha256:14f177f266b5811874a60f17b040b2f7a734c1035a9e3eae71d3fdc6d349ba16"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasScript.pb.validate.go",
+      "size": 67170,
+      "sha256": "sha256:d84cbd04f39487fadb84bfc5d8faf540fbec33a52d62765aff7dd50285b1ae24"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasScript.proto",
+      "size": 7118,
+      "sha256": "sha256:c589e10d586f308222566c6172383a33b1234b660cda156f1b6ac6de8a6712df"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasScript_grpc.pb.go",
+      "size": 18934,
+      "sha256": "sha256:4c3f358f4c0a86e53bbace8533abecc0fcf25fdea6ef61a3db9474ad55612a04"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasScript_router.pb.go",
+      "size": 11689,
+      "sha256": "sha256:426d098fd4cb5ecd153c65f4bc39371d4709c5499bc0e24180e405f2ed416b90"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasSubscription.pb.go",
+      "size": 42876,
+      "sha256": "sha256:7e3b5637b011cf9fa94e4ca3b7589aca3445f3f9f1b9289cea3732ae3d94d20e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasSubscription.pb.validate.go",
+      "size": 70537,
+      "sha256": "sha256:46e1e2f9c3d31d75e6df426034d379c33b8f64358267d01e6aed6958c5a32262"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasSubscription.proto",
+      "size": 7598,
+      "sha256": "sha256:5527255086c086cac1db8807aea0cd0bdece5b09cb5fbf87032bbe56c9c55c06"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasSubscription_grpc.pb.go",
+      "size": 20374,
+      "sha256": "sha256:02919400ef13bbaf9171ab167a20fce4cab2c47a898cef6cff92e2a7fb0cdeb5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasSubscription_router.pb.go",
+      "size": 12229,
+      "sha256": "sha256:e3810009045c81fa27bcefbcfa42d193e40ba0d43a6a729e6fc7810b2063e825"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasTableconfig.pb.go",
+      "size": 48716,
+      "sha256": "sha256:dd1da0c1ec8f650bee6b55d210aa964566754b06c7732554d3a1c608c4cd0135"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasTableconfig.pb.validate.go",
+      "size": 70888,
+      "sha256": "sha256:e6b1fbb6344b648e8e59068fb682416c3d4f37b704f69573aff2d10de91a3674"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasTableconfig.proto",
+      "size": 8060,
+      "sha256": "sha256:a6dad52f837d853ce7f0d2797da1d2e56adf552d6293ea705367fa267426495f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasTableconfig_grpc.pb.go",
+      "size": 20134,
+      "sha256": "sha256:58decbccfaf56f0075b15ba81b37a061c62caa6188d38a20322f630ddff272c6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasTableconfig_router.pb.go",
+      "size": 12139,
+      "sha256": "sha256:29c985af94c428c7dfd411488eef3a36c1e4058fbd3ad716f687f7d3f5609116"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasTag.pb.go",
+      "size": 41004,
+      "sha256": "sha256:ff83befbb94d92aeed0928a91c655c34e51cb1a98f62a6fd1315542ed51808ec"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasTag.pb.validate.go",
+      "size": 66000,
+      "sha256": "sha256:a23ca26778d9dd72e99973037e491c3e086c841e0c0c0c8310b2fb98bf1bb2c5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasTag.proto",
+      "size": 7172,
+      "sha256": "sha256:02ccacc25e9a652e3761368367da6944dbb876539c072f339a8e076bbcba5418"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasTagObjectTypes.pb.go",
+      "size": 42238,
+      "sha256": "sha256:09b5f03493b8fd095c9de66c5020a50c1a8e7f46662e64c3638c3458309d7b05"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasTagObjectTypes.pb.validate.go",
+      "size": 71383,
+      "sha256": "sha256:b356f2c69a7acd82de9fdfc8a21fba5012d6fc6f00e8d272930985f9448b349e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasTagObjectTypes.proto",
+      "size": 7647,
+      "sha256": "sha256:6f15f95d5a4cfce20d173ab2b161483bb430dd7dfb497278b9e11a1692f9810f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasTagObjectTypes_grpc.pb.go",
+      "size": 20854,
+      "sha256": "sha256:454eb9d7fb44769daf259faf24f4244767a3c40c15149d68159c9fb2b825234d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasTagObjectTypes_router.pb.go",
+      "size": 12499,
+      "sha256": "sha256:59d28be166b5e76f55c4ea4d34b99f6840dedb4fcb138047c17bcfc474e007a5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasTag_grpc.pb.go",
+      "size": 18214,
+      "sha256": "sha256:e6eab981c85fe8163f88bf62fe788113da864fa73916edd3635982ebbd855b2b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasTag_router.pb.go",
+      "size": 11419,
+      "sha256": "sha256:64273f25971e1ef91cfbbe6dddfa0d7e16ac79611b1de69b012e49fa3ba3ac0b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasTaggeditem.pb.go",
+      "size": 41177,
+      "sha256": "sha256:a75c41359d84f16cd3782846cecdacd4d82ea33c65487b04614fa7161b8a6c63"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasTaggeditem.pb.validate.go",
+      "size": 69345,
+      "sha256": "sha256:d502b60ba40b97c83d56c567b0e715bdc896e914293e6400a2721a0c77e8d3f4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasTaggeditem.proto",
+      "size": 7396,
+      "sha256": "sha256:1645b8115762972299d1c44d59ac0112d049aeecbf6773f8ef89ead297ae8283"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasTaggeditem_grpc.pb.go",
+      "size": 19894,
+      "sha256": "sha256:74b24a9f3eea4013847a059c44d47d75b97b939017ece5fad8be16746f87e7b9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasTaggeditem_router.pb.go",
+      "size": 12049,
+      "sha256": "sha256:e2340ab6cec37bc517bfa85a8aa656a1eeb86d9484c4226ec1f1213ab5b6bc6f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasWebhook.pb.go",
+      "size": 48672,
+      "sha256": "sha256:743ca727b362925a91adbe42b1118fbe087fd3d76c2cb8505bd42742f9febcfc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasWebhook.pb.validate.go",
+      "size": 68973,
+      "sha256": "sha256:fa26c128dbc8fd45af84460999772aed0c942de3e5890a406123cd7935db8853"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasWebhook.proto",
+      "size": 8010,
+      "sha256": "sha256:cb5dc700bcb3bc6793812c3355aede6a26b612c21aa88c4cb51fd1a2ecf84609"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasWebhook_grpc.pb.go",
+      "size": 19174,
+      "sha256": "sha256:2df5cee95a96914b392e7ceda7fff2e040ae0d2c71edf56cfb6b110cae8686b4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/extrasWebhook_router.pb.go",
+      "size": 11779,
+      "sha256": "sha256:ad03080834d98ec57acd4ae595206dd95776f12fcd8101005fa6bb8a02d72e75"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamAggregate.pb.go",
+      "size": 44737,
+      "sha256": "sha256:215d7efff33cbebc8f8f2bf09fa7287634a72ce4c2c875f08fbd58b88d844a28"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamAggregate.pb.validate.go",
+      "size": 68424,
+      "sha256": "sha256:5bc69fb80b9a38b85c69ede57f173a2d350746e8bd45b148baaef6516a2d1409"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamAggregate.proto",
+      "size": 7629,
+      "sha256": "sha256:00b6b5fef16e109dc0771d58b5c015ebc8cf34fe982c76b7d8cec62b5e2bf988"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamAggregate_grpc.pb.go",
+      "size": 19174,
+      "sha256": "sha256:b01bedae59076cac25d94fae8cbac4874c355b49c3ba0b267f4e127048500e24"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamAggregate_router.pb.go",
+      "size": 11779,
+      "sha256": "sha256:938ceb34577ec5b98189736f14a3a97e32218ef1c123e5fb497f724cbb1f614c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamAsn.pb.go",
+      "size": 41103,
+      "sha256": "sha256:9c29021a51ef0af64a47218a3217b4f20dc311c6f2c2e050e139f8ec1aa7f070"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamAsn.pb.validate.go",
+      "size": 65087,
+      "sha256": "sha256:bb23baa503803f511d4c232a35101e9de8a5d2ed2a42d3eaa840d935ddd51e68"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamAsn.proto",
+      "size": 7135,
+      "sha256": "sha256:7d7cd76369110722681873e809118d409220fd8aea698f7d4a18faedbc3952cc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamAsn_grpc.pb.go",
+      "size": 17734,
+      "sha256": "sha256:8328591ebda1cc6894c7c287d6424709b66a5fb86b7ddee000f622a61ac60036"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamAsn_router.pb.go",
+      "size": 11239,
+      "sha256": "sha256:5e1f0e797815ccb78978e2d1561ac49df416172273a1c175a91acf5176de88cd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamAsnrange.pb.go",
+      "size": 44817,
+      "sha256": "sha256:0efc286e165b268f124072015d3a1dc008c86fbd02f14db14ac7b28d5c3cd2f4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamAsnrange.pb.validate.go",
+      "size": 67947,
+      "sha256": "sha256:7119baff70854ab95f1bd55b3c9daace959c38442f143a189738f5d15718dd61"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamAsnrange.proto",
+      "size": 7582,
+      "sha256": "sha256:dd4901e7782781c2a50001b3b10c310b6c28cbcf0ac9707b74c5872a82e974ec"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamAsnrange_grpc.pb.go",
+      "size": 18934,
+      "sha256": "sha256:2940e137c918acdb20fabe564754bb2505e2d9241d592ffbb7b0bba994e5fea2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamAsnrange_router.pb.go",
+      "size": 11689,
+      "sha256": "sha256:d06eeebedb5539150a5cf6b9fb4361ca8155b8ac236eb324bc48534e9b692b5d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamFhrpgroup.pb.go",
+      "size": 45481,
+      "sha256": "sha256:67a21485073eab756181a6dd06befcac404f94ccd595c60ac597cef98a1db30b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamFhrpgroup.pb.validate.go",
+      "size": 68532,
+      "sha256": "sha256:97ce5772e14269a2410f81fb58ff8c20e96a35920001060b4464e4d7b3b11e3e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamFhrpgroup.proto",
+      "size": 7698,
+      "sha256": "sha256:1a615326e61d5da4d59928c5c64b07ec33c088275623390bd35cf3aa006e18e7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamFhrpgroup_grpc.pb.go",
+      "size": 19174,
+      "sha256": "sha256:803dfc56535246a9c4c1c0431aaf9072158fb2b86b985438e4cf5351ad873e06"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamFhrpgroup_router.pb.go",
+      "size": 11779,
+      "sha256": "sha256:f6333a3484e5d1d06bba902b9cf2887d10a8ccacf35bb08233b465045a2c67ff"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamFhrpgroupassignment.pb.go",
+      "size": 47084,
+      "sha256": "sha256:d44aa82935481b0208e7b01f3731abef7e9fbe6d08f1db6b4af7953cc7940940"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamFhrpgroupassignment.pb.validate.go",
+      "size": 73483,
+      "sha256": "sha256:f604382fd502b7bedc91f6163043cdfe8c01afd9d559433f7a00b43fc06677e2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamFhrpgroupassignment.proto",
+      "size": 8103,
+      "sha256": "sha256:0999631a4e52c215771e8c2736996f510927e9114c18da58e9b560d3ebcb4816"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamFhrpgroupassignment_grpc.pb.go",
+      "size": 21543,
+      "sha256": "sha256:cedb678723a348d341af1ca7594937b917573f0db6e47f211a57bd7a84459e4d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamFhrpgroupassignment_router.pb.go",
+      "size": 12679,
+      "sha256": "sha256:2c0c6d1d5157e256dbf3960a722ea7f8ee5f818f174bc1853f7a7a35f086da36"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamIprange.pb.go",
+      "size": 47924,
+      "sha256": "sha256:b2bf2966f58a5bc74753947b8a388d38112170335502d8a6227131b7bf1cf541"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamIprange.pb.validate.go",
+      "size": 67941,
+      "sha256": "sha256:6e3971966f2310eede2c818e0db5350e48266f54b84570d550e4f9bac774ce52"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamIprange.proto",
+      "size": 7859,
+      "sha256": "sha256:e82d3f00e85c854b86e4e3d24dd569d3d149d8145ee0433a384f3e37fe24ae30"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamIprange_grpc.pb.go",
+      "size": 18694,
+      "sha256": "sha256:1e4fb3eed9f8770ccbb62e63a4d59d6b663a25418e71263a9251db12fa57ed21"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamIprange_router.pb.go",
+      "size": 11599,
+      "sha256": "sha256:ead4965e31c894a0c30f8c461d78b52f9e02964bf26970646532543933088ba0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamRir.pb.go",
+      "size": 40350,
+      "sha256": "sha256:1d4714be6405752a2a735ff0e583d702fe15a95a415ed8cecbaa376ee73e4821"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamRir.pb.validate.go",
+      "size": 64976,
+      "sha256": "sha256:9ccf650cadaafee69ceedcfd4d37e2e986eaa6b2c9c9f2c9cfd8c57e25f07049"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamRir.proto",
+      "size": 7072,
+      "sha256": "sha256:e78c484a8bdaacd088c24b6965dff804bc013d89f149e13246e5306613f7ed9f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamRir_grpc.pb.go",
+      "size": 17734,
+      "sha256": "sha256:3c3f5f02a82a842bbab8cd3acbc2e8a2e4e32e567c04f94e8e7f280fe8234b5e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamRir_router.pb.go",
+      "size": 11239,
+      "sha256": "sha256:b12d13f24d97988566e92ae560fe73b1cedc37fefac59e62f3c527d91f2cbb32"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamRole.pb.go",
+      "size": 40761,
+      "sha256": "sha256:779288d0f0e939d6fdd490ca14a2b8fd8eb37bf8e4c47ae9e464c91453910780"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamRole.pb.validate.go",
+      "size": 65502,
+      "sha256": "sha256:e949682a78d83e872a28160403e32345cdf9e0d73fac87fadf8ab6b026cc51ee"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamRole.proto",
+      "size": 7134,
+      "sha256": "sha256:c7ad880ba42e0a832b2fc2c57121a44c83c63d237eead0b2a3fb718903af947a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamRole_grpc.pb.go",
+      "size": 17974,
+      "sha256": "sha256:dfd2e24301738f873d2b3b9a56b0801f3d6ae7bf734cd50141d032bbb818d78a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamRole_router.pb.go",
+      "size": 11329,
+      "sha256": "sha256:ab3fe7be2a81674385befa3ce41d08cff7f73a7f2f782e9972550377f36cc2d4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamRoutetarget.pb.go",
+      "size": 44050,
+      "sha256": "sha256:377015066c897a3355f6adce20d4ba57409569a4a9391da0fb1657b5c8abdd64"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamRoutetarget.pb.validate.go",
+      "size": 69276,
+      "sha256": "sha256:23b225728a3b1603088f1a7738d77742fa7358bd8cf5d2a4b6ceae74253f26a1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamRoutetarget.proto",
+      "size": 7628,
+      "sha256": "sha256:5c208faa56a8c7fec11295e3d446ef16a1d31416215e1dd7d79510306968ddeb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamRoutetarget_grpc.pb.go",
+      "size": 19654,
+      "sha256": "sha256:ab63661fe76e59b6c2def84e355491fee1e8960b14a7ceb0956d9763d47c835d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamRoutetarget_router.pb.go",
+      "size": 11959,
+      "sha256": "sha256:03c4ff59b8d9851de5a666e80de296641c5d0d46f2816a35173df22c252da2fb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamService.pb.go",
+      "size": 44944,
+      "sha256": "sha256:c59f19d568d9e2e692e582ed19d71a85d94ac4223e351c98276147b20d02f724"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamService.pb.validate.go",
+      "size": 67500,
+      "sha256": "sha256:888d75397ff44fdf0e262e2e23e66a02c6bc3446789da798b6b317ac4b855bc2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamService.proto",
+      "size": 7604,
+      "sha256": "sha256:5e3784ccee196739633881e791d79a3c1a452b47b100b94a41d0685dc34384d8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamServiceIpaddresses.pb.go",
+      "size": 43179,
+      "sha256": "sha256:9ca2a1f3a52ca7fbb110285ab60aa22aca74a7a81754a4e13023e8d9beb60f0b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamServiceIpaddresses.pb.validate.go",
+      "size": 72466,
+      "sha256": "sha256:ee6de11a34c4baf4e792b8f34c77f9ba01743b3cd7153d9bec7d8470eb700997"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamServiceIpaddresses.proto",
+      "size": 7771,
+      "sha256": "sha256:04140a14d3f147d31e12435eec04841b972d85ed258ed74d3556e3f5a670b408"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamServiceIpaddresses_grpc.pb.go",
+      "size": 21304,
+      "sha256": "sha256:5f9921f88c1c3fa38d3e6f7dc176199191d818d8e7fc8c0c1237453db7365d6c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamServiceIpaddresses_router.pb.go",
+      "size": 12643,
+      "sha256": "sha256:52810d7e57e30668cf9a1c98d454584d8b8009c111aa33be78fe1476522d69d2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamService_grpc.pb.go",
+      "size": 18694,
+      "sha256": "sha256:b9fcaf68c933f9a89e20c58877d79ea48fe1c7b15d1352613c478be57971d4df"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamService_router.pb.go",
+      "size": 11599,
+      "sha256": "sha256:086dbb250fefc47fd305a2ed1d304802b7878cccd0b21b8b277f91867bc297fd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamServicetemplate.pb.go",
+      "size": 46689,
+      "sha256": "sha256:085e1e21cdfce4843007e50f091c21c1a5b090d7ed752c3114e15785bce5f64e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamServicetemplate.pb.validate.go",
+      "size": 71542,
+      "sha256": "sha256:ad1799deec57041967f767e95544f8b7c959fec8cd1ae0cf3d1c607f1fa02555"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamServicetemplate.proto",
+      "size": 7963,
+      "sha256": "sha256:8b8e200d79011f5a9b6fdfb02f70daaa307921b67a8cd3e29268dbd8a3c55cc6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamServicetemplate_grpc.pb.go",
+      "size": 20614,
+      "sha256": "sha256:5d2742311c5b68f44ea67fed51d908235aa75c1b2497cef888bfea88a9392c40"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamServicetemplate_router.pb.go",
+      "size": 12319,
+      "sha256": "sha256:880e40d1489914e30f41f87beb559322885aca880fbc44727bc0d999a4868511"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVlan.pb.go",
+      "size": 46179,
+      "sha256": "sha256:8cc839684544461b1174ee73c34c4ecccb728bc7fc9ac84b379d90ef76ed5849"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVlan.pb.validate.go",
+      "size": 66291,
+      "sha256": "sha256:c9fb0c3835c12a18c2f131fe8545d17c261c17de063b1d8117af3c6f3f0b9f1b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVlan.proto",
+      "size": 7610,
+      "sha256": "sha256:0ca2557e65c1b8d13be41c9479e43d2833f9914bdf05a3ce5bdbb5a756e52bd5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVlan_grpc.pb.go",
+      "size": 17974,
+      "sha256": "sha256:bf506ed7450c6a6dce06b36d5a49c6da4522da1e82a37104a817fcdb50f78f65"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVlan_router.pb.go",
+      "size": 11329,
+      "sha256": "sha256:d0b77e07a50eaf2be7433800ac4464d2a808fef1446f00d652afadcac97130e5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVlangroup.pb.go",
+      "size": 46381,
+      "sha256": "sha256:073cf3c4e0de7bee3abb3dc878082a1e18b406a48625ef18e8a57d20e3eec4e8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVlangroup.pb.validate.go",
+      "size": 68664,
+      "sha256": "sha256:007820b488b7a26f6b0f71e9ecf87cf8bb6ef5172331c08b8ec0ea5770060bca"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVlangroup.proto",
+      "size": 7779,
+      "sha256": "sha256:a7b5ce8fd16075fc6b6260e0895d94f821e9f619b52439822a9714858300eef2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVlangroup_grpc.pb.go",
+      "size": 19174,
+      "sha256": "sha256:255a9aa2ae6b684e6827ed32d303427f855f228929ea3cc8ab20141324bdeffa"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVlangroup_router.pb.go",
+      "size": 11779,
+      "sha256": "sha256:8ed9f308de61177a12346514a47bd13e8abe731e5a4041b74eb17985e88532f6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVlantranslationpolicy.pb.go",
+      "size": 47990,
+      "sha256": "sha256:4b123f46e63d5653c048544d1b5286c4708aba1c74c6e970315c17b424a652b4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVlantranslationpolicy.pb.validate.go",
+      "size": 74540,
+      "sha256": "sha256:aeb8512e202860f26fe724caf55ee43e42541eed68ec29fa252da8e526ad7d54"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVlantranslationpolicy.proto",
+      "size": 8242,
+      "sha256": "sha256:b3e776cab09714f5c3b4ca19f8541eefdf40551002e9a3c66a703f41a2dea8e3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVlantranslationpolicy_grpc.pb.go",
+      "size": 22021,
+      "sha256": "sha256:7a58419c93e9382746bc3d5a78be50c875b66533aeeeeb29659e3b283affd02f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVlantranslationpolicy_router.pb.go",
+      "size": 12859,
+      "sha256": "sha256:2effc8f22aca9fa000a3cac98da90ac055b37af02a046804e16c4eff319bbc13"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVlantranslationrule.pb.go",
+      "size": 47933,
+      "sha256": "sha256:388c13937e9d4c980be712e6faa200479a42683c93b5ad81f073b4e075e2a118"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVlantranslationrule.pb.validate.go",
+      "size": 73603,
+      "sha256": "sha256:2a3cf8cc0b88b6a4d6d77413c417c3846e0b1316d555b15fa0b4c7734de128bd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVlantranslationrule.proto",
+      "size": 8181,
+      "sha256": "sha256:ecf08a458c547f3124ea9bb4e7db39018000646eaee7b2d30bbf95c211c21680"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVlantranslationrule_grpc.pb.go",
+      "size": 21543,
+      "sha256": "sha256:82270eaa92303de7c991300df89fd6197a16014d9c84fca6edc4f5fadaf5feaa"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVlantranslationrule_router.pb.go",
+      "size": 12679,
+      "sha256": "sha256:a3e1185faa5dd0729461e5c82e083ddac4215bb9901908dc1118260412757d5f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVrfExportTargets.pb.go",
+      "size": 42225,
+      "sha256": "sha256:a85f819b85f43bb7a0faabcad2c5362cad28f53311cc0430e932004eb0b3a5a7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVrfExportTargets.pb.validate.go",
+      "size": 71383,
+      "sha256": "sha256:360cd6a891176f72029075877c97679124ac18313ada8d761a30e1d7a0ebb711"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVrfExportTargets.proto",
+      "size": 7629,
+      "sha256": "sha256:71a64dfb7ba8c10c13e151939e0c7e4387bc9d4885a90d6ac0253fa3c81d2601"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVrfExportTargets_grpc.pb.go",
+      "size": 20854,
+      "sha256": "sha256:5fc692d148a932287565a47a4c8879f3324d5f39fd657a8132825d66fae5cd34"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVrfExportTargets_router.pb.go",
+      "size": 12463,
+      "sha256": "sha256:cf6aa3ac91c35ecc670e909501b1e914090173fee814120777874647c03fa130"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVrfImportTargets.pb.go",
+      "size": 42225,
+      "sha256": "sha256:a2b369bbf28a9a14af94bb98f065026adb8f9d98d90a0fdfd3585d126c23431d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVrfImportTargets.pb.validate.go",
+      "size": 71383,
+      "sha256": "sha256:9434a09467e76c6f8d84568cf4ac7a945a11a0233ec03e771109f2cc492fb50a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVrfImportTargets.proto",
+      "size": 7629,
+      "sha256": "sha256:c56af1b728defef7e3426cd3c7cb797c4be1865e3747ecdddf9a884a273780de"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVrfImportTargets_grpc.pb.go",
+      "size": 20854,
+      "sha256": "sha256:6bdf9bd9bed751535c81d6a84df825f85447f7c16dd981c0317764b1b7133e29"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/ipamVrfImportTargets_router.pb.go",
+      "size": 12463,
+      "sha256": "sha256:87b7634868a69d8b04074e3bd5ced88e4545d450ce2b851dc4f615593aecb4e8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/socialAuthAssociation.pb.go",
+      "size": 45840,
+      "sha256": "sha256:aa08ecb0afef9d09fe7679d823d8c5bd2402cf7acadb5ab3054baacebaff8cf8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/socialAuthAssociation.pb.validate.go",
+      "size": 72367,
+      "sha256": "sha256:f10e2313a68850a970769e2621d091b81cc97e7394608c01c2de72a3c012a903"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/socialAuthAssociation.proto",
+      "size": 7928,
+      "sha256": "sha256:74591034252608bff70f520b9d407234eeba3109bb434f3daf9009f98631b518"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/socialAuthAssociation_grpc.pb.go",
+      "size": 21094,
+      "sha256": "sha256:177ade6970782e9345e5fb28088639947a4307343427bf2677a57b8a6e0a308c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/socialAuthAssociation_router.pb.go",
+      "size": 12499,
+      "sha256": "sha256:c5c5cc81800b33e891bfd9f9dcda8dd2af39e4c493ec32e161d79193c8b49172"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/socialAuthCode.pb.go",
+      "size": 40954,
+      "sha256": "sha256:048585879075d4706489c1081a13eda68a06df83a99d6869a6fbc1d453f3b585"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/socialAuthCode.pb.validate.go",
+      "size": 68346,
+      "sha256": "sha256:7e6792384f98323d1dd644f857a97cd896e99ff5efdf68bf460fb948e2d7a1f2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/socialAuthCode.proto",
+      "size": 7308,
+      "sha256": "sha256:6811bef3cd704ece5dffc161ef881260a629a9212bf67eaabe966ee34cab3a85"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/socialAuthCode_grpc.pb.go",
+      "size": 19414,
+      "sha256": "sha256:36edd2fdec8bcd76aa6e8c646ea1eba99225f8b72683d135bfb5e2d9848f83b0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/socialAuthCode_router.pb.go",
+      "size": 11869,
+      "sha256": "sha256:9a0ab672fce4024447d436c40cd6c9c0366a38262d9be1c467791a8b26c5dd51"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/socialAuthNonce.pb.go",
+      "size": 40649,
+      "sha256": "sha256:aae3e5b0ba75d4907164668e313a56175f8022b966f302a2a22509067b15a23e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/socialAuthNonce.pb.validate.go",
+      "size": 68790,
+      "sha256": "sha256:eabe9e61ac5cdf850715c12a3460a6682e7204f1a96103c323fa39280436c002"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/socialAuthNonce.proto",
+      "size": 7322,
+      "sha256": "sha256:c92cba52c9a9b8fd8f4160a981583e08188973b1ac3968c3a56ea05c6db6e68b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/socialAuthNonce_grpc.pb.go",
+      "size": 19654,
+      "sha256": "sha256:d22a529baf35a5d6c78b154aeb3531eaacc66db93e0712b68fe051f650b8cefd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/socialAuthNonce_router.pb.go",
+      "size": 11959,
+      "sha256": "sha256:4ab16c8d3d30e78728a9fce0e912fc8552bf95d19a7940bb3f80b34b38c01c9a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/socialAuthPartial.pb.go",
+      "size": 43093,
+      "sha256": "sha256:01be7ba663ea8fd6cb198f74fdce217783543721cf9fbf0e61b9c4cb9603c3ba"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/socialAuthPartial.pb.validate.go",
+      "size": 70087,
+      "sha256": "sha256:b07fe65f14cf1693f3666a8a91f67bce124cd5203cf6900b0bb27d491d8f2153"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/socialAuthPartial.proto",
+      "size": 7581,
+      "sha256": "sha256:a7748a6b4811165d4123ca766cac74e388eaf7480f92be3af8cfab82f4616aac"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/socialAuthPartial_grpc.pb.go",
+      "size": 20134,
+      "sha256": "sha256:7de252e72f08766c19c81779b3925d660a531e7ac26757eabad1158b7da9056e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/socialAuthPartial_router.pb.go",
+      "size": 12139,
+      "sha256": "sha256:93df1858812e662c6f6f07aaa44fe5d85fc9b7565ac82cc87f6083cabe989ab9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/socialAuthUsersocialauth.pb.go",
+      "size": 47213,
+      "sha256": "sha256:9e3b680e0b0fe711aad5ae7de0a5e0631feb05845594a960d18ffeeb8e176124"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/socialAuthUsersocialauth.pb.validate.go",
+      "size": 73961,
+      "sha256": "sha256:bf42e42d91c316c0cf99ac62b801b97ef195f03114ea49a9beaf248f8abdbb09"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/socialAuthUsersocialauth.proto",
+      "size": 8126,
+      "sha256": "sha256:6ea60b59f7662fe18b26b612ff9d8b61e298c6a2a72c3e827989c33a70d17926"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/socialAuthUsersocialauth_grpc.pb.go",
+      "size": 21782,
+      "sha256": "sha256:043a56906ff0bc94580f2283f32604b62433a9ef25c27f30dde4910454e55ade"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/socialAuthUsersocialauth_router.pb.go",
+      "size": 12769,
+      "sha256": "sha256:9abdd55141d5fb137996d15f73f5dc4a8bc84ac33085a498d15afacc2612aeae"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/taggitTag.pb.go",
+      "size": 37114,
+      "sha256": "sha256:552f8d021d225943da3d7cc74f95618b8be23604043fae1cf231b4e31fde5cb2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/taggitTag.pb.validate.go",
+      "size": 65430,
+      "sha256": "sha256:9421e9bdd67f93174d80a2d9496c1feffa9ee12b9c6c7708e73212355d955aa3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/taggitTag.proto",
+      "size": 6830,
+      "sha256": "sha256:4fbe8904e404f69a416e0e0ee9115ec7bd097b3616a52b8a91990c51078a0821"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/taggitTag_grpc.pb.go",
+      "size": 18214,
+      "sha256": "sha256:bd1fbeb5a15b6b100b618bb64ad64225af7001a0298df8827892b4c23997d7ee"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/taggitTag_router.pb.go",
+      "size": 11419,
+      "sha256": "sha256:f0a9dea4d2145f3993beba046190176e3df5182f22adea11ab3c5e6848165952"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/taggitTaggeditem.pb.go",
+      "size": 41177,
+      "sha256": "sha256:93237d5378b9b154b85a9eeb9e30e6f67ad280defbe8f54fefdcfded7f49c196"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/taggitTaggeditem.pb.validate.go",
+      "size": 69345,
+      "sha256": "sha256:ed8faabf3831cbda33525d1c77867aa023a342f59d24e4b6174cb83e6c89b01d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/taggitTaggeditem.proto",
+      "size": 7396,
+      "sha256": "sha256:fa3c99cc35550e935858784e0fd05d61c235c7f9032f13d0027b752f68a2d797"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/taggitTaggeditem_grpc.pb.go",
+      "size": 19894,
+      "sha256": "sha256:a09fdb8beb0e8268e6a57e2f06e79c1d60842956bef3069422941e0f5e65622d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/taggitTaggeditem_router.pb.go",
+      "size": 12049,
+      "sha256": "sha256:773892dcc1e371a718c2047ab83581900d0ca60c309436d193aea6002ede73df"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyContact.pb.go",
+      "size": 46572,
+      "sha256": "sha256:711a175f4d0683f7d08cb0f0318e2ba673b3fbaf6e1b1818fd1e397898e212ac"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyContact.pb.validate.go",
+      "size": 69144,
+      "sha256": "sha256:0cf2fac73d64c2cfacab10a29b6d0973c8867fd83aa31c098e10d5bb24512bab"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyContact.proto",
+      "size": 7805,
+      "sha256": "sha256:fe03a1a2fd5b372a8fdb17e917ca1673e1be6abe74d88d2667a042c7268c6195"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyContactGroups.pb.go",
+      "size": 42353,
+      "sha256": "sha256:2e8003664dc10975b14c772fdec74433900e880733b3598dfcbb5b27283db26a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyContactGroups.pb.validate.go",
+      "size": 71398,
+      "sha256": "sha256:a8f8c4e4474757696bbde504dcdb2cde79375d86291078e6b20cb394293c4ad2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyContactGroups.proto",
+      "size": 7671,
+      "sha256": "sha256:6e7bfd69d3d63c89f86b814a7cf1f02d80118dc453513c7a85c3d35eccc54b26"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyContactGroups_grpc.pb.go",
+      "size": 20854,
+      "sha256": "sha256:95a79b392e0ab32860123fb6801c1ea696e8cffcae1e31540b2bc084168e7e18"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyContactGroups_router.pb.go",
+      "size": 12517,
+      "sha256": "sha256:1ebaadd27a518104b05d986b0b4ffa4e4219ffc6e9327568e7022125661db33c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyContact_grpc.pb.go",
+      "size": 19414,
+      "sha256": "sha256:3aaba3f028a57bdca6671a6db505675e375a49d3616bd88d9214fffc50b316a3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyContact_router.pb.go",
+      "size": 11869,
+      "sha256": "sha256:273973d66cf6b04ed993a4818c9f532f84230a7ee11c9f88ec8cd3418581124e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyContactassignment.pb.go",
+      "size": 49236,
+      "sha256": "sha256:02711d3806462e836f7b263e52d70e15c7ea2ea3f1c662ba45b3f5550d64fa26"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyContactassignment.pb.validate.go",
+      "size": 74246,
+      "sha256": "sha256:708a2230f30d144f837451bce253f744e5dbb84a2b54da2809dee14ac48c1e10"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyContactassignment.proto",
+      "size": 8312,
+      "sha256": "sha256:0b53738329f11254f08c0a11255666e6ee79d9009f13ba281f3a06ec495d209e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyContactassignment_grpc.pb.go",
+      "size": 21782,
+      "sha256": "sha256:817b6d8b38398e648398da285ecb018224ca0e6bc7151613d51e2534169cc05f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyContactassignment_router.pb.go",
+      "size": 12769,
+      "sha256": "sha256:f64b6184d95e19aab71eb0c58838813c6fcc8ee6ab12607e7f0f9b845100e252"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyContactgroup.pb.go",
+      "size": 49727,
+      "sha256": "sha256:be8c17edcd75f3162dc311066aa3dec6e30b6b67c59b71f77387d7c3300cb132"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyContactgroup.pb.validate.go",
+      "size": 71953,
+      "sha256": "sha256:28ba40749702ac1f87b69ec97e23b429d82c83b9de31d64bde843eb4495b6636"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyContactgroup.proto",
+      "size": 8190,
+      "sha256": "sha256:60c14ae49a20e18d1648a87d8cdc2d7bdd429665224715daa264ff29c9134691"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyContactgroup_grpc.pb.go",
+      "size": 20614,
+      "sha256": "sha256:a75bfbf201bf55a3c0d6527d85786fa8ddf23eaf225d59a0c4d64b94d6e69fe0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyContactgroup_router.pb.go",
+      "size": 12319,
+      "sha256": "sha256:8179c7a1d765d184c4bb60719e5da49f98fa0dd035f6eb30a1ef14cdc3e1fc88"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyContactrole.pb.go",
+      "size": 44580,
+      "sha256": "sha256:d40981bb3c733bf9ae113fe4c4cc4929e2ceed1b805ae19922d33932c440ff46"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyContactrole.pb.validate.go",
+      "size": 70774,
+      "sha256": "sha256:81e9d670182da3092e73aa1f80835da148392beaa67440d6dd556fc7f8bf96e7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyContactrole.proto",
+      "size": 7754,
+      "sha256": "sha256:3f5a4a0ceacb4f0bbe7092dcf1cb9fb8420b78f157108e31a83e91f6030aa599"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyContactrole_grpc.pb.go",
+      "size": 20374,
+      "sha256": "sha256:d9c76cadd71c5a1a95d5afc98c1321bd76d7599378c913e937486d9a1446863f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyContactrole_router.pb.go",
+      "size": 12229,
+      "sha256": "sha256:613204643a7351d9076be73b05edd2ce34414a192e3df35de05bb2d78ba49fba"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyTenant.pb.go",
+      "size": 43844,
+      "sha256": "sha256:db3623f53fdde66cea6c01e2a4415eeb76ef201e701ab47c0d74d98db3e41cfb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyTenant.pb.validate.go",
+      "size": 68295,
+      "sha256": "sha256:76c1ca64045732cad06c90a695b3c6ba96e5017f75d18e426a61fe9c2a2cb4ed"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyTenant.proto",
+      "size": 7546,
+      "sha256": "sha256:8e82de89ab48db91aeace62f949b4c9eb6f29161a20580d521bf4953771a2cdf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyTenant_grpc.pb.go",
+      "size": 19174,
+      "sha256": "sha256:4b4f46dee24dbe9178e19dca1a3c48362cbfc7fa063e5d3c7002976a1d6a3347"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyTenant_router.pb.go",
+      "size": 11779,
+      "sha256": "sha256:176f8f2fad2c9ffacdafc66b6d1c8b8a30987c6a9ab8e8a45899b5c75fe20210"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyTenantgroup.pb.go",
+      "size": 49226,
+      "sha256": "sha256:bda6141f5bae39be31d15ab9eed04a977f1789a9240de68ce7edc6ac550275b3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyTenantgroup.pb.validate.go",
+      "size": 71416,
+      "sha256": "sha256:e88b036f78818395b2e53e474d5cd9415dbf5c5a98df07a272975069d48e2de2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyTenantgroup.proto",
+      "size": 8122,
+      "sha256": "sha256:949ec7e7d23ca9ee6d9b23d0aceaf710a72fc06746c401d541fa45ce9248ab4c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyTenantgroup_grpc.pb.go",
+      "size": 20374,
+      "sha256": "sha256:8c02449affdde2ecf70b3118265bf1219373a84777f08b0a78398ba79fe1d687"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/tenancyTenantgroup_router.pb.go",
+      "size": 12229,
+      "sha256": "sha256:1eb96f5e4f079b62b246d9606087b5c56b85521c34852cc768964a5d7be36e10"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/thumbnailKvstore.pb.go",
+      "size": 39893,
+      "sha256": "sha256:09b290d1f2eb37b4285fdbd89846c1c3100949a1a17033768463f2e12d0d91d6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/thumbnailKvstore.pb.validate.go",
+      "size": 69571,
+      "sha256": "sha256:ca978a05d31598a72dffaec00c84f31de0369fe6d6838c7efae797bdf5ca9ad1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/thumbnailKvstore.proto",
+      "size": 7355,
+      "sha256": "sha256:14aac91694335fbfeb2eca7cc024d7c9fefbae8c0d0d6374f6218b8e770c5ddb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/thumbnailKvstore_grpc.pb.go",
+      "size": 20048,
+      "sha256": "sha256:5160a581e03fc4f80d4b5558c72f9f4899ee53fb0933018f54dfacf4f02c65f0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/thumbnailKvstore_router.pb.go",
+      "size": 11971,
+      "sha256": "sha256:545280a418e93f3b39b20b85103c160e16ec11938540377f9ba72920ad43090e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersGroup.pb.go",
+      "size": 37658,
+      "sha256": "sha256:68784dc26790978876a83b45bee5c8db454c083527ff7db7052a4807887f9c46"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersGroup.pb.validate.go",
+      "size": 65985,
+      "sha256": "sha256:daaef158da0b1892cd3e1cfeeb61265f7b044dd4fe4c369c9b6d63e0268c1f22"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersGroup.proto",
+      "size": 6919,
+      "sha256": "sha256:0450c9cb72397f602b9cb3b6a4ef7706fbaa25c5083f9b3f478b9b810f835d13"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersGroupObjectPermissions.pb.go",
+      "size": 45725,
+      "sha256": "sha256:9e70be87ddaf195c079718915137d28d5f719566fd2a182a78e289bc87c21bba"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersGroupObjectPermissions.pb.validate.go",
+      "size": 75166,
+      "sha256": "sha256:fa7a474b47f73d0feea4c9ccc0189ce043dd7015a44aebb392161c42e6670a8d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersGroupObjectPermissions.proto",
+      "size": 8135,
+      "sha256": "sha256:0020ee66f2eaa15a4f9b4e66814c4151559c7dc4b67dd8f6743f7130fdfecb82"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersGroupObjectPermissions_grpc.pb.go",
+      "size": 22499,
+      "sha256": "sha256:15a62802ff7247aeb7b4ca5955a559c5b723e368d97a0d49137df347bc098f44"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersGroupObjectPermissions_router.pb.go",
+      "size": 13111,
+      "sha256": "sha256:534c8a13607f690089d739297c6a115643f7bc6fd5f441daa1db6b7e6b897333"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersGroupPermissions.pb.go",
+      "size": 42702,
+      "sha256": "sha256:29a774216b62f6c92388f953a15569736ad67db1a6d17b789b861e5045301550"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersGroupPermissions.pb.validate.go",
+      "size": 71932,
+      "sha256": "sha256:62fd71d7d4e3a13ed433728776b37b35e50302c73592cecb4347d627ca2ef701"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersGroupPermissions.proto",
+      "size": 7709,
+      "sha256": "sha256:d08af8c9883a89c48e2ca438da37264c52891a6a1e2c9b61ac47504be33ccc4d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersGroupPermissions_grpc.pb.go",
+      "size": 21094,
+      "sha256": "sha256:38bf1bd07ceeaf68b107ecc174c7058745570fd0d84ca5c030cbc8070a9e5e41"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersGroupPermissions_router.pb.go",
+      "size": 12571,
+      "sha256": "sha256:ffa7e252d90bdeeecabe49df85c5b78b7b7f1f0e0fb1eec40104d44c9b9c9c73"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersGroup_grpc.pb.go",
+      "size": 18454,
+      "sha256": "sha256:8e86f51d4e46c0050ddb6072f51201b636ebcbe7b47d553c8f44cbf47085fa99"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersGroup_router.pb.go",
+      "size": 11509,
+      "sha256": "sha256:e492ada8c657a8eff3f9268474d526fe1388f6cf9bb2a59ae6918da5c23d19bc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersObjectpermission.pb.go",
+      "size": 45064,
+      "sha256": "sha256:580b198853a1fac1ca64ef50d91e80e8af9d9294ae10a697da322b0ce65e43c6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersObjectpermission.pb.validate.go",
+      "size": 72265,
+      "sha256": "sha256:589cf35561d1584545475f0dca92bd0d011ca2b2feaf59b454920305e27301ce"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersObjectpermission.proto",
+      "size": 7871,
+      "sha256": "sha256:b81d39bca85cbbe5391beec6b7cbad1b655eb7f97538c562b94654d47982fcee"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersObjectpermissionObjectTypes.pb.go",
+      "size": 48106,
+      "sha256": "sha256:86f090bb65ad3444b45bf250c5e260ff418274cee4bce425792f9142bba89f44"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersObjectpermissionObjectTypes.pb.validate.go",
+      "size": 77884,
+      "sha256": "sha256:ab177fd64424599bf1e115564fccaa4ec2c294c956438d79f15ebf7c5eab4cc2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersObjectpermissionObjectTypes.proto",
+      "size": 8493,
+      "sha256": "sha256:c2aba905ada989daa757c97ecdf8c75e9bb549b2c9d3428facc4ecbc458b4814"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersObjectpermissionObjectTypes_grpc.pb.go",
+      "size": 23694,
+      "sha256": "sha256:24592f12850d26e33122d8ce4893f4a951111510390557e2c602c75b182e6808"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersObjectpermissionObjectTypes_router.pb.go",
+      "size": 13561,
+      "sha256": "sha256:b04fc93ead03c8b9d67992a22c5d35826c68fe77a8b07b7865fb4846e8eb6d8e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersObjectpermission_grpc.pb.go",
+      "size": 21094,
+      "sha256": "sha256:0bc355b7e2fd4f2f51f7a92997ff02cb3686722ed6ce6b85e2b6238c0b3a6e21"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersObjectpermission_router.pb.go",
+      "size": 12499,
+      "sha256": "sha256:d6c13bba7131304fe63d07c578fc708d94f7fe2393ede3bd8c4f73d05cab0207"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersToken.pb.go",
+      "size": 42394,
+      "sha256": "sha256:d4ddba4f56a04c31085ca3ceecc64772f643e66f3b201e34d11af570f58aecdc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersToken.pb.validate.go",
+      "size": 66672,
+      "sha256": "sha256:e99ce36e20d04892a6ea02489449ced76d43c00ee5dc82e739516c907934e081"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersToken.proto",
+      "size": 7327,
+      "sha256": "sha256:7e2ccebcb3f899bb1366a757ffff8d9f252fe633a5958a71bb054d7c95303279"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersToken_grpc.pb.go",
+      "size": 18454,
+      "sha256": "sha256:27e2b910fbc1830e3ecf8bbf41a944f698f200765fd68b10a9ffab442339959b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersToken_router.pb.go",
+      "size": 11509,
+      "sha256": "sha256:7f04015b8fa3f4b66fd10e66d64029799dc2a04ed08e19a8db711de0425bc442"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersUser.pb.go",
+      "size": 43553,
+      "sha256": "sha256:e0a08ea0242561f4a47dedd05f4aa32895325fccc7f23f9a670c6cf3f601e765"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersUser.pb.validate.go",
+      "size": 66375,
+      "sha256": "sha256:4d305f3d93290ee43de5407beccd1e7a79c91e1cdeb1aa093263b3a1e6b7cba7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersUser.proto",
+      "size": 7402,
+      "sha256": "sha256:4f2f3590457807bbeb576b2c354dea9170066abc953191f93b79aa6033089b2b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersUserGroups.pb.go",
+      "size": 39854,
+      "sha256": "sha256:dd80793c317a2ce78d0166256a7a7494ccecf0cce24a50a86693060e52af774e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersUserGroups.pb.validate.go",
+      "size": 68673,
+      "sha256": "sha256:e8cb35375fbc666235808a1874d8839b34c37ccbaae44e7a42c5e4acb9f7afe9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersUserGroups.proto",
+      "size": 7283,
+      "sha256": "sha256:81bfb7fbb92a76e15ea8bce59c95aba7263dda1b3d78b4dca753540f4472a69d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersUserGroups_grpc.pb.go",
+      "size": 19654,
+      "sha256": "sha256:bab8dee7fc783c2a2bd06ce0f6a48797e0631e6b7028e935c572cb9a6121c16c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersUserGroups_router.pb.go",
+      "size": 12031,
+      "sha256": "sha256:932e9d0bba22305488109f98eeb2452bf1c1bfe96f16cc56d6b05634d387baa9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersUserObjectPermissions.pb.go",
+      "size": 45248,
+      "sha256": "sha256:6982174a96a2a66c494e25b5ec273fc7c685de396a2a1c20e020463028a86516"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersUserObjectPermissions.pb.validate.go",
+      "size": 74618,
+      "sha256": "sha256:c44476d86657fdce98e8f0c7b2f01d8b0cd9b0dd15bb7510588ee446c1b8aa41"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersUserObjectPermissions.proto",
+      "size": 8064,
+      "sha256": "sha256:51449377ff38e18fd9b507e29dd10cbd5a504de520c58c898991ef263af60c91"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersUserObjectPermissions_grpc.pb.go",
+      "size": 22260,
+      "sha256": "sha256:d83630e26cce5eed400a3bb2c5540affb21e1c0f1baa8ae014c26c179f4c073d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersUserObjectPermissions_router.pb.go",
+      "size": 13021,
+      "sha256": "sha256:ac24f485a8af01af5f8d6917befbe74541089b9aa5814c9bdf7036d53d9edf9b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersUserUserPermissions.pb.go",
+      "size": 44104,
+      "sha256": "sha256:5ec58609e6d1948101bbe06c8d0e5eac235cad8737780a2440443bd6decc753f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersUserUserPermissions.pb.validate.go",
+      "size": 73532,
+      "sha256": "sha256:37e9a150c27d98b805a57b186f84a33b20a38e3e730a27181615915a711a009e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersUserUserPermissions.proto",
+      "size": 7910,
+      "sha256": "sha256:2f59dda7bac8a3bbbec7b89c136b4908d6e36d7569863de950fd83b7707e3e8a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersUserUserPermissions_grpc.pb.go",
+      "size": 21782,
+      "sha256": "sha256:77649a6e21ab87aaff87a542dea72650b86c06e6351f11ac47eafb201b35a8d1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersUserUserPermissions_router.pb.go",
+      "size": 12841,
+      "sha256": "sha256:48185ae588e1295b129c740543eb6b19146829349e8544dbd74a43542eb0d519"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersUser_grpc.pb.go",
+      "size": 18214,
+      "sha256": "sha256:020efbd3996238c2bfbb67b7588eeb97043c7862b7da37a1e2a02f19495d9c1f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersUser_router.pb.go",
+      "size": 11419,
+      "sha256": "sha256:a543984e470f49e7f6ff39646c8bc82436eeb7b2bbd7a472956744ae5436aa33"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersUserconfig.pb.go",
+      "size": 39790,
+      "sha256": "sha256:e7002e17d6b48b35ecb55f1529eb1d03ae2c0613e00d7fc055277c126e27d568"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersUserconfig.pb.validate.go",
+      "size": 68664,
+      "sha256": "sha256:174d0b9d9fc7395bf4c53127b4756257119266028bc3faefb6d9bb286e1e8839"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersUserconfig.proto",
+      "size": 7241,
+      "sha256": "sha256:64035d3c9fe7bcb0ea1955657de04cd15436c034c855ba9e210fc05d3720bd5c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersUserconfig_grpc.pb.go",
+      "size": 19654,
+      "sha256": "sha256:6151ddb535e82273abd84c5f4e377c964215a60dde1198bb4cac2fd89c76a169"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/usersUserconfig_router.pb.go",
+      "size": 11959,
+      "sha256": "sha256:a4fd8f78dc4c53b11ed0e11f925a3401343bb24dc106d4eb295c0234f49ef763"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationCluster.pb.go",
+      "size": 54331,
+      "sha256": "sha256:034e7c3b65f5a84a78b5fedf17c75295d674b0a7f1b2adcf664f458792e01d9f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationCluster.pb.validate.go",
+      "size": 73555,
+      "sha256": "sha256:75daacbfbb46646d9cd84ffdd2afdf3868e3e0610bad0caae6af5adfd8ea08ed"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationCluster.proto",
+      "size": 8668,
+      "sha256": "sha256:62c793458bf7b8155869c7ff1086e65b4920b0c8d1cde01e9f7bcb63b0bb0ef0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationCluster_grpc.pb.go",
+      "size": 21094,
+      "sha256": "sha256:ef9d567356b968e9f41cf3122b62de50ae1df6156e52a94c7ec61660ec8912c6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationCluster_router.pb.go",
+      "size": 12499,
+      "sha256": "sha256:52b61d8e086de8265f43938484d6ef5cea2fbacf0aeb7e26b45bb305169aedbe"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationClustergroup.pb.go",
+      "size": 48411,
+      "sha256": "sha256:4e521d74e1cceca774bb926657d32392927154e71d10af4b967ce04bf8c335b2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationClustergroup.pb.validate.go",
+      "size": 75062,
+      "sha256": "sha256:c50f8edd58a663803ec5c206e5857180360fc14460f8dbb8fb86b8d77e254449"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationClustergroup.proto",
+      "size": 8298,
+      "sha256": "sha256:e0463a432ebb0676ecddd8a2d78ca7968b467eade6b858dd22170650bb210eb6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationClustergroup_grpc.pb.go",
+      "size": 22260,
+      "sha256": "sha256:08b0372e8dcb30283dc0a01230b985a378024c1f6f4af214f0d078acfea5a57f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationClustergroup_router.pb.go",
+      "size": 12949,
+      "sha256": "sha256:5c820c21e69bc339efc561cffbc56b0cce22e50f09aa2a9233f42d274272d544"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationClustertype.pb.go",
+      "size": 47930,
+      "sha256": "sha256:0fa76562ac5eb6b8770d86076065bf2259935a6423f464b48203f01c64dc71ba"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationClustertype.pb.validate.go",
+      "size": 74528,
+      "sha256": "sha256:5bb3b7c57e30835243ed8b030e530a859d9a1346c7e541330922cfdaf4006506"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationClustertype.proto",
+      "size": 8230,
+      "sha256": "sha256:a6b1ba984ead85c1ba0b4675ff795ed451209f8600dbc68397cfc5797f69bfef"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationClustertype_grpc.pb.go",
+      "size": 22021,
+      "sha256": "sha256:e879ffa977f924f733bd38e19cb26761f3564bac9c2c508577ec5d4a59d9dfa1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationClustertype_router.pb.go",
+      "size": 12859,
+      "sha256": "sha256:bf368882ff9d9cb462bc2a3976e29a68d9451bea06ac202d112272bd97f75187"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationVirtualdisk.pb.go",
+      "size": 48937,
+      "sha256": "sha256:54ebda6fb9975530da45a03132c26faacdf20f86972f2771251483ec759f13b3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationVirtualdisk.pb.validate.go",
+      "size": 74666,
+      "sha256": "sha256:b6b9b3d23917ee21755ae88cb3da491d63faacda41766dd672b95b5ab521dbe9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationVirtualdisk.proto",
+      "size": 8317,
+      "sha256": "sha256:e07d5236b6c469d54241f2fa897339002102c8decbc48d3f45318afac108e00a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationVirtualdisk_grpc.pb.go",
+      "size": 22021,
+      "sha256": "sha256:a8db7dbe1f1c0335162fb481d615c0d43881e0b29ec3b7aa2934b2e628b83d12"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationVirtualdisk_router.pb.go",
+      "size": 12859,
+      "sha256": "sha256:91a0c1900606086ad0fd1f289182509f90a9a008e39db985c970fa9fc1fd8fb1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationVirtualmachine.pb.go",
+      "size": 64295,
+      "sha256": "sha256:4c1b8917f9db9e175f97b7d677c6aa8b8243e199b65e75539b4336c9e6c36d1b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationVirtualmachine.pb.validate.go",
+      "size": 78165,
+      "sha256": "sha256:14d8e0d67ddffed482fa1ffc84be66daff24dd8523bc8c224371e4f17cd402bd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationVirtualmachine.proto",
+      "size": 9696,
+      "sha256": "sha256:7bd939a0b888d6a69a283477e8d3a2d50a304130fb086bf2c72980df53dedefe"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationVirtualmachine_grpc.pb.go",
+      "size": 22738,
+      "sha256": "sha256:34a44b74fba6963c7bc5ec865a0ff04fdb36f6c6e2dc3d06f6b0f067081a27c3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationVirtualmachine_router.pb.go",
+      "size": 13129,
+      "sha256": "sha256:8f32f779a69b9b82af2ab8ea2705c659a49127e4b3739b95bf6a43122541564a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationVminterface.pb.go",
+      "size": 58170,
+      "sha256": "sha256:ee6745342c023c5519974ef2763dc7d652e39210702c0979bd34058313d0fbc7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationVminterface.pb.validate.go",
+      "size": 75875,
+      "sha256": "sha256:eb677ea2fa474b78577a6abfcf9a7a68786b4dbe77f9a8cdb94f41c37713a609"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationVminterface.proto",
+      "size": 9141,
+      "sha256": "sha256:8a99903ca5c4c05525280b80d91465075f1f872e5a0ebd1c8d8d014444d57e5d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationVminterfaceTaggedVlans.pb.go",
+      "size": 49772,
+      "sha256": "sha256:aeef5f6c0e2ecced3dbdfa1557c853b74aa196e5b3216d3753d9c1ed42e72a87"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationVminterfaceTaggedVlans.pb.validate.go",
+      "size": 80012,
+      "sha256": "sha256:2e4c488994cb5c49a30775f550f94d606f289c3a31a6d32f09c651d7fa57d056"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationVminterfaceTaggedVlans.proto",
+      "size": 8810,
+      "sha256": "sha256:580ced43887a39cccf8f1cf5c32f4830f4e21f1cec6eee926f7f8e5f6e75481b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationVminterfaceTaggedVlans_grpc.pb.go",
+      "size": 24650,
+      "sha256": "sha256:d789ae75035daf55e3c8c52420ddd13409e36bfd2a742847f67df91fe61710d7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationVminterfaceTaggedVlans_router.pb.go",
+      "size": 14083,
+      "sha256": "sha256:dd49148e02ff76cc22d79dd6333ea59cbc07c0623c2c4fea00395f0eedcf2f6a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationVminterface_grpc.pb.go",
+      "size": 22021,
+      "sha256": "sha256:28416a9bdbecfbee58cc1eb1e1edfd781cc9d33a0835e9431c55ce50d21f1141"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/virtualizationVminterface_router.pb.go",
+      "size": 12859,
+      "sha256": "sha256:01ce3d62e6dd880498a44251e1f3cea8f8c9f878fca9c6ee549bd751cb1bc2a9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIkepolicy.pb.go",
+      "size": 44226,
+      "sha256": "sha256:15150711b6e9dc9ffc6310684a76493f45ee5d1f12333c807ee89d51aa330b4f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIkepolicy.pb.validate.go",
+      "size": 67875,
+      "sha256": "sha256:590c0de774f27d00e55dd39b7fb088d86c494df766eb1dc56f69c2011d8c28b0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIkepolicy.proto",
+      "size": 7561,
+      "sha256": "sha256:99d1970c620bf5d4b605d02ad5116047c75c72cdd982f954b2d7226d61ed17fc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIkepolicyProposals.pb.go",
+      "size": 42767,
+      "sha256": "sha256:eadaf182115b754400c7be4b6630495cccf7203c9205b6ce5112f39971f0717f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIkepolicyProposals.pb.validate.go",
+      "size": 71947,
+      "sha256": "sha256:d22b8c25dec06243a8d18ed16c6895f438bc7c8f07fbdf7795cf4952427be9ea"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIkepolicyProposals.proto",
+      "size": 7706,
+      "sha256": "sha256:9196f134f1f02f1443042bb0a74bb71c4d22053a49e9dc32820a60b52961b40d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIkepolicyProposals_grpc.pb.go",
+      "size": 21094,
+      "sha256": "sha256:b22ecbb65753e7b9eb46bed65b867376f1795db064a720b621d99edfa08ba9f7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIkepolicyProposals_router.pb.go",
+      "size": 12535,
+      "sha256": "sha256:3147018be22d5650338ca3e569d24376d340899019e82db817eba432c6b2a6f6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIkepolicy_grpc.pb.go",
+      "size": 18934,
+      "sha256": "sha256:bc628b1ebb7897e9a0c3e18377b84bd6e4a5dfd1a4d41b86b3da73275b82a859"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIkepolicy_router.pb.go",
+      "size": 11689,
+      "sha256": "sha256:a9020e559082ac8657241124b274eb3e0b8926be4d96a264651367b4d4b0edfc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIkeproposal.pb.go",
+      "size": 47857,
+      "sha256": "sha256:fce225aa15779367574dd1adc19ef180f93b1d681fdcc4138cfc6bd414822f22"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIkeproposal.pb.validate.go",
+      "size": 69297,
+      "sha256": "sha256:350be975b6b56e5764dc500d9677abef35e0b1eac0661608fad331e96dfbb34c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIkeproposal.proto",
+      "size": 7952,
+      "sha256": "sha256:1b5e0d0012f5a49dac08ece6769794c06b57473131f8cc1161517770656f9e48"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIkeproposal_grpc.pb.go",
+      "size": 19414,
+      "sha256": "sha256:5216366e3a5a445bd21406b21e5693910ed2eea13a1ba5b863627740c261f92b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIkeproposal_router.pb.go",
+      "size": 11869,
+      "sha256": "sha256:d49fd0fdb76c5b5de6f9aa98c630e19af01f22ba6294978e6dbde19537eb3cac"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIpsecpolicy.pb.go",
+      "size": 43597,
+      "sha256": "sha256:78b8f60ef2a809dc5e5ec90bdc2cc15ea19aecfa6324affeb7ee2ba38273b397"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIpsecpolicy.pb.validate.go",
+      "size": 68730,
+      "sha256": "sha256:edd175c50652e46e14a60d0b988a4cd833c4e8fefc2da4b7ee263c505bc227bb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIpsecpolicy.proto",
+      "size": 7560,
+      "sha256": "sha256:2a2dd9e73abf9dc56a6612b10ce4fbd33a85735ff2ef624349b33e05f1dcc055"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIpsecpolicyProposals.pb.go",
+      "size": 43820,
+      "sha256": "sha256:39ec1daf5402600f4ff3894c4061367cd7304d0574dcc7c04315d414650a475b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIpsecpolicyProposals.pb.validate.go",
+      "size": 73030,
+      "sha256": "sha256:5ff4414c1e381ccfb8caebe3fe1e3788002fc14d6f481b7e8493af89f362ccf5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIpsecpolicyProposals.proto",
+      "size": 7854,
+      "sha256": "sha256:912c07fb3395dac2f072fe7a94941eecf788133abea72033149938db6e314921"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIpsecpolicyProposals_grpc.pb.go",
+      "size": 21543,
+      "sha256": "sha256:532664fa848a44d58f8fd6a578e0d93beee70212a3fff2bf0ec3db67546e1ef8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIpsecpolicyProposals_router.pb.go",
+      "size": 12715,
+      "sha256": "sha256:64ecd579b07901af9b49c099b067d49aec18c11ac6b5f3aabcc30b0f37778206"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIpsecpolicy_grpc.pb.go",
+      "size": 19414,
+      "sha256": "sha256:249d7407cce6cb3b45a43eda6bc41631c7f6156ade5bf889a4e2a386a5235954"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIpsecpolicy_router.pb.go",
+      "size": 11869,
+      "sha256": "sha256:b67f8386adb31141ea63b53bedee37a2c8131414cc5fad60373e572d4828d7ad"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIpsecprofile.pb.go",
+      "size": 45717,
+      "sha256": "sha256:1a42090c64de8b25c5d4d28b96f720e110d3e1ce0dc13ef3f9b7389f8ddfc718"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIpsecprofile.pb.validate.go",
+      "size": 69516,
+      "sha256": "sha256:f3935c59b90c574ee426c309c5f33ff07d0aea1e1a4d0656c18bea8b84b19879"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIpsecprofile.proto",
+      "size": 7777,
+      "sha256": "sha256:4823016c96df86046284e5b09842ffba66c163df760da80d1a1c399c128a26e8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIpsecprofile_grpc.pb.go",
+      "size": 19654,
+      "sha256": "sha256:0282488e7a21d29a0ffef2db691391cb7fb9280c461c7d1bfb08d707b93b42c0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIpsecprofile_router.pb.go",
+      "size": 11959,
+      "sha256": "sha256:e3fa025b1bd2e066a118070b96e74d85ceeeb0895ca3e436e4b022bac9bfea22"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIpsecproposal.pb.go",
+      "size": 48010,
+      "sha256": "sha256:c42be2186c8c3383498b571ce92e2c65deef38e47ae02d10c26291f224288ab9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIpsecproposal.pb.validate.go",
+      "size": 70284,
+      "sha256": "sha256:30a36cb93d814c1bd3b15cf4eac6ecb8e36f5a61f79bf9d780e4e001da978248"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIpsecproposal.proto",
+      "size": 8028,
+      "sha256": "sha256:43a90b47c7eebf8ab6afdb6c502fbf7de6191941793b3ede1528661bfa91ae23"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIpsecproposal_grpc.pb.go",
+      "size": 19894,
+      "sha256": "sha256:e2e20a38dc0044d9aed3fd8904aae0877024c8d5d332149ac9f6657863945003"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnIpsecproposal_router.pb.go",
+      "size": 12049,
+      "sha256": "sha256:ff402bcc0a59aa6787c20ed076d28eb657f433ad30e86c72ff96f4b8e7d1a800"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnL2vpn.pb.go",
+      "size": 43886,
+      "sha256": "sha256:19254944a4609b09a5a19295e28b2ca4cd82fd81df39830f54d34c69cea98ab1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnL2vpn.pb.validate.go",
+      "size": 65952,
+      "sha256": "sha256:4430d8cf327ab90175233c1a69360cf342c22eac11270612c662d04519ebfc67"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnL2vpn.proto",
+      "size": 7409,
+      "sha256": "sha256:fd82834c586f5b19de91595cf83afb977b302d070303aab2804d5e4c3d0a2d9e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnL2vpnExportTargets.pb.go",
+      "size": 42704,
+      "sha256": "sha256:b61d11c2db1f44e7e3fc8f4c1a2d9ca23c8e8d3c271145d519053444a868ade5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnL2vpnExportTargets.pb.validate.go",
+      "size": 71935,
+      "sha256": "sha256:98d3c8725281c97245ad6912cc0d9f8e1451f1ee1a29d14be2e425a52b86b13a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnL2vpnExportTargets.proto",
+      "size": 7694,
+      "sha256": "sha256:74f8790b091c54c2ed1ccbd4cf0346f1bfd3317db306ec93b22670c2098f62d8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnL2vpnExportTargets_grpc.pb.go",
+      "size": 21094,
+      "sha256": "sha256:093648f8fa4de0956ec5ebb3f306c1dcf3f70737d6bc03487ae73c34d6b8588d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnL2vpnExportTargets_router.pb.go",
+      "size": 12535,
+      "sha256": "sha256:7226a4c08162390233f69ee42e034b21a4a271898e1d55c83dc7a69f8c7ffb02"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnL2vpnImportTargets.pb.go",
+      "size": 42704,
+      "sha256": "sha256:b8bd613dbbb10a928bdc83c1f4f9fcd3e17222c743fbe54272ada47889a85142"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnL2vpnImportTargets.pb.validate.go",
+      "size": 71935,
+      "sha256": "sha256:c3524ad72ebda42ce69a586df33a94aa2c2d61a4ea90e774d50064a829d60fac"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnL2vpnImportTargets.proto",
+      "size": 7694,
+      "sha256": "sha256:b68da0710197fb7223f06e75db7912329f4ad27b9cb18067a2ba386bfdf173b0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnL2vpnImportTargets_grpc.pb.go",
+      "size": 21094,
+      "sha256": "sha256:5dacc1862bbf1cf334c65d01bef484fa8ff8ed062b906981cac0276ca53e4a64"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnL2vpnImportTargets_router.pb.go",
+      "size": 12535,
+      "sha256": "sha256:ab5eabdbf78d8a7f5637c1df84191706a1ee4b75fed46698766d934742028b64"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnL2vpn_grpc.pb.go",
+      "size": 17974,
+      "sha256": "sha256:fae742f0a3f712edbf4bf1d42471d3cb102f54abe2ab3061b15b3fbe54752d2d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnL2vpn_router.pb.go",
+      "size": 11329,
+      "sha256": "sha256:784d9e385ba375982e2eb1b7936c709024cc55a10ddf97d773b6e01a8bbe04e0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnL2vpntermination.pb.go",
+      "size": 45640,
+      "sha256": "sha256:09559e9b3fc2b45e155daa4754515ccaa8498a516d542ea022576021e9867003"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnL2vpntermination.pb.validate.go",
+      "size": 71383,
+      "sha256": "sha256:806db10b4a93a8ecb422472fadef36132a513c0b8fd2c7561408b16210cbc14b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnL2vpntermination.proto",
+      "size": 7885,
+      "sha256": "sha256:06fa09f3360e5d74e2a700706d21d6becb2249287b16610728a92e65513ea02d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnL2vpntermination_grpc.pb.go",
+      "size": 20614,
+      "sha256": "sha256:19735103bc34e2b788e82c4143639af4f1a00b71544216fa4be132d481c1529c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnL2vpntermination_router.pb.go",
+      "size": 12319,
+      "sha256": "sha256:bd63885b166dca35e1eb9f130d4675a039818990679c542a271482a5940e2598"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnTunnel.pb.go",
+      "size": 45381,
+      "sha256": "sha256:65223f801c4825c74a8f8fc4937a1551e2e621edcd752d2b266280a934c78fd0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnTunnel.pb.validate.go",
+      "size": 66642,
+      "sha256": "sha256:7c89f8c5e767e8c11c81223f72d53f24209b78b0412364f110ef03648c216cd8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnTunnel.proto",
+      "size": 7591,
+      "sha256": "sha256:6de6aede925ea5992f41aa1e874d193a6f9908cf3f5955f7b6ba737edcf04368"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnTunnel_grpc.pb.go",
+      "size": 18214,
+      "sha256": "sha256:ebfbfdd11fc3473b27f01ffd681e4d71a36527d9029ea698e2efcb4ab9047de7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnTunnel_router.pb.go",
+      "size": 11419,
+      "sha256": "sha256:779fb86fcb5cc9ba184ed0c95554557ee43c1d94f02565ff1bb26e48fe610f7d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnTunnelgroup.pb.go",
+      "size": 42745,
+      "sha256": "sha256:8225be9a80e079f030fab20fec5a1cedf2eb858afa444e87abc03a5d6f309caf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnTunnelgroup.pb.validate.go",
+      "size": 68604,
+      "sha256": "sha256:159d40c34a86d1067c6330ce0d3cdc6cce451131b64afbbb117402f90fe1f9ce"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnTunnelgroup.proto",
+      "size": 7482,
+      "sha256": "sha256:eb2ef8b893e192f394d880b5e8f89df565f692fa31e41836de1f8a2d779fb501"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnTunnelgroup_grpc.pb.go",
+      "size": 19414,
+      "sha256": "sha256:e7756fce48dd73d0a794958ab698e9468618479b9156a3a7d7954a4e7b0a5f5c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnTunnelgroup_router.pb.go",
+      "size": 11869,
+      "sha256": "sha256:c100c1200695624b1928dc7914565e5944bcb9e5672aa14d8ebb3aa5ce75dbdc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnTunneltermination.pb.go",
+      "size": 47537,
+      "sha256": "sha256:cb32a9e923c1f3bc6a3f73988f97164a0a72accc0b2bcc2e0c98ddcb33c3ff59"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnTunneltermination.pb.validate.go",
+      "size": 72127,
+      "sha256": "sha256:eaae7b1ef2d7b14e95a57938de35870d9943b4a30b950c6a1c0f18ccb9cc5592"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnTunneltermination.proto",
+      "size": 8070,
+      "sha256": "sha256:6cea5120119a888716b70d4ca07b862b4435aadfd9cdfbcd600654bfe742ecec"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnTunneltermination_grpc.pb.go",
+      "size": 20854,
+      "sha256": "sha256:7ba1fe538cbd0abe672a31360991bd7a12b5183c7a1bada081f811ca20d33cee"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/vpnTunneltermination_router.pb.go",
+      "size": 12409,
+      "sha256": "sha256:05acc6a93bca03f93c0eaeef09e0661733c6a56df9955a22fd8394984a291b4e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/wirelessWirelesslan.pb.go",
+      "size": 55818,
+      "sha256": "sha256:c6eae5b977d7086d9bf773471783b86f87d61a487d92da6848892521e105f95c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/wirelessWirelesslan.pb.validate.go",
+      "size": 72820,
+      "sha256": "sha256:8d9579c80a8b0687a0076af68cfe99ce0f06d3cd982c10bb4da3fc25ac5ae347"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/wirelessWirelesslan.proto",
+      "size": 8751,
+      "sha256": "sha256:6565c261506fa5cacc2b2d28cb280031acb5d9caf32ed7b2ba889ea42c3a8612"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/wirelessWirelesslan_grpc.pb.go",
+      "size": 20614,
+      "sha256": "sha256:2d273166a583066cd770c932d7ef193834453aaf6f41e58e8eb0a096f85617d4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/wirelessWirelesslan_router.pb.go",
+      "size": 12319,
+      "sha256": "sha256:9c5357dbddd3698c67ab541dbe765118fb33942fa5ff91204e958e0a4b96aed9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/wirelessWirelesslangroup.pb.go",
+      "size": 52205,
+      "sha256": "sha256:af49c141aea466d3b7e28dc9193e62b27f4a30d1a2eb65e74ec09905924d52ec"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/wirelessWirelesslangroup.pb.validate.go",
+      "size": 74636,
+      "sha256": "sha256:e568fb4cc916da68899b76204445b0b15090e65c0fcf9bb1e3d9c844ec7b0bcc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/wirelessWirelesslangroup.proto",
+      "size": 8530,
+      "sha256": "sha256:7f458b58b21295e706579d88248c3da73d5c0cd355a083236ef38a0f05abb380"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/wirelessWirelesslangroup_grpc.pb.go",
+      "size": 21782,
+      "sha256": "sha256:5cb2e20e8e82fadbd4f34480906fa9d733f4fdbf731d4afc97be6eb4d59116e0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/wirelessWirelesslangroup_router.pb.go",
+      "size": 12769,
+      "sha256": "sha256:004d0e18369dec418990374d308c66804921188f1842266a16e8d4c63e7ed42b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/wirelessWirelesslink.pb.go",
+      "size": 56331,
+      "sha256": "sha256:8b29730a74a14604bcfc6b7abe2e09c50fe111ee98f9cd5e6e9647e1bca5a73f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/wirelessWirelesslink.pb.validate.go",
+      "size": 73336,
+      "sha256": "sha256:c3274549a1ea6fa7ddc1cbc9e2100687b1a215adfae1a6a3a14f0d0ac33bf493"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/wirelessWirelesslink.proto",
+      "size": 8855,
+      "sha256": "sha256:067bfefb2dc917c3e94cbe8bf61627307be3af27b06dfd365ad689afbe63a142"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/wirelessWirelesslink_grpc.pb.go",
+      "size": 20854,
+      "sha256": "sha256:f9249c2000acd9c8be1e042f1bd567ef577e682fb135ae557a7f07a616454a9b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/netbox_go/v1/wirelessWirelesslink_router.pb.go",
+      "size": 12409,
+      "sha256": "sha256:7658a46f3b9e111123d9e4b676de578349542ef5a047fd2da0d1eb15e1d22eae"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/openapi/netbox-go-v1.yaml",
+      "size": 144859,
+      "sha256": "sha256:21321ad02db2fad3b063e6b38f0a8c422cfe2a812d1c0a689d5cd6213baaf3ce"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/openapi/schema.go",
+      "size": 209,
+      "sha256": "sha256:e8ad04226b946199e5448b3319855caa77bb0f4fd5a5f37b3572005ab751062e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/proto/netbox/dcim/v1/dcim_service.proto",
+      "size": 14865,
+      "sha256": "sha256:2efd0e5f01ce227a1cbd0479e74bad29b7d553f2a9eddcf303d0ebfb75cd9732"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/proto/netbox/dcim/v1/resources.proto",
+      "size": 7652,
+      "sha256": "sha256:cbb1fd058470f224ded280e7223adbe8544253b4089c08d94421cc591cdd2dec"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/proto/netbox/identity/v1/identity_service.proto",
+      "size": 1849,
+      "sha256": "sha256:f0011df55da03b88a5dd28b723203f53cc89dd332fe83a69177e572d7af3be2e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/proto/netbox/ipam/v1/ipam_service.proto",
+      "size": 4893,
+      "sha256": "sha256:c0daff2c05ba4c2ae484869973bda1183fa8235301a910df5b7f63cd1707ab81"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/proto/netbox/ipam/v1/resources.proto",
+      "size": 2372,
+      "sha256": "sha256:c7c68695d594cf0734b9b8b2f2fc679da798959508b9304cca68b6f6c9dcec42"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/proto/netbox/types/v1/errors.proto",
+      "size": 590,
+      "sha256": "sha256:186d0d93e03c0341f66c26cd9895279d9a1d7b47cc95e83269fe75f0b12a1578"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/proto/netbox/types/v1/pagination.proto",
+      "size": 467,
+      "sha256": "sha256:5d540a493665cdad9a6a26665448b7cf978aad67c5399beec852c2f27157b24c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/types/types.pb.go",
+      "size": 7990,
+      "sha256": "sha256:a97771b11c8d87274e547d4f8668a5a9c7f491ccd380e93a2549aabafb6f1cb8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/types/types.pb.validate.go",
+      "size": 10428,
+      "sha256": "sha256:0b84b4dc5e4bc91acb481ee70882cc2e3352a150e639e0ba8f5c6984d87e974b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/api/types/types.proto",
+      "size": 682,
+      "sha256": "sha256:2b239d792b9b2058b7776d9193d3099b8d608665f17a9f80fe12a2246baa3993"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/buf.gen.yaml",
+      "size": 198,
+      "sha256": "sha256:fe556a62d3921faa32353240b4c0f87eefbf461d7e742800650f31abba0c5b49"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/buf.lock",
+      "size": 54,
+      "sha256": "sha256:22136a129cbbce93021e466687a36b0f42f1a1d36a315de5a39d45ff7dc3ca5a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/buf.yaml",
+      "size": 97,
+      "sha256": "sha256:4b9ad91c75b2caa8c12557327d27f184bdfaa5ade3dccdf4bac70694cc8e5d7a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/cmd/netbox_go/initial/close.go",
+      "size": 1007,
+      "sha256": "sha256:3521be4ae70e01018cc53ae3e924a3e4694f9112875a924ee816105d9ba66f04"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/cmd/netbox_go/initial/createService.go",
+      "size": 3160,
+      "sha256": "sha256:0472fe6dbab10078e57adad3b4b2864e29e19577b70c0653e969f7bafaa6a979"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/cmd/netbox_go/initial/initApp.go",
+      "size": 3960,
+      "sha256": "sha256:e2393ab2ff29c3fbacd5680f4e1f4eec156c25709e156b8a8ae352635dd50f54"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/cmd/netbox_go/initial/initApp_test.go",
+      "size": 1155,
+      "sha256": "sha256:906f2ec26109508d86fb721adf7a40bb7e9b8b20061c027dd1b5a21c177c3ac0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/cmd/netbox_go/main.go",
+      "size": 344,
+      "sha256": "sha256:3a1f97fe04b6a9af3ee157873670dedbc8eacb487b512387cce4b67253faf841"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/cmd/netbox_go_admin/main.go",
+      "size": 8686,
+      "sha256": "sha256:41892368922f8248af0560f2b974f07cb0010a51459fc27e82d119e713f4870c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/cmd/netbox_go_admin/main_process_test.go",
+      "size": 7413,
+      "sha256": "sha256:7bc9119b5dc3e06a8f10c728d6ff09be85cc1292ae562f5c51bbc8fed2cbec9c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/cmd/netbox_go_admin/main_test.go",
+      "size": 3273,
+      "sha256": "sha256:c64b427f84b11c43279cb0191e4e4fae801c75690140bb9ebac5ec4e620084bb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/configs/location.go",
+      "size": 462,
+      "sha256": "sha256:08c1b53ab9150fbbfee3dfae9040d29168342909e800de3c9df1161f7b544856"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/configs/netbox_go.docker.yml",
+      "size": 1316,
+      "sha256": "sha256:b594a959217ae7a9e7f53397099ce7c089036cf10c7f08ed69a3be0854244750"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/configs/netbox_go.yml",
+      "size": 6764,
+      "sha256": "sha256:c858848a637dc71a27a6a0048198ca6c4107eea41301739332c4d78594b41946"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/deployments/binary/README.md",
+      "size": 387,
+      "sha256": "sha256:6ebb1dd58245089fcad2544d5b14836abbf2f329707eabc3fe311670afdbf9a9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/deployments/binary/deploy.sh",
+      "size": 774,
+      "sha256": "sha256:ce801c3a14e3f3a90153fe05787f4633569378fbc426634442c2df3d5635eda5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/deployments/binary/run.sh",
+      "size": 943,
+      "sha256": "sha256:bc344b2e21f2b453fccb47363d5ea88a2bdceac9adae5ded60802576720776d7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/deployments/docker-compose/README.md",
+      "size": 217,
+      "sha256": "sha256:c626ff779150021b7a68a44284bb6ece5ac7320caeecd32f90a91bfc87a6886a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/deployments/docker-compose/docker-compose.yml",
+      "size": 825,
+      "sha256": "sha256:53643e570257019aa9ce0007795617f2d19cfa4d47c1652d5c2db6cd6b60e5fe"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/deployments/kubernetes/README.md",
+      "size": 961,
+      "sha256": "sha256:97edef527a337d2a68c4c7eeb04a6325a55174cd6a2ff6c51e7004e1e07d4207"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/deployments/kubernetes/netbox-go-namespace.yml",
+      "size": 59,
+      "sha256": "sha256:0571664639d07953af3b74400803270a69d08f18ea29b67be884ff3b7d698f9d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/deployments/kubernetes/netbox_go-configmap.yml",
+      "size": 7323,
+      "sha256": "sha256:a74dca81e917d0e5297053beb31c7ff7e9b443d95ebed7fe9c7987318915386f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/deployments/kubernetes/netbox_go-deployment.yml",
+      "size": 2200,
+      "sha256": "sha256:41d5a20bc46929fa46de385bc94a37be30054e6182b12ae22bd2ed7b95b88eb7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/deployments/kubernetes/netbox_go-svc.yml",
+      "size": 308,
+      "sha256": "sha256:b0d7dd97747f3c8f3bb0ccc7d001b7ca887ba5c7f0b6b35320dc38f2743d5241"
+    },
+    {
+      "kind": "symlink",
+      "path": "netbox-backend/docs",
+      "target": "../docs"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/gen/go/netbox/dcim/v1/dcim_service.pb.go",
+      "size": 238791,
+      "sha256": "sha256:5db74372f98823f8cfdeff9d739e2c4bf598d81eaa30a9ae52f4683ee7e47e17"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/gen/go/netbox/dcim/v1/dcim_service_grpc.pb.go",
+      "size": 104834,
+      "sha256": "sha256:1b2f43832605030d84adb7064e3ff61d21bdcec8064b01772a0107ea952ea91a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/gen/go/netbox/dcim/v1/resources.pb.go",
+      "size": 98194,
+      "sha256": "sha256:86d2f35350bc2767640213982e60d9077ac6e07d14c2e417f78214563629483a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/gen/go/netbox/identity/v1/identity_service.pb.go",
+      "size": 28568,
+      "sha256": "sha256:1d3cb0909ce5e72e18275d0a762795a7650604c6fc1a15a32f4b010de398e432"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/gen/go/netbox/identity/v1/identity_service_grpc.pb.go",
+      "size": 11691,
+      "sha256": "sha256:0161a266f789b40db2086cda0bcc78e5e82d2e520a69be88e0fe0338a8d825d6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/gen/go/netbox/ipam/v1/ipam_service.pb.go",
+      "size": 80418,
+      "sha256": "sha256:fdb15b0f8cfe66f9abfff362208eba4eb07d916211ffd673749e8c3beb674c6c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/gen/go/netbox/ipam/v1/ipam_service_grpc.pb.go",
+      "size": 35686,
+      "sha256": "sha256:7c1adedf8e2ed4781ca4b0d9b92289e21dfcb82cb79752423d24d0eece632d2e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/gen/go/netbox/ipam/v1/resources.pb.go",
+      "size": 30372,
+      "sha256": "sha256:f3958c098b92b306ce0608045510e1a545cafd927d71ae1b94a324f1480f41c3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/gen/go/netbox/types/v1/errors.pb.go",
+      "size": 9405,
+      "sha256": "sha256:bceb51b64cebc0f910a17e38af709bf1aedb1c0de289df637bd86433b7cd9ab2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/gen/go/netbox/types/v1/pagination.pb.go",
+      "size": 9127,
+      "sha256": "sha256:402fcc76223e86dd01c6b492f78dcf01dffa973ba8ed4ab2cea297065afe2a01"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/go.mod",
+      "size": 8000,
+      "sha256": "sha256:fa7cda7288072b24978bd37a3f9b759cf991dda4e569bfdf5bdcb6d299e0f621"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/go.sum",
+      "size": 86627,
+      "sha256": "sha256:d0bc150b7ae116074eb6af7c0171dfabda75710c55e842de296f4c6db6e7853a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/identity/credential_matrix_test.go",
+      "size": 3369,
+      "sha256": "sha256:f85eef887953cbf0131340ea302251d8a95a85389ddb7bbd2669c54f7c9f9153"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/identity/interceptor.go",
+      "size": 4338,
+      "sha256": "sha256:32e0a9e41f5eab328a1ca45adffc5df1e85bce60957c3eca8a2e46b7a3233f52"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/identity/interceptor_test.go",
+      "size": 1097,
+      "sha256": "sha256:3478c4f46470117b8e766fc5830d87ad2970807ed8e2eef0badcdc870e458529"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/identity/password_change_test.go",
+      "size": 10160,
+      "sha256": "sha256:1996bfc7f48f86f9fede41e32a2fc95d23d9c5d935504034e9182fc3f13f8a1c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/identity/server.go",
+      "size": 4453,
+      "sha256": "sha256:4f71b2f5452889a32d42a7338c01004ed02658fecdf3cfd407e6c5b1231e64db"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/identity/token_transport_matrix_test.go",
+      "size": 19047,
+      "sha256": "sha256:70bc2e10e6daf720857bb905ba844a4b9e17064c4b0077f734e06b90563724c9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/statusmap/errors.go",
+      "size": 1050,
+      "sha256": "sha256:259a21afe24c5fd04a4be3d417aac8c7bb723b07091b6d98afbe333ecfdea7a8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/statusmap/errors_test.go",
+      "size": 1334,
+      "sha256": "sha256:ffc8e383786a0bfc8c8481586933645c7124e0eb26c6285097750049926abf72"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/dcim_server.go",
+      "size": 15525,
+      "sha256": "sha256:32d202107c8431adc53c7b2ee59a64b40753ebcfe24f2157bae12c750a8b33ca"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/dcim_server_test.go",
+      "size": 3238,
+      "sha256": "sha256:5bd82ca597da39df86e9fe10ca38e9ff250ebc43daf832c71270f7f395a05f0c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/device_role_typed_mapper.go",
+      "size": 6004,
+      "sha256": "sha256:64641b50ca5f49dabea9a79fdc54a00d0065dbf25a05a29a7c089055f0136e4e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/device_role_typed_mapper_test.go",
+      "size": 6986,
+      "sha256": "sha256:f1421ec5352a0e6678c7ed42d07764b97dbf18a2e0062a06a016e076e8fdb3f4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/device_role_typed_server.go",
+      "size": 5485,
+      "sha256": "sha256:ddb12a4df4e93dfa1c8198f217c60d936466511f3ab062de36173ee506809d51"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/device_role_typed_server_test.go",
+      "size": 4871,
+      "sha256": "sha256:76a8e44fc48c297edd8936580726a0c014895c37ee7f454dcaf2926512b01472"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/device_type_typed_handler.go",
+      "size": 11548,
+      "sha256": "sha256:d33385a407e9abb37d6e3c91bad231a515b5cb79298451ea39e19d920a46ab04"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/device_type_typed_handler_test.go",
+      "size": 9832,
+      "sha256": "sha256:679c1c2c3ed413eb711f942dfc055b0b00a77d23522f2cf2cd0f8417eee09546"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/device_type_typed_mapper_test.go",
+      "size": 5946,
+      "sha256": "sha256:d2cd91149d1713fdd2e961cffdc484bfbd3e53fe27695b73b62be31bf5c017c3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/device_typed_handler.go",
+      "size": 13377,
+      "sha256": "sha256:814bddd818a3563170ab0e176e8e792ce9eb3018446417441b9f4aeb12a19a7b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/device_typed_handler_test.go",
+      "size": 11079,
+      "sha256": "sha256:2e6d9b156e7a0857638f8d02553c72c0fba0b61e9541e48a9223d4e0552490d3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/interface_dispatch_test.go",
+      "size": 568,
+      "sha256": "sha256:078757257a06190930c9d970e1c5f5928e85deb0ce9e722e791828f02ee23150"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/interface_template_dispatch_test.go",
+      "size": 2984,
+      "sha256": "sha256:78fb481b7f5fa29a087f22633f1f1febd3466a506433cf801c44d8db90b64110"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/interface_template_typed_handler.go",
+      "size": 11008,
+      "sha256": "sha256:31817557a3e851c73f4af3c6ba2cfdefbe11f08f64a82c12a3f72e61ed95ed8e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/interface_template_typed_handler_test.go",
+      "size": 4718,
+      "sha256": "sha256:fa71b43f174d02f17db038689a887a16066422557bb4e3ec53f03130f6f036b4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/interface_template_typed_mapper_test.go",
+      "size": 5485,
+      "sha256": "sha256:d73943ebe179ed2cd119542f7ee08a6ee81d7e404514f733ca094d55bd5700ce"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/interface_typed_handler.go",
+      "size": 12857,
+      "sha256": "sha256:ff03adb9c9026b77963fd6467008717c134b44b9030a885462857851a6d5b31e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/interface_typed_handler_test.go",
+      "size": 5744,
+      "sha256": "sha256:0e9e3fde234044b34eb0b24d525e1ace955e907e166463a6b83e3994698bc297"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/ip_address_typed_handler.go",
+      "size": 14213,
+      "sha256": "sha256:238681b7faf4e4106f3b13469040bd8d5a39fc247919a24410d3ecf80d2b7d71"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/ip_address_typed_handler_test.go",
+      "size": 11167,
+      "sha256": "sha256:d46bc6a614682871dfeb99d6bd4ed5438f906d2d9a00c02465c280499ab54744"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/ipam_server.go",
+      "size": 4765,
+      "sha256": "sha256:66abb51ecfe4661c72572fb0feeea04ec142df256aeb2900f94fb397d900b7f5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/ipam_server_test.go",
+      "size": 530,
+      "sha256": "sha256:4f255e97264ebcbcfdaff29910e03b044f442a87de9272c11026e0d22d06ddcf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/manufacturer_typed_mapper_test.go",
+      "size": 4120,
+      "sha256": "sha256:dae0765fa6b877d95b72032ca07f65d0744222d71216b5880d6e215c204b1aef"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/organization_typed_mapper.go",
+      "size": 7544,
+      "sha256": "sha256:c5c478aa0fc4afffa3bbf4f7fa53b98fd7eb04b505b4ea3c6be48be8a2443259"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/organization_typed_server.go",
+      "size": 10732,
+      "sha256": "sha256:6a0996e886fb1308cd9db87c0af43e911b7d8eb9baaefa3da8bbea5071140bbf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/organization_typed_server_test.go",
+      "size": 6601,
+      "sha256": "sha256:53a5fe8a1b6a1ca4e55e30309e0baab33600fa8a06a07e1282cfb836a6b1bdbb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/prefix_typed_handler.go",
+      "size": 10675,
+      "sha256": "sha256:f0769e020ddfd34572c1f55d22685f4dc297e78ca991a12f41ad2d21d38625a5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/prefix_typed_handler_test.go",
+      "size": 7799,
+      "sha256": "sha256:73efdda141dda2498dd4885645952075cbf126d846cccf11d20df71fac68729d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/principal.go",
+      "size": 392,
+      "sha256": "sha256:43dd5c37dff88a0d9c4e5e23342566a5e9af3dcf92b4825e39c1a428727ab998"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/rack_role_typed_mapper_test.go",
+      "size": 4211,
+      "sha256": "sha256:3bd7d033fc031a570a292dd058f9dcfafb3701840d258c1731a8f0d56868de93"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/rack_type_typed_handler.go",
+      "size": 12083,
+      "sha256": "sha256:12a57f6eb4315ee9ef59739d93bbe28371753793df053e8ef40af250962e8028"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/rack_type_typed_handler_test.go",
+      "size": 9040,
+      "sha256": "sha256:0cf66582c90f20cc58d9f5de06bc84f4681238954f35efc2ec93d0c7a5dab5b9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/rack_type_typed_mapper_test.go",
+      "size": 5526,
+      "sha256": "sha256:815a69acea98157e7b9ea1d28cadc307f1898bfdbd89b438d7c656d59d66be77"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/rack_typed_handler.go",
+      "size": 12269,
+      "sha256": "sha256:9076d3307a27532a74898c60c6104eed323f02c71da7d837dc87c321a0927e0a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/rack_typed_handler_test.go",
+      "size": 10885,
+      "sha256": "sha256:7048f9b1d4ba7df2c55b01b9a536cfc906b359b10fdb4195af57cc0825ecb35b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/rack_typed_mapper_test.go",
+      "size": 6774,
+      "sha256": "sha256:460b812fde73153facff65c900fba1885ad4197b6788c803bc6751b6b4bc5d74"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/site_dispatch_test.go",
+      "size": 2784,
+      "sha256": "sha256:a9c74a9bdcd859e384ddc7ca6cca00ca092b608e213fdefeb0d66de09e16495f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/site_typed_mapper.go",
+      "size": 4953,
+      "sha256": "sha256:f12bf71559f79c1a41deadbb2496981fbbe8588ed389f26c3353bff10028bf90"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/site_typed_mapper_test.go",
+      "size": 4507,
+      "sha256": "sha256:f8ec672293a58bb79d224f2029ec0b991ca7e93ad0d9ed8e2c6085481bc00f2a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/vrf_typed_handler.go",
+      "size": 9946,
+      "sha256": "sha256:68e052dc7eca59961f0d447314075225058476256e6c5f654b34d6b4c2ebc637"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/grpc/workflow/vrf_typed_handler_test.go",
+      "size": 6270,
+      "sha256": "sha256:abaf515b3c53d76b555c5a27d658bec990e238a67f0f21300617bce12a86f7bb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/bootstrap/bootstrap.go",
+      "size": 4862,
+      "sha256": "sha256:d8b19f571c107d372cfce2abc077ff233344034e5c2ddea612637181d5b5b292"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/bootstrap/bootstrap_postgres_test.go",
+      "size": 3280,
+      "sha256": "sha256:f6b5612fd8bdf7f6e6e4b9392f890e78de46cc28834cd1c777035de21dfda398"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/bootstrap/bootstrap_test.go",
+      "size": 7607,
+      "sha256": "sha256:29d561fa087e11980c001a331a95318419d7def81f170a2a79e38ec1bc212e2a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/bootstrap/registry.go",
+      "size": 2922,
+      "sha256": "sha256:0fa71960ec52f68df7091b55ede8f23810e13901619cb9ba99324f8058fb9c51"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/bootstrap/registry_test.go",
+      "size": 2070,
+      "sha256": "sha256:2e24da4503225b6f52cfca6590edb5cceb1ce6104814dd3ed639b156a41bc14a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/changelog/recorder.go",
+      "size": 15996,
+      "sha256": "sha256:c1ffd4e4e22b942426fb7d9b366c9f72673b7d6301f5761a7ec7ed9c9738fbc7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/changelog/recorder_device_test.go",
+      "size": 1325,
+      "sha256": "sha256:eda23836b9e72811318ebc2858f44191ce2090b0fce07f96082b9445866b870e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/changelog/row.go",
+      "size": 974,
+      "sha256": "sha256:395157258a415f0eb793b8228852fea1532a307d9dbcb75c1b904833a543f181"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/changelog/row_test.go",
+      "size": 844,
+      "sha256": "sha256:56aefbc3ea754169fe8fe79d2070863d7a1b71a4ccfb599a1c9941a097ba0647"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/device_repository.go",
+      "size": 21171,
+      "sha256": "sha256:55a1f610ec31aada5c306b8bee6fa8bbb3375bb986a8299b6ecf48204d889403"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/device_repository_test.go",
+      "size": 8082,
+      "sha256": "sha256:b73771bc43f0c96e1ffd46199d98b250c4cc172701156efce6f4b710c63080d0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/device_role_repository.go",
+      "size": 18382,
+      "sha256": "sha256:d8b740ddb60a330c51b0be470b19ccfc697f36b327f2f630e5a37e93a7abaf56"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/device_role_repository_test.go",
+      "size": 7432,
+      "sha256": "sha256:d5fe2ded20bd35cf15d00655a48b67bf02984e20bb78380e2d0d24834c7efdc8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/device_role_service_postgres_test.go",
+      "size": 8247,
+      "sha256": "sha256:b1b36f8382f498ab89bbac6da7ed255ce7df2d25306193fd464f6cc28bc8bb17"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/device_role_service_real_postgres_test.go",
+      "size": 12960,
+      "sha256": "sha256:3d13dbeef686ef119bde25218eae65b4bc807700a3f2cd0906e8314c4a58bd6e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/device_type_repository.go",
+      "size": 19734,
+      "sha256": "sha256:29a5167277652e80fdf94d09dd3da2b846451f2807c9752aa7c9260d4ba43016"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/device_type_repository_test.go",
+      "size": 14327,
+      "sha256": "sha256:9991f2f6521de899740dcbe14eb2a006947166342035ad552a5f81eacc1a5c7d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/device_type_service_real_postgres_test.go",
+      "size": 18562,
+      "sha256": "sha256:0792aa2c17f69dcaa18781507a03b8985bb00eac74c4c5aacd57a2026e3f9aaf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/interface_repository.go",
+      "size": 17668,
+      "sha256": "sha256:0a8e56517f5308c642c0f36d06067be654c7d3e517c248c497ad631f8c9dd3df"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/interface_repository_test.go",
+      "size": 10430,
+      "sha256": "sha256:cea1d760a676be5e1001cf25ebc3dffe5a4f445715da7cacd6d75923ea2d44a1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/interface_template_repository.go",
+      "size": 12300,
+      "sha256": "sha256:5b9acd5d2d8cfa2b4a45b3a38d72491b60d8584ee47ca2317b3122919f4b5bbb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/interface_template_repository_test.go",
+      "size": 9310,
+      "sha256": "sha256:5f06e21a240098bd0a5b745df275f17294f4193c34651c3a41697dfc0befed87"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/interface_template_service_real_postgres_test.go",
+      "size": 19843,
+      "sha256": "sha256:787181ae06dd258085856a1def420452dd6c11cdf95738d1315d75a7511fe312"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/manufacturer_repository.go",
+      "size": 10853,
+      "sha256": "sha256:77bed7ea778c01d0fd90188ed87906e1ba92e8eff2bba2db44405b261f2b9b88"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/manufacturer_service_real_postgres_test.go",
+      "size": 11672,
+      "sha256": "sha256:9467e54ee619f68cfffc10db7ca5d3a3e2af8c3168cbf9c69cb94333677955bd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/organization_repository_test.go",
+      "size": 16934,
+      "sha256": "sha256:6e54283b18f6b67cf4296ca99d4c996c8e18d4a213a6f54a8ae7c30aab558c14"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/rack_repository.go",
+      "size": 21207,
+      "sha256": "sha256:636488f5511ce53c967072921830cb959412d33d3ffc9e8889ae157f25613869"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/rack_repository_test.go",
+      "size": 12438,
+      "sha256": "sha256:bd5178429ea2dea3faab453db909a20306f8832850298573b3e0ea0811b3ecfb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/rack_role_repository.go",
+      "size": 10011,
+      "sha256": "sha256:045979f6af7e011f6b3d301fc9588b0ccfbab41d7df4b81cea69b38d05831f24"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/rack_role_service_real_postgres_test.go",
+      "size": 12910,
+      "sha256": "sha256:2d620a3a4bc48612375af7fbd657d4cf18719fbd562a52b2ef658d3a6a057d75"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/rack_service_real_postgres_test.go",
+      "size": 23362,
+      "sha256": "sha256:0b705ae7c0963171f73d49723048ee549cfeb6cb0d5efc9b333456fb3af5af6c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/rack_type_repository.go",
+      "size": 14923,
+      "sha256": "sha256:1e5ebd0b059a11f1842b2ede68e46ed89307bb6a518f4a39132ab6c889dcc1e5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/rack_type_repository_test.go",
+      "size": 14082,
+      "sha256": "sha256:d8609c7ef99d4b8dc1bd006edb7c20197836867df5183c292ed809ecb2ab25f9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/rack_type_service_real_postgres_test.go",
+      "size": 20042,
+      "sha256": "sha256:fa81e40a67b9a8bbb83d393e1d8fcd44895f23290d26a7b96c2af320204c127c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/row/rows.go",
+      "size": 12524,
+      "sha256": "sha256:6379ff528ecdccad16e176accd89f076179fd8931b50b6d0ee8277a90030b356"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/row/rows_postgres_test.go",
+      "size": 1713,
+      "sha256": "sha256:f706b593672e9b7f2f258daa91db9f9ac3cc3dd73efcf66ec970191983ff4fee"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/row/rows_test.go",
+      "size": 6886,
+      "sha256": "sha256:8eac31ea14baea69654caaf5d12e52fc4faf907d8414faabcf8daec3fe9e2805"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/site_repository.go",
+      "size": 12556,
+      "sha256": "sha256:8cdbde7c06f31dc5321bc21ecdd74941bb72e4036862122ae19b308ce4e2e32e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/site_repository_test.go",
+      "size": 13300,
+      "sha256": "sha256:f9794666551fe664e9ef7ff6c90e1108c206defef5ac50409a4ca57301171cbc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/site_service_real_postgres_test.go",
+      "size": 16576,
+      "sha256": "sha256:dee1886622a5655de06a8f3aedac344db13e4ca45bc9da32e0b1b36a3f3a9f44"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/dcim/site_transaction_test.go",
+      "size": 4675,
+      "sha256": "sha256:7a14d36e9df46361df85b8d74cd561e2a9b84edaf99356f06b9e050784475393"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/identity/rows.go",
+      "size": 4755,
+      "sha256": "sha256:2e2af5423759d74ed988f8664210a824c23a53e77e25b8994b8908e98528cd0b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/identity/store.go",
+      "size": 12868,
+      "sha256": "sha256:7f900e233122ca0c35108be655a5fa66ad06ff94bbba00562c1e44b2c49a4efa"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/ipam/ip_address_repository.go",
+      "size": 24844,
+      "sha256": "sha256:78a614cd57e189594591b8c3c94e44190312426fc67717fb1027475018809aff"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/ipam/ip_address_repository_test.go",
+      "size": 7356,
+      "sha256": "sha256:f57955b0eb32d3472f28a868c58d039c067605ceece5c5120c94ec6e5dd03f98"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/ipam/ip_address_service_real_postgres_test.go",
+      "size": 21470,
+      "sha256": "sha256:4ae95cd62f4ad2e3614a62092c878efc9a51e45c14259877d18ecafce7385d34"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/ipam/prefix_repository.go",
+      "size": 16183,
+      "sha256": "sha256:327281fed1271e9983357b137ee372f984fc35006af13db7ad3a48fce5418107"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/ipam/prefix_repository_test.go",
+      "size": 6261,
+      "sha256": "sha256:7e7e7a31380164e29a643966fa67ccaaa9c02dedb7da8e67a6c94d9616295d34"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/ipam/row/rows.go",
+      "size": 3829,
+      "sha256": "sha256:767d587588e3be92278dae9e54473edbc666428864925b35f05ead0950fc9e84"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/ipam/row/rows_postgres_test.go",
+      "size": 2000,
+      "sha256": "sha256:649795de82f76a2c97bdeb930a710a23a1587b52d4ba08bf52df5ea59ea2a181"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/ipam/row/rows_test.go",
+      "size": 4261,
+      "sha256": "sha256:9fe3816535aea3e74c4dda4d96b1030207d4e8cb6192c084849e4722d31ea246"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/ipam/vrf_repository.go",
+      "size": 12210,
+      "sha256": "sha256:29982ee766adebf4fdb403554e847a1356db1775e9cd8a75309bf59f4ca633f7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/ipam/vrf_repository_test.go",
+      "size": 7232,
+      "sha256": "sha256:65e4bf323232d22c00fa1973d7ac6b6d0a414e83b6b4a34f352b643fcd6fde08"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/postgres/transaction/unit_of_work.go",
+      "size": 1768,
+      "sha256": "sha256:a5e32b16edf8048ff6db25e55131c8f0515e15916990641ffef9f1510245a326"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/identity/credential_matrix_test.go",
+      "size": 3682,
+      "sha256": "sha256:4997d23eb346fb3ce9aaa895e5452c6acb72d5813cad09b5a42a38a48b30845a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/identity/http.go",
+      "size": 22544,
+      "sha256": "sha256:88a14386d9ccbdab0069408e0a0bb780e8859af6b9890bef8efe4545ecc9f349"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/identity/http_test.go",
+      "size": 12088,
+      "sha256": "sha256:e6c335b9253edf98c0628f238d6ce226b08e53f692b6d8ede0635022b5149bd1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/identity/limiter.go",
+      "size": 829,
+      "sha256": "sha256:a4c9691a8c82d5f21ca185860a897da59d8d659ab6cfb5a08b6a82d46bff0e27"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/identity/password_change_test.go",
+      "size": 35757,
+      "sha256": "sha256:82838ae3eec10e8fb8fc3bb9bd86bc11349b0b270ec9e9209e6cd3baca888dd9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/identity/session_matrix_test.go",
+      "size": 56106,
+      "sha256": "sha256:b54acef34c372530262258e979b0b77e5724cfcf81812d1418eede5bcabf6890"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/identity/token_transport_matrix_test.go",
+      "size": 13858,
+      "sha256": "sha256:df45a73cda469b3501239067aff1f99f054054dd029724955f78f03334e4a536"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/router/cors.go",
+      "size": 5002,
+      "sha256": "sha256:8935da084bb24d239fb329f65a6dd7b87aa9f4d1b91b0c9a13c24da8c1c5691a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/router/cors_test.go",
+      "size": 13799,
+      "sha256": "sha256:bb7081c10126abb62ba9efab035ea478a8edc2d775a410063db16ade07c6bef9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/router/router.go",
+      "size": 4882,
+      "sha256": "sha256:991469445d7e68e8e5f62842852cee851df5f3a0e75eeef338db7e05d193d296"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/router/router_test.go",
+      "size": 21404,
+      "sha256": "sha256:b4b642dc5ae123be219f1f70a827f798216ef5328a854d3d554f89b3077db39a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/choice_envelopes.go",
+      "size": 1686,
+      "sha256": "sha256:1e06eafd34a400a712bb8dd3df84f860159fad75e7ff7905ca94d6b97d234123"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/choice_labels_interface_generated.go",
+      "size": 10295,
+      "sha256": "sha256:eb7878b207e6cbf4f942d040a3d612ef067009b2246730f1516d92e8f2508e8d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/device_handlers.go",
+      "size": 16322,
+      "sha256": "sha256:24dda8c15b221d3b874c28a8db430ab3a8f78cc2d6aee55783ae99e3106e8934"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/device_handlers_test.go",
+      "size": 15141,
+      "sha256": "sha256:f787691d4167c78fc553687c3c5b64bb405ab3fdc8e0042335f5035a16774907"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/device_role_handlers.go",
+      "size": 10570,
+      "sha256": "sha256:fcf02135ea937b7b446eef9ef8751248240a6e6f6a66b7c7b421ab2b3ee7d9f1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/device_role_handlers_test.go",
+      "size": 5878,
+      "sha256": "sha256:6df4c932360fcbb3ac13eaf1b0395026b96dfc1f3188904ba79deea0da5740ef"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/device_role_scalar_presence_test.go",
+      "size": 6175,
+      "sha256": "sha256:0323d00b2a4ce5f92d6e9f0f8d75f92062c0afcedd845da248868b8a99b7a4db"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/device_type_handlers.go",
+      "size": 15211,
+      "sha256": "sha256:2cfbd59830db89cd939459c0c45cf83daf830f18c9dc3855b218bb5ccad522d8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/device_type_handlers_test.go",
+      "size": 9343,
+      "sha256": "sha256:a3574ea177a143c630d81b918d04231a8f438eee855dd4da5e3ad5b107d67fc2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/device_type_scalar_presence_test.go",
+      "size": 6586,
+      "sha256": "sha256:ef7daa80b7e4c729241952ba324996136adc151723fbee9fcb8b1f245093a505"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/errors_test.go",
+      "size": 1341,
+      "sha256": "sha256:a6c132c0713a1d0711515a989d7785dcf2114aea7ca1450a1a623230011a1d22"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/handlers.go",
+      "size": 6647,
+      "sha256": "sha256:50b9bca092848195ff86283f0fd375469d7e2b276942923f42acf5ee29457598"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/handlers_test.go",
+      "size": 15863,
+      "sha256": "sha256:d384b1daaefa1a2549c345b7f97390eee2a0d10f775f02c819fc85c0d3f582bc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/interface_dispatch_test.go",
+      "size": 782,
+      "sha256": "sha256:22abf3748a8dfa3be5efd9aa3f618c88ed1294b43430dfa6425ae344dcd66e4d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/interface_handlers.go",
+      "size": 14350,
+      "sha256": "sha256:dd17beaeb1c8a81dea909d423022fec2073ae648190ef62430a5d78207d3624a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/interface_handlers_test.go",
+      "size": 6448,
+      "sha256": "sha256:8439d56fe22dffbb47849875a5466f00661096b257e2f6c925113dad46509240"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/interface_template_dispatch_test.go",
+      "size": 3059,
+      "sha256": "sha256:a2a14c78faea14dec01d0cdaae9f440616c22e4a2cc9984ee5c25eb026a0822c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/interface_template_handlers.go",
+      "size": 13029,
+      "sha256": "sha256:7d02eb4baf22d01df06e6352427745aa02e246748987de90937bb8cbdf1efa85"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/interface_template_handlers_test.go",
+      "size": 5161,
+      "sha256": "sha256:a14a40b7e5162dc68b1e56f688f8b5f61ef6a8e3c25a3f70c9a6833eaa608904"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/interface_template_scalar_presence_test.go",
+      "size": 5565,
+      "sha256": "sha256:01b2a61d9b1bfc63d293556fc2365a1070d27076768f0208869b33ca8096a274"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/ip_address_handlers.go",
+      "size": 23740,
+      "sha256": "sha256:386b909fae771297c6021e979a36805ffa6c6bd081e9f3948a3b3571b8aecb93"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/ip_address_handlers_test.go",
+      "size": 17590,
+      "sha256": "sha256:477f9371784f0217d77d8a226c801879d3af984722d379944780643cbb446920"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/manufacturer_scalar_presence_test.go",
+      "size": 2852,
+      "sha256": "sha256:80bb23c231b04d9b95c0ecf739492537cf6adf8ac782b1ba4482dbd6edf518ec"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/organization_handlers.go",
+      "size": 21781,
+      "sha256": "sha256:67698a0c7f3c4cc8aa8d2eac3da585c016b33389d3bef630c090fee0e76b4d1e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/organization_handlers_test.go",
+      "size": 7117,
+      "sha256": "sha256:2be7a0afb4c09e71949d757a456de8672ce5cc6e9aa8629f8057d18019bc6d18"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/prefix_handlers.go",
+      "size": 15571,
+      "sha256": "sha256:e3c4431dc602fc3028a2b3198188c5233998acf955da2549fa97be4da47a5701"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/prefix_handlers_test.go",
+      "size": 7539,
+      "sha256": "sha256:27ae8c49efc828329516d0b00ceaf98c4504d299c4cdc61bbed9775abc547fe8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/rack_handlers.go",
+      "size": 16373,
+      "sha256": "sha256:ead2b047a0cda8a7e9d2c3b68bda771d3a557d2e8bd6e867ac3cca24d12ee579"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/rack_handlers_test.go",
+      "size": 10091,
+      "sha256": "sha256:fd0280dbaad7034b40df87235a2c4be93c295189e6683c510a236cbe9f3428fa"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/rack_role_scalar_presence_test.go",
+      "size": 2939,
+      "sha256": "sha256:168f2ce1e700d2f78538de5352101769312986056445ce337ba027c1273ee328"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/rack_scalar_presence_test.go",
+      "size": 6643,
+      "sha256": "sha256:c096ce5c0edca07dca171de2e4d884f8181cdb100ff89c773f19a16442fdca95"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/rack_type_handlers.go",
+      "size": 16371,
+      "sha256": "sha256:220fa159705d5fd38e962158e0421bef17c216e63b991f928eb68e88db473ffe"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/rack_type_handlers_test.go",
+      "size": 8822,
+      "sha256": "sha256:e3ed52eaa4792baf843998896b95ebe32bef7ecb500728fe948e352953790200"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/rack_type_scalar_presence_test.go",
+      "size": 5892,
+      "sha256": "sha256:b2bfb0e623c8ce0da02880477eefd0a32369c22ee3662deb0bdcf8bc7052f513"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/site_dispatch_test.go",
+      "size": 4397,
+      "sha256": "sha256:e56eccc4200dc2b14089bc3b88b9eaa4541a0f66361b124bd799f8babd316926"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/site_handlers.go",
+      "size": 11954,
+      "sha256": "sha256:1e3033384e13f928213e7e22b99dfa42c25dfe3cad916000a4d9f0380d9a9b76"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/site_scalar_presence_test.go",
+      "size": 3191,
+      "sha256": "sha256:deeab1e7dfb809aff943581abc3a573d1bc3d90f79dba3152a92e97f92fc87ce"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/vrf_handlers.go",
+      "size": 13540,
+      "sha256": "sha256:e7ce220a15e9cbfb755044ea8d26fa4d9f1ee19522b6b1771bebad6815986caa"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/adapters/rest/netbox/workflow/vrf_handlers_test.go",
+      "size": 6554,
+      "sha256": "sha256:000c6b525156b72f0d76a8a496bc4818739e833ce17f83ab1556725547950786"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/authz/authorizer.go",
+      "size": 854,
+      "sha256": "sha256:96611f5aa3fb52ede6bc974feb234ddb7ed88206fb7e401adf876c138e3538ff"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/authz/authorizer_test.go",
+      "size": 2598,
+      "sha256": "sha256:eded6a941d09accdd06039ba69692ed151c00ab4cb86ad9270d39ffca087dcfc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/authz/resource.go",
+      "size": 4640,
+      "sha256": "sha256:9b5fc671561346a10add3296bb81c0cddf4cd1f5d8ae7a77d5396726bfeac1f4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/authz/resource_test.go",
+      "size": 2747,
+      "sha256": "sha256:1406ffd0743c653644ace740d20f82a5876b7f898ad2070e24c4f7c7b66e263a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/changelog/change.go",
+      "size": 3355,
+      "sha256": "sha256:9766a2f4719601e790ac29fa997d91b768a5d8f0a906173a711a8a2c469fec11"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/changelog/change_test.go",
+      "size": 1277,
+      "sha256": "sha256:b23b185b5e6dc6983cd0aa886e0486b7a72483900f996a30eb63b8934bec4480"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/changelog/recorder.go",
+      "size": 104,
+      "sha256": "sha256:7b267def760305713d5ee75d2acabd328c28703f129c3edeaf164f59cd4e7642"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/device_commands.go",
+      "size": 8043,
+      "sha256": "sha256:6105fa46b386739ffb23b933d3598e4490d0e5ef02fc07cc1556b16090c8438b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/device_ports.go",
+      "size": 2171,
+      "sha256": "sha256:e330960252192f565f54b63373b8d3d48db14575209ad4251e45896725b33c1b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/device_queries.go",
+      "size": 4024,
+      "sha256": "sha256:2f6f74e492ba94001447643cd8f8f8a70b0e8bfe24814e1e198aeeeabaa2dd3b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/device_role_commands.go",
+      "size": 7140,
+      "sha256": "sha256:ad94a033631e7d645c04e29e487f9bf061fe3830a20f3bdea58f57452f09f350"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/device_role_commands_test.go",
+      "size": 7134,
+      "sha256": "sha256:8510ebeea0478341c958b4b6a110254fb0da850164c38e24bb9a8d7c19d88839"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/device_role_ports.go",
+      "size": 1155,
+      "sha256": "sha256:5036cfac74044be8cbda2dd5a5977a78419af9657ee8277e58c44ca25f88f523"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/device_role_queries.go",
+      "size": 3076,
+      "sha256": "sha256:fa9f7965ce6d87db9172d3af097e0e0c6e495f9a7dcc0ea45516c65ad0885542"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/device_role_service.go",
+      "size": 16122,
+      "sha256": "sha256:3f5197b1929663ec3e24213f66c52fc0faca1bca90216198eefe3251e3152bbf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/device_role_service_presence_test.go",
+      "size": 16207,
+      "sha256": "sha256:9cdd2da2e0e145451ecedf7d7c85f6bec2a54e5bb3591d05658af2c83c5f2431"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/device_service.go",
+      "size": 20555,
+      "sha256": "sha256:550d0ff8442d289257f301444133defe8639df4f6e5a094d79f028e9f6a455e8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/device_type_commands.go",
+      "size": 9013,
+      "sha256": "sha256:3aba8757fa251feaf87d3ff15d7951725937772d32978b60d34184fa83c3a06d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/device_type_commands_test.go",
+      "size": 7357,
+      "sha256": "sha256:2729fe0f8c76aed7a3f4d19961c5a3ebd78d1777f736838fa3469daf5d2a4063"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/device_type_ports.go",
+      "size": 2135,
+      "sha256": "sha256:0ea148121a592eaa3e8be1f2e5597fa72b73502ea096a5e9bbf888789db25af8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/device_type_queries.go",
+      "size": 3558,
+      "sha256": "sha256:a8ee12feca8f6304b3c824349564bee37b41441927902d1ce7fd5a2887c7026d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/device_type_service.go",
+      "size": 15918,
+      "sha256": "sha256:20a8c539142b5c73374be6915c5ea153e7bb102a56c3ee0320e00429382d7650"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/device_type_service_presence_test.go",
+      "size": 14929,
+      "sha256": "sha256:57a552c3efda28b73e880ed79bf817284649b5249b73c378aaa3828156561eec"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/device_type_service_test.go",
+      "size": 13215,
+      "sha256": "sha256:981894e9d9f76105a71fdb98ee95adfdf4e55f834daa61e2d9b74c15075db9f8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/interface_commands.go",
+      "size": 5172,
+      "sha256": "sha256:734eef21560da07b269537568c6e1bc8b14765bc8d83d3f178a0b7e146271dc3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/interface_ports.go",
+      "size": 2269,
+      "sha256": "sha256:23ec53d0108f5cc0e3722b83633d63563c594559d94e2da3ba45e50eb5e9fe7d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/interface_queries.go",
+      "size": 3829,
+      "sha256": "sha256:2fab938ae4df2811977e3cc4548a1f8bab13c25baabc38ecf16b6d7bea537b87"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/interface_service.go",
+      "size": 13406,
+      "sha256": "sha256:deb66d50a2b8dbbfc4c84ff36005ffa59ebfcb5f026afd3e28bba3b74a58d5fa"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/interface_service_test.go",
+      "size": 15204,
+      "sha256": "sha256:6419ae705e9a40003e61eac441fcc1caa95b8a2810829e6bb95d79a55316bed4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/interface_template_commands.go",
+      "size": 6376,
+      "sha256": "sha256:4a727a2d030df379500a0c5cc9be6e33b12d63c348177803828dcf9a93c55947"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/interface_template_commands_test.go",
+      "size": 6023,
+      "sha256": "sha256:719f12414f77dd2a26940b344c85c6429e1dd6242566c0e67caeca0bdfcb7d90"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/interface_template_ports.go",
+      "size": 1282,
+      "sha256": "sha256:a409b360f2127645ad7a2a3405d3c1f55eb4848a0dd84f6871390ddbcfd88410"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/interface_template_queries.go",
+      "size": 4273,
+      "sha256": "sha256:b34b197494e88697fa6c8370a3c129da45a256faa280c1ab9ce5eaec4742aed1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/interface_template_service.go",
+      "size": 13934,
+      "sha256": "sha256:d5aee7f6777fe59183c8bd36e571a2f429cffe78d9bd4974e75d3eb109ba880a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/interface_template_service_presence_test.go",
+      "size": 13207,
+      "sha256": "sha256:4d317c968f8f5a4043002d65519bbfbcdc9e3bf4e5c4bba4f6671768bc20ce92"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/interface_template_service_test.go",
+      "size": 10586,
+      "sha256": "sha256:5cce7fd910f9cd0f7be83dce63e5c239e16fa2d8e78c8e65f9f2956f91cfc5a1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/manufacturer_commands.go",
+      "size": 4341,
+      "sha256": "sha256:a38d2bfe1d5fcead02023b5e1bf59561f1e021a800f28a62fd909bb64ea1eaac"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/manufacturer_commands_test.go",
+      "size": 10163,
+      "sha256": "sha256:230a950f6a6426ff58c05943d0615aa4764923ca67ab9f0a1f8e95df8cce688d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/manufacturer_service.go",
+      "size": 11327,
+      "sha256": "sha256:09531c092fdefd4c36e51df8d12c66e8502ab80417ebfe07427e7d1c6e59922b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/manufacturer_service_presence_test.go",
+      "size": 4089,
+      "sha256": "sha256:24075e9ba58f600fd9b86010de8ac21bacbf7a9ee2089a85e119f518560e19ea"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/organization_ports.go",
+      "size": 1826,
+      "sha256": "sha256:63f507438afee94ae727c20088dda49324c489bc3f3554f51934b26d1ddeadcb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/organization_queries.go",
+      "size": 5896,
+      "sha256": "sha256:59bd19ba0d80b503ed32a33d231a7f3783dec5b6134e75b2f0b1b4611079f639"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/organization_service_helpers.go",
+      "size": 231,
+      "sha256": "sha256:c688ff0182455d1025b4ce617fc3e39385615232c821c88fb1801b8e3ee83dcd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/organization_service_test.go",
+      "size": 23218,
+      "sha256": "sha256:58ae0ffe0a54b1fce3420c0327e669fdf6ead09c391c71f11d68ab4782944d26"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/rack_commands.go",
+      "size": 11192,
+      "sha256": "sha256:0957d67523ef49bcea7cedf4b1617262f320f5a48a676ea37c4e36279ba00da0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/rack_commands_test.go",
+      "size": 9327,
+      "sha256": "sha256:a777bfbf5b4252ff9af7bee4a29a747232ad5029aa29fd5fe458701daf12ef17"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/rack_ports.go",
+      "size": 1884,
+      "sha256": "sha256:69495bb81bac72b10c42d7f99fc709193a05a0e210f5fddce4ad62c3e7f0e2d8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/rack_queries.go",
+      "size": 3921,
+      "sha256": "sha256:c31d453cdc54d45d6fee10d3dc23c4e935657200fdc7ddf21a6965bd3e4637e5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/rack_role_commands.go",
+      "size": 4565,
+      "sha256": "sha256:7df86ce5ae3ea76b9c6b482fac45da77f160805569998e1a3f72c97aa431bfc2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/rack_role_commands_test.go",
+      "size": 10231,
+      "sha256": "sha256:d99caf582cac4ba031497a55300713de8dfbbfa207573c6a928ecf65f46ea5fc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/rack_role_service.go",
+      "size": 10835,
+      "sha256": "sha256:b50f31cc12c8da88f8d343b8de97e4ecce211edc75bc4ebbb2b86bf5f4b929da"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/rack_role_service_presence_test.go",
+      "size": 7720,
+      "sha256": "sha256:d2d6afbc39b1647d031725f634a6a86a74bfcb0f846a5104bd0326027ceee9b8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/rack_service.go",
+      "size": 19227,
+      "sha256": "sha256:6a20c2f6a991eb19e96d02aac34e0ab7413d937b7267c8efbb65f98414dfe843"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/rack_service_presence_test.go",
+      "size": 24381,
+      "sha256": "sha256:d8b56b7d4691fe72c3c774ca089e37fc0f4fbbbcc5ff7ea87df8e24deb493e0f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/rack_service_test.go",
+      "size": 9857,
+      "sha256": "sha256:2cec7a1df1e58921a1cc29f6cacc4ab9ce91db8524818e321998bc51cac8db29"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/rack_type_commands.go",
+      "size": 9166,
+      "sha256": "sha256:17abd0db5c6712d3f6f7b3070fb472cd2d9f1b3351ec320e44de812b3ac5f997"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/rack_type_commands_test.go",
+      "size": 9356,
+      "sha256": "sha256:b207f48b9969df1fa136afb1a7b36af3301eee3906381d153342a9383f1c1afa"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/rack_type_ports.go",
+      "size": 1437,
+      "sha256": "sha256:5764643eb932dd0656cf279567ee42eea788baa6f129c7e574a50af49344ffa0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/rack_type_queries.go",
+      "size": 3426,
+      "sha256": "sha256:5efc2e15e4a7ca9a7a091d9b611ebb82e3175b99ff6bab6b226d0ace3e1ee2dd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/rack_type_service.go",
+      "size": 14654,
+      "sha256": "sha256:935c6a8ab03e68ab62416090561ba705147fb343abe181e570dbb6f6f256896f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/rack_type_service_presence_test.go",
+      "size": 14031,
+      "sha256": "sha256:9ccb9595b71074bb82265bc9def53b4fcd0f678a4407105cf549f64024c72648"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/rack_type_service_test.go",
+      "size": 5887,
+      "sha256": "sha256:6569b24bf298578d0dbab939f9c6473c350e1190b98f35e64e5cea49da19ef47"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/site_commands.go",
+      "size": 8131,
+      "sha256": "sha256:8d31308bb8b35c5d7ef5be3f80b69b326cd840f80d3249ed7859fb5e36b7829f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/site_commands_test.go",
+      "size": 13177,
+      "sha256": "sha256:f6a42bd9e4f6e7646c4236f066d35efdb75bddac17dca634658e6ddf7aa1c4ce"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/site_ports.go",
+      "size": 1390,
+      "sha256": "sha256:48ea2f2813a710b223106b2e665a97138352a4cb3241898572cf0ff2414d4a56"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/site_queries.go",
+      "size": 4309,
+      "sha256": "sha256:a274a58f16b7a3e70de61a3b74560af544398bb2351bb78a847c9c94d983c52b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/site_service.go",
+      "size": 11795,
+      "sha256": "sha256:e6d6bc9cbafaa71a008259a7f75d765fb4bf094ace523f5d423344601b03c483"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/dcim/site_service_test.go",
+      "size": 29727,
+      "sha256": "sha256:dfd6bc6494693ac35f54bbe52ce68b03ca1db4ffc26857c27689993f3bda53b5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/identity/bootstrap_postgres_test.go",
+      "size": 2631,
+      "sha256": "sha256:e5a0617198b4c9b2f19cb2f3bfcc0f89ee736fdd3689041e103a99f22b9beba7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/identity/credential_errors.go",
+      "size": 1262,
+      "sha256": "sha256:73e26b53ef4e3483f796320148c85909000b4e0e920216082877c30711e43259"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/identity/credential_matrix_test.go",
+      "size": 22351,
+      "sha256": "sha256:f9fe6557848a9e4d5daf7e35aa15840a5906e7494cc236c188a0217e948c5026"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/identity/credential_postgres_test.go",
+      "size": 14727,
+      "sha256": "sha256:e89ba2644e0eb85ee9405e4ee8cdc6dfc1e012bdbd1ae52872ce90fa44ba8b25"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/identity/password_change_matrix_test.go",
+      "size": 68167,
+      "sha256": "sha256:d3e450be674765dd3285beac9db950e66b99024ce8918662ec8d3a7da23ea1f7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/identity/password_change_postgres_test.go",
+      "size": 40891,
+      "sha256": "sha256:8682027a9a63f125a266a94fafbbd6751072f2bc3b5fc45e00f3d942bf0a8d82"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/identity/rbac_integration_test.go",
+      "size": 7138,
+      "sha256": "sha256:fa7d56f5cde1537b46ac796fb2bf7f15195603e4764f288095f15096be26c09c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/identity/service.go",
+      "size": 34626,
+      "sha256": "sha256:86b362237d280f45db7151eb0e30e100d7d75d5917bd957e2157a8be398e246f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/identity/service_integration_test.go",
+      "size": 9312,
+      "sha256": "sha256:4ed10ff5624b1e8ef73b69a5f7cd1facfeecc932447ae716aa65b8f19c7b6ac7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/identity/session_errors.go",
+      "size": 1666,
+      "sha256": "sha256:22f07627e0c551ba6a6dee87bae488f8a0a993d93ee3be560af5657db34528b6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/identity/session_matrix_test.go",
+      "size": 60481,
+      "sha256": "sha256:1afa22986a1b2544a9a75ce74f2697d6ed746e2b5afa9760012b3b420f2ff7f6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/identity/session_postgres_test.go",
+      "size": 23846,
+      "sha256": "sha256:34571c59f024bc6b2a0f02621c54df783bbd477a7bf39778a033098817096f26"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/ipam/ip_address_cascade.go",
+      "size": 763,
+      "sha256": "sha256:3fbeb2bd3b8179754fd11d542c86664017f60091716ff9f4e55fb2bb34cb87ae"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/ipam/ip_address_commands.go",
+      "size": 9156,
+      "sha256": "sha256:ff06b55009871b3063f95112a19a01edeb2159b4a54981ceec2c49d212389c6b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/ipam/ip_address_commands_test.go",
+      "size": 4821,
+      "sha256": "sha256:046353bec7f808fbcc87e23c9c008325ff1da420bc584e4ab866447249b175cd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/ipam/ip_address_ports.go",
+      "size": 2047,
+      "sha256": "sha256:fade284c4ae23b8b2d490228dc545163c023b7392dd041636b6884d8ab326947"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/ipam/ip_address_queries.go",
+      "size": 5740,
+      "sha256": "sha256:7f7b5263306205d448465ddbde0560a0ffc54a01646f9b8c6264350b59149428"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/ipam/ip_address_service.go",
+      "size": 20659,
+      "sha256": "sha256:f95a04d36810005f8b402953c245c9f99b7a2309a93cd139bf07130f98120c28"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/ipam/ip_address_service_integration_test.go",
+      "size": 18215,
+      "sha256": "sha256:6d4a80f47d13e13cb2679655f6f4f07ff16b85a590ef973ad489e6e287ff3833"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/ipam/prefix_commands.go",
+      "size": 4419,
+      "sha256": "sha256:af58a1745b752855a8911882cbca2c3df570d05aaffc262fe4a3300fdaee762c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/ipam/prefix_ports.go",
+      "size": 1534,
+      "sha256": "sha256:d9a0efeaa67f9e2accd67316a960ed9c94963f16d6fca8ae4a8346313b04de88"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/ipam/prefix_queries.go",
+      "size": 4594,
+      "sha256": "sha256:2f2420a7edcfde0415ac5784e41a00d0b431b382541723eb787c72da056ec3ba"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/ipam/prefix_service.go",
+      "size": 13665,
+      "sha256": "sha256:e397d1a3d22d461fe9c0730041dae4d4673dc00bb88b5424b72cbb6139aadccf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/ipam/prefix_service_integration_test.go",
+      "size": 7752,
+      "sha256": "sha256:f80e43601ee9560dca0d46d1694721b1b42b0ad453a12660fe23edc231f3e5fd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/ipam/vrf_commands.go",
+      "size": 5707,
+      "sha256": "sha256:41288ff865d909a0e19d31934855a1924983172a100984e378da93013cdc869e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/ipam/vrf_ports.go",
+      "size": 1081,
+      "sha256": "sha256:0d0fb2b1090d878d34e16206c362f93996d070e9eaf55635e281c624e2a17abc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/ipam/vrf_queries.go",
+      "size": 3995,
+      "sha256": "sha256:b77eb77c571a74dee8cc8953073d88617e7e909e877d7e68b16c784beb29d10d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/ipam/vrf_service.go",
+      "size": 11212,
+      "sha256": "sha256:c9b333ec3bafdb46970b935eb1d9c02f7f9b7be4833aecf267fd98b6b68a1bba"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/ipam/vrf_service_test.go",
+      "size": 19273,
+      "sha256": "sha256:6ae0c23a4dc8e6b1f958dc45479d047fb1b6a66b95fc67da321899dcf0933d08"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/presence/field.go",
+      "size": 1097,
+      "sha256": "sha256:0fe4e7d0b144e2a9cd4b017d184619fcc1b3d47b413cb8c00c54428c11691fc2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/presence/field_test.go",
+      "size": 626,
+      "sha256": "sha256:fea41b021415633e254abb81804af8911c74302bf2ff9ed31c6f80b502333def"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/application/transaction/unit_of_work.go",
+      "size": 344,
+      "sha256": "sha256:c8d3d2bc22f625205732d3e1bb2ab7021e624a2d9846e5f05617a170569d728c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/architecture/import_boundary_test.go",
+      "size": 6451,
+      "sha256": "sha256:e43e9390483ff0dcde6c152e830b2f3e945f21c0f042f7a6f19bf2d0b6105f8a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/authGroup.go",
+      "size": 4015,
+      "sha256": "sha256:7897c8cf1e4ea9e9cd75fa76fb2d89a13b1b5d91b37bc19ffab18f228784a4bc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/authGroupPermissions.go",
+      "size": 4521,
+      "sha256": "sha256:bdc0cf7807bff9f76c5582e01dc24ecb23a6e03c354744c631ed7fe781fb31a3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/authGroupPermissions_test.go",
+      "size": 3658,
+      "sha256": "sha256:a1ece9462b2053cf090064f4ead084af948eda525dea7f5e6164d9f088d33120"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/authGroup_test.go",
+      "size": 3218,
+      "sha256": "sha256:7f869da599ef78712d686812382c129f6f51e74f81069b9bb1d0346328e3005a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/authPermission.go",
+      "size": 4245,
+      "sha256": "sha256:5894af33d919565c623fc5c66ed565666d1d96fd46e740c833ed006d2d0794dd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/authPermission_test.go",
+      "size": 3418,
+      "sha256": "sha256:73b8e1bc6800b02f7ee20530087e89f4f014080cea346164adebbf4d620794b3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/circuitsCircuit.go",
+      "size": 4291,
+      "sha256": "sha256:9dd71e3b336177641662906e8f10e55a88826921466620a18c222f3303674028"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/circuitsCircuit_test.go",
+      "size": 3458,
+      "sha256": "sha256:33b4d707e080282f436fe4a56580caf836809e8948c2b79d98b2b97207fefd4e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/circuitsCircuitgroup.go",
+      "size": 4521,
+      "sha256": "sha256:8b4f9d966a62a176e099bcec1c3cc31906ab50c50c4c7b489b9333fba2ac4e84"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/circuitsCircuitgroup_test.go",
+      "size": 3658,
+      "sha256": "sha256:9432e49f70b257e264e8015fb4509ab4bf779ca878db84aee76efc085980afc7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/circuitsCircuitgroupassignment.go",
+      "size": 4981,
+      "sha256": "sha256:a0715601acca747a7f982dba24ab271865c83480ec8e2d4ddfb284104be248ca"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/circuitsCircuitgroupassignment_test.go",
+      "size": 4058,
+      "sha256": "sha256:f23b81fc76a8f2ee8673be89011dc3e8a1cc814a9d1ab98981a84e44db288bd9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/circuitsCircuittermination.go",
+      "size": 4797,
+      "sha256": "sha256:9e6abdb8e2c45bfe2eeacbd7c715c163aa0e5292599d4c6a1052864ef5467237"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/circuitsCircuittermination_test.go",
+      "size": 3898,
+      "sha256": "sha256:7fdcb9610062d794549c2c605f2d4f8937bbf9bfc321f460169a3d85cd27a777"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/circuitsCircuittype.go",
+      "size": 4475,
+      "sha256": "sha256:0b4ccd6b4f372d1e45b88ba77b71ce55c06cd47fd3ac8f770cc81bf5a93bc534"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/circuitsCircuittype_test.go",
+      "size": 3618,
+      "sha256": "sha256:cfcffd54d08e30cc2f9518617fda3aa057bb314f0f3ce12c2a1de999797ca20a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/circuitsProvider.go",
+      "size": 4337,
+      "sha256": "sha256:f9f614929b18530810ce60a8821692b3721e819da937d1d58bc77ab1bd910d56"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/circuitsProviderAsns.go",
+      "size": 4521,
+      "sha256": "sha256:175e73c19e0bfc6ef5003b84ad8c70352b290b25ce0bc78ab6744df081cbeb38"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/circuitsProviderAsns_test.go",
+      "size": 3658,
+      "sha256": "sha256:6d9b658e7fb89b034d8e95f55a1a8976b805d2bf25060616a2c0aca8ec4d400e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/circuitsProvider_test.go",
+      "size": 3498,
+      "sha256": "sha256:0131cd36add19f8d0ae8a0dce31790ab917a3b58faadcf788f48187ec381c8e8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/circuitsProvideraccount.go",
+      "size": 4659,
+      "sha256": "sha256:f7e0a67748366889fb068d597fb8bad497cc528aa94a98b1bef4fc346d171362"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/circuitsProvideraccount_test.go",
+      "size": 3778,
+      "sha256": "sha256:71299c41331fdbad06257d1b5192e9522d7f37973261e2a3f39f596edec72cfa"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/circuitsProvidernetwork.go",
+      "size": 4659,
+      "sha256": "sha256:d61a6b9b95eb7ab6e4a30b96063cbe86a6da2636d62854b0e0f8d8110ae4ff4d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/circuitsProvidernetwork_test.go",
+      "size": 3778,
+      "sha256": "sha256:f9df0a565b88b8b8d0cf765759730ac7d9d07c26b1d59e7486cec4f1d9882800"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/circuitsVirtualcircuit.go",
+      "size": 4613,
+      "sha256": "sha256:59cb4cf40d67f4a94c31ce5108063e9e5f37fc734eaedf2dc89ca31f4e50571a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/circuitsVirtualcircuit_test.go",
+      "size": 3738,
+      "sha256": "sha256:7813e60827b17747a44cc5c304fb4bee2986ee4ecb406e306a002683bd4b8e5a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/circuitsVirtualcircuittermination.go",
+      "size": 5119,
+      "sha256": "sha256:ba3140bc94c44bea0cf99f88db45c4b06e1960925ae4da3d3fe34c25077a3113"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/circuitsVirtualcircuittermination_test.go",
+      "size": 4178,
+      "sha256": "sha256:05db484f2b0c2cee438e20c55301ecd8dd782b8754d9f716ad07fbc20dc78c0c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/circuitsVirtualcircuittype.go",
+      "size": 4797,
+      "sha256": "sha256:66099b085b5f4a4d1dd268b12be0caeb7919279d2c0962f4bf7675979b5d4103"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/circuitsVirtualcircuittype_test.go",
+      "size": 3898,
+      "sha256": "sha256:e3ecdf45c1d758252381b5669da169acd55a129dfb86d54de6150b09faf1e3dd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/coreAutosyncrecord.go",
+      "size": 4429,
+      "sha256": "sha256:ee42ee8f00df23c296c9eebfc9c7bfac43c5c178bf11f19935a44b1094de13f3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/coreAutosyncrecord_test.go",
+      "size": 3578,
+      "sha256": "sha256:f79427a621cccc090b12c393db09e109848c81daf4312c2032a12d0d4c285085"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/coreConfigrevision.go",
+      "size": 4429,
+      "sha256": "sha256:4a617143c9f6ab08902c6a0ef5645216370b97d6a332193d42d5e1b417b7e0cb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/coreConfigrevision_test.go",
+      "size": 3578,
+      "sha256": "sha256:510c7cfa4b632e1dcbd7fef4c3408d2b68f6b995219530f784034f3875fbef31"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/coreDatafile.go",
+      "size": 4153,
+      "sha256": "sha256:9008f3448bb2614947a32752b2c9a2c4b731187c3b5a3167bb33d7ce131e42d3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/coreDatafile_test.go",
+      "size": 3338,
+      "sha256": "sha256:4b5b87f5dd23869b722d0dfbc1f54d917de87f10c2b4150026cc21c4681c4097"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/coreDatasource.go",
+      "size": 4245,
+      "sha256": "sha256:4450494a8a0a5a84f900664f5e480a5c1e5c4bbf5c18d332ca2015d4f4042fed"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/coreDatasource_test.go",
+      "size": 3418,
+      "sha256": "sha256:3e8900fa2107dab123c8aa2b817ebee147b862bce0565bf00d2c48cf5303bb77"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/coreJob.go",
+      "size": 3923,
+      "sha256": "sha256:382e23d02e22d05ba2e5c67138e214aea8e1358df4176aed134ada9e8a6024b2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/coreJob_test.go",
+      "size": 3138,
+      "sha256": "sha256:6497975fdd5bfa9884c6c31f716d75a826acd38331b10b693cef98cde7db90ba"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/coreManagedfile.go",
+      "size": 4291,
+      "sha256": "sha256:5a3603d9a8fc397db715f7be210721dde5f0fd286248cc2f86bfc9b1977c28d9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/coreManagedfile_test.go",
+      "size": 3458,
+      "sha256": "sha256:9981194b8eec67da4810b3af6fb75b95efae69bc5035486250e06f65f3ea13b2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/coreObjectchange.go",
+      "size": 4337,
+      "sha256": "sha256:1fe7b280eb0fb4195b4c8448a037cfd34d854ab9b0aae9f2ae1ae278871d0873"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/coreObjectchange_test.go",
+      "size": 3498,
+      "sha256": "sha256:5c197234855305b203d3bb67598508b525efaaf1e916b2262728cef8c4fdf028"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/coreObjecttype.go",
+      "size": 4511,
+      "sha256": "sha256:8ee30823af905327269477dc7a5decd6acac7d7d57d78e0d2437a83eb16f18a6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimCable.go",
+      "size": 4015,
+      "sha256": "sha256:e7936b3f1705afc03561ed4a50eed617f465c0895d6af7f43ccd9f552b749dbb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimCable_test.go",
+      "size": 3218,
+      "sha256": "sha256:614dce01db0636c3fee6de38e8f595b70304e2ad745a26cd2a1dc6337f36d18a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimCablepath.go",
+      "size": 4199,
+      "sha256": "sha256:a21c2666f7c0667b2a94a423cd6b42d48aab35cef2b27da18775656ce61582b1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimCablepath_test.go",
+      "size": 3378,
+      "sha256": "sha256:5e3f1ae80053bf7995616f44593c84e4e8041e1022923a90a257b4aac9de9a81"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimCabletermination.go",
+      "size": 4521,
+      "sha256": "sha256:0246450c8066daf6e837d99dbea1d459aa4e3f46247f0283932e1b7dbcd01475"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimCabletermination_test.go",
+      "size": 3658,
+      "sha256": "sha256:89445ccbb8ce291124f8c6369d6e5f8c64b2ac3ac5a05cd11f03dd184a19adaa"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimConsoleport.go",
+      "size": 4291,
+      "sha256": "sha256:50544b09ecd412765a5035df3522859635582b7060857eeafb1a22f9d140fae9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimConsoleport_test.go",
+      "size": 3458,
+      "sha256": "sha256:0afa86cc64532106be4e382dac5323c50b6f23d91b2dc85f6f8667aabc9e7fd0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimConsoleporttemplate.go",
+      "size": 4659,
+      "sha256": "sha256:f12ed099fd256498331f1df577c45bb9f446a0d165a491e1cdb3dc027ab1e8a4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimConsoleporttemplate_test.go",
+      "size": 3778,
+      "sha256": "sha256:15b00b2266ee9f968b7ca60103db7516320736035a329c830218f0486481e33e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimConsoleserverport.go",
+      "size": 4567,
+      "sha256": "sha256:295ce1671b8394e3ae34fe1c485a22a510fefdd9a9ebe06924ff373fc41e165f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimConsoleserverport_test.go",
+      "size": 3698,
+      "sha256": "sha256:c085ad825e43e6f205ce02824b8f297b750e24742ecd85d0c580623cb4c27608"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimConsoleserverporttemplate.go",
+      "size": 4935,
+      "sha256": "sha256:28e112c4c3398127f556251e2ac9976f54667fb6ee6490e4014dafb09e425a75"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimConsoleserverporttemplate_test.go",
+      "size": 4018,
+      "sha256": "sha256:1d8fa49f0ea1945f95836131862836a3aa9c33bd5313f1e51ffdf597b7726a72"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimDevicebay.go",
+      "size": 4199,
+      "sha256": "sha256:ebd3231fb6e39c2c5fd443ff7c565e35f704b77ccf1fae1696b5ef729743d3cf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimDevicebay_test.go",
+      "size": 3378,
+      "sha256": "sha256:f25603a3c37e05c7a65deb814ba1d3ec1e271093ccf84824a69b3058106e10ae"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimDevicebaytemplate.go",
+      "size": 4567,
+      "sha256": "sha256:9ac510efd8a8589870c39a576146d74bba4b5ae4215fd9b9d7d1551c16c28334"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimDevicebaytemplate_test.go",
+      "size": 3698,
+      "sha256": "sha256:a0d2bff60b3d2032e7ddd7943502b658d978e6c73564c1ff1191ace49d7a1c1f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimFrontport.go",
+      "size": 4199,
+      "sha256": "sha256:97cff72435c9e59899d1482d2304682042ceb5bcbd03d3c7a497dac9c3d1f196"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimFrontport_test.go",
+      "size": 3378,
+      "sha256": "sha256:38a70b8dcf6a2473c5b33765a034361e6d2b096e2044a5d54b6e0a124daec18f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimFrontporttemplate.go",
+      "size": 4567,
+      "sha256": "sha256:ec15ef6961dfd20dec6b2c1e4b7f141d84bb9b5a7b52abb6893b219e033b4412"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimFrontporttemplate_test.go",
+      "size": 3698,
+      "sha256": "sha256:d4ce712c71a53c8c3127ed23be34326898ab7832cdaf10aedaf9cfe42b3142c0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimInterfaceTaggedVlans.go",
+      "size": 4705,
+      "sha256": "sha256:00242e982993da5c5d96d91ab3c8f83d5833e6e94568f595a77f1c8f34e56a9c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimInterfaceTaggedVlans_test.go",
+      "size": 3818,
+      "sha256": "sha256:c45f8e83e28eebfd8673f8047f1c5ed7c910fb184b6bf06aa4a6839dcd96cda0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimInterfaceVdcs.go",
+      "size": 4383,
+      "sha256": "sha256:9121bb9db12d5e0abcd60a196b069badc3a07b4927aeeb7eb6dc81ab91878774"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimInterfaceVdcs_test.go",
+      "size": 3538,
+      "sha256": "sha256:94dfdc4ef867ef582634259eecada5fa52b2162216b69a2debb2dc02557352cc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimInterfaceWirelessLans.go",
+      "size": 4751,
+      "sha256": "sha256:ee5c9d9d63e713bb4fd3ecc7af0de9c6591097ed946831b0986294e0fc6c84f8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimInterfaceWirelessLans_test.go",
+      "size": 3858,
+      "sha256": "sha256:cc569696eaba8f0e03116c0a56a5f5bbec6d13fb492294a26fbb0d5bb2e31784"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimInventoryitem.go",
+      "size": 4383,
+      "sha256": "sha256:574347fb754a5c7868e961607d53a967742498742a5ceb18e03b3433de4873ca"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimInventoryitem_test.go",
+      "size": 3538,
+      "sha256": "sha256:e8b85e05a7dce39071d1673d838947e17054f26f28e6212498a6b3631b7cdb89"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimInventoryitemrole.go",
+      "size": 4567,
+      "sha256": "sha256:1b11f127d31f5425b981029291dfcb790a8955e1f9f07c9989e8a6287d8a5274"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimInventoryitemrole_test.go",
+      "size": 3698,
+      "sha256": "sha256:6aebd03471630fbd239c0e7f730f03ec724bdfef219ba8f74d7216d9e374ed39"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimInventoryitemtemplate.go",
+      "size": 4751,
+      "sha256": "sha256:5e3adb1afd94dd82594a5827529a59e7501dd3fc3b00d914b91aa148f61d0b96"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimInventoryitemtemplate_test.go",
+      "size": 3858,
+      "sha256": "sha256:7a2c5c04986c1d1f2fd9a4374ec283d67330dbc10b23b768de4c8f8e6f0ee690"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimLocation.go",
+      "size": 4153,
+      "sha256": "sha256:c4bcae0d52bf601906787ba3d537021e4e6ce8d889552940eb876e9c1cb41df4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimLocation_test.go",
+      "size": 3338,
+      "sha256": "sha256:350567e62e9e9ec38edeb6f9598de3d5371542bb1144f9e2341159082f3f40a5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimMacaddress.go",
+      "size": 4245,
+      "sha256": "sha256:bfbdbda4b8eed04e348067d7f7daf28e47b51aba53d175729b5813616bdb2396"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimMacaddress_test.go",
+      "size": 3418,
+      "sha256": "sha256:d1a739042ff0ddc99b8504d2825bf0e47b04b80b7d340bc6e1d48626d5c79d78"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimModule.go",
+      "size": 4061,
+      "sha256": "sha256:5762552705116e975fe0bfd90b9c671432972cd42b3e4958b8802365ffc73f02"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimModule_test.go",
+      "size": 3258,
+      "sha256": "sha256:3f814608329818bb47f0dff9a9c6be47f39930ccc1a2cbdd38b7cc88fc2f76cb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimModulebay.go",
+      "size": 4199,
+      "sha256": "sha256:d03a9cb6b5b26a288274aa381ccab59c466da7f62ed619acdd796e121e156b0b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimModulebay_test.go",
+      "size": 3378,
+      "sha256": "sha256:99bff0eef3d9b92f66d8e0a6d8ddd7aa33997187ce8d630c1e7f00d241a68ef2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimModulebaytemplate.go",
+      "size": 4567,
+      "sha256": "sha256:1625ad64824391b606d3cee25e9d33997f265f5832ea1f245f230c56af49f91b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimModulebaytemplate_test.go",
+      "size": 3698,
+      "sha256": "sha256:47151ce86e030263dd4b6d12437ccd3cfa2071fe8cce85786e54cf75730c98fe"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimModuletype.go",
+      "size": 4245,
+      "sha256": "sha256:880b346380c02038e4e9b41e9ccfd9b8643834e62292e2e2a81a43b5b553b729"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimModuletype_test.go",
+      "size": 3418,
+      "sha256": "sha256:f366538bccf1db1291e7cc4a633eeb3c269d979a640d5890f05fb188a70fae47"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimModuletypeprofile.go",
+      "size": 4567,
+      "sha256": "sha256:b7ab7acd260d3d90d546994cc830be4c37ac580cb724391f0390907003723335"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimModuletypeprofile_test.go",
+      "size": 3698,
+      "sha256": "sha256:a7674ac04e6f240de1d83aa300ec335bdc05966e02c54c6db14c454ba98fd61f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimPlatform.go",
+      "size": 4153,
+      "sha256": "sha256:003ff6e06911fa7f0e0b1fb5f696720bc5886755600c7a25e1c4ce4a7c51c6b7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimPlatform_test.go",
+      "size": 3338,
+      "sha256": "sha256:9ddf5a7638a5539de8b6971baa7d6526eac1a713aa608850145be069d8819f89"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimPowerfeed.go",
+      "size": 4199,
+      "sha256": "sha256:1bb510ffbd348584723a3126e35041ff2421eaa0a033a52977438643a2702e5a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimPowerfeed_test.go",
+      "size": 3378,
+      "sha256": "sha256:fbeed91ec94e589f33faefe6a308b49b628cfb089e2a5523ed920d97f9f81f6f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimPoweroutlet.go",
+      "size": 4291,
+      "sha256": "sha256:6f5e5415410686b86e78a0c12780abba3fb5520703234587317372b6c3a62a53"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimPoweroutlet_test.go",
+      "size": 3458,
+      "sha256": "sha256:43e58cb1297f08e69cddd01e4e0aea65e8ea201b025f141316342d235c85bd1a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimPoweroutlettemplate.go",
+      "size": 4659,
+      "sha256": "sha256:3b72acc9cd8dcf3c4407fc73c5108f6f4abc3bbf2eafd714c00e5f447788f233"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimPoweroutlettemplate_test.go",
+      "size": 3778,
+      "sha256": "sha256:465f50c883edfbc39ec7052e9a0c1bcee7ff3d4c479ecdf81490f1d427ea39a9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimPowerpanel.go",
+      "size": 4245,
+      "sha256": "sha256:a4ae56e2a48e67025cb0d6718d6648bb9c9896d3d4cfefd416887bdb215b8c2a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimPowerpanel_test.go",
+      "size": 3418,
+      "sha256": "sha256:d5fdd1db83eee293c0818b0fb6b5297b714ab5f625672a72bf56333ebcdd6123"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimPowerport.go",
+      "size": 4199,
+      "sha256": "sha256:909c91d3f742080ae2e33c5dcb89c844b0cd6767bd4e28f545e485e2c1529826"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimPowerport_test.go",
+      "size": 3378,
+      "sha256": "sha256:88691d14d23d8fb3bc227cd99b0927489f2bbea9628f72532d418bb900933f46"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimPowerporttemplate.go",
+      "size": 4567,
+      "sha256": "sha256:985093fd0a01380530ee4bf83625e3d285d33e440f16f15537ecc5e806ae83ba"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimPowerporttemplate_test.go",
+      "size": 3698,
+      "sha256": "sha256:f01571153554f9ec2ad56ec4bd8058f97ca2095e1d1767b6cdce4cc8f5200731"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimRackreservation.go",
+      "size": 4475,
+      "sha256": "sha256:1859ae4a11c60f75dfc123d2eb94eb728be49eca16627935f17cec3ac4239484"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimRackreservation_test.go",
+      "size": 3618,
+      "sha256": "sha256:14295f473f1e084b0aa8cc1dce0b3740ab6a0e6c0011e21e609ef2fc8ef2f094"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimRearport.go",
+      "size": 4153,
+      "sha256": "sha256:73114cb2df72e1f351118f446dba35b62ec09033fd1554cf4869fcc296c251c5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimRearport_test.go",
+      "size": 3338,
+      "sha256": "sha256:ef48e30a1d8f87f14d03414b53e3669efcca094f7a0f8ead4db325be33bf6dbc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimRearporttemplate.go",
+      "size": 4521,
+      "sha256": "sha256:436493a92b5662f585b5ef7d879549cdd8a5198ec3767db09d3e0dca54e5a69c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimRearporttemplate_test.go",
+      "size": 3658,
+      "sha256": "sha256:a69f13eb3b09727f583cb47038dfd51c846d8a9d9010e58745fd562f8f8e2e14"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimRegion.go",
+      "size": 4061,
+      "sha256": "sha256:0f9158622b6d61e0983d0c75d7112344a94e63ed07e7e8932fc954395bfa2399"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimRegion_test.go",
+      "size": 3258,
+      "sha256": "sha256:c1811de2147d0e4aec1f2dd7265406ebff87100f51b04628dc60ac74dab8bbfb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimSiteAsns.go",
+      "size": 4153,
+      "sha256": "sha256:ca84885614c172b45cdd7414db23ff1d4240c58def0ae644586e13a7c553805f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimSiteAsns_test.go",
+      "size": 3338,
+      "sha256": "sha256:0cc691c757f1cca0747cd2de669ddb34d1b368ca8506300d733a047b1447b4c9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimSitegroup.go",
+      "size": 4199,
+      "sha256": "sha256:c5043299489e9086d60684d0db3a10890c0c018ec38ebcd8a5e96285d7f42136"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimSitegroup_test.go",
+      "size": 3378,
+      "sha256": "sha256:10a684a3ba2ed1a544b2cf8dfa636d869e87994e84037606d6af5736a16d460c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimVirtualchassis.go",
+      "size": 4429,
+      "sha256": "sha256:b1e9d1c72f6600aca289b9932fb5cc53ec21be84f6aaae0182e2e1572d426ba7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimVirtualchassis_test.go",
+      "size": 3578,
+      "sha256": "sha256:aa8ca081a86f1351e25d286f6074c9777076c2f532ebad17f8d3dc737b1ee0fb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimVirtualdevicecontext.go",
+      "size": 4705,
+      "sha256": "sha256:9f602f278f054cbc503505f7ebe1960269a816c199a72526d5c583c2505a73ae"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/dcimVirtualdevicecontext_test.go",
+      "size": 3818,
+      "sha256": "sha256:0172dcb6ce911e60338f1ea1b51abf0a568ace846f66fce0409d5a5e87572d2c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/djangoContentType.go",
+      "size": 4383,
+      "sha256": "sha256:67c5ff52591c8ab9d117a8f430ad714cb9adcd134f5e0fe251bf4fb29cabdf8e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/djangoContentType_test.go",
+      "size": 3538,
+      "sha256": "sha256:79c92abe677e7093521f247b4680f56b8ce0380e085a927bd5d5780495d086bf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/djangoMigrations.go",
+      "size": 4337,
+      "sha256": "sha256:4d78dbbf0db0f7a5dfa3e95c9df2d3b6576f99cfe50c582b454161f0c2f8e7fe"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/djangoMigrations_test.go",
+      "size": 3498,
+      "sha256": "sha256:23c618e1eb255a988748d761c7a5e36742982f136d8ffc584b2f02a646b2850f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/djangoSession.go",
+      "size": 4309,
+      "sha256": "sha256:3ae2ad29217c7a06ced6c327f9a2c1313a284945bb2809e12410322c6ea9959b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasBookmark.go",
+      "size": 4245,
+      "sha256": "sha256:d2fd010e4e9de09a6206f6620d0f173f4a75c91a41cba85d2b6ffcdb4d584fb4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasBookmark_test.go",
+      "size": 3418,
+      "sha256": "sha256:af458fb48a81c85928fbf63ea4abff9bead84af88ffa9e645f17c7cbd1ecd36a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasCachedvalue.go",
+      "size": 4309,
+      "sha256": "sha256:6f6c18caa74fb21b9e486ffd61cf5d54a532d224f8a544fcaf4f6fba35a072ed"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontext.go",
+      "size": 4475,
+      "sha256": "sha256:d71626eba34c0f08a0aa484c06d21348527dcfae2a1ccfc060071d7ba9934692"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextClusterGroups.go",
+      "size": 5073,
+      "sha256": "sha256:a5e0044c327bbe000fe2b305a6c9243704faea5abde3009a9f0a1656cf79425f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextClusterGroups_test.go",
+      "size": 4138,
+      "sha256": "sha256:65b8b2ee375fb0acf9752a7d42976426afaf87ad1001a4c3dca7ba64c41065d4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextClusterTypes.go",
+      "size": 5027,
+      "sha256": "sha256:6f717db602d0f168272430e2b8ad0ac87eac89021c732442c6c8cf2a202a027e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextClusterTypes_test.go",
+      "size": 4098,
+      "sha256": "sha256:5e6482198a9816a839ffa25afb873947957875291e2c90a90152c120b7485822"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextClusters.go",
+      "size": 4843,
+      "sha256": "sha256:b96c708b8a49133330b112042a5d5555e74469b107e1eaad56d17942a1a0e715"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextClusters_test.go",
+      "size": 3938,
+      "sha256": "sha256:e3a6726a5ff64582d4e73220f54ece277113aed1e0235adf08559d79863da708"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextDeviceTypes.go",
+      "size": 4981,
+      "sha256": "sha256:d337d35c7ca3aa399ea2e920ad9044a8c1712b8699a84cf47c406d9df4989e44"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextDeviceTypes_test.go",
+      "size": 4058,
+      "sha256": "sha256:d96aefa454d492524432edc37c5f80b73f828855bd33d7149e0cc9cbe984ca3a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextLocations.go",
+      "size": 4889,
+      "sha256": "sha256:b711aa0cc4e42125f15e90c5105993f1d50c335a3da0e864569f449c6e50dcd0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextLocations_test.go",
+      "size": 3978,
+      "sha256": "sha256:7ca3be481de72c8c579203a7df6c27c2fd88536240145622a7e2e08e393d9741"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextPlatforms.go",
+      "size": 4889,
+      "sha256": "sha256:5bc91ffbdb983643ba2e191bf97b52105cb52b5d2e1cd7834ed7d6956490074b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextPlatforms_test.go",
+      "size": 3978,
+      "sha256": "sha256:7f0e4c9c9484be5f98f34083fc1d86082f6af6a2ae05fc4f65bc4f381c99e6e2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextRegions.go",
+      "size": 4797,
+      "sha256": "sha256:e8899e765e85e478191075e100dad93c19f6a10eaeb0f8af93f8621d62309fb4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextRegions_test.go",
+      "size": 3898,
+      "sha256": "sha256:d6ed383613b3589f9f49250f44c7767dc01b14a1dbbec2e56599f5520219acf4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextRoles.go",
+      "size": 4705,
+      "sha256": "sha256:79c1aa0f1ee2458979ec1c90e5cad4f24dee18a1d128aafca335c0b6237dfe67"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextRoles_test.go",
+      "size": 3818,
+      "sha256": "sha256:a3bc3880add943b96b40a09b888321dcedae2e61dedf800cef9437b4e38c699e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextSiteGroups.go",
+      "size": 4935,
+      "sha256": "sha256:8429fdd5165d1035c425855e30d0aece3064b4fe99e5a16bdfd485b6fa06db74"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextSiteGroups_test.go",
+      "size": 4018,
+      "sha256": "sha256:7ecbe33deeb7d437650b92a76eab7d4629a38b135ded7f160bae5919dfadeeef"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextSites.go",
+      "size": 4705,
+      "sha256": "sha256:3e39f6ef98a0b4a63f49e665672308751a8a7456211959bf4e17daa41a2465af"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextSites_test.go",
+      "size": 3818,
+      "sha256": "sha256:a18ee6c4f10649199d9ea8766cb99f6ff6979eafad6d7a4ff17da02929309aa8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextTags.go",
+      "size": 4659,
+      "sha256": "sha256:8d5a437a736a9fb1080670027be43bebff60951f8c451e6702b3926b89514d27"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextTags_test.go",
+      "size": 3778,
+      "sha256": "sha256:109b0a1e6ade0226999b40ea659bd4fd5be548ab0ab8e398aed0d49c31b62edd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextTenantGroups.go",
+      "size": 5027,
+      "sha256": "sha256:a96cc1204279881e27399d35eb704b0efab737ea6aa81d035bc2b40fd2771fd1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextTenantGroups_test.go",
+      "size": 4098,
+      "sha256": "sha256:c77bc3be0d01b1d9e6c3fddfec49b5a1d72adec9f4416c69f582b1036e66dcd7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextTenants.go",
+      "size": 4797,
+      "sha256": "sha256:65b95c87aa16fcf403678ba459b3beeadca7259884f5e301324c98a3f170cd3a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextTenants_test.go",
+      "size": 3898,
+      "sha256": "sha256:07cd653881e51a693ff830788eacd98527fa33a5683423bd9a2e509a56116082"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontext_test.go",
+      "size": 3618,
+      "sha256": "sha256:282e1668cd4cae8932e5cca35a6fd8d92a2b881071425a41989122dbc6c0030b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextprofile.go",
+      "size": 4797,
+      "sha256": "sha256:8b73f23f7dda65f507c2669995948024d96800f22bb5b64d0b48477bd6b5eea2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigcontextprofile_test.go",
+      "size": 3898,
+      "sha256": "sha256:f49f665582f61a69da0c6b9fffd9d680a7fda24a36b3517742da24e6c7dfd173"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigtemplate.go",
+      "size": 4521,
+      "sha256": "sha256:41ee8113d68383371bfe9debe7bdbbcb92f3cab9cd1eb0fd225e1a707e209d9e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasConfigtemplate_test.go",
+      "size": 3658,
+      "sha256": "sha256:f0045114ab09d65596b858cc910eb4a5197bd0bcd005d3418ff90d190bcc7d57"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasCustomfield.go",
+      "size": 4383,
+      "sha256": "sha256:d826d576390cbf16c7d5eabf0dddb93d4ae535d704ebc09e3a987f2633ba396d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasCustomfieldObjectTypes.go",
+      "size": 4889,
+      "sha256": "sha256:d874538de4131195a15a6e54d84d1422ca7944d3da8c1a98ed99f47d38f654ef"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasCustomfieldObjectTypes_test.go",
+      "size": 3978,
+      "sha256": "sha256:11214a9ec6d5f45e4010b744d7b621c55e28e33db1d9d477d472228b20e9f258"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasCustomfield_test.go",
+      "size": 3538,
+      "sha256": "sha256:175f50c693bbb6f7140bf6a79736e86ed10cf6d4ac8a51cd10b1add6fed333da"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasCustomfieldchoiceset.go",
+      "size": 4797,
+      "sha256": "sha256:bd4dde3fd2f8cbcca675bf4f4c0a31d52f296ee6c31a54c9d3f84fda42ceef76"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasCustomfieldchoiceset_test.go",
+      "size": 3898,
+      "sha256": "sha256:13a4cffc2f085bd5ca8221728113a63dc9fb72c5a99c7af401c7c68f4a7a03ac"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasCustomlink.go",
+      "size": 4337,
+      "sha256": "sha256:1ed139268aed97107f2121edc3f1d34ddac40e8322922bf493fcfd2138d0cd40"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasCustomlinkObjectTypes.go",
+      "size": 4843,
+      "sha256": "sha256:6c293a82ee0686976d10bb674231e31762a2d3e170e7cc4f8e27f68ca3f64bdb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasCustomlinkObjectTypes_test.go",
+      "size": 3938,
+      "sha256": "sha256:1735569647e880d83ee044ae1cd18ce01e6782c0c31235bc4527cfa8f23c1cb4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasCustomlink_test.go",
+      "size": 3498,
+      "sha256": "sha256:65c270f0b4a3feb7464dd3ba8b47958368feff7bd694456dcbd51211935de215"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasDashboard.go",
+      "size": 4291,
+      "sha256": "sha256:1cc6ced6ceb64b2133358a172a417573895f24742f751f1053bab7022ce65291"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasDashboard_test.go",
+      "size": 3458,
+      "sha256": "sha256:948073c24176da147edfd6ad87b3c9e58cf838ff66be782e36bf6e2a9cb2b069"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasEventrule.go",
+      "size": 4291,
+      "sha256": "sha256:55447983ebd1aece7ee1afa097ee1907b54c3712c677084e0eecd8fd44f13683"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasEventruleObjectTypes.go",
+      "size": 4797,
+      "sha256": "sha256:e7a7ea8476c14327b8358be3507b82cb27debf2feb8eeb9850f3d54ded7ecf32"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasEventruleObjectTypes_test.go",
+      "size": 3898,
+      "sha256": "sha256:86c7172ed4c7d8b3a7c2df84ff706f431853a3ac4c7a0da673bc77184e23056e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasEventrule_test.go",
+      "size": 3458,
+      "sha256": "sha256:178ed7e17c400b6c70cd5bc664fd57b88d45a0375618a3d84b363c5f067a63a4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasExporttemplate.go",
+      "size": 4521,
+      "sha256": "sha256:6be85e1af4c378401c71f3afaf1be9df5ed697dc2855d8d06efc891d88267657"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasExporttemplateObjectTypes.go",
+      "size": 5027,
+      "sha256": "sha256:fda2033772bfdc25d2392aea409d4c2f5673b14655cca80ac43b4165aa967c5c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasExporttemplateObjectTypes_test.go",
+      "size": 4098,
+      "sha256": "sha256:fb2be4f91b5203ea1cc05fa9ce668bc88ab39d31b33034e436420d8e1afb85d9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasExporttemplate_test.go",
+      "size": 3658,
+      "sha256": "sha256:42b856334833cbf340fed7d0f9cdaa3915bc2905f3aedc913240a35193a4547d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasImageattachment.go",
+      "size": 4567,
+      "sha256": "sha256:b61a71bb3468d0a493a5ebf50faf2f926ba814ed85e519535e2d59905cad74a0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasImageattachment_test.go",
+      "size": 3698,
+      "sha256": "sha256:b85abf5299caba67d3ca57fbb459e068c6831c6da8cf248510a7ab6a965cb69d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasJournalentry.go",
+      "size": 4429,
+      "sha256": "sha256:0b42fa6e6852a1e9738bfc3fbab1c32e25d043429595fe57b02d47a01c072572"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasJournalentry_test.go",
+      "size": 3578,
+      "sha256": "sha256:c4fa1eba08ff3e5e15b80e54f39751e39b63d7437e0f6b0dd589563e458b3bd6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasNotification.go",
+      "size": 4429,
+      "sha256": "sha256:8e83625087bc656930bef632d99dba536a48c1b125b02d386eb42ed74eb6212e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasNotification_test.go",
+      "size": 3578,
+      "sha256": "sha256:f9b1a33bd85043cf6a3ee79df820d977dc6e54586b4858ebfb8bb50fb9dd4139"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasNotificationgroup.go",
+      "size": 4659,
+      "sha256": "sha256:611c329363b958c21b17ffb8874cfd3eed01717efabc38808c4ae5b1fbd44ee4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasNotificationgroupGroups.go",
+      "size": 4935,
+      "sha256": "sha256:6a70511376af8e1ebdcc154bc32f78ea8c4a3aa0d14aab869185698142ec4933"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasNotificationgroupGroups_test.go",
+      "size": 4018,
+      "sha256": "sha256:94d3866bfa26d2d0a9908d4da077ebd94ccedd95f8985931d2a3ba6d020133bc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasNotificationgroupUsers.go",
+      "size": 4889,
+      "sha256": "sha256:c7749956dd70a53db38dbebfe7eca85a9c6f9e3482c4c993b40bf24370643e63"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasNotificationgroupUsers_test.go",
+      "size": 3978,
+      "sha256": "sha256:fd077ea0573f7c0f22c47f22f7bc621484eda2296b8d34c901bac1f8789740a6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasNotificationgroup_test.go",
+      "size": 3778,
+      "sha256": "sha256:5e9b285482dfeffedf0a2a8f6e27feea75645dad286cb65313db5f6cabc8e32b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasSavedfilter.go",
+      "size": 4383,
+      "sha256": "sha256:79722305ac50a45f887ff64ec1261212bb9cc4f40245553c2e72905658d2b111"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasSavedfilterObjectTypes.go",
+      "size": 4889,
+      "sha256": "sha256:f69e806b8554db29c6a3d73804fd411cad25bd4558950f3715b93b97407496a2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasSavedfilterObjectTypes_test.go",
+      "size": 3978,
+      "sha256": "sha256:53dade06c80a8949e66c184e99d55d2b54b472c0d32304be57adc27d9a42eae4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasSavedfilter_test.go",
+      "size": 3538,
+      "sha256": "sha256:a4018518ca832961b613876243d39246cc4594e34b8ac74eb9bc05aa934888c0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasScript.go",
+      "size": 4153,
+      "sha256": "sha256:38033edf186e0423582068bde289e84366db259dc722b9e6a51fef2798b43f42"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasScript_test.go",
+      "size": 3338,
+      "sha256": "sha256:79172628be499519afb51d83f5e9b77916f7021bb0776713a4b4a5f95eaecc29"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasSubscription.go",
+      "size": 4429,
+      "sha256": "sha256:2551b417de73aace26cfadecd777059fa3b8997b2ec4bbb4eedc7bc8494827f2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasSubscription_test.go",
+      "size": 3578,
+      "sha256": "sha256:71fb6173d55879c4ad32cb5c66f24c447605823b557cb2cc9dc1da1a82d46d3b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasTableconfig.go",
+      "size": 4383,
+      "sha256": "sha256:2e0bd4760e41e577a00685b0a32586b4943170bd78ab7ef0a7a7da836f13f17f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasTableconfig_test.go",
+      "size": 3538,
+      "sha256": "sha256:3445da6f397c48f58ae77e30fddaad9e5bfe07e40126b2c62d2516a5481f0e01"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasTag.go",
+      "size": 4015,
+      "sha256": "sha256:3a88127c7e6a1f2df2cde58554b4b5a74f1af2911df2f16ed4d2906645b9b182"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasTagObjectTypes.go",
+      "size": 4521,
+      "sha256": "sha256:4e1c7d24a12952e73ebf9291a0173a9cbe772d4c3c3020127fbd1682ad001c97"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasTagObjectTypes_test.go",
+      "size": 3658,
+      "sha256": "sha256:baaed1ed463ba451fccd4d56eacd5f8ab939e7ab4c186f3d3ec9d60def915019"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasTag_test.go",
+      "size": 3218,
+      "sha256": "sha256:b6b417ad02df18a03141c5d949fe6fe7bfd2808da0ea2790a91150086b8305c8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasTaggeditem.go",
+      "size": 4337,
+      "sha256": "sha256:ab8fe32922e17c759a57bf007de64dbd3f0ea97622701c178b483bf63270a8c7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasTaggeditem_test.go",
+      "size": 3498,
+      "sha256": "sha256:3e3a06cddeb92f9a93d6a5613339516eb08f39cf89c9b180f470c5a073374b5d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasWebhook.go",
+      "size": 4199,
+      "sha256": "sha256:1de1339683ddec3bcde30a83b7022af02e412953427882c0dd3bb119ac0d8894"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/extrasWebhook_test.go",
+      "size": 3378,
+      "sha256": "sha256:0c57e8d7b198e6ee1326fc1ec4e844f1fbbcf13ac00c1028112292d017c5b76c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamAggregate.go",
+      "size": 4199,
+      "sha256": "sha256:2ea29e4c6c2bceb16b347dbe1f99c6753c1d57b7e2e3a13959663ef1ccf62b71"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamAggregate_test.go",
+      "size": 3378,
+      "sha256": "sha256:35af2e3b8b2073d6c05f85177de91155d6d11c4a62d435c189ee37e9f9f96396"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamAsn.go",
+      "size": 3923,
+      "sha256": "sha256:3b4cb3824ae78469043fd12c984dcc571242151e252e580bcc5a595fe009ea5c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamAsn_test.go",
+      "size": 3138,
+      "sha256": "sha256:4312046733ffa061b75c74fb65c1406baefc66dc84ff33afb23da6ecf0d4db33"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamAsnrange.go",
+      "size": 4153,
+      "sha256": "sha256:27d62716dda990154d4122c497b18c5b14aaeeea47eb1cf4e8678f8bba7d0bd4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamAsnrange_test.go",
+      "size": 3338,
+      "sha256": "sha256:8e4efb72ab17c85f9482cc8d975968ee3ca3001e0cc1778794285ad59980ad2e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamFhrpgroup.go",
+      "size": 4199,
+      "sha256": "sha256:b2ce483c34e8251014f05a0ec2ffa0881cea377bad4d57a012f2b6961bfa5150"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamFhrpgroup_test.go",
+      "size": 3378,
+      "sha256": "sha256:9829f5d13b8bdc899af69243a0f3f7477a106190f262d194ea5cf776b13d6ca4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamFhrpgroupassignment.go",
+      "size": 4659,
+      "sha256": "sha256:e10464fdf5916eb068e369e4f81ae32f111cd041af5b184efd3e56f2f27d1334"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamFhrpgroupassignment_test.go",
+      "size": 3778,
+      "sha256": "sha256:66e364cddaafb49937352273614ceb641eec0063dc604d4200a76125644eb903"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamIprange.go",
+      "size": 4107,
+      "sha256": "sha256:2d31a4986e36d64289dd5c704609b036e57880aba36edb4c3e6ac71babcd1fd0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamIprange_test.go",
+      "size": 3298,
+      "sha256": "sha256:33eeec1dd6424ce35e6a635e20f2f1a0590ae01a5500fde11668f45b234153c6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamRir.go",
+      "size": 3923,
+      "sha256": "sha256:32778aa03f49060dcfda2bae0475244a18e6886b3fc17dcffd49f8d56cc64b56"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamRir_test.go",
+      "size": 3138,
+      "sha256": "sha256:0c9a7d3385002e07448bb3931be4d637ca3f9d6d67f4a2c6c55912b446ce47fb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamRole.go",
+      "size": 3969,
+      "sha256": "sha256:ec7c03bf4b84a1518f9bf05360123f52790f69078c6f87b6194f4930c5426748"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamRole_test.go",
+      "size": 3178,
+      "sha256": "sha256:1627b904aee1e09c1a9de1bfde5704b7892912e6ec320849a15b5a52c2931dcd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamRoutetarget.go",
+      "size": 4291,
+      "sha256": "sha256:2f2c63cb69729951afbff04e8ffe375128563c8af1ca35755dc813997d41ff53"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamRoutetarget_test.go",
+      "size": 3458,
+      "sha256": "sha256:e1b44b569aa7d8b2f6cbc5947ea48e0fdf89e677de776c6bd5de358d2f7e53bb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamService.go",
+      "size": 4107,
+      "sha256": "sha256:1e766c8f5c4f53f80a3ff85761d5e8eb8e10c5c0085e87b757a984f1a753b769"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamServiceIpaddresses.go",
+      "size": 4613,
+      "sha256": "sha256:62d5b2fb916cc88e0610e1f99986f23bc2093e076ac8bc8781ac0e5a59fcb5d0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamServiceIpaddresses_test.go",
+      "size": 3738,
+      "sha256": "sha256:193b0ce035aeaea98809f88c5f61e25234c03b84b14d0819ad68a8001f1d4b8a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamService_test.go",
+      "size": 3298,
+      "sha256": "sha256:b92c41e62e9223828e9d5a31f7e8d785a30519a577d7ce6f2224c4915fea10b2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamServicetemplate.go",
+      "size": 4475,
+      "sha256": "sha256:f39edfaba99292d2b8c5ef90aa41ef531deef24fe64f1d9bcd0f665836231d94"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamServicetemplate_test.go",
+      "size": 3618,
+      "sha256": "sha256:c082b9e04b27e64d74e624ac7e63a56ae20ec3cad3da8c1faf2fa6d17d895ca1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamVlan.go",
+      "size": 3969,
+      "sha256": "sha256:71a570e50ac956aedbc6bb55053ca6d3bcc2fc824fb0698eddb8929e892c0f32"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamVlan_test.go",
+      "size": 3178,
+      "sha256": "sha256:2557c021df64ee494747dad7558f05031e0eb1f78ba1d9950774b9659a567edc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamVlangroup.go",
+      "size": 4199,
+      "sha256": "sha256:498f493dd5157e94fc5a2db45238ea023a4b4d2eec073083500fc93b97673245"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamVlangroup_test.go",
+      "size": 3378,
+      "sha256": "sha256:1e8077c31e7f829cd3a8517cf581b77c0f3232c53bf4337a9839e550a92c7c9e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamVlantranslationpolicy.go",
+      "size": 4751,
+      "sha256": "sha256:e49411e3911dd7a56b483d8f9bfec953319ae663e1ddd1f8ddb5c10e37d249c2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamVlantranslationpolicy_test.go",
+      "size": 3858,
+      "sha256": "sha256:c9e276b3549e25d3873d12ed14a22cd87f926a138928410350c4cdae48484b74"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamVlantranslationrule.go",
+      "size": 4659,
+      "sha256": "sha256:f84ad44664058325982a4d2aadff537c2efebc1ffb8a8eb6fbc2b2dd79543611"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamVlantranslationrule_test.go",
+      "size": 3778,
+      "sha256": "sha256:561a7ea401d7556ffdd72c5f2747771322a0c0e85157d895631156c4a856dd27"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamVrfExportTargets.go",
+      "size": 4521,
+      "sha256": "sha256:c9e57b53f764f3fbc67a05fd195b57fc8143a3b5038faa19f16ef958696ee795"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamVrfExportTargets_test.go",
+      "size": 3658,
+      "sha256": "sha256:e5ab08e99e5b03c1df1180352aa1ac651840fc9865bf30808c384a744ac21835"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamVrfImportTargets.go",
+      "size": 4521,
+      "sha256": "sha256:f5b3c982edef74150cd55a150d21b83c5dfc004c4a37411d4b5f6bd816341425"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/ipamVrfImportTargets_test.go",
+      "size": 3658,
+      "sha256": "sha256:1d17d79032f74a338cce7c42f87fc2f5407ba8dc031d636aa497c8289a8c7eab"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/socialAuthAssociation.go",
+      "size": 4567,
+      "sha256": "sha256:73350e3e77f5b9605fef8110c6036f00fad3f08441e8ea73b39ce97039c2d59a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/socialAuthAssociation_test.go",
+      "size": 3698,
+      "sha256": "sha256:7b253a2cf1a4eef89447e6beec75a336ed983ba1cbad638cd016a5280f05f3f3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/socialAuthCode.go",
+      "size": 4245,
+      "sha256": "sha256:7655ed0582372ab068c72cd77b375013405abe4501208e1bd898d74f8a075bc2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/socialAuthCode_test.go",
+      "size": 3418,
+      "sha256": "sha256:aff03b8be2ed5dcb4788080a39413c275d5fb5db18c1fc3c2de831d339c4d826"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/socialAuthNonce.go",
+      "size": 4291,
+      "sha256": "sha256:2c0d37fafd59c69630ed1c5f7a841dd924bb3df4ac4a8b3b20d1a1c789b7239c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/socialAuthNonce_test.go",
+      "size": 3458,
+      "sha256": "sha256:011a9b0076aa4e5ff4a5ce411c635180b5a0e21bfae4f5fc1760707821e04f0d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/socialAuthPartial.go",
+      "size": 4383,
+      "sha256": "sha256:63f3142366b41113a4d84b8693011f9282ea028036011e91a7858721475adff1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/socialAuthPartial_test.go",
+      "size": 3538,
+      "sha256": "sha256:2c4a6aed94d74e88cc034bba1adb3cf4a3455e35b775a144d5a372c6294224b1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/socialAuthUsersocialauth.go",
+      "size": 4705,
+      "sha256": "sha256:7e8c20d18c07fa0c369207d6e0dd29ab1c5b82f7f4d8286dc341ff837c38cf5b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/socialAuthUsersocialauth_test.go",
+      "size": 3818,
+      "sha256": "sha256:cb0156e1d6250fc3e606a29782e597af09d4de8fdea90b6d708668b948d76011"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/taggitTag.go",
+      "size": 4015,
+      "sha256": "sha256:5638e1fd846a975ee6ba7b872ccdc7308289ccc8e8f035631cbb56f14135c787"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/taggitTag_test.go",
+      "size": 3218,
+      "sha256": "sha256:180ac4474d159af7be47d395ca8a0c532c5be4322df53c1801e6b558b539e25d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/taggitTaggeditem.go",
+      "size": 4337,
+      "sha256": "sha256:4a4ba6bcd7d8dc4ca2f2734af30687c5aea0688e2624c46af76667d35adf9654"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/taggitTaggeditem_test.go",
+      "size": 3498,
+      "sha256": "sha256:66628556e21870badd3857ccded306686a65c9c154bdd612e98b97640ea9a372"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/tenancyContact.go",
+      "size": 4245,
+      "sha256": "sha256:27f91e188f6db1f94308c9c9be481da2116a7dfb90324eece78c0ddf71382958"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/tenancyContactGroups.go",
+      "size": 4521,
+      "sha256": "sha256:8966eda90477b13e1addda7203735cee399ec63e225e659b81b27617704d5017"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/tenancyContactGroups_test.go",
+      "size": 3658,
+      "sha256": "sha256:7bca3f7d16563f411b25a3188318a557f3972ba10edc09c485c7317f2c36a191"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/tenancyContact_test.go",
+      "size": 3418,
+      "sha256": "sha256:d86d369ec9fd504f4f9ea8abc85918e7ee02e5e997f3298aeb2233685bd23efa"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/tenancyContactassignment.go",
+      "size": 4705,
+      "sha256": "sha256:f41f544cac4fb6e752d4d54a98a70345d21fb29b970df9991cc03d5d6b88a97f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/tenancyContactassignment_test.go",
+      "size": 3818,
+      "sha256": "sha256:1f08ddc33953d80c9e72decc7452dc7deffd5a9d9c3200631edff3e66e27bf77"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/tenancyContactgroup.go",
+      "size": 4475,
+      "sha256": "sha256:df59b796f6f805edb0342493160bde13c4de3bb4bb0b9787a5b81fd89fe7ce1a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/tenancyContactgroup_test.go",
+      "size": 3618,
+      "sha256": "sha256:c37d306f74cd9f2a090fd0472cbf10cb22b3912a148e4202564f1c86320fba58"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/tenancyContactrole.go",
+      "size": 4429,
+      "sha256": "sha256:201fe136783a82c95fea9b1c02b3f44ab6dcd832828adb5a7cc277377951bbed"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/tenancyContactrole_test.go",
+      "size": 3578,
+      "sha256": "sha256:0583b5469ca16667f0db99afdff490870b242de2af07a146f10fca5d971ee50f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/tenancyTenant.go",
+      "size": 4199,
+      "sha256": "sha256:108d2fc03c2df6e3067e4b2b0b74df7d708d3da9aba14769511bb86a4b6a0c62"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/tenancyTenant_test.go",
+      "size": 3378,
+      "sha256": "sha256:a53410d02a23e47cfd7f97e51a4ee946ecdc571ea15c84b879160cfefa20cba7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/tenancyTenantgroup.go",
+      "size": 4429,
+      "sha256": "sha256:5c8418e8ba95945e4c6cacca26b349b82d1ae7a55485449b043bef606083883e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/tenancyTenantgroup_test.go",
+      "size": 3578,
+      "sha256": "sha256:52f4dafec8f8d6857c91eb05e1173bac96498ddb962a8563fc2d26b53febac50"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/thumbnailKvstore.go",
+      "size": 4306,
+      "sha256": "sha256:07e4d0e75194262d7b1c9ecb594317f12a31b0deb4ef5f1c9aa2618f74fbcfbc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/usersGroup.go",
+      "size": 4061,
+      "sha256": "sha256:83a496c3697ddc93a0b542eae0923a8addf0cb98dbf50897cd4574f0984f3889"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/usersGroupObjectPermissions.go",
+      "size": 4843,
+      "sha256": "sha256:1bc5c09aa263de558bd4b7d514e99c85bafaf9e89369d234290944895972f67f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/usersGroupObjectPermissions_test.go",
+      "size": 3938,
+      "sha256": "sha256:501bd985024fff66ac4b41aa3d7b8dea7a05dd4c5f2b8f6f3ce718a5de0e8109"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/usersGroupPermissions.go",
+      "size": 4567,
+      "sha256": "sha256:95cf0665fd922f73624c95073198e263deba70937216c081d8c83d1f6b5ebc90"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/usersGroupPermissions_test.go",
+      "size": 3698,
+      "sha256": "sha256:4c12b2be7bdc90110bc5e3a0b85e8a5a99281210c5ff5b790380c8749ada331c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/usersGroup_test.go",
+      "size": 3258,
+      "sha256": "sha256:2478992ec5dc7bdae31e47154f52217e4f9ac0db5b0e151a91b7510d93d46d19"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/usersObjectpermission.go",
+      "size": 4567,
+      "sha256": "sha256:9c171e59e5a3ab03111bd6b2e7dcfd4650843d2275fe0f716c397655bd07110b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/usersObjectpermissionObjectTypes.go",
+      "size": 5073,
+      "sha256": "sha256:279d52ea1aa2fe501199cde43545ebffe8d309fe0ea75fd468c761792f3761b1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/usersObjectpermissionObjectTypes_test.go",
+      "size": 4138,
+      "sha256": "sha256:250f7731c2125d820e70d08450aee823e6d1072235e110b8d91e4c20107a8da9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/usersObjectpermission_test.go",
+      "size": 3698,
+      "sha256": "sha256:4493c6f0f3768511255c484f4c91b6d2b9bdd54b94018ed94b0769fd60c8c391"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/usersToken.go",
+      "size": 4061,
+      "sha256": "sha256:cb72ec93ce287f5a464502b0a4f986fa2123b21878f8a8857650a9193e7443ca"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/usersToken_test.go",
+      "size": 3258,
+      "sha256": "sha256:68709a9fe3cf4f06747d9bfe02a3f5299bcdfe68a3d27a606a18ff67a2425d9f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/usersUser.go",
+      "size": 4015,
+      "sha256": "sha256:af10f9291b2e2b0a68fc26000bfaae47d12bf4b5e4ae02f685c01f30420ce5ee"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/usersUserGroups.go",
+      "size": 4291,
+      "sha256": "sha256:024108787bb2a31066556ef12fc389f5630e7d9bd98554a4dcbea71e31f14806"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/usersUserGroups_test.go",
+      "size": 3458,
+      "sha256": "sha256:8cb4941614237abba79997cb58e50cf7e840cec076cbd93bfddaa1ef5d971df8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/usersUserObjectPermissions.go",
+      "size": 4797,
+      "sha256": "sha256:7ab0519a086f2a3fd4c51ef70c2aac95551444556ec687cc767b805eb186b5b7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/usersUserObjectPermissions_test.go",
+      "size": 3898,
+      "sha256": "sha256:b8d8f00864f2b93cebd362d147075c0fb1c59ea1e4c3486a84524c6ada2afad7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/usersUserUserPermissions.go",
+      "size": 4705,
+      "sha256": "sha256:46a54048c4d4761f1b7bbdd725efbd5c0144c891ca521e786e50fe9e1931f623"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/usersUserUserPermissions_test.go",
+      "size": 3818,
+      "sha256": "sha256:d54cfbdfd2847f8281274198e4da4adad40be38961dee528faf3dd9afca5ddc3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/usersUser_test.go",
+      "size": 3218,
+      "sha256": "sha256:a84178bce92608cff239b53fe783026ca38fa078b50c78ad85529ee816d1858b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/usersUserconfig.go",
+      "size": 4291,
+      "sha256": "sha256:0fc60197bf129717586a00d042a1b57c1033d8e7c06399919ba04cf428ae0776"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/usersUserconfig_test.go",
+      "size": 3458,
+      "sha256": "sha256:dd4ab54398a7fb12221db565327d894f7cf9dd27287a9b0a182cf5ad58e309d7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/virtualizationCluster.go",
+      "size": 4567,
+      "sha256": "sha256:8fedc7762a0632e72c69e37403d9d1bd561bf03996f7b0a32b5b900e9e978041"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/virtualizationCluster_test.go",
+      "size": 3698,
+      "sha256": "sha256:cf7d93d0bc5c58716858dbb80f4b1be2aa8ed6f5fa9570cf5da7800388e1827e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/virtualizationClustergroup.go",
+      "size": 4797,
+      "sha256": "sha256:1af8a6d78169e24d97996f8a1fdb9688d0b3a34b544d20c61559f4d902489e5b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/virtualizationClustergroup_test.go",
+      "size": 3898,
+      "sha256": "sha256:422225023d8ac81b648ed6d7ace4f772ee81688ce391712124e65bdeefd944ea"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/virtualizationClustertype.go",
+      "size": 4751,
+      "sha256": "sha256:39ef17f53a00e5ff4993770e608cacd884d1f9b9a6067e7318ef51ad7cd53827"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/virtualizationClustertype_test.go",
+      "size": 3858,
+      "sha256": "sha256:1b87dffa4285e4e12c334e28456b7ac77d098fc8c4f31806e49bffdd796ad9d3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/virtualizationVirtualdisk.go",
+      "size": 4751,
+      "sha256": "sha256:65b9859c2bc875d1d6c25853948f202c9d99da8ffd2b307e24c45edb1c14795c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/virtualizationVirtualdisk_test.go",
+      "size": 3858,
+      "sha256": "sha256:d0da61f488ef726fb2995797391042b6ca07cc6f58e1fcc9c8a95ae4c42f0696"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/virtualizationVirtualmachine.go",
+      "size": 4889,
+      "sha256": "sha256:8ab816b6236dc5b385cf32e3ec16245989af0e82465b4e1caa9cdadf924ec28f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/virtualizationVirtualmachine_test.go",
+      "size": 3978,
+      "sha256": "sha256:292de0a47c06d56b2d4638bed9f8fff1a308b16da5732710f774233e58a59cc9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/virtualizationVminterface.go",
+      "size": 4751,
+      "sha256": "sha256:595cf4f73d3e830a4b67e45a1e154db4dc689ee1f06d813d828acab1e55953c9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/virtualizationVminterfaceTaggedVlans.go",
+      "size": 5257,
+      "sha256": "sha256:142bfbfb0240527a63a9b49505f58920146e3abb137c111002a32a81aed38413"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/virtualizationVminterfaceTaggedVlans_test.go",
+      "size": 4298,
+      "sha256": "sha256:b99d5e1f89f235a040e18b147d157b3e8fb638308ac2322ca0532329d512c004"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/virtualizationVminterface_test.go",
+      "size": 3858,
+      "sha256": "sha256:8ee5a77bdaf9475e75c16a54b8c8140a1c18600d05a6b35e2304902887603a3c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnIkepolicy.go",
+      "size": 4153,
+      "sha256": "sha256:96c06c76dc6b47063b74256857d3ddc9d67eb0ab7d51cf40461d1704ac41f225"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnIkepolicyProposals.go",
+      "size": 4567,
+      "sha256": "sha256:5d90b53685d5a111a6b74f0f5b854dcd61f79b971bce2647e53ddd803a453f3a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnIkepolicyProposals_test.go",
+      "size": 3698,
+      "sha256": "sha256:72eff4631222cab553538cffa27c729853fec187b4b4ab5371adf06f72242be8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnIkepolicy_test.go",
+      "size": 3338,
+      "sha256": "sha256:7b2dea9d63295b3337a6b2cfdb43a00b2613b5bd95a5a32c38a8bd3e979e9452"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnIkeproposal.go",
+      "size": 4245,
+      "sha256": "sha256:fd8b54e2016a5c50d2e2a171e5350fe3485506809f665926cd08cd4a702b1c0a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnIkeproposal_test.go",
+      "size": 3418,
+      "sha256": "sha256:25460aee2c33f4cd0fa84faa26c23eec938d84c5935ce0031b1d8ef396ce6c12"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnIpsecpolicy.go",
+      "size": 4245,
+      "sha256": "sha256:e798495acd171b38858e54e797b6432b1a38eca24a871d2bdf4b4c21b42c412a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnIpsecpolicyProposals.go",
+      "size": 4659,
+      "sha256": "sha256:c7d2749e9212219c8fd2083b68b6cbf88078d2f4d6ed393bb0bea5ff7d2b1d0b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnIpsecpolicyProposals_test.go",
+      "size": 3778,
+      "sha256": "sha256:491e60ca0f77a41e71250815a8df6b413c0f6aa435d0121efb7c037026114286"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnIpsecpolicy_test.go",
+      "size": 3418,
+      "sha256": "sha256:17aa63b8473345ad15089a6885594ce1e5f977c2adc6e5bc5955efa610327ffe"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnIpsecprofile.go",
+      "size": 4291,
+      "sha256": "sha256:d4c257a2cf2f13cdf492dbe609732500f701d067f9744333555539babd5dbd76"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnIpsecprofile_test.go",
+      "size": 3458,
+      "sha256": "sha256:9bfd42d5d2601383708751993ace250dec3f6426172b7895bc24701270a08c65"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnIpsecproposal.go",
+      "size": 4337,
+      "sha256": "sha256:a4dcd083185126697bca85197df3f1ff32614859f1e607ad8c3fddc52961f919"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnIpsecproposal_test.go",
+      "size": 3498,
+      "sha256": "sha256:70a789c38d67083d039cfc17885990355396be87e796c33721d79be5aeb601f1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnL2vpn.go",
+      "size": 3969,
+      "sha256": "sha256:3ab020770b4b0ca12726678a7528ed5243a94ed4101e35f04c9e98482767239c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnL2vpnExportTargets.go",
+      "size": 4567,
+      "sha256": "sha256:9f32b971dfde307790d973c27fb681c93c591d027f3b68788aab8e88c38357b3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnL2vpnExportTargets_test.go",
+      "size": 3698,
+      "sha256": "sha256:2122450d8c9992175f04f800aad98a6ae4dfe1512b1e931284420484150656d8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnL2vpnImportTargets.go",
+      "size": 4567,
+      "sha256": "sha256:8a456d8e86c22dfcba71eebe5a973e1e3bd1c961b931afecb20f5588c19a1221"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnL2vpnImportTargets_test.go",
+      "size": 3698,
+      "sha256": "sha256:0cd54dcfd7f7a3f08e9df6bc84c006ac29bbc5723ab1faadcf3c8b79744efac9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnL2vpn_test.go",
+      "size": 3178,
+      "sha256": "sha256:2d08ec254895a7a9d0be858e2bcc9bcacca1ab24ac9321ffce81fb51704e19aa"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnL2vpntermination.go",
+      "size": 4475,
+      "sha256": "sha256:8db81e3816ba37bce7a10d863f439323c1e491d25b365b0633f5ae0db75f6e9a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnL2vpntermination_test.go",
+      "size": 3618,
+      "sha256": "sha256:c4762f430a68e6d36b4eac2f9e74886f612e8c9bd37cea977a3c6614537ef4fe"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnTunnel.go",
+      "size": 4015,
+      "sha256": "sha256:eb99ac116acc11b3aa9d87be81f51646e22aaadeba3eac7b2cf99b1431bb8208"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnTunnel_test.go",
+      "size": 3218,
+      "sha256": "sha256:2a9c776f748407883a9911a1796f74c7506739d5e4733a251f7216f87eb7f3aa"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnTunnelgroup.go",
+      "size": 4245,
+      "sha256": "sha256:e0c1da836ef0b2903fab27969dc6e1ca869f28325ff6e3f95abacc120d09a263"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnTunnelgroup_test.go",
+      "size": 3418,
+      "sha256": "sha256:93005b3b6d03721d7fd1872550a5a41b2ccf63e6d5bb3860188948b8a2338780"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnTunneltermination.go",
+      "size": 4521,
+      "sha256": "sha256:d0ac81584b4ca9b57200713c6fb6b530605a403657b0b9d7798ed35451e8069c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/vpnTunneltermination_test.go",
+      "size": 3658,
+      "sha256": "sha256:88821669fabb942b304f7d67107e09ef4943c0fd48809869fe81f8ede1749d63"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/wirelessWirelesslan.go",
+      "size": 4475,
+      "sha256": "sha256:7e64f75c0df368e09d464417aaf47a884f16f72cbdab0d54bdef5da36b174c68"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/wirelessWirelesslan_test.go",
+      "size": 3618,
+      "sha256": "sha256:22be5137470fb81903d117af94838a5823ae765da40f908d029f23864be5b4cc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/wirelessWirelesslangroup.go",
+      "size": 4705,
+      "sha256": "sha256:c97a573ceae11fa45485a51de5a26e4cd599c057b677588f218abea5f77b732f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/wirelessWirelesslangroup_test.go",
+      "size": 3818,
+      "sha256": "sha256:90e24a4a4ebf85f69ac40520c9a8afb61ad02491bca09722df9c1d37e24cb9ce"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/wirelessWirelesslink.go",
+      "size": 4521,
+      "sha256": "sha256:a0909878f933f45ff4988d3da1162450bda077ab4763b720d8067e06a7cd21be"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/cache/wirelessWirelesslink_test.go",
+      "size": 3658,
+      "sha256": "sha256:e01246900b31ea239b4d5c62058474b8b38bd092f2dffbbd94e76d80db436c67"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/config/environment.go",
+      "size": 816,
+      "sha256": "sha256:757c443d94d0e190c5f0ef0eed98bb4d7cbba35c5d7393814d17928eb0fc2f9c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/config/netbox_go.go",
+      "size": 6352,
+      "sha256": "sha256:35ee8b33697a94f043408c1a39dff2753b2bfe633eabb9d13d3e9addac901365"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/contenttype/contenttype_test.go",
+      "size": 6230,
+      "sha256": "sha256:a1f9f68f10bf43ff92f00510624f56ca9bc076f9a2f3125b41f64f4fb3aa7cc8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/contenttype/resolver.go",
+      "size": 5820,
+      "sha256": "sha256:6c95b0200b40e01cee69069ff42275dcd6df2c295c550d25bb85ac943e6b4de5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/contenttype/seed.go",
+      "size": 10435,
+      "sha256": "sha256:b9e7d5b08445c5e17c880d1a26be68303eaf05152d7e378d12c7a5814a9a8722"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/authGroup.go",
+      "size": 9843,
+      "sha256": "sha256:50af6b9a2ffda5fb01425d3b3891cda61660c8178a185c90113f302909b8b11c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/authGroupPermissions.go",
+      "size": 10724,
+      "sha256": "sha256:f2aaa880e957bf21cf113e8f341d24bd9ebc244f0b9639ae30e87c26285f3f19"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/authGroupPermissions_test.go",
+      "size": 8618,
+      "sha256": "sha256:46329082221f45c18bb9fb4d1b2bf684f79e8a656a1a8f51058321ec4b2e61db"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/authGroup_test.go",
+      "size": 7913,
+      "sha256": "sha256:30ee932fbc9815038ee9dac4c22edf19de3710286e1f00c526dc0ce7b6b8d836"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/authPermission.go",
+      "size": 10355,
+      "sha256": "sha256:9d59aece936fe8aa7509612e727a30688c9dcca4da8b96d1cc67e638be1ad300"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/authPermission_test.go",
+      "size": 8233,
+      "sha256": "sha256:fdc284db9fbe405b7713e220c4dcca8cb692a7e3fc2f7a029dc4e10b28dcfae9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/circuitsCircuit.go",
+      "size": 11938,
+      "sha256": "sha256:b6b6139203bc73b5d218124b44bf33076114571e3d89e2756f6b36771945cb66"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/circuitsCircuit_test.go",
+      "size": 8296,
+      "sha256": "sha256:0e7e19dfd74f84ff3974676cd6ba427659a98519987757f3cb3bba72ae27fba1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/circuitsCircuitgroup.go",
+      "size": 11187,
+      "sha256": "sha256:7ccccf58f4e5b3afe3873d5cf5cc7a63b5af6832ed7e6315516f6f093c3cf1ff"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/circuitsCircuitgroup_test.go",
+      "size": 8617,
+      "sha256": "sha256:3dac657746bef06921d903fddd61c134ecb4a7622f3dc432378f6eec92d7e23b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/circuitsCircuitgroupassignment.go",
+      "size": 11932,
+      "sha256": "sha256:643b2bdaee22894f079de2b512d4b63b9f1ff2aa8e428dab1a530f75090ec77f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/circuitsCircuitgroupassignment_test.go",
+      "size": 9261,
+      "sha256": "sha256:19d070a981581db0ee1c54484dc434aeaed26fe01bf6549677e9ed9185be665e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/circuitsCircuittermination.go",
+      "size": 12662,
+      "sha256": "sha256:0340e9b782bd3dd48982ebaecb482be6e2d507f69a98a94a069a3171155047c7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/circuitsCircuittermination_test.go",
+      "size": 9005,
+      "sha256": "sha256:b8c3a3a0ae8968ef9af1052da9d51f991935f3c57f245560fe0b7f9ad27859ed"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/circuitsCircuittype.go",
+      "size": 11106,
+      "sha256": "sha256:28dccd9931a1ac97a57f2015f70d03ec555bee29ef7104aad68bf3883cd70ca8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/circuitsCircuittype_test.go",
+      "size": 8553,
+      "sha256": "sha256:3062ba592bae7db6b4ea2ef74902e5aa5737bee318ef9350b85afadc010a1f91"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/circuitsProvider.go",
+      "size": 10899,
+      "sha256": "sha256:373e38d50bbe668472ffcffa5366d2d69f9ff6357f87370dd1b82db8c8881e39"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/circuitsProviderAsns.go",
+      "size": 10712,
+      "sha256": "sha256:109483da4de32aedb5a35f243cc6db90cc2d703d3ebd981a54ab9319b091454a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/circuitsProviderAsns_test.go",
+      "size": 8621,
+      "sha256": "sha256:eb4ae676dbcc3f97b86f3f30f790a543bebcb1d8c1b71c10e53073aa141e8e9d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/circuitsProvider_test.go",
+      "size": 8361,
+      "sha256": "sha256:7c3140501f777f0560746ada5dd1dc20fcdf5f04052bf19f9b4b8c87be93235e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/circuitsProvideraccount.go",
+      "size": 11486,
+      "sha256": "sha256:5661d84d2491c38075911ec3b63c0e91676136780899dd7e22e08644fcf74e6c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/circuitsProvideraccount_test.go",
+      "size": 8816,
+      "sha256": "sha256:fae312bca93a6993b2f8c546a3bf4b6c5e5cef64f77fc00e6b00bb7648e0a119"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/circuitsProvidernetwork.go",
+      "size": 11493,
+      "sha256": "sha256:8af0bcda92b12780fac53ea35ba1651199970ef68658ef854347a22ce0e5e196"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/circuitsProvidernetwork_test.go",
+      "size": 8809,
+      "sha256": "sha256:119206edc0647d43b23c19a7a52a3cf4feb6b8cbcae75d61754869aaa3ae8312"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/circuitsVirtualcircuit.go",
+      "size": 11656,
+      "sha256": "sha256:7b28406313e4cefc009bd97800e4c4b067b82ba641346f2de6b1ce42af3d3b89"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/circuitsVirtualcircuit_test.go",
+      "size": 8752,
+      "sha256": "sha256:a7810611c024947a4ad48b338d9a60adc7dd978a6706fe033239908ff1e7d46b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/circuitsVirtualcircuittermination.go",
+      "size": 12169,
+      "sha256": "sha256:846bfb98bc15dd1c9549835d0f50ed8703811fa95186c3d9d6b16dcf827be0c2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/circuitsVirtualcircuittermination_test.go",
+      "size": 9449,
+      "sha256": "sha256:51d2c5d3877e931ba991346733673ed58b4f125d4e67b7d0d51d1e8a6ebfd1a1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/circuitsVirtualcircuittype.go",
+      "size": 11610,
+      "sha256": "sha256:7b07e8b1bbd51434ad270d2efbd7e488e8cb9941d440afd850dcbdfe4ed194f4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/circuitsVirtualcircuittype_test.go",
+      "size": 9001,
+      "sha256": "sha256:3c2fb16c470b63869910d1969903afc1a09aa7537abda3df175da566cfbf9236"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/coreAutosyncrecord.go",
+      "size": 10658,
+      "sha256": "sha256:e9301c1b7e77c69e7156233ea85c13321d89196f6828b153b284af04ed755146"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/coreAutosyncrecord_test.go",
+      "size": 8491,
+      "sha256": "sha256:922694712aea4730e62f8f373c1b591ac98b07832cbe00694fceeb88b72d38ea"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/coreConfigrevision.go",
+      "size": 10750,
+      "sha256": "sha256:cf964b0e85fad7a2d7345ca7d56378158b8eaf93a296359a8d63001dbc773414"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/coreConfigrevision_test.go",
+      "size": 8492,
+      "sha256": "sha256:8016d3d52617ed6c2c39cb839a9cbb60fbb39b9a6450292dbcddef157deaf97b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/coreDatafile.go",
+      "size": 10513,
+      "sha256": "sha256:16d2e03ca484482c12412cc71793d42c21f9011c7bdb7ad095b79c1c7875b323"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/coreDatafile_test.go",
+      "size": 8105,
+      "sha256": "sha256:77df93286a7c518cf3d84430a3b26ff19ad2262064b045f82d65037a1930801a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/coreDatasource.go",
+      "size": 11337,
+      "sha256": "sha256:62e6775adc8691c7024de38476ee0093ad98674aaaa24a5827cfd6a5ba231fd2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/coreDatasource_test.go",
+      "size": 8240,
+      "sha256": "sha256:085ae3b27b6ef85f37da04a8504e9576144f90ada61e3b8eaf0d96ed139326d0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/coreJob.go",
+      "size": 10741,
+      "sha256": "sha256:23932e08ada5d85a4bcf0611c56a10367daac3b74d9949f3f6607df5b5a7c333"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/coreJob_test.go",
+      "size": 7787,
+      "sha256": "sha256:f1c7f46cd00457ddae3ff7cef688dcb09ffbdd8d15ec66ec649dff0cb9357cd3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/coreManagedfile.go",
+      "size": 11007,
+      "sha256": "sha256:45c70304d710f04c0c14d4da0f0d50e3c3e17c88162c694ec88553528ceb9aa7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/coreManagedfile_test.go",
+      "size": 8301,
+      "sha256": "sha256:02132be633d9429d97e76a6a1a4287c14d4c85dbec28f7b82e761fc2a7800874"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/coreObjectchange.go",
+      "size": 11421,
+      "sha256": "sha256:d8b5056072067ff3a113f8044bab25d6de0d044cf13a6d9c0d5a56d7f90b2c53"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/coreObjectchange_test.go",
+      "size": 8365,
+      "sha256": "sha256:202b9c5907333fd2dd7cbcd4272aa0584d62e692825ac2cade7653e17b284e76"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/coreObjecttype.go",
+      "size": 12068,
+      "sha256": "sha256:fd89cc07bad3fd64484a04ba619f5c3596f6c1558f80518536e98b64c54db7fd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimCable.go",
+      "size": 10873,
+      "sha256": "sha256:db738e9d79f91dfb575af2fbcd0063b0d86e37698fb6f4e06290ed4c7a3c3e62"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimCable_test.go",
+      "size": 7913,
+      "sha256": "sha256:a4c5dd48aa8ef5d09d93bbccd6859d6229c3cac29c89c22144151549e256ca02"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimCablepath.go",
+      "size": 10436,
+      "sha256": "sha256:5b804f374a714407bf053494812e6ddf14955ff515d7c49aa5c11f2dbb396d58"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimCablepath_test.go",
+      "size": 8174,
+      "sha256": "sha256:9958c06d36513a194e11423c99e1007304a4fdd4277f0bebebaf873537d28e68"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimCabletermination.go",
+      "size": 11389,
+      "sha256": "sha256:4609900cc5388ef03c0410b5e3fad2f9ccbaa61c1b85ab4a52ef1a4bb9608b7e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimCabletermination_test.go",
+      "size": 8621,
+      "sha256": "sha256:e0d880561a8db3244e3e9fe528a3acd7c804c80f39d07fc2c85c23ede6b862d4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimConsoleport.go",
+      "size": 11503,
+      "sha256": "sha256:39cc26401a3770ab606c1737b27521d272e7362f610f13cbcb2cd30c8664d904"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimConsoleport_test.go",
+      "size": 8297,
+      "sha256": "sha256:1370e023c1bc1244b4e7179527b67467511d6ee858404693bf7cffd4a095d6e7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimConsoleporttemplate.go",
+      "size": 11424,
+      "sha256": "sha256:b291a54c276913d134b8505159499569abaa971cd17f39a5d082fa9567bf0eee"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimConsoleporttemplate_test.go",
+      "size": 8809,
+      "sha256": "sha256:bdd89549ec9e07497b166b0f508808b10eacbf002c01cf4092e9b6feb3ebf9a7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimConsoleserverport.go",
+      "size": 11935,
+      "sha256": "sha256:1fccdfc345ceb894068de98d4b911a95915e4b88fa9a3df0d08721925d5a2f27"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimConsoleserverport_test.go",
+      "size": 8681,
+      "sha256": "sha256:b70568420a29380e47992d88d1bb0e24db2d78bf49fbfa52260c55fa12a1b0ab"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimConsoleserverporttemplate.go",
+      "size": 11856,
+      "sha256": "sha256:d037ffb8705f5f183edd5b1f26dbba029d41bc4b3809dd5fa59c9f3f37922001"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimConsoleserverporttemplate_test.go",
+      "size": 9193,
+      "sha256": "sha256:586076533e7b8fe0e75f2f79bb4f336d1752350687d3b12d057c104246018a95"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimDevicebay.go",
+      "size": 10989,
+      "sha256": "sha256:7f44f1350b1648ccdc233db065ca59d2a0b9d714c9ca2c605fe245c85e7abb3d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimDevicebay_test.go",
+      "size": 8169,
+      "sha256": "sha256:fbedddafebdf958d5a8058aaf4c57235e69dbdde8d8743df037bd1e14dedb730"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimDevicebaytemplate.go",
+      "size": 11143,
+      "sha256": "sha256:24f1d3c5fbabc16b300c34020ba543623232eaf7e836fdf3bf9882a09c1627bd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimDevicebaytemplate_test.go",
+      "size": 8681,
+      "sha256": "sha256:2449ae3339ed74aeb82e69c00f7c6c315b14d1dc097eacde5113a8e16b7b46f1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimFrontport.go",
+      "size": 11463,
+      "sha256": "sha256:463d248a70a88538dc842028c686d8b07b8dafaae13de09c5e70a766127fb022"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimFrontport_test.go",
+      "size": 8169,
+      "sha256": "sha256:0078b1161387a2729e1c944a2d0e713857e22e4e21686cb5367f6a58b5e63449"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimFrontporttemplate.go",
+      "size": 11507,
+      "sha256": "sha256:666364988ed15706883af5e4a63130b1d94cd79502223787f87c979bab6ff86e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimFrontporttemplate_test.go",
+      "size": 8681,
+      "sha256": "sha256:761e612567abbeb2eb944c41154118ad070901f8719111b70dd6b021adc0bea7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimInterfaceTaggedVlans.go",
+      "size": 11006,
+      "sha256": "sha256:a4ba4657188445de369cac2605732b7c3b007cdfb81cfc2f123508e239d068c8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimInterfaceTaggedVlans_test.go",
+      "size": 8878,
+      "sha256": "sha256:7db70b3eace285d89bf4ca4e5160289e7df1d258a821a9f175911201f106066c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimInterfaceVdcs.go",
+      "size": 10550,
+      "sha256": "sha256:abcaef58b30316a677889dc4c4ba80c55181eebeb4bf11e1291190d9bba8cd53"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimInterfaceVdcs_test.go",
+      "size": 8430,
+      "sha256": "sha256:45e9a810626d8cd57ed67179eefcedddebe628e0ca4cc46ff7ae799202670fed"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimInterfaceWirelessLans.go",
+      "size": 11099,
+      "sha256": "sha256:72b5d130cb189c79c24beead8292ec9c52bd6c0c1bbbf14e60bde33d29ea0cc1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimInterfaceWirelessLans_test.go",
+      "size": 8942,
+      "sha256": "sha256:8237b27aadd2ef1839190b758f37bf3e92c1bb60f80866f61e8f4d323ed3734a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimInventoryitem.go",
+      "size": 12122,
+      "sha256": "sha256:facb7f9b8bc9fbf704368560c54ab268c6f854d1ad68c203a91eefac94d58852"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimInventoryitem_test.go",
+      "size": 8425,
+      "sha256": "sha256:f013fb7cc0dc50e94ef33eb42795cd754742abdb974d83df195876a02f904443"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimInventoryitemrole.go",
+      "size": 11250,
+      "sha256": "sha256:814dfec85893096778958fd2456c867349d705a5c7f27129a0e9344ce4bf05bf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimInventoryitemrole_test.go",
+      "size": 8681,
+      "sha256": "sha256:16c02686576c52ce6e9bba40df5c25dca94da43090049575b2ea7bcda4991cb8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimInventoryitemtemplate.go",
+      "size": 12104,
+      "sha256": "sha256:25db1bc74c89aa4628c69d0dace91c17ceb66dac122e94317466bb35715a1c01"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimInventoryitemtemplate_test.go",
+      "size": 8937,
+      "sha256": "sha256:281d0b0321d8a3e7250282b28db843bfa6ad43ea531efb7fdeb09504f1206c13"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimLocation.go",
+      "size": 11166,
+      "sha256": "sha256:284140e5f8f203f4d64850aaf09b8e69796bf7d4361bec8aceec241089e5cad3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimLocation_test.go",
+      "size": 8105,
+      "sha256": "sha256:b541af655ad00b5ab9403c50c4413a02aa63f772d7aac1521c6f39dd132458f6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimMacaddress.go",
+      "size": 10917,
+      "sha256": "sha256:e31afe4f737f27675e9ca3f911a7f6eaa2b4e9022f15d98d08996dd35349573a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimMacaddress_test.go",
+      "size": 8240,
+      "sha256": "sha256:a0d9070d370b03d6b4c796caab1597c978236ba4fc792c2fe29eb984bd91946b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimModule.go",
+      "size": 10911,
+      "sha256": "sha256:fd9b93eb0c9c42469c8f260a35137093c4e9d0ca4801540552647b8dbacd8180"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimModule_test.go",
+      "size": 7979,
+      "sha256": "sha256:93c243c754373d072af22246d790d3c6c8e2c793ec466309300dfc0ec897a34d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimModulebay.go",
+      "size": 11324,
+      "sha256": "sha256:f5bffbadad986216edc01ab071b5b219fea23bee26cc9039950cb30d0707cef8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimModulebay_test.go",
+      "size": 8169,
+      "sha256": "sha256:cb09f5aa8b2116467fbcc5a6257649a1309e26c00b091bbf897e34c9b69bb758"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimModulebaytemplate.go",
+      "size": 11292,
+      "sha256": "sha256:5b29e8e89208dea9dad30c2bdbe2a8af14f3803f116512b3cd6383c8c93b60a8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimModulebaytemplate_test.go",
+      "size": 8681,
+      "sha256": "sha256:929bbea992e571465f447bd1993c170e7e3bc9c841059cf40f684837b1b92eb0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimModuletype.go",
+      "size": 11368,
+      "sha256": "sha256:ce80f0ee78e9ef9d6b6a3307717634c7a0848701a2dd4e72bb8f6c966be541a2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimModuletype_test.go",
+      "size": 8234,
+      "sha256": "sha256:8ae37813aafe31c2aaaed87b6826d3fdf2bf6d80107bd4828753649258545bf5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimModuletypeprofile.go",
+      "size": 11297,
+      "sha256": "sha256:6aae882788d26513e21a11f78c72af5597d1494f6153297fb0e64f5490b8b428"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimModuletypeprofile_test.go",
+      "size": 8688,
+      "sha256": "sha256:43e26a1afd04eab12667b42b97c1d894f16c549c3ef5e58f148f4ae55c1cb9d6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimPlatform.go",
+      "size": 11085,
+      "sha256": "sha256:be1351723d6d8eadc1e4dce7fd248baa77401d7f910b34a39c8e30be340d7cdc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimPlatform_test.go",
+      "size": 8105,
+      "sha256": "sha256:7821c409d0244713c2f73191b8dce5a1eab160011166381e691c60957775fb7a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimPowerfeed.go",
+      "size": 11664,
+      "sha256": "sha256:0d81400e8eb56685fc0d5d35e1cc9d349ab3df24bb29b1e0904ce1770bb188c7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimPowerfeed_test.go",
+      "size": 8169,
+      "sha256": "sha256:4a77559235ddf5d89ac725972859814b93d0f4af7c4fe777d21ffc94d3c89665"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimPoweroutlet.go",
+      "size": 11710,
+      "sha256": "sha256:e8cf15ec8d7319c1589797eb08684eedf83988c80eb466538e4da9cabe778e80"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimPoweroutlet_test.go",
+      "size": 8297,
+      "sha256": "sha256:e8764677146eeda48cf866707ee4aed35aff5cbf3e83dd71055798b7ed21a5db"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimPoweroutlettemplate.go",
+      "size": 11568,
+      "sha256": "sha256:8aedbda69838db3fefb1e3decf9bde8f5bcbe41e9eb81f9ffb431b22a49dd2c4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimPoweroutlettemplate_test.go",
+      "size": 8809,
+      "sha256": "sha256:580d94725793bf2c4c9ea1b17a66d137e98fa42149cfeeab154def940a8cc2ed"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimPowerpanel.go",
+      "size": 10835,
+      "sha256": "sha256:8a96bf89cf020abe3f300eb0fd419a5b4015599a7b2432b4af37380bdce13052"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimPowerpanel_test.go",
+      "size": 8233,
+      "sha256": "sha256:e7455f8ac15b2362a7f4b6348efe627a2b367f3f03c0648c9b2aa1170c609b46"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimPowerport.go",
+      "size": 11461,
+      "sha256": "sha256:42bf6f6905d033988e8f58c0e2c1291e7562688bef4847102b90f7dc3b845244"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimPowerport_test.go",
+      "size": 8169,
+      "sha256": "sha256:6f1e3f357cefe3358cbafc2226ead53752f577f453cdcf8854ac62ef3e0c72e2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimPowerporttemplate.go",
+      "size": 11440,
+      "sha256": "sha256:e23f3846df54440784b79018984a43b8ff4a5d6919410310a8aa2d3b71479d78"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimPowerporttemplate_test.go",
+      "size": 8681,
+      "sha256": "sha256:db851228324f3e54698533bae37fe6cd41476866c4c944d23eaaab65204f6033"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimRackreservation.go",
+      "size": 11316,
+      "sha256": "sha256:eab03391af58a1a25deae177a66c94b2a32e2815908d78a36ec22892fa2a2884"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimRackreservation_test.go",
+      "size": 8554,
+      "sha256": "sha256:9f7247a64c65e9a15c745ce95ad7c625330e5ed25f01c2c254c15039e7cb880e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimRearport.go",
+      "size": 11293,
+      "sha256": "sha256:d5992c9786f96c1cce7fd03c32acd5d6eedef13e4290d970f71b37a07488caf5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimRearport_test.go",
+      "size": 8105,
+      "sha256": "sha256:1835afe4b09c10291b7249cb165075eda6eecadffc50f91d1d69f5c0c44256c3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimRearporttemplate.go",
+      "size": 11337,
+      "sha256": "sha256:6523a6f20e7d1492281af3d479f132428d35f641daa7143215ea7b6c6c9d2c01"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimRearporttemplate_test.go",
+      "size": 8617,
+      "sha256": "sha256:ee9b0861269d8107df475535b70af1ae3e6d7d4235243d895dde50e915156293"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimRegion.go",
+      "size": 10762,
+      "sha256": "sha256:eeb34aaff08c411429d3de636c84b6fe90ef75fcc390b053233820a966678632"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimRegion_test.go",
+      "size": 7977,
+      "sha256": "sha256:d15ffd4513bab552169824714d6578727cd9f0d842d8f5a077626d475662afdf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimSiteAsns.go",
+      "size": 10124,
+      "sha256": "sha256:44e5fcc26c86cadf3c8b32d45a7f75cc47096fe748abc5d9630d5bb38790c678"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimSiteAsns_test.go",
+      "size": 8105,
+      "sha256": "sha256:8ac8ec0a79c1bf30154da0ad2bedc93f18a52b5278899717a7ab806f2fbf6ae2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimSitegroup.go",
+      "size": 10978,
+      "sha256": "sha256:e4fb88142f1b2d1d291e4484e3767d93c64b4d485caf65f7e8106d4aba6a461c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimSitegroup_test.go",
+      "size": 8169,
+      "sha256": "sha256:48698091b275aa0c5d3b14a89e2f0833b82630de16bc321ea4922eecbea5be2a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimVirtualchassis.go",
+      "size": 11194,
+      "sha256": "sha256:44527c846af7c9c1e283ffbfa84131f748cd1cad99d6313773db81e1c7cb351c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimVirtualchassis_test.go",
+      "size": 8489,
+      "sha256": "sha256:1c76c51412a0310ddc52398c25b9bfef1f62627e443ebff11b923a3e8f2e41da"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimVirtualdevicecontext.go",
+      "size": 11852,
+      "sha256": "sha256:9d5b816f20fead572a85c3a7480381d4ae76a9de1d8f68d99dbef584385a36f6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/dcimVirtualdevicecontext_test.go",
+      "size": 8880,
+      "sha256": "sha256:c149089175f3338f97e92e9b5ba3404f175fc2ff6b0fe3f33e5ede69c4ec60f9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/djangoContentType.go",
+      "size": 10491,
+      "sha256": "sha256:f323f95a2cd187bfe6b3452f0c62829fbc548b99c4691b5116aafcc03b089789"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/djangoContentType_test.go",
+      "size": 8429,
+      "sha256": "sha256:99c6c347a55a353e50bdb6335264b16646a844c4edb31d88fa9fe786f3c27b50"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/djangoMigrations.go",
+      "size": 10501,
+      "sha256": "sha256:b98e616d7c98acfb52ea55bdbff9a2c9c9874f98e75935dd1f4acb20eca96cd6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/djangoMigrations_test.go",
+      "size": 8360,
+      "sha256": "sha256:8e0d3a491351c5a2d194ef81be07439ba98963b7fa59b8f5ad9d24b20c1d0bc3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/djangoSession.go",
+      "size": 11354,
+      "sha256": "sha256:a0cd848d6d41986a8f78ea4a138e36005f8b2a364bed0c30156db23ed58ba87c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasBookmark.go",
+      "size": 10459,
+      "sha256": "sha256:964daeb9ca33fea9f4f0ea9a615918f4feec766ea6986d64e48804b62734d54e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasBookmark_test.go",
+      "size": 8235,
+      "sha256": "sha256:93585ee2b9af0f12e376e14d6f1fb59c68e83e59695b7880333fe4246f52c114"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasCachedvalue.go",
+      "size": 10856,
+      "sha256": "sha256:6dc91ad772aeede4dd5b5ac69082bb8de1851629888647753ee6e7d2c6a58c8a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontext.go",
+      "size": 11578,
+      "sha256": "sha256:8667b55707526bf04fb7bad61cfc6f0aaa4bf6d9e413872928e9bb7b059efa06"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextClusterGroups.go",
+      "size": 11618,
+      "sha256": "sha256:525af9b1284a3c8308609b82273462a83076d66bdd25c685e631c2096c8bc91e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextClusterGroups_test.go",
+      "size": 9394,
+      "sha256": "sha256:7d47ce3e7e279d3a13039cb8f660d524c53108780e836993d795b74a8b24c399"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextClusterTypes.go",
+      "size": 11543,
+      "sha256": "sha256:33a57a43ec8c2f442c0261dfe1ded6f4332d45a85975ebf96f0cf75ba39e0690"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextClusterTypes_test.go",
+      "size": 9330,
+      "sha256": "sha256:150ff67dbdb7c6f744ffc7658874862cfa66f507c7bfa2f2084bb46d4395bbfb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextClusters.go",
+      "size": 11243,
+      "sha256": "sha256:15fb5f6e1a94557af616fc802dd8ce423bd3f46d2271a464fcfe7165b5bb7484"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextClusters_test.go",
+      "size": 9074,
+      "sha256": "sha256:2a13f2c74bbcaa97cf1d8d2bf04627480393659b1fc546f86e3bbcc9905b568b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextDeviceTypes.go",
+      "size": 11468,
+      "sha256": "sha256:908968944448d547b63a463d534c70d20be0c5138ebdffeb5ed7931f7ccc0b4f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextDeviceTypes_test.go",
+      "size": 9266,
+      "sha256": "sha256:e08bfa94ec36e27defad3e7efef5910e2b75c717c49cbf604e1a6980b8f2e029"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextLocations.go",
+      "size": 11318,
+      "sha256": "sha256:8aa23ebbdb747b51c735759859710646f2f9441b6730edfcdaccb2259d0e1efb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextLocations_test.go",
+      "size": 9138,
+      "sha256": "sha256:af3610a819267b06ffef479420c99ce38b3fc6350efcae3bd2e7ccd0ef18398c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextPlatforms.go",
+      "size": 11318,
+      "sha256": "sha256:8e0bcd459d9f13ccdeec1f3b8b0e49f0351541b351dbc5ee9461e45c6adad686"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextPlatforms_test.go",
+      "size": 9138,
+      "sha256": "sha256:00278281186bbb83e36a77740a59e84d7b7c3e103fd5951e823602d5ed6f8867"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextRegions.go",
+      "size": 11168,
+      "sha256": "sha256:4c7402358a6a35897930739cc1a645e66c15099a6612467de7b40a2aa42b8622"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextRegions_test.go",
+      "size": 9010,
+      "sha256": "sha256:64b601253e64c6493cb90ef0232e86b9791687e40969fffc169d53bb8eedd93d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextRoles.go",
+      "size": 11036,
+      "sha256": "sha256:37d055364ab022aac2da2e2e039f447d2d654492044dd40c2843f43276598e05"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextRoles_test.go",
+      "size": 8882,
+      "sha256": "sha256:e4a5452e7dc5ab18203148f453e110a37a02d16c88cefab324bebddc07060cf9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextSiteGroups.go",
+      "size": 11393,
+      "sha256": "sha256:ba2e59bbd41ac034df75d59d1cac892a6f49af94bbde16c65c8347555210b4ad"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextSiteGroups_test.go",
+      "size": 9202,
+      "sha256": "sha256:524ed862991dcae1ab76c54036c4208a2d3f07af7abecfb02ccb9435a2daaee2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextSites.go",
+      "size": 11018,
+      "sha256": "sha256:877e9a96cd88feff091130868cce8fb6236b838f49f3c463ed84f57a45058db4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextSites_test.go",
+      "size": 8882,
+      "sha256": "sha256:929045677ab507f0ca5613c06aa1b0792875dc4fc04232117cccdd897226c0aa"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextTags.go",
+      "size": 10943,
+      "sha256": "sha256:1e0396442942eeb71958c4771afee7c0dc083c6525ffa5d7eb608412bfdc75a3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextTags_test.go",
+      "size": 8818,
+      "sha256": "sha256:92104c1196a611822be6a2153aad0d9df2334008f919ed9fda4e02e7c533961a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextTenantGroups.go",
+      "size": 11543,
+      "sha256": "sha256:3651cc49445b72410c4bdb47b1ae88bb99ddfa0878ef9335e15d836be753b34b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextTenantGroups_test.go",
+      "size": 9330,
+      "sha256": "sha256:52f49875e7c0280dfe8dea3315f8acacc87dfae9649c0346196ac5c21d428e95"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextTenants.go",
+      "size": 11168,
+      "sha256": "sha256:171b9ae92faf8d96250c1c574ecdc313134b78a35d9cc25994ea51112ae13933"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextTenants_test.go",
+      "size": 9010,
+      "sha256": "sha256:cbed7e980b2d07ca6c9a2642483811fc9bd3f4d5722fe12df20af0643493460b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontext_test.go",
+      "size": 8553,
+      "sha256": "sha256:f63e3d5ae97615ab206439c91b8b17ed9633a7daf4d223635cbc156441553fb8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextprofile.go",
+      "size": 12088,
+      "sha256": "sha256:8362452399792f60be48859e6b67efbe15ce4552b074b09ed706ced0bd591bf9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigcontextprofile_test.go",
+      "size": 9005,
+      "sha256": "sha256:f7ac7a09ecf140886e6161f9f7a5f003be89a9ada92f9f21a71f925920174321"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigtemplate.go",
+      "size": 11886,
+      "sha256": "sha256:880b11bb590feb49dfbabad2edd724ec6f22f83f2a37915432dae709045aed84"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasConfigtemplate_test.go",
+      "size": 8621,
+      "sha256": "sha256:63895f754fe1eb7f0f416fbf4458bf268dd80f75e46771e495974b33ec819220"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasCustomfield.go",
+      "size": 12348,
+      "sha256": "sha256:9472d4f39543ca80d6ffe900d8794bcb67bb877d2e2cefe0da04dda735ae5ef7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasCustomfieldObjectTypes.go",
+      "size": 11321,
+      "sha256": "sha256:607e2109500570d9e3bdf0420690c4ba6107d834d6916cdc7574e7f05e7b1a7d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasCustomfieldObjectTypes_test.go",
+      "size": 9136,
+      "sha256": "sha256:514580b0131c26714e17634339fbc2a7623bc14044b47721660491b6c004a6ac"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasCustomfield_test.go",
+      "size": 8425,
+      "sha256": "sha256:744d8083ca413d499f7aa57d61a73d6ba3d814cff8a373b20cb74634ffcddc30"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasCustomfieldchoiceset.go",
+      "size": 11625,
+      "sha256": "sha256:64437a753ce7ea14c379b71ffec01a46690359378e91b5ec71d132c0084f78bf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasCustomfieldchoiceset_test.go",
+      "size": 9001,
+      "sha256": "sha256:879203bcab20959dd8512c536d6b5e09012edf0369e769710f14c047ee05dcd3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasCustomlink.go",
+      "size": 11051,
+      "sha256": "sha256:2855c00b0128a3002d3ca63e99012528aa682ba489142d2e9288d9386b0f8a8a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasCustomlinkObjectTypes.go",
+      "size": 11246,
+      "sha256": "sha256:5f19606463c9953e1ccd989cdc3d97e543d0bbbd52add41c13a63e6c9c83968a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasCustomlinkObjectTypes_test.go",
+      "size": 9071,
+      "sha256": "sha256:c9f697834c8c8b752956e581fcef3969059273b5b500d77a60bc5d337edd66c3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasCustomlink_test.go",
+      "size": 8361,
+      "sha256": "sha256:6d1fc9c245eddf281e8e47ce2fd76eed0207e1c04f674f523e4aef011dfc5853"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasDashboard.go",
+      "size": 10469,
+      "sha256": "sha256:90cda28fc56af7a0e80d011631a9d0c024bb52215a8020744fa1b75776b632c9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasDashboard_test.go",
+      "size": 8297,
+      "sha256": "sha256:a526d4213261b211079dbe6056d1966a6facba51079ccf9993cfd191c9afcae2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasEventrule.go",
+      "size": 11395,
+      "sha256": "sha256:ff08d0b0573542164f0b228a08063cee9b742ffcc811240872958064feace624"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasEventruleObjectTypes.go",
+      "size": 11171,
+      "sha256": "sha256:2d75fbd49b83568805da28237a06d50a7c56f239c7ea23f57b5b04364746c562"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasEventruleObjectTypes_test.go",
+      "size": 9006,
+      "sha256": "sha256:6b1babd73b51866a9769615cda9675f7bae332314715099e8a3f8fb528e6455d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasEventrule_test.go",
+      "size": 8297,
+      "sha256": "sha256:3b74b5c882726e050b9546935b552bfc66b3008edfbb155b824f3945e821b101"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasExporttemplate.go",
+      "size": 11886,
+      "sha256": "sha256:70e7827bdebc31f57c5e258da85a90945b7a4139d50e61aadb17e72714a30f20"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasExporttemplateObjectTypes.go",
+      "size": 11546,
+      "sha256": "sha256:a83b4b6a06e68d86c88d191da44e00977e77f8a0eae731e6ca452d09da3ace20"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasExporttemplateObjectTypes_test.go",
+      "size": 9331,
+      "sha256": "sha256:937f1b27d6d54a9b15857a01bb18108fa8ed752ab7daa2a811bb706c8fa3cf67"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasExporttemplate_test.go",
+      "size": 8617,
+      "sha256": "sha256:d3c2c53a1a69b2fce550107a182d1cc032570ca701925bbcc83040c57e6c6b6b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasImageattachment.go",
+      "size": 11362,
+      "sha256": "sha256:1de233445848577de9ffd09dd63241063eb970216aa401fed6475aabb7fc1863"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasImageattachment_test.go",
+      "size": 8683,
+      "sha256": "sha256:089d47c41663b56d68bc630509365b18059d9c6dc7b3af8c423307220cfe1ab7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasJournalentry.go",
+      "size": 11187,
+      "sha256": "sha256:a221b9ddd29c971dc639987166b0d3d1f48cf737947aef68afed26d7da2dc0cb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasJournalentry_test.go",
+      "size": 8499,
+      "sha256": "sha256:c4250e9a7b8e21fa58ce96a07478ee8f211fcd0a76845430196797b013dadbeb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasNotification.go",
+      "size": 10983,
+      "sha256": "sha256:f2d7eec23a9759f87362c483be279937ca5e84e202817db342c8f2cea63936f0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasNotification_test.go",
+      "size": 8491,
+      "sha256": "sha256:b1b97d95839f872c918acdcaa128bbfc05c3c983909ce4feccac67e5cae51cd5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasNotificationgroup.go",
+      "size": 11147,
+      "sha256": "sha256:0dcb2366aaae99a0a3cc22d64168f2a886c7f63e08945b37c2963959cde02295"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasNotificationgroupGroups.go",
+      "size": 11393,
+      "sha256": "sha256:290f9d96f00a2e584b53d0471dfd4b1417846e1241f0a4a5ba6fe094617db487"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasNotificationgroupGroups_test.go",
+      "size": 9206,
+      "sha256": "sha256:328bda5c98eb50aa6337755630c258f858dfc342e9c26bba411adfb99c4ded7a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasNotificationgroupUsers.go",
+      "size": 11318,
+      "sha256": "sha256:e0c8ec5437cef571e6b4e7c53d4ce464560acb02b3d9dca1a192fbcb98140eb7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasNotificationgroupUsers_test.go",
+      "size": 9142,
+      "sha256": "sha256:a78bd0c785cc64d5195386e7caa5829c54a6503ec6b1e22c163dfd378b6da6e0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasNotificationgroup_test.go",
+      "size": 8809,
+      "sha256": "sha256:f3a937ea55b838e751708bd21e4c90d4284fdbe0b9c0e4f96ce02810a3efd114"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasSavedfilter.go",
+      "size": 11133,
+      "sha256": "sha256:143240d6a2811c76b77beeaeb493c73c65fb6c3f3276fc9a572a651b2dc16b2d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasSavedfilterObjectTypes.go",
+      "size": 11321,
+      "sha256": "sha256:0440b9e39de70c4c10804240baf735b3a9f9e2774ea83da386a24ab90531b4ff"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasSavedfilterObjectTypes_test.go",
+      "size": 9136,
+      "sha256": "sha256:e24ac390729f84b328b5dd96c7391bc0d31167e81f1c378b25e73403c9b302ab"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasSavedfilter_test.go",
+      "size": 8425,
+      "sha256": "sha256:e85bd534b78fb719ed849f315e68d77fc896bc165794cf0778e0aa918d6e9002"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasScript.go",
+      "size": 10209,
+      "sha256": "sha256:7f05be2f284a1e6cc8a2ab732a14b6c92a8e693cb963ccfce6e85602d61dd1bc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasScript_test.go",
+      "size": 8105,
+      "sha256": "sha256:0f1e8d48b048a0e9ecad16d93b23e0c1377f880690754716fbefb6c618693ab9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasSubscription.go",
+      "size": 10747,
+      "sha256": "sha256:c38864dde0fa3dad801510b44635a573441bae739862e331df91fe7745728c9d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasSubscription_test.go",
+      "size": 8491,
+      "sha256": "sha256:b58b351cffdb4026b43cd5d0ecf78d1d3eee6691e492e721168dcbf0796d848d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasTableconfig.go",
+      "size": 11240,
+      "sha256": "sha256:cfced9c49ea1eb442d9d1630b8569a922166f325234d1e351728a40323c5af54"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasTableconfig_test.go",
+      "size": 8426,
+      "sha256": "sha256:008457f98c261fb705f698ca649e433b7ecc4c84056025319eebc441f679b98f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasTag.go",
+      "size": 10315,
+      "sha256": "sha256:54b869a23795160ecf1567a50b1cdff88b02a91a78798edd2520e1b2f05684b5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasTagObjectTypes.go",
+      "size": 10721,
+      "sha256": "sha256:4c5f1fa1efcff58b33a75dc95e83ccc74828aa51a8bb234f46898473f1d597c8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasTagObjectTypes_test.go",
+      "size": 8616,
+      "sha256": "sha256:f754fbe753beffeb7d9f97a5f0f8f906d580f13140f7d64529d945615e0c9031"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasTag_test.go",
+      "size": 7913,
+      "sha256": "sha256:345a2b67b2584dd72464ade6820f829dfe2de687ecd7b60bb921a0f9b0e662eb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasTaggeditem.go",
+      "size": 10502,
+      "sha256": "sha256:ffe4add8e1d0e6d0e8629f2053e0f363a929621d8e92e0764d7bb53e37764c97"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasTaggeditem_test.go",
+      "size": 8363,
+      "sha256": "sha256:d294b99286078601077bf4e0b0aad6f6f0d66db14281d8eeb528de0631223ee8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasWebhook.go",
+      "size": 11206,
+      "sha256": "sha256:5f1d630ef06806437be66f1647fbf659cc294aa6ed2d317bc4688c4919fdd525"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/extrasWebhook_test.go",
+      "size": 8169,
+      "sha256": "sha256:1d3315c926570b8e89ea7fb6e2d52728feef07d311a93dce9a183484665b0496"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamAggregate.go",
+      "size": 10870,
+      "sha256": "sha256:24f0d9298bfa4facc77cf3c22d44f41818f53dac33df7f1e01654178b1383d05"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamAggregate_test.go",
+      "size": 8171,
+      "sha256": "sha256:1d31fffd1cbf4e96bb15f72a1c4610b5cfbda601251e32d2db1c878f26251170"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamAsn.go",
+      "size": 10320,
+      "sha256": "sha256:893acb07a7a7164c33e944224829f40fc1f2288fd385d6d07810bf56205b03a1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamAsn_test.go",
+      "size": 7782,
+      "sha256": "sha256:bf76af895d8de93b3029bcb81838026a07aed0e8d17a2318f6a0790cf48623d6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamAsnrange.go",
+      "size": 10780,
+      "sha256": "sha256:39e515ec044642d0ffec1c420530099dfb3e65fa82007b1ad97c4d1141c9a7e9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamAsnrange_test.go",
+      "size": 8112,
+      "sha256": "sha256:6ef2dc10310a39556f6b84b4e3bcf1cf9847acc41f65f4dc6f9bb311039c149d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamFhrpgroup.go",
+      "size": 10895,
+      "sha256": "sha256:03c9c5f9dcd9e92085a548693d5c9b66f42050a8e6233b2ca39bf140c6726bff"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamFhrpgroup_test.go",
+      "size": 8170,
+      "sha256": "sha256:3462aa6f75464a4b2404f689d549a15fce9036d3d6d2aed15c7fe52d833540f3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamFhrpgroupassignment.go",
+      "size": 11313,
+      "sha256": "sha256:e98ef4a3e489cf0dcccf4947624a2de9cc85da61beb90fb9d66a89068fe5cd71"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamFhrpgroupassignment_test.go",
+      "size": 8814,
+      "sha256": "sha256:e6e640a798abd41301c881753a9947ef9589eb2ac216f1f874e1119713945d4d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamIprange.go",
+      "size": 11056,
+      "sha256": "sha256:60ed127c199d4c9b67611eed47c57d3118a255b711d6c4c3869aa5e830814a5e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamIprange_test.go",
+      "size": 8049,
+      "sha256": "sha256:e2f9d362699f74230b0a9bcb01b104aafa3d7e8d62365ff06cb57f1a8594bb63"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamRir.go",
+      "size": 10258,
+      "sha256": "sha256:463b8de292b9a7e213a63d344ffdb21ca756b4e9e34f163f0c09c9812bb935c9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamRir_test.go",
+      "size": 7785,
+      "sha256": "sha256:e00e56d67a2c5df554c7067ea4ee82b09dc8f9ec2bc935d0e849e16d7a80d779"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamRole.go",
+      "size": 10316,
+      "sha256": "sha256:b3f017a42983cf17b24055e05a68cd132f7a43b75f7f480bc04fe5cb7e21444e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamRole_test.go",
+      "size": 7849,
+      "sha256": "sha256:591c34a5ddefc1a3fd9d9d4db9a31c3bf61f4b1e0bb8f03209658804e5e1f01d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamRoutetarget.go",
+      "size": 10839,
+      "sha256": "sha256:87662f317c77ed666011409f03addd1d4a01e675af87bf36ec2e19a22002c26b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamRoutetarget_test.go",
+      "size": 8297,
+      "sha256": "sha256:c772ae572be9de92c580b0fae9945d87ac56d68a3a93b5087b647407c21da5ad"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamService.go",
+      "size": 10797,
+      "sha256": "sha256:941dd5de5b48e78d467a1b5f0aed5bf935d1dc53f74fdb8a8e4c772270a6d61a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamServiceIpaddresses.go",
+      "size": 10871,
+      "sha256": "sha256:3b84c5f178810a384f9bfee6c44ce417b4a0451fa659bc8b76e655e5a1b98450"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamServiceIpaddresses_test.go",
+      "size": 8748,
+      "sha256": "sha256:f4f46ad214509a239674870a8ff98d936316912bf742a827031d4d5309a0b3d3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamService_test.go",
+      "size": 8041,
+      "sha256": "sha256:6c4e092217ef0bab5cdd9269bbdbaf9e47d72bf29829d7bbc2254bce74da1acb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamServicetemplate.go",
+      "size": 11186,
+      "sha256": "sha256:eefeb9f74d2056fb2131dc23b9e6a4168109fd7a6435b0b557483bc435c2e75b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamServicetemplate_test.go",
+      "size": 8557,
+      "sha256": "sha256:68ba027b681a3f341f71a2283a1d94f79652dc47a77bb94fbda3a9c0b1e2abd8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamVlan.go",
+      "size": 10785,
+      "sha256": "sha256:5ce66e46afdd192a10435309f460807f2d3d5053aa1ed9e316f634eca06e64cb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamVlan_test.go",
+      "size": 7846,
+      "sha256": "sha256:da72f374b8f207bd9c83bea043a1ae8716e2b7f544a4f73d48f516e5af812c44"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamVlangroup.go",
+      "size": 10982,
+      "sha256": "sha256:ed3584074774f4e8c06c12c3f035cf27635b55591af814d53e876f1331909299"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamVlangroup_test.go",
+      "size": 8169,
+      "sha256": "sha256:9d81fadd19e49d1a3cfabddc9ff8aa09e4b6d89d79f1ca4f5e9fa90f4ba55ee6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamVlantranslationpolicy.go",
+      "size": 11491,
+      "sha256": "sha256:a8cd91de1108bd4c9ae0a4b3be96b047ff64ce9bdec8ce81364f88a2553058d0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamVlantranslationpolicy_test.go",
+      "size": 8941,
+      "sha256": "sha256:10971235f477b5330f6d8bae72e75e94dbd8fafa9ccc382b243c6d0d4506cb0d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamVlantranslationrule.go",
+      "size": 11430,
+      "sha256": "sha256:a970c9da67d4f54e1e170fffcfe05f93de31dc2ad94d8743d8aad899b54efb09"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamVlantranslationrule_test.go",
+      "size": 8811,
+      "sha256": "sha256:a18b3d1f9b37b14576355e039c72e02c536945b2e88067d378a11e69b33b6971"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamVrfExportTargets.go",
+      "size": 10721,
+      "sha256": "sha256:382f7b8716c2bc224b1f0c36d8176624deed3187945a5fcb71df3d236e3c9845"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamVrfExportTargets_test.go",
+      "size": 8616,
+      "sha256": "sha256:f1742f1261d6e1d842c3ef22f41678da00d15b973df2e744f9b4941978c1459f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamVrfImportTargets.go",
+      "size": 10721,
+      "sha256": "sha256:1959ed10f8f08dbce9e6e364a94942c0e70ae6252b9f4188bb5afe5049872643"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/ipamVrfImportTargets_test.go",
+      "size": 8616,
+      "sha256": "sha256:ce08e6bab301f79929e26ead0f7f062a5d5e79183c6b503b0b18bafa08373b8d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/socialAuthAssociation.go",
+      "size": 11047,
+      "sha256": "sha256:d56f743c8e4958e613628c310e24c0c2283c637d7591a3c2b773f34b2b4e0a32"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/socialAuthAssociation_test.go",
+      "size": 8686,
+      "sha256": "sha256:2aa6eab444fee273ca71279f58c9bedae1eced1b50e7a702f37e34478b2e9d67"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/socialAuthCode.go",
+      "size": 10440,
+      "sha256": "sha256:67c8d07ca5cd2267b9fb562fa519e03b8650c3d21f05a8c474e29e641c5bf0de"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/socialAuthCode_test.go",
+      "size": 8234,
+      "sha256": "sha256:defa4f52e08d408e0014589d857274e9d4aaf4fcf1c110e273142a113619c324"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/socialAuthNonce.go",
+      "size": 10417,
+      "sha256": "sha256:a196a1d7c1b00985515d145054ff22d545b50ef1b092b26b8a0bcef4b301f9a7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/socialAuthNonce_test.go",
+      "size": 8302,
+      "sha256": "sha256:ff03b4dc58df24d8ae46c861f0295340e847e6e9ca9a6dad4d849fbf60a2ba7f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/socialAuthPartial.go",
+      "size": 10750,
+      "sha256": "sha256:aa0bb24443f9ffd06152100717c1395f3b91ab54531cfb5f6336a677ce4b7e07"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/socialAuthPartial_test.go",
+      "size": 8426,
+      "sha256": "sha256:8011fdebf79bcb75c57e6ecffc02f3bbcbaf3c06e67aadac16c0c7af6afe0c6b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/socialAuthUsersocialauth.go",
+      "size": 11363,
+      "sha256": "sha256:3d6097fc232f83125c16dd6349cf0eb27e0aacdfe67c19bb4d694d1ac04bfdc0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/socialAuthUsersocialauth_test.go",
+      "size": 8877,
+      "sha256": "sha256:3c5cbb533be930db5ad378cf7c9cbefc914dd32f4779892069dad0712f17a07f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/taggitTag.go",
+      "size": 9899,
+      "sha256": "sha256:1acbdaa6e585829391e7c041fefa38db9b0f61ab75ec36605c288bca0818fb9f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/taggitTag_test.go",
+      "size": 7913,
+      "sha256": "sha256:13cf50905bbcc0582eae738c8bb5aa6882909abd1de37c223a70f11b3053e9fb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/taggitTaggeditem.go",
+      "size": 10502,
+      "sha256": "sha256:d05122bc0ac08bca3137c4d859fbdfb39c24d84a39d816c81d4d636f9fadb4a7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/taggitTaggeditem_test.go",
+      "size": 8363,
+      "sha256": "sha256:da9b5bd1dcd947ce023501837e80e1c28ca38b734b05ea37c7682de50c4aed9e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/tenancyContact.go",
+      "size": 10997,
+      "sha256": "sha256:81983685efdfb4d124ed42c90f2847bc63c332476d6a6449a304be5b69c79529"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/tenancyContactGroups.go",
+      "size": 10736,
+      "sha256": "sha256:49125a86ce1655c7fc07daaa9a260f8a449923cbd86c510623eeb7d01984872b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/tenancyContactGroups_test.go",
+      "size": 8620,
+      "sha256": "sha256:be2fab609c9beca9d1797bf48881aff0da96bf5621d9c83c29457244c4ab4b52"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/tenancyContact_test.go",
+      "size": 8233,
+      "sha256": "sha256:166cd77298cad0f954f237eeaaebb8b21af6e95dc6589d94940baa2f6325e5ff"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/tenancyContactassignment.go",
+      "size": 11568,
+      "sha256": "sha256:caec7a7c3deceaa521ae687a2eee4bd9b7b7ccbe51b53fdc54d553f189ba16f3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/tenancyContactassignment_test.go",
+      "size": 8875,
+      "sha256": "sha256:b1c0f78b890e227954ae2693653182b3c0e77d62c9807e0360836f4957cad8e4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/tenancyContactgroup.go",
+      "size": 11410,
+      "sha256": "sha256:bbf84bb1cb141fd29c319c7a10b9576f92b6b0d36966d09f9137c9c599838587"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/tenancyContactgroup_test.go",
+      "size": 8553,
+      "sha256": "sha256:7fa978af16065548d8d18cbe5e4fa1bdcf773066df1d8da0f4f28fde67acda76"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/tenancyContactrole.go",
+      "size": 10975,
+      "sha256": "sha256:4664bb958e234769e5098ac36cab42a2cdaa158ba6b0d8b4eda5915929de6f83"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/tenancyContactrole_test.go",
+      "size": 8489,
+      "sha256": "sha256:816bafe2de56ca782ea754cdff9fb958fdebee7bd943e4bffbefe5f4b6079375"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/tenancyTenant.go",
+      "size": 10748,
+      "sha256": "sha256:ee682c6b07754613be63d7a22011639dd2b5f3fbfdb4dd5a4c7f8513713acb0a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/tenancyTenant_test.go",
+      "size": 8169,
+      "sha256": "sha256:134c2b0db3466969130d94569afc7aebaeaa055093ea7b0ce8287400d04a1cbb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/tenancyTenantgroup.go",
+      "size": 11338,
+      "sha256": "sha256:e616f2f4ad4d2e029bedc4299781c0e123e2d67dc850e07893040e5a1e439d4e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/tenancyTenantgroup_test.go",
+      "size": 8489,
+      "sha256": "sha256:0de71475d6dc4e39b6664189c1e98a41bc43fca8d4cf1a49f2b26d4f9c856808"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/thumbnailKvstore.go",
+      "size": 10607,
+      "sha256": "sha256:6ff678d4c852b5b9e6a90d8141ef3ed1bbdaa0cb6c2c8067973dcc913524f414"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/usersGroup.go",
+      "size": 9992,
+      "sha256": "sha256:d3ed0b298aab454a4f3a244d5a9eaa4b062dd016733d16d8743b3ca4b8731286"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/usersGroupObjectPermissions.go",
+      "size": 11246,
+      "sha256": "sha256:dbe453020e026841c59ae57a3a06d9ca97aec8425bf2c7caba08ed9d5d15e8b3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/usersGroupObjectPermissions_test.go",
+      "size": 9077,
+      "sha256": "sha256:828c7947bdea4688586486da4a5cafce7bc9391cdb7fe9197e7b2e1d232a8a15"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/usersGroupPermissions.go",
+      "size": 10796,
+      "sha256": "sha256:3bbbb0d69c98daf4bcda0cb6fe813ad1268bf966760d837f3d7036dc07223d61"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/usersGroupPermissions_test.go",
+      "size": 8682,
+      "sha256": "sha256:63daac0141d8d5966bb2e71bf92aed0475491c8a5e26a6fd63dd89ee13833acc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/usersGroup_test.go",
+      "size": 7977,
+      "sha256": "sha256:482e8c2f23cfe762a3003cfa440f0aa00d12245c0c1f6f8a67612c3d9f4aeec0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/usersObjectpermission.go",
+      "size": 11029,
+      "sha256": "sha256:e5ad3a809f3163811974083de08a6872781b76f6db82b06c3ba63489f56df45e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/usersObjectpermissionObjectTypes.go",
+      "size": 11624,
+      "sha256": "sha256:c331754a101d7eb4c30e7e7b2183038d00647fbbcc6dc889dc7e814c4a2ea63d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/usersObjectpermissionObjectTypes_test.go",
+      "size": 9397,
+      "sha256": "sha256:9740856049b75a14bc1fd95e9fd44ca3829d4bfa1f9dc06373c65d01cf9e51bd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/usersObjectpermission_test.go",
+      "size": 8681,
+      "sha256": "sha256:51f08dfe86c57453b869d65ac38fa64870135e051485bc8534910ce84c9181fd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/usersToken.go",
+      "size": 10516,
+      "sha256": "sha256:7967055a8bbcc80ddbbb888bc2c6d71222346f0c723d8bb4ef77932d0813053e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/usersToken_test.go",
+      "size": 7976,
+      "sha256": "sha256:f3917dd32abbeb63b4fa924b57b218e4da9b636db0281fd129924dcf5da316b9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/usersUser.go",
+      "size": 10563,
+      "sha256": "sha256:33bc01d258c6608c0174ed57393dd67747b539a715367047573e21d519644848"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/usersUserGroups.go",
+      "size": 10346,
+      "sha256": "sha256:b42d75c6db8475499a239a1887406522a9265a153ce702bb6004ccb84143c1b6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/usersUserGroups_test.go",
+      "size": 8297,
+      "sha256": "sha256:d763ca7af7bceb9e13e902f4441d293a070a6f9d790ff8b822e6e2aec0a97332"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/usersUserObjectPermissions.go",
+      "size": 11171,
+      "sha256": "sha256:d43599b7c56169e802630b3024a1ef27ac7c055593c0d27a9555f09c0b2ed79f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/usersUserObjectPermissions_test.go",
+      "size": 9013,
+      "sha256": "sha256:69f0138038f867e0812221cce16d5636dc3f47469bb305dc50b01bcbd0542864"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/usersUserUserPermissions.go",
+      "size": 11009,
+      "sha256": "sha256:e231579db0f545a236f96dbed9098d3a321c2c8282f0ed3cfa0d9ce37cf43eab"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/usersUserUserPermissions_test.go",
+      "size": 8873,
+      "sha256": "sha256:26aea46b721d085aa2eb571ed82157c1abe4e631f3079ebb3a2ea839f52cb46d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/usersUser_test.go",
+      "size": 7917,
+      "sha256": "sha256:333fa68376cdefc0eff8a988b414500d932c61fa8d4ccbb08145ede63d23d531"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/usersUserconfig.go",
+      "size": 10367,
+      "sha256": "sha256:a6a3044826cca0b95aacb247e0a4b449d6f9d332ec7f044c3745caabb1d25322"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/usersUserconfig_test.go",
+      "size": 8297,
+      "sha256": "sha256:957aca94b8dff9ba790ce7b22acd1a21d035b01d8a8903c8f0ca8585c0b35e26"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/virtualizationCluster.go",
+      "size": 11897,
+      "sha256": "sha256:3f39bd37a2efa0bd5d4e40ee8ee970320d950dafdc0c08e6cf0d1b60f364b2ff"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/virtualizationCluster_test.go",
+      "size": 8681,
+      "sha256": "sha256:46f2683c762b4855ff54d434eda5fc0c98427df56bc9ad492575bd4f4ae7d158"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/virtualizationClustergroup.go",
+      "size": 11551,
+      "sha256": "sha256:5cc9c72fe1f9119608e22e53eb933ae6d5e31d0f6c68b5d3bf92b8da2ff46fad"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/virtualizationClustergroup_test.go",
+      "size": 9001,
+      "sha256": "sha256:1ed6cd6e4b312c8572a8b1c8d1dd519bd3b298bed99ef8e2d5d2768642cf10de"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/virtualizationClustertype.go",
+      "size": 11479,
+      "sha256": "sha256:de8e7b26555f98fa8ba3480725138c1ad40e8ae45c385c293d429a404cc9f6f5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/virtualizationClustertype_test.go",
+      "size": 8937,
+      "sha256": "sha256:f5a7133bfe2a680c9722e32a15b5f169d26b4ff151ad84ce9d2d79f474e4d5ea"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/virtualizationVirtualdisk.go",
+      "size": 11571,
+      "sha256": "sha256:bf2e766052245baa14991cbda6c0a7c73a10592f4e6cb5603b886ffc7c0fa1b2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/virtualizationVirtualdisk_test.go",
+      "size": 8937,
+      "sha256": "sha256:aabcb14becd91ee71c3ba91ee1e28b243d8f48c5ee2ac07e4455c9ad2e6bbce8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/virtualizationVirtualmachine.go",
+      "size": 13015,
+      "sha256": "sha256:b1fa41ac5509aeb3825a5310b19b9c87dd6f021e87d4939cedcc6ea113d96f87"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/virtualizationVirtualmachine_test.go",
+      "size": 9129,
+      "sha256": "sha256:53d626c76df04746e644e8da0214d6cb6ad809eee296ff002ed9160f1a0cc671"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/virtualizationVminterface.go",
+      "size": 12327,
+      "sha256": "sha256:caa733601b928c6f2aa8ff5cd5586676710b609e2487ab73890b663b447cc029"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/virtualizationVminterfaceTaggedVlans.go",
+      "size": 11876,
+      "sha256": "sha256:e9c51f1dd5f5c93ca6f15b04f2f5575ac406e21e9df41d316b64e540cff3ddd5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/virtualizationVminterfaceTaggedVlans_test.go",
+      "size": 9648,
+      "sha256": "sha256:2197bdf7cb2744841dfc7b864a188bc876a59b506ac82e71e52175fede4a27e3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/virtualizationVminterface_test.go",
+      "size": 8934,
+      "sha256": "sha256:1a5359929a9ff45e9b4190f641fb37cdb3c9416fbf8fb7b01a9e5a4099e7a7bd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnIkepolicy.go",
+      "size": 10756,
+      "sha256": "sha256:0421c4e89c6d0a036c871f3dfd241d12bd60bf62be0495a824a8356bc62d9fc6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnIkepolicyProposals.go",
+      "size": 10811,
+      "sha256": "sha256:000378fe405f2bf64bad5fab7de15af037c764258b8eb3874cc18662697307d9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnIkepolicyProposals_test.go",
+      "size": 8686,
+      "sha256": "sha256:2b6f0663a7978b65cff25f1d4982168d72cb4f11c74b03df2fd672439e757c66"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnIkepolicy_test.go",
+      "size": 8112,
+      "sha256": "sha256:d37994c00003f5c45067f0770f6ac8b814c2caa1315c5476a4ae50b22df664fb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnIkeproposal.go",
+      "size": 11152,
+      "sha256": "sha256:7cc7895fb80a29318b877368d3a8714a0ed78e4002d63a9d404ccc9c4c488296"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnIkeproposal_test.go",
+      "size": 8240,
+      "sha256": "sha256:2ed1fe3b0d7396d4e037473df26f6e8eb5346edd5c28ee06a8b722738dcf5edc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnIpsecpolicy.go",
+      "size": 10767,
+      "sha256": "sha256:de6caef637d35e22ca0ff3f480475a7121fdcd3b4210dba5588ec0bba3ad829c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnIpsecpolicyProposals.go",
+      "size": 10967,
+      "sha256": "sha256:9ff047337e5b090019abc9112cef31b3703ac0d7712ebf3ea3ea338998e656d3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnIpsecpolicyProposals_test.go",
+      "size": 8816,
+      "sha256": "sha256:586dd549cd7e53f2dd74b70ea8cb0f9e3fee7426e03e7dcbfcafcfbbfa46ab00"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnIpsecpolicy_test.go",
+      "size": 8240,
+      "sha256": "sha256:da0787b2971f41642231a6c56e03c4046a6763adf1ce956c670641a36feb979a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnIpsecprofile.go",
+      "size": 10989,
+      "sha256": "sha256:01d5533535abd621df76f25fc2a2ed51343deac1ada11df75757b3563ec08aba"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnIpsecprofile_test.go",
+      "size": 8304,
+      "sha256": "sha256:867244f8216da7eefc7823e657052b31f858626ddd781aa05e6b8288a6d1d3dc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnIpsecproposal.go",
+      "size": 11242,
+      "sha256": "sha256:99d835f74698d53175b142be61f76d07e44297157d932e9416d8d062b892fa52"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnIpsecproposal_test.go",
+      "size": 8368,
+      "sha256": "sha256:1866dc58786bb78c593d77b38342a216dfd6e3c6759e051d80ef4751407443c0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnL2vpn.go",
+      "size": 10582,
+      "sha256": "sha256:ec4a85863ea1696a793386350e0861a010469ec68c21df07e0e821ebd3fd2dfb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnL2vpnExportTargets.go",
+      "size": 10799,
+      "sha256": "sha256:5a27f7bc4f142041b44a18cc44d422ec14cfdfa137aa6ba545dcaed9a02a3589"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnL2vpnExportTargets_test.go",
+      "size": 8682,
+      "sha256": "sha256:bbbe664e555a10f47aafdf7d2eea19218bbcc6d581bd509160ea2a0a49a4cef2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnL2vpnImportTargets.go",
+      "size": 10799,
+      "sha256": "sha256:cefa90bc7f9331de60417775df377423ff39065a60d06d7bfe5ff1bffd7af109"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnL2vpnImportTargets_test.go",
+      "size": 8682,
+      "sha256": "sha256:f220ea7eba4ac95d6ab4b90acf2bbb452f1ef71ca12cd4de1ccfb2f1a9c5577b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnL2vpn_test.go",
+      "size": 7852,
+      "sha256": "sha256:b59ff1eb10dc7a635fbc5bdacd214e020671364846ba8a5adcad8930de006c78"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnL2vpntermination.go",
+      "size": 11122,
+      "sha256": "sha256:d40842ab4eddf707f117ea7637fcf11feddc21294162cd9896b618e82c39e75f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnL2vpntermination_test.go",
+      "size": 8563,
+      "sha256": "sha256:0909ebe24cbbb8147eb465bb594c6ba4a09c2f1c27a774559d3066bc6e671b82"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnTunnel.go",
+      "size": 10772,
+      "sha256": "sha256:6b597d8b6d758bda2e62c52970e039a291581f70ae98a2cfc6338962f17e05f0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnTunnel_test.go",
+      "size": 7920,
+      "sha256": "sha256:8fe848ff8ef3709638d4c60e931034a0088a6ebe387c82ba136f1727b3f9f774"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnTunnelgroup.go",
+      "size": 10687,
+      "sha256": "sha256:1e2bcc40673bc3083d0a44779d3c16a5060a4a56098f099b06c3f4d0432a54cc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnTunnelgroup_test.go",
+      "size": 8233,
+      "sha256": "sha256:cafa9dfc6e154ef7c449b0778cd5b0af524deef79a86be12f930611160ccee18"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnTunneltermination.go",
+      "size": 11311,
+      "sha256": "sha256:c1545002510602f81c506e7e872330cd5e714434cb64e3d9c9e7ab600056a164"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/vpnTunneltermination_test.go",
+      "size": 8617,
+      "sha256": "sha256:d47d96337ac462837543a8658dacb5570e825e13f646108df0568689d8e791d3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/wirelessWirelesslan.go",
+      "size": 11963,
+      "sha256": "sha256:d54ef221e4a03c268515bfc04c2175953baf163e281f223c0823c7b9dcaa8e30"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/wirelessWirelesslan_test.go",
+      "size": 8553,
+      "sha256": "sha256:7c12d1fa14d13954f667c58da5eeb1bb8ff4591f5d4e3655731436186c7c23ff"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/wirelessWirelesslangroup.go",
+      "size": 11770,
+      "sha256": "sha256:283635ebdfea99418733cc2cc0dfede54a12d922a62526e7d88ec25abfe1f7ce"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/wirelessWirelesslangroup_test.go",
+      "size": 8873,
+      "sha256": "sha256:597d0e09179bb3fca7734ac621bc19e79cedf3876ff338c76dd199f0958b439c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/wirelessWirelesslink.go",
+      "size": 12147,
+      "sha256": "sha256:6a1fa3213fcbef8aff6b93884b5e3bac70dff105c2e91816927c14c6d5c3b3b4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/dao/wirelessWirelesslink_test.go",
+      "size": 8617,
+      "sha256": "sha256:aa35e56680d013db0a50feff314d8d1152562ef6f6ef5c0ac9767a066018a403"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/database/init.go",
+      "size": 1069,
+      "sha256": "sha256:04ff3096f84f72cfc31b94af98f9f783f0f70fac1521bd1152e743cd6689f359"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/database/migrate.go",
+      "size": 9680,
+      "sha256": "sha256:cbbc5433aefeb5364bbc48907b4128ca1c91909e1ab80b9c29610ccc3893cb2f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/database/migrate_postgres_test.go",
+      "size": 2169,
+      "sha256": "sha256:04ef5167d8336a25efe19c454b619717136fdf030276e3de77c334291c7c197c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/database/migrate_test.go",
+      "size": 1584,
+      "sha256": "sha256:5d8debcdfc7e656783537d68bd7b593f5463ef1e73aafde6078f2e699f535718"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/database/postgresql.go",
+      "size": 1166,
+      "sha256": "sha256:526911409634de49a572ef0fee751be976893e92ebf5751eeee51bdcc54b7bab"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/database/redis.go",
+      "size": 1720,
+      "sha256": "sha256:480d3f77f261581d7ab208747d4aa7921f338f336608240bc79a17547cb03893"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/dcim/choices.go",
+      "size": 740,
+      "sha256": "sha256:faee2004b1debb0fd4f58e572b50d1cf86b158349a000de68cb49bfbbe9efd30"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/dcim/device.go",
+      "size": 23895,
+      "sha256": "sha256:0c3c1b93b64670b77015d25977ae7618610c3e879cff8b25a12f2620afd2f9a2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/dcim/device_role.go",
+      "size": 11395,
+      "sha256": "sha256:d98b785b6545d79ef966180a8ab5c5061217e811f6cb52c5fb2e15dc3c59b324"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/dcim/device_role_test.go",
+      "size": 4516,
+      "sha256": "sha256:9551f734c705884a27b51e5b6306c086bb32bf7834ce61bb33e6a2582fa5a35c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/dcim/device_test.go",
+      "size": 8334,
+      "sha256": "sha256:026b2b8361e993b8ccc3ff761239b9c3293791754cc55e429c06ccb379a494ef"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/dcim/device_type.go",
+      "size": 21354,
+      "sha256": "sha256:daaa33e5aadd7c2a31d551b4420304919798d06c9dc2d70631ad53e7524fd704"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/dcim/device_type_test.go",
+      "size": 4697,
+      "sha256": "sha256:7baa5ccc54c22951a0f9d93191da7d090c13e31fb56b66870cd11974dcd460de"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/dcim/interface.go",
+      "size": 14417,
+      "sha256": "sha256:739e569a4d53e276762d567d2e3c0c1e2ebedd077eefda512254fc5a0b8eef5e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/dcim/interface_template.go",
+      "size": 15632,
+      "sha256": "sha256:8e097de80ee889c87e457b9c6dd0ca19ca65ebc1e8963d57974f90138bc67572"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/dcim/interface_template_test.go",
+      "size": 5184,
+      "sha256": "sha256:52daa2a49fd477c85082643bd18ef1bcdd5828530ac50a439690b954bbfc406f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/dcim/interface_test.go",
+      "size": 5479,
+      "sha256": "sha256:6fc91e23469bf35a29b799372f7d2ae962d90afbef8087eb1a3dc6f6e3d20a46"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/dcim/manufacturer.go",
+      "size": 8003,
+      "sha256": "sha256:fb81fd0a48604d0b68339654e2b7ccd0a72878b52de34bf6f56b531f80175489"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/dcim/manufacturer_test.go",
+      "size": 5346,
+      "sha256": "sha256:ddab8a775518db79d4237a22ebcf035c0e1e3db99d57f657d32df4eec1951ee8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/dcim/rack.go",
+      "size": 22632,
+      "sha256": "sha256:098e9e25ffb5ea412080dcac4a395f9ba1e98b0259995be92b5e3b6488da2bff"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/dcim/rack_role.go",
+      "size": 8223,
+      "sha256": "sha256:f11d8357608347c6987c109ba26c7a708b14200ce38fee0735e7fd17d2b0ca16"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/dcim/rack_role_test.go",
+      "size": 5889,
+      "sha256": "sha256:981b81148c13b21ef72b5adefda2ce7dcc77c952abcfab2675d3001b768cb516"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/dcim/rack_snapshot.go",
+      "size": 1284,
+      "sha256": "sha256:81172381c421f1603e1791fe32c637802e47f344459b3fe07ac27796625e6654"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/dcim/rack_test.go",
+      "size": 6849,
+      "sha256": "sha256:b30f9fee12c48961dc78a10d4fc91c272ae67c880b517d1ef76416a05b72dc97"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/dcim/rack_type.go",
+      "size": 15767,
+      "sha256": "sha256:daaee59e8ba4530447e38073b879b0a2a0d8f73fc3f9cb7ab6ae5f5305c163da"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/dcim/rack_type_test.go",
+      "size": 6219,
+      "sha256": "sha256:7c0b706e94e981aefd1f2a18e4ea6f467ad126fe57990d1d839b08a47e1149ca"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/dcim/site.go",
+      "size": 11167,
+      "sha256": "sha256:d27cd72a595ba083ad857ed8d063e3e9ed0d8acc93c02894ffd59709e5df3559"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/dcim/site_test.go",
+      "size": 5778,
+      "sha256": "sha256:a59c817c758394741eb37ef60d61aafbeeb1a66d70b75806f4472a82da5fb378"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/identity/principal.go",
+      "size": 1195,
+      "sha256": "sha256:68c7fa9ec634704e005f76421ef7f24d3bf6cb7fb30ddc41271de7235401b76a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/identity/user.go",
+      "size": 2498,
+      "sha256": "sha256:be0f99e0358c6cfeb884b4e317b7e6bd74050f8351ebe2e76b0a10013689b246"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/ipam/ip_address.go",
+      "size": 24429,
+      "sha256": "sha256:094c969aa0c6a0c20e887f6314b6cb50f2820c77ed38438b5de8d7285c1dc843"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/ipam/ip_address_test.go",
+      "size": 11815,
+      "sha256": "sha256:1094ab63d80a7fd17fb83852759bbb405a6580621b62e76cf86b427a150adf20"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/ipam/prefix.go",
+      "size": 11416,
+      "sha256": "sha256:450933c74c842025d62b3e1d13ae2ba3e3a5f29e5f271aa6995820689a121453"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/ipam/prefix_network.go",
+      "size": 3135,
+      "sha256": "sha256:209196c5a6235d0ea688c4b8fb03dcc59bfc7872414c67cc97b8a45bfd5e9d70"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/ipam/prefix_test.go",
+      "size": 4492,
+      "sha256": "sha256:5ed2efdeb4b991ada8457de3cb1df1a92d8ebefdcbcfd6b10bcbfeb6c4fc8129"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/ipam/route_distinguisher.go",
+      "size": 1700,
+      "sha256": "sha256:fe810e38be4439268b1aed5859c01657dbd701e0056d634544aa53ebc83600d1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/ipam/vrf.go",
+      "size": 8588,
+      "sha256": "sha256:f9c4fadb21c74ca154675ec9ac62e7729d1b3a375d8dcc6c9a54d44c6c3c299a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/ipam/vrf_test.go",
+      "size": 6501,
+      "sha256": "sha256:e3fdda1397e44aedbb72b9a135127ac04de0b111004de126f97371571a40fedb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/shared/errors.go",
+      "size": 4178,
+      "sha256": "sha256:ceb5c4090c0085676d0dcf4ad804bf53c280fa24413e959a9a0af2bfd6f9a748"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/shared/errors_test.go",
+      "size": 800,
+      "sha256": "sha256:fce5f241a3d8e10f0d0dc6ccb4e6cc1595a818c91302c3e499cf2986fd90ca01"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/shared/id.go",
+      "size": 820,
+      "sha256": "sha256:3ea98da231e27c449b57803ae8b057630ddfcee86f2ae513042122580879bf92"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/shared/slug.go",
+      "size": 1152,
+      "sha256": "sha256:c0e8893dfbba58f22f9680b0ce5f345da579eb054cc411871d70be943b41209b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/shared/slug_test.go",
+      "size": 1248,
+      "sha256": "sha256:9e38568063d18a3965bdc21e75e7880770018ed805c0075c7413f569f27c3434"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/shared/snapshot.go",
+      "size": 320,
+      "sha256": "sha256:8a334679800444f37385f2d7bc9bee6a866019d37723039f1124aa732b7c6ef3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/domain/shared/timestamp.go",
+      "size": 610,
+      "sha256": "sha256:f44fb76ade975b47cc03522eebeaab7f948201f785abb19cc0728ab707305c4d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/authGroupPermissions_rpc.go",
+      "size": 1876,
+      "sha256": "sha256:167515785ee9a4246db01b33ed9ce27ab53cc9b53a32c094b1e16345b5af1d25"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/authGroup_rpc.go",
+      "size": 1502,
+      "sha256": "sha256:6cf1cc0accacc757f3bbf172fbe613b2a9d908eef908a11d564b49584bb6c2a6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/authPermission_rpc.go",
+      "size": 1672,
+      "sha256": "sha256:75371f5e323cdbd6284a03abcccfa44cef9abeb0f82b18c27d36a90ba045573a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/circuitsCircuit_rpc.go",
+      "size": 1706,
+      "sha256": "sha256:74c287b4fb4739a68500826363532b32c49b25cee8c14057a88b4eee03fe5694"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/circuitsCircuitgroup_rpc.go",
+      "size": 1876,
+      "sha256": "sha256:bb942e89ee6b21a71c3e7b6bb402e40a2e694576fb6e303e05d5c7c2e6d6e225"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/circuitsCircuitgroupassignment_rpc.go",
+      "size": 2216,
+      "sha256": "sha256:266d13fce92d48bfa3502e42b5b43fafe95c636c3580c73d14d3a85ab29fd341"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/circuitsCircuittermination_rpc.go",
+      "size": 2080,
+      "sha256": "sha256:ab9a2fd85313917ff9969d1785e721666dc53668b106bd76bc654ffb0efd8e49"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/circuitsCircuittype_rpc.go",
+      "size": 1842,
+      "sha256": "sha256:8be5c773c781c675e1add8fb2eaf217a9855a827a61880e945b2bfc7c9b6e10a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/circuitsProviderAsns_rpc.go",
+      "size": 1876,
+      "sha256": "sha256:2c67034f20f2e8341ab475022f72b1dae5f00572084971287e7a976da2a23305"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/circuitsProvider_rpc.go",
+      "size": 1741,
+      "sha256": "sha256:dd503b41ff161d2c5a632e0daea27f2e5cfc8011295295c3072dcd439ed41029"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/circuitsProvideraccount_rpc.go",
+      "size": 1979,
+      "sha256": "sha256:e99c5106a1f6cebefdaa05e146a953234a2ec76b8775b6ef9440924d0b016f71"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/circuitsProvidernetwork_rpc.go",
+      "size": 1979,
+      "sha256": "sha256:45f4a1dbf7b6f318f158e7962e9257be13baca0e3ee14619de632a9e06e9b2c6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/circuitsVirtualcircuit_rpc.go",
+      "size": 1945,
+      "sha256": "sha256:57b8c191aad73878fb7ff7383a50ef74d53bbaf88ff7e33500ee38ed32cc9fc0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/circuitsVirtualcircuittermination_rpc.go",
+      "size": 2319,
+      "sha256": "sha256:6724a97f2afd11d24b779a2b1d11663006f5427a73ab806cc5effdc27676fa7d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/circuitsVirtualcircuittype_rpc.go",
+      "size": 2081,
+      "sha256": "sha256:4fe03de369bbb3b4a52f5c92055d736b7491a13706efb69e293f508f2879eaaf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/coreAutosyncrecord_rpc.go",
+      "size": 1809,
+      "sha256": "sha256:c3c389bbf289cbd9f3fcf4f44eba3770d8e2a8247fb0abd37c2b1b223a1b539e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/coreConfigrevision_rpc.go",
+      "size": 1809,
+      "sha256": "sha256:5f819379b25aae0fc7f9f1ac3aa40d39db3f439d38335888714c742fa5b3cfb4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/coreDatafile_rpc.go",
+      "size": 1605,
+      "sha256": "sha256:15647ca18baf2973ecc125411ee94cc568876de1ca2aae69c2c0367eb4674b95"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/coreDatasource_rpc.go",
+      "size": 1673,
+      "sha256": "sha256:9634a4852dfd869d8ff8e8b5afe9f4b16ab31b65a55f64246177b973e0549d4d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/coreJob_rpc.go",
+      "size": 1435,
+      "sha256": "sha256:f28403e79f12321f088f62670b398c3410a760a817987b2fd8a90f811c2cbd76"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/coreManagedfile_rpc.go",
+      "size": 1707,
+      "sha256": "sha256:c9683b726b18a3127cc12dc066d191e8f92f3219bc5987f4bc5c0095c273367a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/coreObjectchange_rpc.go",
+      "size": 1741,
+      "sha256": "sha256:5aa9ebf1483d6054435d2cd6c3710f4de44be37448c00d77888188f171068e44"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/coreObjecttype_rpc.go",
+      "size": 1865,
+      "sha256": "sha256:1f1f3b694eb89087430849ee68b8edd69a816d289eda9e6a9f35012d0186586a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimCable_rpc.go",
+      "size": 1503,
+      "sha256": "sha256:6ddd788018dfb89764a704947fd46e5c3ff1663ac87773affec0fb354273cc2b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimCablepath_rpc.go",
+      "size": 1639,
+      "sha256": "sha256:2150c08c73d779b7dcd90b5e4ec9d293e9cd53d83324c965218ebd12714a1506"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimCabletermination_rpc.go",
+      "size": 1877,
+      "sha256": "sha256:e5921ac35b77fdca24a915c16fc311e725cf454c702d0d27a3e640e7f0c2e3ba"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimConsoleport_rpc.go",
+      "size": 1707,
+      "sha256": "sha256:16517620c181c9dd9fc84a3bf5db7eb5417f188fdfea48fa73770ed9ec3530d3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimConsoleporttemplate_rpc.go",
+      "size": 1979,
+      "sha256": "sha256:4eb38760dbda2b47586d3bf60184dcfc3cbc0a4f4685a9cb42f335c1d3627ddc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimConsoleserverport_rpc.go",
+      "size": 1911,
+      "sha256": "sha256:3f21b4ef6d8dfef6331e001bf6f77ab6ea67e4824b926ebc1115d339692e8690"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimConsoleserverporttemplate_rpc.go",
+      "size": 2183,
+      "sha256": "sha256:dc3f5386cdbd34071e3728da117e21da82114c0c2b5578c02fae026b2df672c3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimDevice_rpc.go",
+      "size": 1537,
+      "sha256": "sha256:e7cc382043aaa2e026046a6c0b81e7b2d9de454a8f96bcae8de03d923f102925"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimDevicebay_rpc.go",
+      "size": 1639,
+      "sha256": "sha256:52c3e3099fdededa178d07845b0372b77719397064e613d9ab08490e86f35964"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimDevicebaytemplate_rpc.go",
+      "size": 1911,
+      "sha256": "sha256:4d5df0a5910cd31d479241c3b4b4739b17b1c547939efb19cd5b98fa950b97df"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimDevicerole_rpc.go",
+      "size": 1673,
+      "sha256": "sha256:7891c5dfd20c1a6e09ffffcc3d7e77ca1d208284c5a072b02ebcfd9dc6971e2f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimDevicetype_rpc.go",
+      "size": 1673,
+      "sha256": "sha256:d58c3665726351a8cc34d0bcece073de202514360117c0976a4cb54579dee68d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimFrontport_rpc.go",
+      "size": 1639,
+      "sha256": "sha256:40f3540ead9d92673b1ed0555b012e9514e69cd879ee87a71c504ec836e92f77"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimFrontporttemplate_rpc.go",
+      "size": 1911,
+      "sha256": "sha256:083441394d5f3f85901cda40c7cbad113f743a18d00a8242a495507a5731edde"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimInterfaceTaggedVlans_rpc.go",
+      "size": 2013,
+      "sha256": "sha256:a11332a10ee76a4c62aad17155c1490aa1ecab8933f3e8cebf40185d12bc4149"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimInterfaceVdcs_rpc.go",
+      "size": 1775,
+      "sha256": "sha256:c24f4f4084ad949244ab7e6cca7e65706713853fe40ce91414bc582f7b1ba861"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimInterfaceWirelessLans_rpc.go",
+      "size": 2047,
+      "sha256": "sha256:bb1b447a84df2aafa6e8be660281fb69a9dd77b0bca194adee3e5175aec28b3f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimInterface_rpc.go",
+      "size": 1639,
+      "sha256": "sha256:1bfc4ed1fe6903c2d45b12f90d3100e2886c3e064f934bdc63bb619983a35ddb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimInterfacetemplate_rpc.go",
+      "size": 1911,
+      "sha256": "sha256:aaca974a9d79286cceb1ae3df1dcc5a9fb78b7638b29a9f1dc4547233acb8294"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimInventoryitem_rpc.go",
+      "size": 1775,
+      "sha256": "sha256:ac94eb3e963accfb1a3e75f89836483505482c65071398a6cf7669b9c23cbda9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimInventoryitemrole_rpc.go",
+      "size": 1911,
+      "sha256": "sha256:9afc808d1215950606ede97ec7a2e662a3133a8649a1f0716358b510df52068c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimInventoryitemtemplate_rpc.go",
+      "size": 2047,
+      "sha256": "sha256:188f5656c62b9c7d619f8e7556ea97149fac9645a312fb4bc11170928eb5bd80"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimLocation_rpc.go",
+      "size": 1605,
+      "sha256": "sha256:89a8f3f9d6016352b0a6a0afc5e2d84a264dea471680a5f01d3a831ee07eae26"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimMacaddress_rpc.go",
+      "size": 1673,
+      "sha256": "sha256:e24078632ed67bdfb4b1b46458f387a9cd2703a0f8bc03ec69e348825c626155"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimManufacturer_rpc.go",
+      "size": 1741,
+      "sha256": "sha256:59ab2fb945d70e5f19a1c42028db9ac4389e60ed368466b9fdd858f54b0e88b7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimModule_rpc.go",
+      "size": 1537,
+      "sha256": "sha256:41e9996f11aefa5f6825fc35298e6ca595f2d963921bf300b1307b98add0cc14"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimModulebay_rpc.go",
+      "size": 1639,
+      "sha256": "sha256:aee7ad9b96ce6c5c787cb279c2c7dab445837a62b89c0f39d0c32a0af0e4a3ad"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimModulebaytemplate_rpc.go",
+      "size": 1911,
+      "sha256": "sha256:28a7a08fb706e91ad5c04a1e03c96a8b1b470e325fab5f4e3f50eba64c6fb0a1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimModuletype_rpc.go",
+      "size": 1673,
+      "sha256": "sha256:8eab0028f5b9586c6f016e5c3a9ba2cc463b9288b3c36961439e86a768e7926c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimModuletypeprofile_rpc.go",
+      "size": 1911,
+      "sha256": "sha256:5db6c25677e7d08fe9196b809072d81c014e4329b0eb8c347e887000f2621296"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimPlatform_rpc.go",
+      "size": 1605,
+      "sha256": "sha256:79c466c7db88e7012000d3e56efad5db91611f634105968dc0b6100c83186d79"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimPowerfeed_rpc.go",
+      "size": 1639,
+      "sha256": "sha256:95586f20e22d74b125940ff9dfc1a0592dd3353b3b134d26877c875ad4f8bb49"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimPoweroutlet_rpc.go",
+      "size": 1707,
+      "sha256": "sha256:82113bb42a08326c3525987eccce7ec798addc474e9bec9aac0c1ee01158ce2a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimPoweroutlettemplate_rpc.go",
+      "size": 1979,
+      "sha256": "sha256:f00e9393b258c92a545191f54d9f09a5a9c6ec5f00bd58e1f9aeafdf8341f869"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimPowerpanel_rpc.go",
+      "size": 1673,
+      "sha256": "sha256:f374e327be2c9d58174ebb6d75690ce3e756cae8ac7d8a0294de632021b605d3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimPowerport_rpc.go",
+      "size": 1639,
+      "sha256": "sha256:a0086e079ed3679e43615a9191dcbca067bb890964e782edbe170cb30996adff"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimPowerporttemplate_rpc.go",
+      "size": 1911,
+      "sha256": "sha256:80a4296d6ae900f3e261e017024a882559acfb0c92cc8fbc3431928a19244c1c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimRack_rpc.go",
+      "size": 1469,
+      "sha256": "sha256:65a442ee63c0471ff1203ce941c2c0a0e928f0fb8fb3bb46408e04fddf82af09"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimRackreservation_rpc.go",
+      "size": 1843,
+      "sha256": "sha256:1277e74c8b71b04e2a7d0c404b58184eb64118878364cbb3ff452b102fe43c63"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimRackrole_rpc.go",
+      "size": 1605,
+      "sha256": "sha256:caee3f93f679be80b67e29281867e0ad874dacbd887ff861aa1d4dfa706e8309"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimRacktype_rpc.go",
+      "size": 1605,
+      "sha256": "sha256:176ec55493e1b302b8509d3a5ec80b247243d551ad45b5657e15e5dba393ed1c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimRearport_rpc.go",
+      "size": 1605,
+      "sha256": "sha256:88b3deca4b86767289ea69e96b3bea4094187192a0789197b8af5867ad85a46a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimRearporttemplate_rpc.go",
+      "size": 1877,
+      "sha256": "sha256:20aebd9954d1923a034a9a461fbfa395e5e9dae619cf38e4c14e956e414c2234"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimRegion_rpc.go",
+      "size": 1537,
+      "sha256": "sha256:fc70872b5795c0a2c50f1b93b53ec038578e710f8c3b53032bcdee3597699cd8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimSiteAsns_rpc.go",
+      "size": 1605,
+      "sha256": "sha256:13bae3df58f85d12f9f717f2badb9afe70820bead9346b82ebc9dc5e679659c4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimSite_rpc.go",
+      "size": 1469,
+      "sha256": "sha256:909359c365efa1055e08cf5db3d5dade931ed372e05f55832ed58939d3a842e7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimSitegroup_rpc.go",
+      "size": 1639,
+      "sha256": "sha256:2968da0985505157183c54019adcb771ed45ea4a260d84bb02cb6625d23d70c1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimVirtualchassis_rpc.go",
+      "size": 1809,
+      "sha256": "sha256:0e57a221a1700e54b5f8009dbe9f003b959519a9b8f2c7309f5c99750e2df145"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/dcimVirtualdevicecontext_rpc.go",
+      "size": 2013,
+      "sha256": "sha256:5c5ffdb81cf6e5d3d8d3044e47c6d1af3a53071d59636a829320c9e16ae1ef0c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/djangoContentType_rpc.go",
+      "size": 1775,
+      "sha256": "sha256:edfa346078e1557ce445c30f0ab23af2ddcae0a999e8abdcc0d850696e550478"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/djangoMigrations_rpc.go",
+      "size": 1741,
+      "sha256": "sha256:851e2d6d16fc75ceebe228f4adca0e4da7054206d62b7ea14943bedd4c46e1a7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/djangoSession_rpc.go",
+      "size": 1741,
+      "sha256": "sha256:5f36bbaac51e754aafa60c2a358ded0bcbd21284b81763b44f0eabfa845989d3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasBookmark_rpc.go",
+      "size": 1673,
+      "sha256": "sha256:8455c7d2d84b066847e0a455d7404d8ec2fc277fc1a8e2b59db7a309dbcd801e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasCachedvalue_rpc.go",
+      "size": 1775,
+      "sha256": "sha256:bcc64278cea77d8e66bddc6bcd469143cbced056ffac1a8c5e70d0f2800a1ab5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasConfigcontextClusterGroups_rpc.go",
+      "size": 2285,
+      "sha256": "sha256:6e2d412d6b6d6249437d8d1a296d1b1f120da40ff9429416bfd4fc6c44938499"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasConfigcontextClusterTypes_rpc.go",
+      "size": 2251,
+      "sha256": "sha256:ad52067d49110ebdc02e2614845325cfe88ac9211b7297008f3352acc915c472"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasConfigcontextClusters_rpc.go",
+      "size": 2115,
+      "sha256": "sha256:e00bee4d535bacdda2c09493f34d9648192d764685411c89b30be2565c2b8a96"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasConfigcontextDeviceTypes_rpc.go",
+      "size": 2217,
+      "sha256": "sha256:a77d49dc3caac11a5d19088477ffebcde3a7ceb0d86f4729abb0338ace670d98"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasConfigcontextLocations_rpc.go",
+      "size": 2149,
+      "sha256": "sha256:9e6366bcde276a2516f04364a8ac34e771e68af67ede7ac4db4724f645d1a090"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasConfigcontextPlatforms_rpc.go",
+      "size": 2149,
+      "sha256": "sha256:90ec0156b518382409fc7cdec12429360ea99cb249452f9c0ef0d320aa855ddc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasConfigcontextRegions_rpc.go",
+      "size": 2081,
+      "sha256": "sha256:19c61e5ab349c890d8a7374d456168446dd5678945a672e146d76d360a442035"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasConfigcontextRoles_rpc.go",
+      "size": 2013,
+      "sha256": "sha256:44e7b373e5391bf81f7e3523642fd29c1cbe5efa86b491a46afa4bbb77a83c57"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasConfigcontextSiteGroups_rpc.go",
+      "size": 2183,
+      "sha256": "sha256:393a5b336c299da04b22e72cdc33e81ce207d7c9ceb11ded13878d47031184e2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasConfigcontextSites_rpc.go",
+      "size": 2013,
+      "sha256": "sha256:b33321240ea778586ea46a62b85aa30cc3a9afa7bd8268259033c5e6e6faf104"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasConfigcontextTags_rpc.go",
+      "size": 1979,
+      "sha256": "sha256:952d117644afd98d33c1f1789f3e8050024e1250ed2b68435359e9190e9c73b1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasConfigcontextTenantGroups_rpc.go",
+      "size": 2251,
+      "sha256": "sha256:de1929c50341b88f16e8525647f18dc59d949ff3fd2549c4d00fc5700ee95560"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasConfigcontextTenants_rpc.go",
+      "size": 2081,
+      "sha256": "sha256:3993231c50d58b8b6bde905bb046dffde5237afa9a8617066512a727151e83b5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasConfigcontext_rpc.go",
+      "size": 1843,
+      "sha256": "sha256:d50ff8a7b1897693f4eca7d93537d2cda0c6a86285378a29212baab92ffef0a6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasConfigcontextprofile_rpc.go",
+      "size": 2081,
+      "sha256": "sha256:4aaf3247e6be1b615a05ea751197947f95eee1e2083bf793b1f907879480623d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasConfigtemplate_rpc.go",
+      "size": 1877,
+      "sha256": "sha256:89464f8f6c7eec63dd3f48fd859a9ee89220563f107ea1c40da5149afd268d92"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasCustomfieldObjectTypes_rpc.go",
+      "size": 2149,
+      "sha256": "sha256:bdd1cac50fc5d73dfcf675e0c0ebee7329748e1d0492f8fade681a117cde0533"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasCustomfield_rpc.go",
+      "size": 1775,
+      "sha256": "sha256:a67370b2f0e8b5a0f0113fdeca46d0697d287528280dc1bff7a8517902303ea2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasCustomfieldchoiceset_rpc.go",
+      "size": 2081,
+      "sha256": "sha256:edfee2e8e49aaed0ff37525f696a7c991e0b864e2cc398cf582572b8909e5868"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasCustomlinkObjectTypes_rpc.go",
+      "size": 2115,
+      "sha256": "sha256:0612c485f3e59e92c3c7545a25b06b766a35d1f147bbf8bdc56b4efc599a08b6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasCustomlink_rpc.go",
+      "size": 1741,
+      "sha256": "sha256:ee2c3408cfb8aa80bfc1a9900a8ea49f140ad7cf53624a5991ae2a7f61b4cb0b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasDashboard_rpc.go",
+      "size": 1707,
+      "sha256": "sha256:0351b9955fe17755219a12c5046f1a9018ebfd6bf99972c7203c1c11725813b7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasEventruleObjectTypes_rpc.go",
+      "size": 2082,
+      "sha256": "sha256:aaa2095092c55ca6dc9a11ac2dd82f851d93073584a3cc3a86d44673f34177bf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasEventrule_rpc.go",
+      "size": 1708,
+      "sha256": "sha256:1eadd100a6891977c417fd11516c908975bf6ed01a0f6bbf1731ed80f92bd797"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasExporttemplateObjectTypes_rpc.go",
+      "size": 2252,
+      "sha256": "sha256:7522a4fc294d5c65905bd2f4099fb06554af9bc20089fe3e08cf8385171efe55"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasExporttemplate_rpc.go",
+      "size": 1878,
+      "sha256": "sha256:10364170be8321cc1b7b4c1e9ba700aa1aaaa337b6f1c95e1f2237204aa854df"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasImageattachment_rpc.go",
+      "size": 1912,
+      "sha256": "sha256:3b959c00ae282ef103d5d70f6835b32e9197eacc0da1329e8f14c45c80b8b4d1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasJournalentry_rpc.go",
+      "size": 1810,
+      "sha256": "sha256:c8421dbdfd4a1fab894c0f6fc2af082ca1e16d68d18155b0755a9bd4275dc980"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasNotification_rpc.go",
+      "size": 1810,
+      "sha256": "sha256:bfe26c60bac4a65776971e1169d96c6113c4592adf2b8d4e87c9ffbccb8eeefc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasNotificationgroupGroups_rpc.go",
+      "size": 2184,
+      "sha256": "sha256:9e8fd7df6dd46a12422fa99dd6cf62fbd074d0c252cd5a712484d12663ef0d9a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasNotificationgroupUsers_rpc.go",
+      "size": 2150,
+      "sha256": "sha256:f21818e0c37ca824fa1473158d29e07f84557918552baf8a251a2854d7fdd138"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasNotificationgroup_rpc.go",
+      "size": 1980,
+      "sha256": "sha256:d8abb9de32a39e4c52ea4903de794727e20f70ba1fc90311a02e4482ad209512"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasSavedfilterObjectTypes_rpc.go",
+      "size": 2150,
+      "sha256": "sha256:983506e95044632e91575c469a024c2ef4ae4b64c06bba31625fd750ecbc3917"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasSavedfilter_rpc.go",
+      "size": 1776,
+      "sha256": "sha256:a60a1d63e2fff2592cd29ab46591e7ed657c9b2473c55a5c7539ccf3f82b186b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasScript_rpc.go",
+      "size": 1606,
+      "sha256": "sha256:ee12a3e067c3783a44bd0c6661ba53df1d7219399fa49750fde4700cb2c17b77"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasSubscription_rpc.go",
+      "size": 1810,
+      "sha256": "sha256:9353e4c963a07d219236157eb1efa24ce1eb17f1d8beded1d9cb2df65846d2d1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasTableconfig_rpc.go",
+      "size": 1776,
+      "sha256": "sha256:cf26ca4696338e97534c7882aac9e7dffe3bf4469a7d2d137bbc93a7f17fbf53"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasTagObjectTypes_rpc.go",
+      "size": 1878,
+      "sha256": "sha256:940b8f4bd442b83a883cba4902cef3211674bc593cb73598795507357a70c46a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasTag_rpc.go",
+      "size": 1504,
+      "sha256": "sha256:ba98d1231f7dd066dcc178bcdbe00d7b0878a9d067bb3d7d0331305ad4c99f96"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasTaggeditem_rpc.go",
+      "size": 1742,
+      "sha256": "sha256:d20c4496d7be2919de1f690db45cacea53fc55132c4b3edd133114977deca218"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/extrasWebhook_rpc.go",
+      "size": 1640,
+      "sha256": "sha256:6b91634e6983d2938c42956d47bc1935bee22208bcd0c94c22f4f215f5742a7f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/ipamAggregate_rpc.go",
+      "size": 1640,
+      "sha256": "sha256:00c6c832ea5c1e9f316c53d63517cbcf28f5ec513311fc257f2eaa77e474cb44"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/ipamAsn_rpc.go",
+      "size": 1436,
+      "sha256": "sha256:e6aa302d2121bc2e4b60183f4b23643285d5fd7c13519fde2b1796e54e1336bc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/ipamAsnrange_rpc.go",
+      "size": 1606,
+      "sha256": "sha256:296f1524c3eea0fdb3aae339fe1344f675b309058328f6bcee999de1d0ab9981"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/ipamFhrpgroup_rpc.go",
+      "size": 1640,
+      "sha256": "sha256:3f0b33ec63317ae2896972709282ef6f4f86413019394c138f75cedaa43b63f2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/ipamFhrpgroupassignment_rpc.go",
+      "size": 1980,
+      "sha256": "sha256:c767ca583970f88dc4bba415b5df0948a037f0c71496a7143958e62778d3ce68"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/ipamIpaddress_rpc.go",
+      "size": 1640,
+      "sha256": "sha256:24b800ca909e6f13fa23fdd783100aa555663c7b4d16e50054349348a3fc42ad"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/ipamIprange_rpc.go",
+      "size": 1572,
+      "sha256": "sha256:247d312e4198fefd802deb8787b803505e34330521c5e0c95aed6287ae3e5689"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/ipamPrefix_rpc.go",
+      "size": 1538,
+      "sha256": "sha256:682b8671b338a297b23aff9f2251e3e69a3b58a696bc6584d0352a5edc96b635"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/ipamRir_rpc.go",
+      "size": 1436,
+      "sha256": "sha256:d3f4b4096ff8a40fd994a670efa44a787906675f519225e316a4393da2ae86a9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/ipamRole_rpc.go",
+      "size": 1470,
+      "sha256": "sha256:34654e4470313c1182c4f6466db68d474ab172c7fae7bcb797b1e2fa5740330b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/ipamRoutetarget_rpc.go",
+      "size": 1708,
+      "sha256": "sha256:e7aae47eb0bfcd8235b83dd0b39ea4c4651771457c92fddd1680a0f90bbc384d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/ipamServiceIpaddresses_rpc.go",
+      "size": 1946,
+      "sha256": "sha256:12359cc0549a6e7f45f313c975efa5ac1e65a45056611640ac4ddd63752553a3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/ipamService_rpc.go",
+      "size": 1572,
+      "sha256": "sha256:e378954cbbb3395ec30ccf6dea53bf7b9bbb7317338cc8ed189c9713ba8e12dd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/ipamServicetemplate_rpc.go",
+      "size": 1844,
+      "sha256": "sha256:c3c880f612de6389aa73359abc3b7c0f53d1da5ad26e049b3f88126da3c701a8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/ipamVlan_rpc.go",
+      "size": 1470,
+      "sha256": "sha256:9237fa4e78753924d6f4d761b24aa2b87b3ccb853dc293e643b3cd48ac8191c9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/ipamVlangroup_rpc.go",
+      "size": 1640,
+      "sha256": "sha256:8dfad3457ff7fa2cdaeeeaadb374969e7b40884c9b49aa3857a7fe055937e489"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/ipamVlantranslationpolicy_rpc.go",
+      "size": 2048,
+      "sha256": "sha256:257c53c0cd3086884fc6501fed918356bd1e7e9256b0b82198fe3eae01d16b6e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/ipamVlantranslationrule_rpc.go",
+      "size": 1980,
+      "sha256": "sha256:5cad4f1def46862080045770c82448cb9b010e7294cc23951fbc92889e1b2988"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/ipamVrfExportTargets_rpc.go",
+      "size": 1878,
+      "sha256": "sha256:947c5ee1d171929a25ed2a95f5e7d1d655c87393cd68e89a076d0a62c48983c6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/ipamVrfImportTargets_rpc.go",
+      "size": 1878,
+      "sha256": "sha256:993cee77ea3cfacdc620980a6a7672dfc9bacabd036589702aeeba3b4a8f0fbe"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/ipamVrf_rpc.go",
+      "size": 1436,
+      "sha256": "sha256:cd7bc72ff8312b55a39bcf859b0701913a2b9817bfb367b283ba42cd68a3e992"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/socialAuthAssociation_rpc.go",
+      "size": 1912,
+      "sha256": "sha256:ead5ad36ff349d1f6de8f36e6a23cb0539b636438abf7b010835506140aec232"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/socialAuthCode_rpc.go",
+      "size": 1674,
+      "sha256": "sha256:55bfd6ad9736ad791ae000efc6999e3e23dd5fac6bccae94a2713f8e5f786384"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/socialAuthNonce_rpc.go",
+      "size": 1708,
+      "sha256": "sha256:6977943f05faf1cafefc004f6dc113e5810348470d23ab641f71be94f44b05fa"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/socialAuthPartial_rpc.go",
+      "size": 1776,
+      "sha256": "sha256:90a09d47df53c8e79372b931db3fe65e7fc0b39371404e98fec60f69973204bb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/socialAuthUsersocialauth_rpc.go",
+      "size": 2014,
+      "sha256": "sha256:a9dd09675a19237d8f325a5fc7b9985d95c9d0c73b278cafa7e9f8c98d1b3a1c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/systemCode_http.go",
+      "size": 1402,
+      "sha256": "sha256:9a8d998bd7735c3355c721dc7ced436ec92d27394dad63bf0c3c0c28e9538cdb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/systemCode_rpc.go",
+      "size": 1788,
+      "sha256": "sha256:178a8a574da261ad8ba5a4a8f0cf11634796e8db2969eae592c3a038a2135319"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/taggitTag_rpc.go",
+      "size": 1504,
+      "sha256": "sha256:a531c1d4d52b91fcb860841f691783a14b470ab564e6d6719a33b1e090c21e10"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/taggitTaggeditem_rpc.go",
+      "size": 1742,
+      "sha256": "sha256:64969fc9d6aa7eaf17ed2aca4a8e32ef6e7ec2486810da59fd1f8ebe59d22767"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/tenancyContactGroups_rpc.go",
+      "size": 1878,
+      "sha256": "sha256:82e2820a3ba00960d1a90ae0469b0ba90b6d531ba0443af525838700f16c8189"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/tenancyContact_rpc.go",
+      "size": 1674,
+      "sha256": "sha256:f00427d596daca0c0d551afdd0932a99d577aa1c2a6e012309585109b02f77ae"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/tenancyContactassignment_rpc.go",
+      "size": 2014,
+      "sha256": "sha256:76ee738d14c1914c39eaf3ed80ab0fad2acafa729ae37d840543133e5107cfee"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/tenancyContactgroup_rpc.go",
+      "size": 1844,
+      "sha256": "sha256:df5d8374e79c8617e15694f1568ac6c0bcd7f6e8c32ca03c569453375e5aa4e6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/tenancyContactrole_rpc.go",
+      "size": 1810,
+      "sha256": "sha256:40fd6046a8e7d9c94f59dc061cf1b64a646854f3c5d3ad59a9dd434d0f503129"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/tenancyTenant_rpc.go",
+      "size": 1640,
+      "sha256": "sha256:160705a0b5da3403703d9300b7dd58eaf464c6cc7b35de2e62deeb3f12236348"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/tenancyTenantgroup_rpc.go",
+      "size": 1810,
+      "sha256": "sha256:4f8a22e54cb9f97ec3b636a01fb07fb5c7fec6d2212147d69ed02bd419a3654b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/thumbnailKvstore_rpc.go",
+      "size": 1748,
+      "sha256": "sha256:d3de3f0a179e3b4316714c3b1bcf7f80bce82f1d6e4e31cb02ef923f0c182246"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/usersGroupObjectPermissions_rpc.go",
+      "size": 2116,
+      "sha256": "sha256:608d0bae72d1863f7b7f25f8a618e4c34cd0f80fe2b2ed80d290563699953e11"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/usersGroupPermissions_rpc.go",
+      "size": 1912,
+      "sha256": "sha256:2c51b26c4d0aa67f54ce35b98047f2e4b7527326c4c32ee077565bc56f66c73a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/usersGroup_rpc.go",
+      "size": 1538,
+      "sha256": "sha256:d4317bee8ddb56b87f3d3ff7f4abe3d055ea3a8b21b3bb93c313bd1359fa6eda"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/usersObjectpermissionObjectTypes_rpc.go",
+      "size": 2286,
+      "sha256": "sha256:d63f2744ead0c2e55373669e94048ea033b197763657a3a2ae752a54bb6cd7ac"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/usersObjectpermission_rpc.go",
+      "size": 1912,
+      "sha256": "sha256:d94894aca20ed081ae4ce7a8d8b48a4f84c989a4647aba7ace9a0795ac95af71"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/usersToken_rpc.go",
+      "size": 1538,
+      "sha256": "sha256:b0ccb1547c1f3f63d1570addebaaed5e92898e4085b6fe500067ff8fd29f8807"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/usersUserGroups_rpc.go",
+      "size": 1708,
+      "sha256": "sha256:80cd7fa22e61f4e75995d9777a47d0fccbc11e99d2bbf8e71addafa75c68908b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/usersUserObjectPermissions_rpc.go",
+      "size": 2082,
+      "sha256": "sha256:9b5b4a0af98d0a962370a153e201de0c829c7d5d2765576dcc87386c6dccbc44"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/usersUserUserPermissions_rpc.go",
+      "size": 2014,
+      "sha256": "sha256:fc1de4679a5973ab786ef6327262ff5fc96f1bd1ee51ba036e1dd17a8b28f78f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/usersUser_rpc.go",
+      "size": 1504,
+      "sha256": "sha256:bb9a64f7ab17e662d187c00bcfc0257ea5b5abdeca6533d3497928fee1f72818"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/usersUserconfig_rpc.go",
+      "size": 1708,
+      "sha256": "sha256:9a385be82baa00bf411c604681b61551e00664a155c7c268d889dcfb92c981ea"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/virtualizationCluster_rpc.go",
+      "size": 1912,
+      "sha256": "sha256:ca62953e19bf67a71fae935560f105ae3897dbc85b4187896195af726d167ae3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/virtualizationClustergroup_rpc.go",
+      "size": 2082,
+      "sha256": "sha256:ce4a86e11dacb01c66e6302495ed18d23eb14906177e6dc239cf4abb392fd445"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/virtualizationClustertype_rpc.go",
+      "size": 2048,
+      "sha256": "sha256:663d01f52014441ba9e071f554028757ac648e13b665f37f6181817ae50d7ab5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/virtualizationVirtualdisk_rpc.go",
+      "size": 2048,
+      "sha256": "sha256:ea172ffc4ab3ee8d890d4ba0a01fb1c5782c3299da48fefedcfd912821aa0212"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/virtualizationVirtualmachine_rpc.go",
+      "size": 2150,
+      "sha256": "sha256:6e71ab20b1974e1a5dfcc35fd7dbea308a05cf1479add2ff1a75a5df6cbaa1d7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/virtualizationVminterfaceTaggedVlans_rpc.go",
+      "size": 2422,
+      "sha256": "sha256:1e5c54f2baaf632b820623068a2ac2fbfeef7d0cdb4e9a92a86c268e26c49fb6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/virtualizationVminterface_rpc.go",
+      "size": 2048,
+      "sha256": "sha256:c87d7e481a5bed846e2bb49ac5b84433c219e6915aeeac76aa366b8ad7116559"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/vpnIkepolicyProposals_rpc.go",
+      "size": 1912,
+      "sha256": "sha256:c1531260939ab594707282026a87c4a28415ad2dc423e91cf5cb28cc2a5c5779"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/vpnIkepolicy_rpc.go",
+      "size": 1606,
+      "sha256": "sha256:62a018fdb38203912c843e4e7cf9ea19cd88ba16307ffe699ebe634365e5a2a0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/vpnIkeproposal_rpc.go",
+      "size": 1674,
+      "sha256": "sha256:d7b196abd12703dd5cba13b96eb243f4a6de744b22146d09ae20eda9b72dfcc0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/vpnIpsecpolicyProposals_rpc.go",
+      "size": 1980,
+      "sha256": "sha256:5231f6fe8706dcf9923b17cf73394e4c11db2d9bbaa9d2ce6a9987edc1ea8627"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/vpnIpsecpolicy_rpc.go",
+      "size": 1674,
+      "sha256": "sha256:7a42341e91d4d86e2f1f7daa8d21bcf4d40620c41ccd403ed02e130d91ccf559"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/vpnIpsecprofile_rpc.go",
+      "size": 1708,
+      "sha256": "sha256:e0652a1575d17bac83a2619af068e85588c63c2654095b71a4cee7886d34ee06"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/vpnIpsecproposal_rpc.go",
+      "size": 1742,
+      "sha256": "sha256:6ee4a55cc7e1e4b2a0b278727f8c3945729fb67739dfe1fdc5dd0a310060c99d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/vpnL2vpnExportTargets_rpc.go",
+      "size": 1912,
+      "sha256": "sha256:52128d5755ded51cc0c178d96a916b69c650e5ee92d10028e5daacd7c24f4bd3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/vpnL2vpnImportTargets_rpc.go",
+      "size": 1912,
+      "sha256": "sha256:5598792e30adca65cbd7bb1c181d71e39e5560114cb9dd8ca6efee1379e76b24"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/vpnL2vpn_rpc.go",
+      "size": 1470,
+      "sha256": "sha256:8a5bec7983cf7c3464f2f4815349d0f3b8b64add4abb43f24b86200b656acbe3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/vpnL2vpntermination_rpc.go",
+      "size": 1844,
+      "sha256": "sha256:9461c54ec94290f3457bd2932a92496b1f8c2f8170e12bddee27159f1c7800e9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/vpnTunnel_rpc.go",
+      "size": 1504,
+      "sha256": "sha256:6187073106fe3d3495cca89e19ede33526c5743f55d2a625e5a882a341410481"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/vpnTunnelgroup_rpc.go",
+      "size": 1674,
+      "sha256": "sha256:28f30db57cceab3a2a077aac08225b4419ff6750ed7a8ea1cf5a374442a86437"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/vpnTunneltermination_rpc.go",
+      "size": 1878,
+      "sha256": "sha256:da58510898f90832ebcacdfdbc664a683bf83a1bbeba753f4a8d156c5f1de67c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/wirelessWirelesslan_rpc.go",
+      "size": 1844,
+      "sha256": "sha256:f8ad7afd82fe2c1df58cf1386fe91641d56818e717c116504d29b25deae44a78"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/wirelessWirelesslangroup_rpc.go",
+      "size": 2014,
+      "sha256": "sha256:5de3b272bfb5006978c4302889481595e65cbb19325bcd6ae660165bfb3a172c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/ecode/wirelessWirelesslink_rpc.go",
+      "size": 1878,
+      "sha256": "sha256:d9263006138db28ca713a4f577b37b5d5f2e056c157666160ced6f43c8d41b64"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/handler/auth.go",
+      "size": 8072,
+      "sha256": "sha256:53feca847fc9cd58ca64565fb8d539cd89eff840a32304f2fab1094b39e09f1c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/handler/auth_test.go",
+      "size": 8581,
+      "sha256": "sha256:d4cea57140589e33d27a071603f8f83fb826e717848ed34fd04c4eed4732997d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/authGroup.go",
+      "size": 435,
+      "sha256": "sha256:914e020abcd58ef1d8fce6635f838963357f959147ad30f5e25b5fcd30a50b91"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/authGroupPermissions.go",
+      "size": 526,
+      "sha256": "sha256:a86b4496262804bbd64900501cdb6ab84f105381c234b3cc6e650015da3bc271"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/authPermission.go",
+      "size": 736,
+      "sha256": "sha256:cefb7d02ecd81985dc318f387fe66410ca13b804c9501e3998452e509bb37ec8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/circuitsCircuit.go",
+      "size": 2935,
+      "sha256": "sha256:fff3203584c26c0807e5fb4f6c7bbe954471ff38400168ce53e504b493710370"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/circuitsCircuitgroup.go",
+      "size": 1347,
+      "sha256": "sha256:0312b9aefcee6bda5f2af63d5514c170e9de6713deada5ed2dbda27087f10d73"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/circuitsCircuitgroupassignment.go",
+      "size": 1399,
+      "sha256": "sha256:567c4e47cb4666586f9fbf1f40474901d5b5a4518649dc79aa332cc6e2b125e3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/circuitsCircuittermination.go",
+      "size": 3159,
+      "sha256": "sha256:d312d05b959947d0974431625337c8638547bd497b4946176ab2fb1fc3d7fb33"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/circuitsCircuittype.go",
+      "size": 1350,
+      "sha256": "sha256:ac9686190ca8ba140139541aa9e516a8eb2c77f17f9217e183ddcf6847d4b27d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/circuitsProvider.go",
+      "size": 1335,
+      "sha256": "sha256:c01a1d5e811fec3dce4e8b23ccc949b9451940f6e2eaa52e9edf957dd199953d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/circuitsProviderAsns.go",
+      "size": 506,
+      "sha256": "sha256:d718f00f3fd5fa3cc257f480f95310738249ca8109a3f7563e424ee4dd1639ad"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/circuitsProvideraccount.go",
+      "size": 1502,
+      "sha256": "sha256:e4a9b5bce88ced507812390f02cb2f9ae86f01488b7019ea2a26f3c5dbebe11f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/circuitsProvidernetwork.go",
+      "size": 1507,
+      "sha256": "sha256:c4f14cad5ee1b3443543d1390cd5d80eb96d837d81004c41202c9771e3314bf6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/circuitsVirtualcircuit.go",
+      "size": 1918,
+      "sha256": "sha256:77e01d2abbd517a5b17dd1b5badcd0548ac9b9f99bd3ddb47921807d3217da71"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/circuitsVirtualcircuittermination.go",
+      "size": 1460,
+      "sha256": "sha256:2e02a0a84506ab690cd1dfddcc353f7a9b189f5886fa64bdc91d792a2ac8676f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/circuitsVirtualcircuittype.go",
+      "size": 1385,
+      "sha256": "sha256:12e6a38252ef822356f01bc2699d506d514c5b3ce2f46720dfce87f9fa561c08"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/coreAutosyncrecord.go",
+      "size": 744,
+      "sha256": "sha256:fd1de9c74374d34690203956bcbaf4cf8229a2fbb28396840c42ae336529348a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/coreConfigrevision.go",
+      "size": 895,
+      "sha256": "sha256:db9e96cf4087b87e08f22049b4e28d7b3ca32704b9839245c9c7af36f065ff82"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/coreDatafile.go",
+      "size": 1155,
+      "sha256": "sha256:8213c60890d2044998d42fee0c1d66e43432a14c53b670f662947a31e3583a0e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/coreDatasource.go",
+      "size": 2233,
+      "sha256": "sha256:80e407fcbd6384d4785cf0c061b40bc48ab8166f82507e6251108448ada0845c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/coreJob.go",
+      "size": 1971,
+      "sha256": "sha256:68f29f3e846810272c5b85ff530d0c9f7e2b7cb78ca9e5638afa05abb7095b1d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/coreManagedfile.go",
+      "size": 1579,
+      "sha256": "sha256:59fc862f8aca661304b0a0b8112719746b7559e8bd8deae738c2c2e5f791d83e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/coreObjectchange.go",
+      "size": 2248,
+      "sha256": "sha256:deccfeaf6562944a64acefe78de6bbe3d3af3532f8d56c6c0bcd94fd6c86fc21"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/coreObjecttype.go",
+      "size": 727,
+      "sha256": "sha256:d1c7960329bd9f394193959f58b8c46adebd00bc4215b5af5daaf79e76344c95"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimCable.go",
+      "size": 2052,
+      "sha256": "sha256:3e8bb827e7a8a0f2eb49f14f5101ee7fab20877a521dc6caade5dd0eacf6bc28"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimCablepath.go",
+      "size": 1014,
+      "sha256": "sha256:275354f65fc932d971893edfe7de421c6a208bae6a72431e88a0779aa87e9688"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimCabletermination.go",
+      "size": 1664,
+      "sha256": "sha256:173a06502949b01601c862a366e2ebcae198477dc3af0116cfaa481a630d6ac7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimConsoleport.go",
+      "size": 2519,
+      "sha256": "sha256:d2e1461cf0034d8fb698d0ba11b1d7eed7b1bac788661dc4e393e8b7e137039f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimConsoleporttemplate.go",
+      "size": 1346,
+      "sha256": "sha256:4f9d6f72eec54cd992cc729d6a9d357640a7404847ce1d01b8dad30e08a294d9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimConsoleserverport.go",
+      "size": 2549,
+      "sha256": "sha256:df56b0be4afec48f6e1b605901adca08ecd23b36e52946debe154333396473ac"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimConsoleserverporttemplate.go",
+      "size": 1376,
+      "sha256": "sha256:fc2abbe165ad2804ad0519642f9afae7a2a32ecf2d289ffadfbca3e951b3fe34"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimDevicebay.go",
+      "size": 1842,
+      "sha256": "sha256:ee66a7b267995fb67cad7990aae2ed629a0221a844a5d19924f72f2db6cb7927"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimDevicebaytemplate.go",
+      "size": 1134,
+      "sha256": "sha256:1ddae11ddb49c93403aa8e3ec44174ea0abeed881ebaabb79e138cbf1862d637"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimFrontport.go",
+      "size": 2726,
+      "sha256": "sha256:eff52117d5f217604e1674e88d072613e2a406abef8b1e267a9006e536985c2e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimFrontporttemplate.go",
+      "size": 1795,
+      "sha256": "sha256:2249866b033a9f688d3879777ecbb16fdfa8c5f065c00859bf97a2d466284b6d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimInterfaceTaggedVlans.go",
+      "size": 528,
+      "sha256": "sha256:9df391227f2cc68362a4524062338c8c649a6cc7867281b5ff98b00ba786fb98"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimInterfaceVdcs.go",
+      "size": 605,
+      "sha256": "sha256:a762e20cfe7f3988c393810eb591bda41d3f2be4cfb794322195c4db1e9dc179"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimInterfaceWirelessLans.go",
+      "size": 557,
+      "sha256": "sha256:fcf4cd8931b6e665d12ec73895d8628e15a11e5f8efe6a12ece5d156b82f1630"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimInventoryitem.go",
+      "size": 3395,
+      "sha256": "sha256:df84a4a300b933334816d1bcc5f893b0f7055042fe996ae232a15cd71074e672"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimInventoryitemrole.go",
+      "size": 1360,
+      "sha256": "sha256:4a2841d63d744f76bfb5d5afbca4c5d332d096115659227f91703a9c15e7c737"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimInventoryitemtemplate.go",
+      "size": 2322,
+      "sha256": "sha256:e56e57317b5adb88a29d951b5e1cb91ce12fc6492c0864cbae53758ea0c57a6b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimLocation.go",
+      "size": 2368,
+      "sha256": "sha256:8248f1cf54819782f2529191a4ca0b28e27e198a1e7e9fbbdc052b7dcff442d6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimMacaddress.go",
+      "size": 1580,
+      "sha256": "sha256:d77c1cfc35f2461f02d0e42693280229881055b7adb0b6ca04982c7e1649f021"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimModule.go",
+      "size": 1970,
+      "sha256": "sha256:3088092991cef769de6258fe076f4f46ff222abc0c2e1e2d71638989b64b67a8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimModulebay.go",
+      "size": 2473,
+      "sha256": "sha256:5cd9a3e788f5f033fee3fe7a4f2f46fb70efa8d3f97bfb9bafc16ae3310b17a1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimModulebaytemplate.go",
+      "size": 1353,
+      "sha256": "sha256:d351f969f244a7cf3305291da31450f08792f89ad16413c0ea48958012851fe7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimModuletype.go",
+      "size": 2229,
+      "sha256": "sha256:c27e9a010316f4886a2f348f43e6e84d3bbf5f2143d0a66f04be482aa2487981"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimModuletypeprofile.go",
+      "size": 1348,
+      "sha256": "sha256:e1a8b06e7eb2f52da5cfe50f754a466c3e2985ec547be95e6fde3e7f04641f9f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimPlatform.go",
+      "size": 2170,
+      "sha256": "sha256:14d91f0959651aeba9202785046ffa3dc94a07f6d40413f194d4ac2e7bfb8151"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimPowerfeed.go",
+      "size": 3067,
+      "sha256": "sha256:e6e39e87886b2d0565944265d4f1d3854914d70e47a448624f44ff46ba349bec"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimPoweroutlet.go",
+      "size": 2896,
+      "sha256": "sha256:23d1f67c3d8161f83e6da47a987893f0c287b821b06a7abdfd8cc2a16ac8357b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimPoweroutlettemplate.go",
+      "size": 1562,
+      "sha256": "sha256:dc1623614b231e2798b7fe2f219d3ffc589aa422cf0a98c38917af1d64618723"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimPowerpanel.go",
+      "size": 1439,
+      "sha256": "sha256:47e83dcac1f90d22e11fc17242924d00773945674f52f86c01c22e4611e37f58"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimPowerport.go",
+      "size": 2645,
+      "sha256": "sha256:3d2287630323a7c7380b28fca0b6ea8890b56d0409ca51a822b59b2af53bbfdf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimPowerporttemplate.go",
+      "size": 1567,
+      "sha256": "sha256:dd47b7e7fca2dcb05cf6397e3be3c81473fb4f37f60d71f32c99f61fac515d16"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimRackreservation.go",
+      "size": 1697,
+      "sha256": "sha256:9cd6175e2333986c87c3fa4955c207e0bf1a7033fad3e2eba0db37da4fe96539"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimRearport.go",
+      "size": 2540,
+      "sha256": "sha256:6ba1418a856474101671a7f709460bb1d8244338f34788f2977a19c3fbd51562"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimRearporttemplate.go",
+      "size": 1562,
+      "sha256": "sha256:a87f04c3c6a7e07aae8f58bd29405b39f382481bc96be70b25e2766efea41300"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimRegion.go",
+      "size": 1875,
+      "sha256": "sha256:1b61c132a6cf025669ed1a8f47bcef5dbcb0ca6ed8c4a658f3b8b2b272f9ac36"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimSiteAsns.go",
+      "size": 450,
+      "sha256": "sha256:4c06058d52c4ce976bc8d7953557f4d87e1187f4c880c4984627ebe97c02ad53"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimSitegroup.go",
+      "size": 1890,
+      "sha256": "sha256:fdd1f42fe5c7c17ad529242d7d9edf01696b1a1f8e4bb1531e9532b1b1be7e2b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimVirtualchassis.go",
+      "size": 1588,
+      "sha256": "sha256:d8328c48ed44c96a3e99eb72a570e733fd173f3d2af2a9236f5e202a67d7d932"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/dcimVirtualdevicecontext.go",
+      "size": 1963,
+      "sha256": "sha256:08f0224dd941d2cb1a45d0c7f91a06af95f3498a0c31091d116c52160dc0f133"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/djangoContentType.go",
+      "size": 698,
+      "sha256": "sha256:aea2181df3ab061dd311a1f98ee741749ffae5030f08e198473e2ae4bc47af34"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/djangoMigrations.go",
+      "size": 606,
+      "sha256": "sha256:7103768d9ad1d55d544fd2125c7fd9883253ef5e2231551898883c424b67f5a9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/djangoSession.go",
+      "size": 663,
+      "sha256": "sha256:2410fc19f3a13f517bcbd75f427fb1dcc14e4697b7ec639e137e5553521b055a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasBookmark.go",
+      "size": 867,
+      "sha256": "sha256:888c5ca84ff19d945bf8996c1f5a6c615786f2f6066d795ffc5644c1d332dbca"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasCachedvalue.go",
+      "size": 1210,
+      "sha256": "sha256:bc50fbf2cc6ac2ba033ac1c2b081c9a6abd050756422380fa123cf785600ec1d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasConfigcontext.go",
+      "size": 2114,
+      "sha256": "sha256:bcb31e2afe698705daf0891b0ca195b3a282d1f2b5c0b3877f4ef00aea09793e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasConfigcontextClusterGroups.go",
+      "size": 600,
+      "sha256": "sha256:b99753d70f2ce9193c89c0f4732b4d3ec57d966ce2bdd54e8c186a890e14d759"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasConfigcontextClusterTypes.go",
+      "size": 595,
+      "sha256": "sha256:3b8724a0e8bd5341ea54c5c0ab0e9a395132db0d0aabeef839b9e9d13085b43d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasConfigcontextClusters.go",
+      "size": 575,
+      "sha256": "sha256:eeff24b62decdb9e36af1d33d4a8b89fe29897983843e5ec7722d5f37c421e91"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasConfigcontextDeviceTypes.go",
+      "size": 590,
+      "sha256": "sha256:9885b38cf34c0de9dedb15967244f6bd9be43900b551960f3131d8663f26fe96"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasConfigcontextLocations.go",
+      "size": 580,
+      "sha256": "sha256:b6b00781d3768f09da64aae724fadf72c52b8101dc060f17908ab8939131ee7a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasConfigcontextPlatforms.go",
+      "size": 580,
+      "sha256": "sha256:91436b77db4bdc5728125c15fbec490038ffc16632c4ff5d13cc735c05da1491"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasConfigcontextRegions.go",
+      "size": 570,
+      "sha256": "sha256:0778260d36b7a25d961fb861dc363c2035854f60cb13c93514d796809c5ef022"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasConfigcontextRoles.go",
+      "size": 572,
+      "sha256": "sha256:ac713a28da2e0d56070568756c953515bcb05fda0de1e46e7b69e545145c8c2f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasConfigcontextSiteGroups.go",
+      "size": 585,
+      "sha256": "sha256:d694947b030a8c01cfdc995bacb21c4f216cf95cb3da9d628c748717c53c56a8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasConfigcontextSites.go",
+      "size": 560,
+      "sha256": "sha256:95f43fae4a4859f4a406a024661aee749cfbb4adb7e42daf94055536bbd9e29a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasConfigcontextTags.go",
+      "size": 555,
+      "sha256": "sha256:d1a35e2a8daa5a439146c91c08bd8926f48fefc2dcd21f725100b23559ff8f76"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasConfigcontextTenantGroups.go",
+      "size": 595,
+      "sha256": "sha256:2d30bd369a17b437c5d51efcba27f701abb735e56e5583e4941926f77b5bb066"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasConfigcontextTenants.go",
+      "size": 570,
+      "sha256": "sha256:534f6218af392f7c8b8caa3ae8eafa741eeadc5a59f292c057f598dec829a972"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasConfigcontextprofile.go",
+      "size": 2049,
+      "sha256": "sha256:5a3225e05c066aa947236d27496e9149e53c8a8b1e6848f440f5463498fd059f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasConfigtemplate.go",
+      "size": 2489,
+      "sha256": "sha256:34e76538e9ff64cb0265b7ad02a98dd9472f8e8269689c76a62fc15c6b641214"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasCustomfield.go",
+      "size": 3699,
+      "sha256": "sha256:36de6cf13fd94d037b46a6c85cc4da35b8d3b15a2589bb0f991bab7db42c14ea"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasCustomfieldObjectTypes.go",
+      "size": 570,
+      "sha256": "sha256:42bbbd14fccc1ef957008159e26f707d7dba8e0e3b692900c4ebfba94a9afbf6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasCustomfieldchoiceset.go",
+      "size": 1447,
+      "sha256": "sha256:6a56338ea6adf541f3e52169a41657a042bb352c562e9ddff358ff58f5824bda"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasCustomlink.go",
+      "size": 1568,
+      "sha256": "sha256:3631a000a43b38a0469cbf29da1d2e25132da928e5555e797fb77d73f13c0bd6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasCustomlinkObjectTypes.go",
+      "size": 565,
+      "sha256": "sha256:d0093c500d5da8bde8e0c17282a4cda638e5db437583d7cc1cd9a3cff04d4e35"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasDashboard.go",
+      "size": 721,
+      "sha256": "sha256:7c6816eb321746edd0ef17a514ce3497466d19171058e232f4350a012766e665"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasEventrule.go",
+      "size": 2238,
+      "sha256": "sha256:d05c1f9c29eb8a842ea6c9ba3549559d7ab2c5fd326e217f32e25216342079e3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasEventruleObjectTypes.go",
+      "size": 560,
+      "sha256": "sha256:24e4e77fd9197f4555b932af749e623b7d43c403e83aba1ca37090a0eb2d9be0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasExporttemplate.go",
+      "size": 2489,
+      "sha256": "sha256:5554b19be40d26d85457e3f3b39521979ae5fdd9a750cb157d940efd81a80df6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasExporttemplateObjectTypes.go",
+      "size": 603,
+      "sha256": "sha256:f59b105187c6999c3ff0484aa3e7726bd8d457aa7a35b644cff92218fd567d05"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasImageattachment.go",
+      "size": 1478,
+      "sha256": "sha256:8e116cb72c704946d74b33c9e9c60554b69c1aa8823d8a79c742fe58bb8d4ac9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasJournalentry.go",
+      "size": 1594,
+      "sha256": "sha256:3495568c5bb4b9f4eae3f9f607c837229a91550f37eb02d29849bf63be940f59"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasNotification.go",
+      "size": 1230,
+      "sha256": "sha256:1a3fa5d094c1702c70861a469ab9b53fbdb844cf13a1dfa64b54d78dacf9c707"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasNotificationgroup.go",
+      "size": 899,
+      "sha256": "sha256:b1fc88e6a0149720e4befe9ea77ae1671bb5a365afe05bf6f35ed12e3928eb7b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasNotificationgroupGroups.go",
+      "size": 609,
+      "sha256": "sha256:1a81d7ed645df1eeca4141381f434201a5f776836697dd21afc05ff4e60a220e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasNotificationgroupUsers.go",
+      "size": 604,
+      "sha256": "sha256:b78f4a08f23bdaef5bcdf5607a3007a4656edd996e8dce78ded2bbfc14838672"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasSavedfilter.go",
+      "size": 1614,
+      "sha256": "sha256:376507d50e871483b1d71b5243864581dfb4419c35feec637f52876604f43f32"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasSavedfilterObjectTypes.go",
+      "size": 570,
+      "sha256": "sha256:f0503b05b22031191ec739a4f25e873c9592aea5c794171d16f519d307cf57e6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasScript.go",
+      "size": 779,
+      "sha256": "sha256:1c14cd314bd1f42d663cb915ed1ee49b87746b2bf9022660abfe53c162e5e17e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasSubscription.go",
+      "size": 887,
+      "sha256": "sha256:fe1f67eafd63f12e1d4409e85265249cddb943b7ce64aaf2c35251e258f7bb89"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasTableconfig.go",
+      "size": 1808,
+      "sha256": "sha256:cddc6f8cc98c9bf9d6266ae4a24124e96667e9ad95fe83afd765974f5d57d34a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasTag.go",
+      "size": 1146,
+      "sha256": "sha256:23bf39ac8ed74e4a6a42e919372ab26a3661af0140a01598f35969518ef68a95"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasTagObjectTypes.go",
+      "size": 530,
+      "sha256": "sha256:630d14d131c2910af401296617f06b047b243a6639e89327ec6ba1abed70672a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasTaggeditem.go",
+      "size": 734,
+      "sha256": "sha256:434d435bddfb2bcb2daef8027458e64caead447148fdeb028b7045c460800be2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/extrasWebhook.go",
+      "size": 2234,
+      "sha256": "sha256:ea8529797f1115a0a3bd55d20ca0a1de1314152256d29ad1c9aaee164252d0b6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/ipamAggregate.go",
+      "size": 1539,
+      "sha256": "sha256:43b1c107237c1b2ead2153ceadabbb80a1fac5f236ed906380e9a22a05a4d54e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/ipamAsn.go",
+      "size": 1388,
+      "sha256": "sha256:81fc95aed1189542b511cf98033256be2da8d4c36ded1dcfeff6e71afc02494b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/ipamAsnrange.go",
+      "size": 1649,
+      "sha256": "sha256:568241aed9b2867dc5988e96b5044e63a7f3eb2d9df71a8cb57f2e12e73adf84"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/ipamFhrpgroup.go",
+      "size": 1695,
+      "sha256": "sha256:aa9641a54005ee3b3ac66bca75b1a7b078c7bd9d0b73ca3c48b7af0e7ed85164"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/ipamFhrpgroupassignment.go",
+      "size": 1184,
+      "sha256": "sha256:dabf391ae79cb6a2b46c9db3964032968699e3060d43d5321237648269312ff1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/ipamIprange.go",
+      "size": 2196,
+      "sha256": "sha256:4a00b426f6dcc302274e70781067dc85b06854884c5effd4dc0b093085423bfb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/ipamRir.go",
+      "size": 1337,
+      "sha256": "sha256:cd6d3962dd3e97ac8aeac2b8df2591ae6452ddcf6fa481a423dcec1946cd14f8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/ipamRole.go",
+      "size": 1291,
+      "sha256": "sha256:0a765e34c6f828d69d28a7af1e11740f6de111828a020682d5762cefcab3191a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/ipamRoutetarget.go",
+      "size": 1321,
+      "sha256": "sha256:494104f35432fc62f04ce20fe0c213c53268e4a0e30a3fde3dcc25f3f9b4e5fd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/ipamService.go",
+      "size": 1789,
+      "sha256": "sha256:b5f187f80ac0d839be7363b07be59265dad386db6f990c80ae89a7ac48c40fed"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/ipamServiceIpaddresses.go",
+      "size": 528,
+      "sha256": "sha256:631dad5ee374c5d07ef1a760c61eed4e3299f9699b5ee7dcf4e4bd89029c746a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/ipamServicetemplate.go",
+      "size": 1473,
+      "sha256": "sha256:f8ca5beb68b7853b3880ddbc58cc651ecaaa155fdc44a4778cbb76a6446d054a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/ipamVlan.go",
+      "size": 2090,
+      "sha256": "sha256:5bd9dc36097e15b1b499cc816790ec5807dcc757fc671ff0ae0542a42766a534"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/ipamVlangroup.go",
+      "size": 1806,
+      "sha256": "sha256:c6df0a9e78070d7c695e6d0e80711fde8c3c88ca5dda8f68244e41d8c6b252bd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/ipamVlantranslationpolicy.go",
+      "size": 1259,
+      "sha256": "sha256:99dd9b095f982ee85d4292740d1ba81a58ba6c3628b89f0835199cef5f8d4837"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/ipamVlantranslationrule.go",
+      "size": 1375,
+      "sha256": "sha256:984a38b30263173f63bd540c2c160b099562f75dc58d4b5066a9f8e9eedb47b4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/ipamVrfExportTargets.go",
+      "size": 530,
+      "sha256": "sha256:5e2bf3d38061241639c0cf29974e87ec5d31c326dbbaaaaea7be56fd0fc778f2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/ipamVrfImportTargets.go",
+      "size": 530,
+      "sha256": "sha256:57ae2ca69421e9d00ace9765d730e0bb500b033474dd1fdda898929e69ee9e02"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/socialAuthAssociation.go",
+      "size": 1038,
+      "sha256": "sha256:55495d893c5e5a638f7341fc300ca6a0b9129d56a0db38c912860c2f278874a7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/socialAuthCode.go",
+      "size": 874,
+      "sha256": "sha256:1c5990cd0eaed37de9f466997fa409719678f817e3c171e8797b8c114320561f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/socialAuthNonce.go",
+      "size": 698,
+      "sha256": "sha256:d0df05336342b1e9a4729d3d6986270536f5c9b0d637ca4a48d990d49c621d84"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/socialAuthPartial.go",
+      "size": 992,
+      "sha256": "sha256:ba2c6cfbf09f55b1e321039e1ef53070d5cb15bc532671d7e4bb9d81812395b8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/socialAuthUsersocialauth.go",
+      "size": 1150,
+      "sha256": "sha256:343e8f348615904ba0e464d12b0c15baf7353f474604f008ffec916341745f90"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/taggitTag.go",
+      "size": 523,
+      "sha256": "sha256:70dc2dc2c4d1266d28825e348826da836aaa8c5b81e11e45d205c5f217d5b984"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/taggitTaggeditem.go",
+      "size": 734,
+      "sha256": "sha256:fe089dfa2807267648f879265318bf55931cb467f2e8790e222ad89994220713"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/tenancyContact.go",
+      "size": 1820,
+      "sha256": "sha256:05d1111948efffaa64ce84a95290a4d77d29be196616f1d4d701cbfb7dc96521"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/tenancyContactGroups.go",
+      "size": 546,
+      "sha256": "sha256:137d81d622a31edfddc109d0e79b4201eeef126cebe8710e0bac0375d75dd848"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/tenancyContactassignment.go",
+      "size": 1491,
+      "sha256": "sha256:7b5e6c777e6981cb24c2df90c86a5d178ef945511ed3163e6d01f340d4f513b9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/tenancyContactgroup.go",
+      "size": 1920,
+      "sha256": "sha256:bca4e4f02c9b86d91cf8d0022163147a3477caa7f2a62c508bdcd5466b20f6d3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/tenancyContactrole.go",
+      "size": 1224,
+      "sha256": "sha256:176aa9a2dd9b47ee2ef24b58dee1053cc43c0a532d975a6178da66c88a2f30a2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/tenancyTenant.go",
+      "size": 1431,
+      "sha256": "sha256:b7a85b74553abf62b6a794a38cbbd11787d668b28f737c3f960629380e85393e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/tenancyTenantgroup.go",
+      "size": 1915,
+      "sha256": "sha256:48ab1a4a7cec6f8bfd287f3cfef8d807e6b3cdb568a61b6433b1951710dae146"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/thumbnailKvstore.go",
+      "size": 478,
+      "sha256": "sha256:a45434abb0ea471a2a5d5c0e5a03f259fe10ac958487142ba941b9b24e3e08cb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/usersGroup.go",
+      "size": 584,
+      "sha256": "sha256:338cb231c91276c5facee5c31f2effd6762c7277b58e72c62ef494adbaf45988"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/usersGroupObjectPermissions.go",
+      "size": 595,
+      "sha256": "sha256:89ce98e9862afdec81b792e84bb758e3583101e05ad385e2415ca6007f8ad4e2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/usersGroupPermissions.go",
+      "size": 529,
+      "sha256": "sha256:bae9ec8355e53009de15195cd7f18f122c34b5a1de733d7e473d5b5a038ffea3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/usersObjectpermission.go",
+      "size": 1074,
+      "sha256": "sha256:0f27b09f26f52f86886c2d9c68ec62e10f67cd9467892bad08f1d5f5c8745f69"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/usersObjectpermissionObjectTypes.go",
+      "size": 622,
+      "sha256": "sha256:144b765556b9d378a0830ff37f29c678fedf85eebb3bf491e1ea58ff72df0ed1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/usersToken.go",
+      "size": 1332,
+      "sha256": "sha256:28a3d0ed2dbb8152b14731e217e759fbd668f95c7139bf264a577d1b71c11cef"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/usersUser.go",
+      "size": 1569,
+      "sha256": "sha256:edbba40d5ab1fbc24616e25b9f2a90adc3e595d14183a6a1e4462fc767c4d204"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/usersUserGroups.go",
+      "size": 469,
+      "sha256": "sha256:5d20877e6463c2d1f9a571bf5334c02b6cca08077db925984cb8a6e0f9f69efa"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/usersUserObjectPermissions.go",
+      "size": 590,
+      "sha256": "sha256:e87f4a88ca569196f82687ceea245c821bc400323846ffbda48b725e7a303f4f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/usersUserUserPermissions.go",
+      "size": 536,
+      "sha256": "sha256:7b221b4a870d69a45c4a3951bab5a55fad8fd7260e929c6926c9dd965ded369d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/usersUserconfig.go",
+      "size": 618,
+      "sha256": "sha256:1f2aff8eda6413839f979824b01efa2dcc4b8f1874af29d87c7a35f848d24a4a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/virtualizationCluster.go",
+      "size": 2403,
+      "sha256": "sha256:19a0a6ff54ebc5771db4dc344223442314149a3eabf9b9bfe4f9df61fc32c221"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/virtualizationClustergroup.go",
+      "size": 1264,
+      "sha256": "sha256:845ddfdf93301ca4a070a60998a0caefee2463a27d5a116879260b9c43bae295"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/virtualizationClustertype.go",
+      "size": 1259,
+      "sha256": "sha256:49d65cb2162561a97a3447fd4639e05a1d9f559947c1849052f78e8e906eecea"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/virtualizationVirtualdisk.go",
+      "size": 1405,
+      "sha256": "sha256:86478554628d861d0d43aa0196db6da083ba1e6f1d426c52b305b7370cff0316"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/virtualizationVirtualmachine.go",
+      "size": 3401,
+      "sha256": "sha256:86a3addf07a4a6b957052dccbc8144466daf7bea124530850d320848c4d3bc36"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/virtualizationVminterface.go",
+      "size": 2942,
+      "sha256": "sha256:1b5322f8172b14b4992fb13b6c4619c00c0b9bc7f64ee899a4d15f1c15f820b5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/virtualizationVminterfaceTaggedVlans.go",
+      "size": 580,
+      "sha256": "sha256:1f2c7bc4958c9459956aff4adba8078c127c3fd900e8fef0ce6b5492f83de70f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/vpnIkepolicy.go",
+      "size": 1550,
+      "sha256": "sha256:178cbe32f4504d99d0aaf7f593228ca82f21d9a47939e97c3378c891293ca815"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/vpnIkepolicyProposals.go",
+      "size": 545,
+      "sha256": "sha256:c9d6ed4a3fef18c4d2a5018a7395cd47819a8e0f7885d03db8b6e4065ead776d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/vpnIkeproposal.go",
+      "size": 2058,
+      "sha256": "sha256:bb0c48b7c6f1be43c8337a5dcbb92fddc0ce42bb4b4adbf7170880331e2fa688"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/vpnIpsecpolicy.go",
+      "size": 1317,
+      "sha256": "sha256:1da61f3c6c3c5b6f88bd60ae5861c1d6fdd25799b52d3f71b0516e139d67cec7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/vpnIpsecpolicyProposals.go",
+      "size": 571,
+      "sha256": "sha256:30b140ea4d4bb53a2247aee5890591ddc629339df864642e3578ba946adeeeeb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/vpnIpsecprofile.go",
+      "size": 1587,
+      "sha256": "sha256:8e0e0a0e3e59b2492a71f95a3a70ffda12c19bac58ca6f6b0114547c45426db3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/vpnIpsecproposal.go",
+      "size": 1921,
+      "sha256": "sha256:0023768e56214f51e57b5d04918416163fc652cf4bdf2b5e0a2cf512f866942a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/vpnL2vpn.go",
+      "size": 1768,
+      "sha256": "sha256:a5e5f5a415b0a28fa7672052a55c8f982afc367cda988793bd275c40667be1a4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/vpnL2vpnExportTargets.go",
+      "size": 537,
+      "sha256": "sha256:caf9c0b45c869574340613099897fc706e2fca59a128908883d53264edd82a47"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/vpnL2vpnImportTargets.go",
+      "size": 537,
+      "sha256": "sha256:bf5ce8172dfe88a9d33a37ca66f9b40bf9fb07f0e05d622d6e2709ac4f4909a1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/vpnL2vpntermination.go",
+      "size": 1336,
+      "sha256": "sha256:5307440be019b18aaef43fec7dd6d671ee6090e9475674218f6df205e512e997"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/vpnTunnel.go",
+      "size": 1904,
+      "sha256": "sha256:b6c3518db9b9fafb0a153dfda3acedca7a36ab633579b4afe866b3389004eefd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/vpnTunnelgroup.go",
+      "size": 1204,
+      "sha256": "sha256:9a86bfa10e91492ef61b76628c6cbcb11c1d8ab1a38a27a9b43fbe0584517407"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/vpnTunneltermination.go",
+      "size": 1519,
+      "sha256": "sha256:c3e1f2af6c5610b4733cb7b014c79c54091347d3772e9972c5e5fc7dc344b7c9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/wirelessWirelesslan.go",
+      "size": 2754,
+      "sha256": "sha256:9fb2f66f418b3cc25e455fe9f422fcbb1ae6c37d8b975612e6a8c741d7c2c8a0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/wirelessWirelesslangroup.go",
+      "size": 1945,
+      "sha256": "sha256:2e832105fd7007ea4a05d7de485984ddaadf2b82518d6502edb6f5254b5b9fa5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/model/wirelessWirelesslink.go",
+      "size": 2967,
+      "sha256": "sha256:e699e201babe4911961b0d5daa40234cc265c40e37d46a59cd094d637b15bbbb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/platform/composition/core.go",
+      "size": 6230,
+      "sha256": "sha256:0d465078b65480cd75c4ee63328340c35c0f5901f6180e08c43003e9f130c758"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/platform/composition/core_test.go",
+      "size": 840,
+      "sha256": "sha256:cb4f011d57bc7dbeb5e6cb4bcfabb31c124902339d4d2382387d69a09c04bae9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/platform/config/cors.go",
+      "size": 7978,
+      "sha256": "sha256:fb13527de31b027acb3d86a94bd909a8f3f7df1d9d8d4531f79ef599f9f1a04c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/platform/config/cors_test.go",
+      "size": 11707,
+      "sha256": "sha256:358bf6f10b6501c9409694e624aa10826b0e971cf88a3666f96ac181dcaaead2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/routers/auth_routes.go",
+      "size": 5013,
+      "sha256": "sha256:086d5f05f19f3d9edf314198178a961a04a6ed8f0163eed0bdf4ae3e9362a557"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/routers/dcim/connections.go",
+      "size": 15678,
+      "sha256": "sha256:b39c04dfe0d7e7c58142d8258b55404a2a853b6ee973c65156ce94a6d9e508ea"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/routers/dcim/connections_test.go",
+      "size": 17001,
+      "sha256": "sha256:4ee0a03d0c06c26ab8794772f8d8e6ae9f634af2e8692695d3cd5b580e521772"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/routers/dcim/trace.go",
+      "size": 17293,
+      "sha256": "sha256:b6730323f780e503f616f7530e51254ef5ab6b996dc6943998818092a7249782"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/routers/dcim/trace_test.go",
+      "size": 4029,
+      "sha256": "sha256:b49638a6caf7c25764777e29364b46ff9a81353dc23b927f25c117ec68ee2ec5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/routers/frontend.go",
+      "size": 1780,
+      "sha256": "sha256:ba14851e0f8609c67784c21e7026e05ebcc29f74a5ccba5c82c8a1fec1b93f8d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/routers/frontend_test.go",
+      "size": 3727,
+      "sha256": "sha256:a0752d36f042a8b35bcd17ae5b37e3dfe3bb8140b435bbb0a1627a5c7fa6bc7a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/routers/ipam/available.go",
+      "size": 10619,
+      "sha256": "sha256:1b7375cd14f1f989d837e154bbbdc641083634fa625d61841bfb1d3ffb1ea22b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/routers/ipam/available_test.go",
+      "size": 9606,
+      "sha256": "sha256:aeef584b5da7dd80f83e9c531ffcd1934f430ef7e6a584e37f845e0a6c0493dc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/routers/ipam/handlers.go",
+      "size": 18165,
+      "sha256": "sha256:d8cca22109dcd2e006e70bf755f68e7a90c1a5c3cae28405ec25d9743802fcf3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/routers/netbox_custom.go",
+      "size": 8477,
+      "sha256": "sha256:2d4848db7a8a955738bc8986db16c80bb7d2326d8380774ff0917d50c4edd5fa"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/routers/netbox_custom_test.go",
+      "size": 23348,
+      "sha256": "sha256:eb3107b09c65a760eb02e641bcf26151f2ae3d98e0cefe39cf4cd2afc1b0ef13"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/routers/netbox_drf.go",
+      "size": 28913,
+      "sha256": "sha256:f5c36c8dbaf8c0a2dd5e6e0c4509ff76ee1d004056571e293b4cd29873c70580"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/routers/netbox_drf_autogen.go",
+      "size": 68489,
+      "sha256": "sha256:f4dacc54658d25b3c19837c25e7f18b63c13a87c6670f010070bb8e790c30dd1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/routers/netbox_drf_registry_test.go",
+      "size": 6291,
+      "sha256": "sha256:cf177be827ef436480c4d5235c7ed4a3504e143a3c6f1686b384abe4288ff6b3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/routers/netbox_drf_test.go",
+      "size": 11932,
+      "sha256": "sha256:4b0af2a50bb0146f239aaf28d273a59fb324b50e038df35addbbbdafa3535f4c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/routers/netbox_envelope.go",
+      "size": 6303,
+      "sha256": "sha256:779ff1416f22ea3241eed48b3c8de3809dc44b615ade45a1ea3cb0231f5a3f7d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/routers/netbox_envelope_test.go",
+      "size": 9908,
+      "sha256": "sha256:995ae291e2bef709812d822320f2f4a365b4a93617254ee555ee587e196ddb02"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/routers/router_startup_test.go",
+      "size": 3206,
+      "sha256": "sha256:7ccaf21a39cde56d0ee473a1395ff3be0ac21c3e05750de60cf2a422971d384a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/routers/routers.go",
+      "size": 3277,
+      "sha256": "sha256:a3a69976ce4779a73d95b42389ce9aa22da109cd6c023b3a6502fcfd2f80e504"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/server/grpc.go",
+      "size": 9557,
+      "sha256": "sha256:4e4f77f78a2781a3cef850cf8514bc8f2b4bca1a4f613052c8d7faf054d9b228"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/server/grpc_option.go",
+      "size": 670,
+      "sha256": "sha256:7e618e6c9d8bd96718deb608b64ee0bcaac70821803bd15397759be4647ba73e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/server/grpc_test.go",
+      "size": 960,
+      "sha256": "sha256:c0f64a33abc70d5db629b14f74f58783efed8c2a745051dbe42a9c2a64723d54"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/server/http.go",
+      "size": 3557,
+      "sha256": "sha256:1dd8059a368884048ed87a96048f125e06f14afc83a04a6943efbbed6f19ccf8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/server/http_option.go",
+      "size": 1409,
+      "sha256": "sha256:2f105d4915aec5dca6d5c4621ceb4614bd44629215ffbfa7ffe4074edfae087f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/server/http_test.go",
+      "size": 848,
+      "sha256": "sha256:cfc07f1d391bca0ae6e8659a080c480b11a8b15576b4eb652020aa91bd0804fc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/circuitsCircuit.go",
+      "size": 12119,
+      "sha256": "sha256:661e245f4b6f353040402503e5b49ddcd4b0e34f037bfc09dd92e40526b5281b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/circuitsCircuit_client_test.go",
+      "size": 10773,
+      "sha256": "sha256:a261b67c218049e0d98cbc9633c5d2fc0c8941e3dc99b032e6fcdf18541a792f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/circuitsCircuitgroup.go",
+      "size": 12654,
+      "sha256": "sha256:ee14dd2f1a647f04e72ae9dfd8a0e6d24abf61cd191a45eeec5d0d2fb02216c4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/circuitsCircuitgroup_client_test.go",
+      "size": 9533,
+      "sha256": "sha256:867bdb0c457ac5d8b400cf33edb12208acfdfda99caaef4629aca3a21098de40"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/circuitsCircuitgroupassignment.go",
+      "size": 13724,
+      "sha256": "sha256:28bbbba7488b773b6a64623ad58b3f7934bbb8fe06b743b38869c17ad67c1995"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/circuitsCircuitgroupassignment_client_test.go",
+      "size": 9805,
+      "sha256": "sha256:9572148604dcbdb92415c356aa338bbeba73c74102f5c560235e3577a14fc176"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/circuitsCircuittermination.go",
+      "size": 13296,
+      "sha256": "sha256:c92bbc8afd93c6c5a72725c5f6322f5afc9290bed36b80ce7e905ac6ce16507e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/circuitsCircuittermination_client_test.go",
+      "size": 11271,
+      "sha256": "sha256:f51da14d2cfc0c51e282d00446f8e1ac73d9ac33551c2cfe65bc15a671d8fc3d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/circuitsCircuittype.go",
+      "size": 12547,
+      "sha256": "sha256:0be4f29a509d5bf4aa87b8a76c8951bd63e2c96265a0aa520cf69b2ff71e23b0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/circuitsCircuittype_client_test.go",
+      "size": 9509,
+      "sha256": "sha256:bc93803df8a3b50eea418f78e2de9e0edf1c1c9b32912b2a35aa3e7f5b435f72"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/circuitsProvider.go",
+      "size": 12226,
+      "sha256": "sha256:b8ea601e03db1a16658ce545b61f1b27cae4f4d983b89be2364e1d9f68241457"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/circuitsProvider_client_test.go",
+      "size": 9425,
+      "sha256": "sha256:81bde253618ed2d81a68b719656cf47246573097942052dfd10dd5168e77e505"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/circuitsProvideraccount.go",
+      "size": 12975,
+      "sha256": "sha256:76ebcd06e7edafa1f5cf6e02a9ae80b1af33b9cf5d5031609126684f0b638caa"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/circuitsProvideraccount_client_test.go",
+      "size": 9721,
+      "sha256": "sha256:c7b56ccc88759ab9745fd89286ec6d9b9b1d9557a8510bfab03e84dbaf477286"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/circuitsProvidernetwork.go",
+      "size": 12975,
+      "sha256": "sha256:ec2bcf89d927009e564bff31ccc8789d1cc73bf54e02e7ff6da1d750175ef38e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/circuitsProvidernetwork_client_test.go",
+      "size": 9721,
+      "sha256": "sha256:2d320908166f4ef14c5737f9016187885aa69b007540db5a73f1f5eb9e0d61b5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/circuitsVirtualcircuit.go",
+      "size": 12868,
+      "sha256": "sha256:63df6e8a23944792b1204b17beb842d1f53105f7522b6b989ef460e2b737c96f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/circuitsVirtualcircuit_client_test.go",
+      "size": 10085,
+      "sha256": "sha256:8761d87ab90b097a9e3a8b6c81a690489490bd5ac03e46006334c15541f2249e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/circuitsVirtualcircuittermination.go",
+      "size": 14045,
+      "sha256": "sha256:e8116fbf4926a604a258f78e8a0266de9c861046182018cf78537613d86b3917"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/circuitsVirtualcircuittermination_client_test.go",
+      "size": 9923,
+      "sha256": "sha256:75d85108239e38def5bbbf675ca54676e07746c73b2220aae0954845b0ee090c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/circuitsVirtualcircuittype.go",
+      "size": 13296,
+      "sha256": "sha256:11823ce34f7e0f29cda73c748f60f38bec74c57a99bbb88bd2f70ac3206376c2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/circuitsVirtualcircuittype_client_test.go",
+      "size": 9705,
+      "sha256": "sha256:cd0b41b77d150c7bc3f3f0100df201ae3c7a8e6cfcd60d0c696a7c8bea897b51"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/coreDatafile.go",
+      "size": 11798,
+      "sha256": "sha256:b950c00489b557414a620f7864badc9a7242cd5a4d2ebabea04c1da5c4f5b85b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/coreDatafile_client_test.go",
+      "size": 9185,
+      "sha256": "sha256:5d798b3c7c126b6171fbb179779464a07897683d01bc6cae4521314248e1d390"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/coreDatasource.go",
+      "size": 12012,
+      "sha256": "sha256:940ad6305c2954941b67a0b1f5c7ab09dea0490682cf147b9e90ab313e7918bd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/coreDatasource_client_test.go",
+      "size": 10105,
+      "sha256": "sha256:29232dc49a8a64aa491c527f604dad04298fe80ef84ec77b8dd012d0b239fa3c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/coreJob.go",
+      "size": 11263,
+      "sha256": "sha256:dfb922c785ad8d42ee5dc452418f258f823561f54406c786d011e7fb12f4909c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/coreJob_client_test.go",
+      "size": 9711,
+      "sha256": "sha256:a50bc1bc2beab41c5b883fbd0149b0e7e4c687406e0e37f1a3f48aba388c0698"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/coreObjectchange.go",
+      "size": 12226,
+      "sha256": "sha256:903fa2387402063a4feb7314878462359cd9242748bd22c8e1b03168e6af83d5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/coreObjectchange_client_test.go",
+      "size": 10245,
+      "sha256": "sha256:ef3b6ebb7896e0f2dd7e2736841c7173dfad76cc525f71fe10ed9474dd8db3cd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/coreObjecttype.go",
+      "size": 13341,
+      "sha256": "sha256:9ad552e92a8c1b241f3a604acabd754d114b6a4fbc1f3903919dceb94fbbf3ec"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/coreObjecttype_client_test.go",
+      "size": 9631,
+      "sha256": "sha256:f72c64181f813001b0a849f768859836ff5a631fe609b6b3ad793d7609c59e49"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimCable.go",
+      "size": 11477,
+      "sha256": "sha256:f2217d9ae6125fcfe431e9fb7957a5f42c0b1cca613df95e7412a47c19a5f066"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimCable_client_test.go",
+      "size": 9849,
+      "sha256": "sha256:6195bac86e26a5e953c339b16762f1d48da6522f569f9dd6712f54419633644f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimCabletermination.go",
+      "size": 12654,
+      "sha256": "sha256:762c93b7fde3da6b0ec0922c344b0441062baa084df1eb810dacafff76be101b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimCabletermination_client_test.go",
+      "size": 9905,
+      "sha256": "sha256:3aec7f9810d702b57a406846e0dcf0b291607bee6fce9022f6233150d6098a57"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimConsoleport.go",
+      "size": 12119,
+      "sha256": "sha256:508e970091000999a4593f42207d580729e81a3be3cd0cd8c4fbeabb43eafb6e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimConsoleport_client_test.go",
+      "size": 10417,
+      "sha256": "sha256:36ea9a074791030a940fdc78ccd85dfb6c84c743e4c923160441ad940f30f1fb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimConsoleporttemplate.go",
+      "size": 12975,
+      "sha256": "sha256:239ee0a0ccdce70df75e2f2462827ca549c539fd9719403be04dbe96c0c5a638"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimConsoleporttemplate_client_test.go",
+      "size": 9615,
+      "sha256": "sha256:b781d7752eed65e5dd479929da8f8d42a73d90f5c5f4f541b4947d6f723ff6de"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimConsoleserverport.go",
+      "size": 12761,
+      "sha256": "sha256:4feab5effd66b3c4e3626fbe4b707ce15212caa2d5be4a71eb979ff28835cc95"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimConsoleserverport_client_test.go",
+      "size": 10585,
+      "sha256": "sha256:c110bcdcd6c659b6b9a98b1b9b6de62f3f797843eb2f52193807445006210088"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimConsoleserverporttemplate.go",
+      "size": 13617,
+      "sha256": "sha256:a9feaed59ff85cd950c8fba875447151532874acaa4fbdedcae6e64cc15b7a6a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimConsoleserverporttemplate_client_test.go",
+      "size": 9783,
+      "sha256": "sha256:5f62913d8fd13921b7e70a8e1b16fbf9cc0d0c73faa3803f9ecf51d6d1ac1d12"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimDevicebay.go",
+      "size": 11905,
+      "sha256": "sha256:4ed26acdb6c0bbba9a3cfb85e1dee51848e4b8f0603ffb11ccf86474c6cf3d29"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimDevicebay_client_test.go",
+      "size": 9829,
+      "sha256": "sha256:17917184f3544764f1c259dc843c34c172e30fa4b99b233063704ea4e8bdfce8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimDevicebaytemplate.go",
+      "size": 12761,
+      "sha256": "sha256:1808738efcfd3e5b765414ee7bf93a4a89d62df5cac1b35ea73cf49148387000"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimDevicebaytemplate_client_test.go",
+      "size": 9379,
+      "sha256": "sha256:93baabc272c196a7e79fb4b97b44ecb64421b968ec9a8ccf4aa5751d171feffe"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimFrontport.go",
+      "size": 11905,
+      "sha256": "sha256:caa56698fb064aff494daa64f874b7ad0eeafea5973a3f2be2e9006c216ce3cc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimFrontport_client_test.go",
+      "size": 10539,
+      "sha256": "sha256:73995af9977e7ca5bd3bb352d2166877b6e4c464e133025ba8ecbe72a1c75329"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimFrontporttemplate.go",
+      "size": 12761,
+      "sha256": "sha256:21d7255bc057010fa1c4b7ad1c49056a490f4372480620c8aa70b81012b8ae5b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimFrontporttemplate_client_test.go",
+      "size": 10011,
+      "sha256": "sha256:f7ccaadf8b0c33d05bcc0c2c64c47067409bcf2af7c7e4673a6c979f187cc51e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimInventoryitem.go",
+      "size": 12333,
+      "sha256": "sha256:19d67334eb89bccb9ce85e0a4b2e418fb22111ac673f4358c3ee2ca27379385d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimInventoryitem_client_test.go",
+      "size": 11181,
+      "sha256": "sha256:adf159c9a5f4186861f9224b8df9747b8ad6c0a14c48a75cd32c8ce62b149fad"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimInventoryitemrole.go",
+      "size": 12761,
+      "sha256": "sha256:ed90117ff486142455b2f4c690831cc7b863b8eb14be9e386c5344d54c8f7ba8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimInventoryitemrole_client_test.go",
+      "size": 9565,
+      "sha256": "sha256:c4a776a87c1d60dbcf21ae4f8e85beee50f7deef3cae277b0d9de6fd1dde3462"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimInventoryitemtemplate.go",
+      "size": 13189,
+      "sha256": "sha256:f923d4ec8964ee10ccbe863d45f511e6317a3d442684e16b9a5ded9970b9f91f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimInventoryitemtemplate_client_test.go",
+      "size": 10573,
+      "sha256": "sha256:d709c69677be45402926d365c3087f1fb9320e569b8810d9b3650fe6a41035a1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimLocation.go",
+      "size": 11798,
+      "sha256": "sha256:718bbe8ef2b07f57bde00903daaf0c5f35d1970a485fb0cbaaf44f78e15c9368"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimLocation_client_test.go",
+      "size": 10221,
+      "sha256": "sha256:6fa055c99a5ea323d4976f7d79b2d686630929326d966d9948cf55fa8d978b6c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimMacaddress.go",
+      "size": 12012,
+      "sha256": "sha256:7a187c8ef99161009e97cf6ccf83dc95c03290b2e6b123d7b8f2d91fb8a5026a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimMacaddress_client_test.go",
+      "size": 9635,
+      "sha256": "sha256:0d15bf39235c5ef5739ad9796dda3bb086b116986f5b68dbdc0a74096e50d20d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimModule.go",
+      "size": 11584,
+      "sha256": "sha256:3fbb3d16a90457da271362aa81b0902f8a32bbfeb43040dc9759010827584778"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimModule_client_test.go",
+      "size": 9815,
+      "sha256": "sha256:f164d9f0a55a2980ee579f61eaca8c30cbcf2bc346c2e01a48f97c17d06e3a78"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimModulebay.go",
+      "size": 11905,
+      "sha256": "sha256:a7be3b57837e0f35c0450a59334a176d9bb78a27eb36151f151aa27abf66b580"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimModulebay_client_test.go",
+      "size": 10341,
+      "sha256": "sha256:615bbac6c640b2e8b96ad792fab57064466af83207c9275d2b30071cc43b711d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimModulebaytemplate.go",
+      "size": 12761,
+      "sha256": "sha256:b9767198adee9b059aabf1f5fa53fd154626958d229a0e3e7df57dc3d103472c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimModulebaytemplate_client_test.go",
+      "size": 9559,
+      "sha256": "sha256:fef2ae774307f5434888f3878271aacaeead38e1bb463b544022252b7ee62384"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimModuletype.go",
+      "size": 12012,
+      "sha256": "sha256:cc91106386fa97385862395ba4da75e56967d548f1f4cfc78a4a8814ffaaaf16"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimModuletype_client_test.go",
+      "size": 10085,
+      "sha256": "sha256:22ed328212088718028737ec741a8fc2b532f071b8ea2a1643fb58c81044b23b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimModuletypeprofile.go",
+      "size": 12761,
+      "sha256": "sha256:26f64484e653c5cf0677f6a45a78a17cc3b94ccb4961eb1e29213702e35d6a77"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimModuletypeprofile_client_test.go",
+      "size": 9565,
+      "sha256": "sha256:47925b7e191329e7c9d4346c5c9155323ad1c256593b67fa44de3e908c16003a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimPlatform.go",
+      "size": 11798,
+      "sha256": "sha256:d8c2daeca561fbb705f1f4b71a1be5c9e21a63cb735e21ad7bcbf99f056003d2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimPlatform_client_test.go",
+      "size": 10071,
+      "sha256": "sha256:8950bbf7e1e0c1c9d42693c50f35ac1328c9ddb22142ce96aa15d8a4734dc176"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimPowerfeed.go",
+      "size": 11905,
+      "sha256": "sha256:89ec06bc8863cc7c40cfe00098cfcbd2623d38cfa8d90a1b69dc1dfb6f6739f1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimPowerfeed_client_test.go",
+      "size": 10773,
+      "sha256": "sha256:03dd3e002c8b63334f093109500fba02d8252689aeffa04e53d03cddd07d425e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimPoweroutlet.go",
+      "size": 12119,
+      "sha256": "sha256:7cff3648b7a84603ca5cfbbba0db48d43b1ef7489695317a3718737825e8a64a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimPoweroutlet_client_test.go",
+      "size": 10729,
+      "sha256": "sha256:c90dd5c0ebe8411bb4908d84fbe0020225ef0589bde99773dd313f08a0f3bf0a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimPoweroutlettemplate.go",
+      "size": 12975,
+      "sha256": "sha256:38721b6318298cf7fe87e35d29ad74567d60d8e5690ef079a15161e320cbd282"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimPoweroutlettemplate_client_test.go",
+      "size": 9795,
+      "sha256": "sha256:ed865eb57ec1d33a8b47da57e1614ec5655ebed53b02967f4dea3aed389535f8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimPowerpanel.go",
+      "size": 12012,
+      "sha256": "sha256:e553c49335e689590603137129d7596ae1032297b23403e4f85d48f79c52463b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimPowerpanel_client_test.go",
+      "size": 9465,
+      "sha256": "sha256:ab09234b0f4730772d8b02da5f774afc482848008d7cb761bb7a5f242e9ee6de"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimPowerport.go",
+      "size": 11905,
+      "sha256": "sha256:976a6ddc771f08c952dd801faefba9d417102f2e3a8bdd1c6d0d54b3a79e8abf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimPowerport_client_test.go",
+      "size": 10461,
+      "sha256": "sha256:d2cccb820b1eb7488c18601e18f3e42df26591235d2811cc9397493efc12d888"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimPowerporttemplate.go",
+      "size": 12761,
+      "sha256": "sha256:877e4aab27c8c3a96afbcba47d78027148659163e8875392d171300908ce572a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimPowerporttemplate_client_test.go",
+      "size": 9777,
+      "sha256": "sha256:5a9cd4f21ad6bd9259ad834c5435452ac78e6fff11cc8fc780d8da6799596355"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimRackreservation.go",
+      "size": 12547,
+      "sha256": "sha256:38965ee5a645aae7a617225ac47ebfcb9338382ebc0abc3feb3959fa70566d48"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimRackreservation_client_test.go",
+      "size": 9809,
+      "sha256": "sha256:16967d56ebc789e15a43496f924d0c91400beb1a824a7b4dfbe09bc2a6438c81"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimRearport.go",
+      "size": 11798,
+      "sha256": "sha256:5625b509487bbc63bc1ac6d67582a8fe93abf69de4aa31b53301e95f5cfe7224"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimRearport_client_test.go",
+      "size": 10337,
+      "sha256": "sha256:717676bfb8cf0968904ccc1ce88f97b6b2b976ac973e853ccf1fb808927022b9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimRearporttemplate.go",
+      "size": 12654,
+      "sha256": "sha256:91c78592cc74c886f3b4b0a13a6abe00b178931a7dcead615a85d12d00947b6e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimRearporttemplate_client_test.go",
+      "size": 9711,
+      "sha256": "sha256:b7fa8a788548042bfdfe791233f65e0fac4fa3e340371ea331bdcffeabd8efb0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimRegion.go",
+      "size": 11584,
+      "sha256": "sha256:45962c5dbb5deb67c98060ea5790ea6a7d8db184df3aae2580a79a46e4439e64"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimRegion_client_test.go",
+      "size": 9757,
+      "sha256": "sha256:851af0c168e391bb4b7fe6b0bde456269986eb3de7f1bd544f6993f874c40f2a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimSitegroup.go",
+      "size": 11905,
+      "sha256": "sha256:cfb667ba24a45521dc3d72b2a00f6a6a17486659734f613f9ee121abd123bd9f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimSitegroup_client_test.go",
+      "size": 9841,
+      "sha256": "sha256:0279b97025c6651c19447c4659ff416e5565ef840df411e25fdbfd92d8abd688"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimVirtualchassis.go",
+      "size": 12440,
+      "sha256": "sha256:7f4022f876ccc7df9f1473c1b70b5f971d92f8996d7eb6e02fd57c80efc8f02e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimVirtualchassis_client_test.go",
+      "size": 9681,
+      "sha256": "sha256:323787b1940a96d3bd5fafe0edfad28a7b2a607fce2a6d89157066fc6d1e56e6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimVirtualdevicecontext.go",
+      "size": 13082,
+      "sha256": "sha256:f9bcab598d31cce5d203f91504d961c14248014132d0d2bdeb366c5f972be479"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/dcimVirtualdevicecontext_client_test.go",
+      "size": 10149,
+      "sha256": "sha256:64fca7c3afd9f741ae4d32f6bf68e2b4dcc2622dda854c522885ec5517feac93"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasBookmark.go",
+      "size": 12012,
+      "sha256": "sha256:0ec547d0b4d1b6a163cd78d79d42efc7029bd6c1f78f4c8f779dc86e970233c5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasBookmark_client_test.go",
+      "size": 8991,
+      "sha256": "sha256:46e9457435e95f7615710e8648627c0c19b36e719ede86c2f3d5a92676c9029c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasConfigcontext.go",
+      "size": 12547,
+      "sha256": "sha256:0176e30d27ef0fa8e74e4f113d74d0e527c8ae094827cfbdecfa1e3deab4c660"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasConfigcontext_client_test.go",
+      "size": 10141,
+      "sha256": "sha256:0a8c64c737828ca973e19ea985d05060423037322f6139b3388503ab6eb7e9e1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasConfigcontextprofile.go",
+      "size": 13296,
+      "sha256": "sha256:da487957ef829e3742ce923ef17730dbf3c9f0ee484de6cf3c5a0589cc2d438f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasConfigcontextprofile_client_test.go",
+      "size": 10229,
+      "sha256": "sha256:3edbdfb389ccd49790cf27e65f69c2f5147ffc6e8f9802a9577eb551bce6505a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasConfigtemplate.go",
+      "size": 12654,
+      "sha256": "sha256:b1ed8192417e5e60db17e8bfad657ace3594a110c9f0068685d5a11cc88650bf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasConfigtemplate_client_test.go",
+      "size": 10509,
+      "sha256": "sha256:9d6011fa0da63509ee624623ad969ac3aacbacb69bc569cc0e2f1d8e3cc9a922"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasCustomfield.go",
+      "size": 12333,
+      "sha256": "sha256:9bfe6a4e97002e261c2cfe03201b020797117ecde374ac692124aa9764f8f577"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasCustomfield_client_test.go",
+      "size": 11513,
+      "sha256": "sha256:2bca62fdc25a71d5ba96f406350b520300c9b4c7aa0d4d6c58b1448ff103bb15"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasCustomfieldchoiceset.go",
+      "size": 13296,
+      "sha256": "sha256:3cb446bbb61cfd5fcb3df91fb857d4641c807397608579e5a1619a0f54c09c98"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasCustomfieldchoiceset_client_test.go",
+      "size": 9837,
+      "sha256": "sha256:d053756a5c8f4240ff233476cb1e40b8fa209647d14bfe2acddf14303a216b19"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasCustomlink.go",
+      "size": 12226,
+      "sha256": "sha256:0dd46b560ea8132eb3c545e43ce19f0e46b3c98b18bf3be6f48c618ee97d27d0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasCustomlink_client_test.go",
+      "size": 9589,
+      "sha256": "sha256:2e8838ed09e161bd8b739be27745cff45c25bbee93fee59988386e3e0d31fd15"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasDashboard.go",
+      "size": 12119,
+      "sha256": "sha256:ca98cc3656a0fe9d8f51976908d5b9479eebb37ebf806939b2104c95ac19268e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasDashboard_client_test.go",
+      "size": 8851,
+      "sha256": "sha256:daa221a7c2a62eca8d2723b293fc532cfdb13de777be7411a10df3b62465699b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasEventrule.go",
+      "size": 12119,
+      "sha256": "sha256:5457c494381e0356f2f70f4239f9c97c03a859271382085b1e7bf5fcb9f7c107"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasEventrule_client_test.go",
+      "size": 10187,
+      "sha256": "sha256:591f63218db2205feca9d6a25975ce09aa7d1f4a0d965d1abc77f341d18edf3d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasExporttemplate.go",
+      "size": 12654,
+      "sha256": "sha256:ad8ef51549d16b825d71cd52919357d66d1ee930ad05e9289b0c337e60c8e8ef"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasExporttemplate_client_test.go",
+      "size": 10509,
+      "sha256": "sha256:4080148360bfdb9f5b52b690642ca34717407925263bf4d82e1d4fcb05d7bf1a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasImageattachment.go",
+      "size": 12761,
+      "sha256": "sha256:f6f04f1e673983bee32a01c0cd728d491a4b4a1dbedd3acbe3832fdd90dedde7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasImageattachment_client_test.go",
+      "size": 9643,
+      "sha256": "sha256:72f31d76917bdaa42a55196ee65060380868973e108bca0a53566e76445367f6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasJournalentry.go",
+      "size": 12440,
+      "sha256": "sha256:dfaa43f5c1165452e89308646de320033b0c6e3a6fa6750f702d636b127f4e56"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasJournalentry_client_test.go",
+      "size": 9743,
+      "sha256": "sha256:c6a8d883446a1945cab6b68e6887b2a9ca872bd3d2acbc340f5b02d3f59cc74d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasNotification.go",
+      "size": 12440,
+      "sha256": "sha256:5dd98a6cc5db7ee2c40729a36b16afc424b1291a1339a86b1cc6cfcbbb0bcacb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasNotification_client_test.go",
+      "size": 9379,
+      "sha256": "sha256:1211a01cdb5a7e52f3462a35e13fbfb1ffb317138b4e5d0ffc9be0b8c36fa309"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasNotificationgroup.go",
+      "size": 12975,
+      "sha256": "sha256:9a29d38c16d36097c592fe3a5a9ef340f6ef3b5210bada40d3c2738fba318ff7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasNotificationgroup_client_test.go",
+      "size": 9237,
+      "sha256": "sha256:fa009ebe8d9d49feabf0f99e7b10a5649df2050bec10e5de99803ece275f08ab"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasSavedfilter.go",
+      "size": 12333,
+      "sha256": "sha256:ed90aed21a52471a329fe1a8d1e874211d953beacd90735385fc7cb0c5f3f2a1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasSavedfilter_client_test.go",
+      "size": 9613,
+      "sha256": "sha256:4aec5a52bc5fca1079f72423cba3e276884b7a401e74dbbccff40f35d00fc069"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasScript.go",
+      "size": 11798,
+      "sha256": "sha256:9bed826007d76833972dad8fce1b711c0e4d97fb5020a131ef5ba5d9f3e9bb8b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasScript_client_test.go",
+      "size": 8863,
+      "sha256": "sha256:2239a3fb89d72ccf08224fa7ed6cfdc82f0be03546fcbfc82ad63750eb85fc61"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasSubscription.go",
+      "size": 12440,
+      "sha256": "sha256:51693f50d83cb439324e905a130067a4b5df4e7501ffb92f18ae01e0aacdba32"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasSubscription_client_test.go",
+      "size": 9103,
+      "sha256": "sha256:9b479d0f426eca841f60011732e72a4f0756b24761578a2e7737f4ec2ec78666"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasTableconfig.go",
+      "size": 12333,
+      "sha256": "sha256:0fad1ca02a6203a2f62d232fdf846cb496d7ea043e5194ed29567d89bd3de7f5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasTableconfig_client_test.go",
+      "size": 9835,
+      "sha256": "sha256:798103d4b4a35a0b776596c24bb5fad500d7a32810e537d909bf1757a3b8ee60"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasTag.go",
+      "size": 11477,
+      "sha256": "sha256:69d9f8a2c603f2433989f07e4ac1097aa4ffa2a47007cdda753c391067352032"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasTag_client_test.go",
+      "size": 9105,
+      "sha256": "sha256:22dc9ae60a272fb47c0d402f4059a53751ed05707e37102bbc31feb4d648429a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasTaggeditem.go",
+      "size": 12226,
+      "sha256": "sha256:9aaf41d0df4b1161ad9071bd79409804150adc7a99b0416c62febfc067e40e4a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasTaggeditem_client_test.go",
+      "size": 8969,
+      "sha256": "sha256:83a07073c32c76057ef540e06616c6ebb30f401998e121a7391cffd2ed3b38ad"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasWebhook.go",
+      "size": 11905,
+      "sha256": "sha256:1900af8699177ce562b4c5509b95be64440a47d4f21922b9f4474e082fcf45ff"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/extrasWebhook_client_test.go",
+      "size": 10085,
+      "sha256": "sha256:e834af55f5a8d2999d21907676f03623806e61fef30ceca6b20b609c49d449b7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamAggregate.go",
+      "size": 11905,
+      "sha256": "sha256:6a4823b226c83e0542d7a1fd69f10e8a084f4ab5c1e23bb9bdd99c328b2508e0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamAggregate_client_test.go",
+      "size": 9541,
+      "sha256": "sha256:19eaca4853d4fd5dc4ca13f5058409c6ed66868fbcda80cb6ef25bda19a4da90"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamAsn.go",
+      "size": 11263,
+      "sha256": "sha256:a6c127dee22f40c5e5eb0a87969214795e2c94d357827468a933c4760391e787"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamAsn_client_test.go",
+      "size": 9265,
+      "sha256": "sha256:21ee1742999c009f1258f90d7f0235429c15a12757a15e84ecb605398fbffa86"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamAsnrange.go",
+      "size": 11798,
+      "sha256": "sha256:78a9b515076c94415685c1cac88d38aa2f5a5870f9240593824b5e2613fafc8d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamAsnrange_client_test.go",
+      "size": 9609,
+      "sha256": "sha256:3ed03747f28123ccda6c6602e05c567d96ec92c043101bdfb8c5cf9fc02e622e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamFhrpgroup.go",
+      "size": 11905,
+      "sha256": "sha256:0409f8580e228ac197eabb5d9ce9eb071192c9e6d50866416179f380ec98eca4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamFhrpgroup_client_test.go",
+      "size": 9649,
+      "sha256": "sha256:c0505732354a79920c3d176f65a4a7b66f76642ff149cee936933baf18d95dc3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamFhrpgroupassignment.go",
+      "size": 12975,
+      "sha256": "sha256:9f4b5166d6b14e3736878f96e0f5542825cbfac451006648872e90e25e37dd51"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamFhrpgroupassignment_client_test.go",
+      "size": 9501,
+      "sha256": "sha256:b01e813d3fee7a7ef815348efdf39499a261b723db10a749031d2194b09a5c98"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamIprange.go",
+      "size": 11691,
+      "sha256": "sha256:714850f51561d6f5c57aa74d9f4dbabc39d952a0fe4ec7af5b19fa3132c73dbb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamIprange_client_test.go",
+      "size": 10021,
+      "sha256": "sha256:eff00e94b227ae2d1cdeaf87b5c86e7f4d312eff7926c16e3d5bf73279b22073"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamRir.go",
+      "size": 11263,
+      "sha256": "sha256:a61770aa30b2281597633c9a3df0ba7fd37e3a475b619883045b766479822d85"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamRir_client_test.go",
+      "size": 9185,
+      "sha256": "sha256:24cfc142ecd485313bb1860590d6d3102d0204b3f1676fe493aa149232439dbf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamRole.go",
+      "size": 11370,
+      "sha256": "sha256:42151630e45c08ced864275bc7db44b77db9152a158dc7ade2da942753c801bb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamRole_client_test.go",
+      "size": 9197,
+      "sha256": "sha256:c0af1fb03bb3d4514bbb5b7d663e906cd8dd2b80b0a7d3a8f96a8caafc3b6ae7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamRoutetarget.go",
+      "size": 12119,
+      "sha256": "sha256:4733d7b0f5ceb0de55b98d8a9322282dd8eee76f4f8229ab364009ddcffb8f34"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamRoutetarget_client_test.go",
+      "size": 9393,
+      "sha256": "sha256:36b329cd9f5d1a321b3d52304e31509ef1ea85d9d3b9f94ec119a8cdce8b6a76"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamService.go",
+      "size": 11691,
+      "sha256": "sha256:c21abcaace462b54dd19c426caefa947e38c843fb3454b655013cc395b2507fc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamService_client_test.go",
+      "size": 9715,
+      "sha256": "sha256:459d0e596ebcd60912d3706e47c7f479bce1f039418bef620152876e55517061"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamServicetemplate.go",
+      "size": 12547,
+      "sha256": "sha256:030d597cf7bd8314789b1bc23028ffa7483e97dd2c11400a4f75beb15d9cb408"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamServicetemplate_client_test.go",
+      "size": 9613,
+      "sha256": "sha256:eb910d589cfc091ca0556ab19d520aede5b24ac72df565ee022304e45dc42902"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamVlan.go",
+      "size": 11370,
+      "sha256": "sha256:ac18c605719bd679ff1507e08fe0be8f7bf90293b18f5c3cbe003437f1a6118e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamVlan_client_test.go",
+      "size": 9905,
+      "sha256": "sha256:c8e29df62f86108d08f66d60cbcfa6d555dd91319abd6828ef34b6b35a29f9c6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamVlangroup.go",
+      "size": 11905,
+      "sha256": "sha256:f3fa5711224d79ffd1c4446854dfd833495c2dfb256d476b988c2afe4338c6d1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamVlangroup_client_test.go",
+      "size": 9741,
+      "sha256": "sha256:e2a3976d1f67a1d15604dba0a87657232ecf5bb57ca08f97a0fa1cafc19a1a2a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamVlantranslationpolicy.go",
+      "size": 13189,
+      "sha256": "sha256:697a9988edb8ed3f70be41a3759a062475cd4a4c5d487b36a24c80f4c8bbd455"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamVlantranslationpolicy_client_test.go",
+      "size": 9573,
+      "sha256": "sha256:9c4376702d36a6242b0f76657ca56cc433956c927a8e55a13b549656341db02c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamVlantranslationrule.go",
+      "size": 12975,
+      "sha256": "sha256:971ac70fa6423b7a992c7f56459787c5cdb151e07525916c38ad730e0e6513b1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/ipamVlantranslationrule_client_test.go",
+      "size": 9609,
+      "sha256": "sha256:e8239ee9bcae91eed41bcc6524455adf33dbd876b12601f98ec7e9cbb5cea034"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/service.go",
+      "size": 587,
+      "sha256": "sha256:712ea9bdf26108fc0a0b4ae27fcad1b6dff468213e3218c9dcc9c81835b46a35"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/service_test.go",
+      "size": 4735,
+      "sha256": "sha256:4fb30e249d2a7e1be8539056a8e5faa7f531667fcf634b6efcbcd078084045da"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/tenancyContact.go",
+      "size": 12012,
+      "sha256": "sha256:5bbb592dd4d00b03189a12930c625bfd092f36dd85c446c148adc9507f6a34a6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/tenancyContactGroups.go",
+      "size": 12654,
+      "sha256": "sha256:e129561d36e96b1af8de71ecf1849b55cbae676badaec585cee282e3095ae52d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/tenancyContactGroups_client_test.go",
+      "size": 8999,
+      "sha256": "sha256:491cdb47edf56025f9aae6b74692b67854324af9d1ad9571379b6218d99007f7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/tenancyContact_client_test.go",
+      "size": 9785,
+      "sha256": "sha256:2dde272bf672aa8526f45391af858e21e1d9a2b264e495088b3836fff0381e49"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/tenancyContactassignment.go",
+      "size": 13082,
+      "sha256": "sha256:92dc85ef63872620670b24dd0f232368cf47cca5a003b3dda5aca92ae48c1c0e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/tenancyContactassignment_client_test.go",
+      "size": 9737,
+      "sha256": "sha256:090c2d299681ce71f9bc6ac1e4b1ecb7de9a8ecaf38793e55c937fffe8280527"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/tenancyContactgroup.go",
+      "size": 12547,
+      "sha256": "sha256:c73ec93e02fe99bce4eb37c77d0de2c6af46a87b313081ccd9e34b2601b3a703"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/tenancyContactgroup_client_test.go",
+      "size": 10009,
+      "sha256": "sha256:7a5ac6efb2c1767828fa1b5918587adb3277e83c102c4507005932568130a27a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/tenancyContactrole.go",
+      "size": 12440,
+      "sha256": "sha256:b5616b85e640c81a2c6e93d1f10592fe89212957d16a1e92d10c8bd14511e2f7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/tenancyContactrole_client_test.go",
+      "size": 9377,
+      "sha256": "sha256:d527befd03d2ce8a2f0938eee6e474f9808f491ba900b33606b05aed1d40b1ee"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/tenancyTenant.go",
+      "size": 11905,
+      "sha256": "sha256:cd1e4384c0fef59c10f3aec83a1632fbd7afb005ebd6d3db5c8fce3fc287bc55"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/tenancyTenant_client_test.go",
+      "size": 9441,
+      "sha256": "sha256:7c94ffc76a70cac4d063c35b82a7542e8ae7b87eaefda031303596231f8f2d34"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/tenancyTenantgroup.go",
+      "size": 12440,
+      "sha256": "sha256:66fc21496330b99d7012a8950df7140e939875374eeb2475e637ed17542f8803"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/tenancyTenantgroup_client_test.go",
+      "size": 9981,
+      "sha256": "sha256:7e9e9d777a206a02cb80a8e7e76fcb0373394aa399dfb0eb74a794c4fcad6aff"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/usersGroup.go",
+      "size": 11584,
+      "sha256": "sha256:0eaee01a5494f0ff764e7f79de4ee0e7b9c1e78e2ec5256eb6cb9d00065f8cdc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/usersGroup_client_test.go",
+      "size": 8697,
+      "sha256": "sha256:0cae5b9772554807ffb93541a793b389728ec12d6f7a30861f32d3192a698e43"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/usersObjectpermission.go",
+      "size": 12761,
+      "sha256": "sha256:96801969fca1dd78197281ea880b4cb9e0ac1aa108d5088174c0925f83bc407f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/usersObjectpermissionObjectTypes.go",
+      "size": 13938,
+      "sha256": "sha256:9188fd35c8b030bac76d9b3fe1092201a462a51c7e2c7a338ef16ea2f36b9b3e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/usersObjectpermissionObjectTypes_client_test.go",
+      "size": 9375,
+      "sha256": "sha256:6fdb777c80c566bb60df5b8c84e9322f7ceca999cbc9f056021a476c8892f4bd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/usersObjectpermission_client_test.go",
+      "size": 9281,
+      "sha256": "sha256:7de92ff7d2043d423f8eea0e7c6a3dd942ce68e1134b921988166ad97025c468"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/usersToken.go",
+      "size": 11584,
+      "sha256": "sha256:94e2061fb1b1b35df9dff8afcebdbb7046277598d568a61a2287975127161f3f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/usersToken_client_test.go",
+      "size": 9267,
+      "sha256": "sha256:68c08b8f8c98d9e1bd9e942d5ecf956589c12862ce2e0f4a930de5c1e2746203"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/usersUser.go",
+      "size": 11477,
+      "sha256": "sha256:c080eaeb363c7aef939f3845700d6858c02b7f87c9d8adc196e3b3d8c0556b9c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/usersUser_client_test.go",
+      "size": 9409,
+      "sha256": "sha256:8db328cced80e1ffe2c5e953fee85ac067bdf812576bf153cea7793caf772663"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/usersUserconfig.go",
+      "size": 12119,
+      "sha256": "sha256:8c114169646a44a07b2aaade83091dc99b98ff7a96e472284a16efcfb2eae248"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/usersUserconfig_client_test.go",
+      "size": 8783,
+      "sha256": "sha256:a1183a039c1f84425cc84bf5a2f3f3757ce072ef07149707104eb22471244168"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/virtualizationCluster.go",
+      "size": 12761,
+      "sha256": "sha256:ecf6a4b4fe988e5cfcec2bc77f898164f4c4337cfbcf555a3d288f6162fe3402"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/virtualizationCluster_client_test.go",
+      "size": 10465,
+      "sha256": "sha256:83b87c3abe1dcba53b7ed60aace038bdc63e3551a1b063bacb3bc30a5d3cb907"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/virtualizationClustergroup.go",
+      "size": 13296,
+      "sha256": "sha256:a3717bc46e8b8f26e9bfaacea29a75ad643e343e033ae974e45525456fba0992"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/virtualizationClustergroup_client_test.go",
+      "size": 9601,
+      "sha256": "sha256:4456654331026628d1072374a036b146d8f86e020558232156929f8cd9aa3fb9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/virtualizationClustertype.go",
+      "size": 13189,
+      "sha256": "sha256:576d69e6d57c11f7d9a6a2c302b34a8107be6d483f9df9705d0305d37e12e804"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/virtualizationClustertype_client_test.go",
+      "size": 9573,
+      "sha256": "sha256:29e6310c0e253fa081389eb68bf47a93dca264fc892191668fc0723f998f3eec"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/virtualizationVirtualdisk.go",
+      "size": 13189,
+      "sha256": "sha256:d6ca27c3cf26e09ec2acba3d211f58f557dda03e0f6c8fef90ef14ca8a0d36ba"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/virtualizationVirtualdisk_client_test.go",
+      "size": 9699,
+      "sha256": "sha256:9ca59843cd415580c32de14b9b83d20240a366356aaf9c26847a332e94c8623f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/virtualizationVirtualmachine.go",
+      "size": 13510,
+      "sha256": "sha256:cc54fa838e66435177a4b60d576e3c69966006780137d7666044f1c343bc561e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/virtualizationVirtualmachine_client_test.go",
+      "size": 11467,
+      "sha256": "sha256:95acb7d50894ff23f6eb6b6dd910aba7850b338fbeb08c1fb08c3bc6bb34abb9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/virtualizationVminterface.go",
+      "size": 13189,
+      "sha256": "sha256:7857db748351535fc2f37d39f04920120d63687f6f41bf2e87d81b67013a1339"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/virtualizationVminterface_client_test.go",
+      "size": 11253,
+      "sha256": "sha256:7bedd73a62fc48becb485d1fdda943d323af31088b903224d5d658151ec1b3bd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/vpnIkepolicy.go",
+      "size": 11798,
+      "sha256": "sha256:bc6cf093fc0e7ca340f2fa79fc3b602ccbc96c4d2365fc4a15317f176ec7163a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/vpnIkepolicy_client_test.go",
+      "size": 9517,
+      "sha256": "sha256:05233da77d93a960778a08698f9a33cf582c4eda79b7bd7709dfa4410111f16f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/vpnIkeproposal.go",
+      "size": 12012,
+      "sha256": "sha256:d9dd5db256037ab3e6b499ee38ca2e84a9ec4d02d521baa127be7d38eec01220"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/vpnIkeproposal_client_test.go",
+      "size": 10145,
+      "sha256": "sha256:9d75702142d45a102380ec1e47c805ea7db26a6416728dafbdffc69962ecae0b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/vpnIpsecpolicy.go",
+      "size": 12012,
+      "sha256": "sha256:15c2e793deb7dbddd6bcbbecfd1f0d9b21cf1afcec75252c06857f1207afaf0c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/vpnIpsecpolicy_client_test.go",
+      "size": 9365,
+      "sha256": "sha256:72bd44d0cd20cdc4a07942497227f8ca275ec6846cd08ad6f8206ebbd96c905f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/vpnIpsecprofile.go",
+      "size": 12119,
+      "sha256": "sha256:f1fdff33c808f85ed561c8451b5d7de41267459b8be655b14d120c846d014fdd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/vpnIpsecprofile_client_test.go",
+      "size": 9597,
+      "sha256": "sha256:48f39fc0db2ee00348fb35b3fcd158b0ad132aee637f17c8868ecce0528e4306"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/vpnIpsecproposal.go",
+      "size": 12226,
+      "sha256": "sha256:d0ebf13b91c26dd5374e8db904078ba95316c20ac8dddaf3dea6f199d213f6f1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/vpnIpsecproposal_client_test.go",
+      "size": 10065,
+      "sha256": "sha256:80a904980158babdd339cfc859ca94b3ebdd0fd95b87af5489a333784059dd79"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/vpnL2vpn.go",
+      "size": 11370,
+      "sha256": "sha256:50c0736e6324d4e3d34e90dadad1739a5148b2e1cbcf56322e931615a7d2dca4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/vpnL2vpn_client_test.go",
+      "size": 9609,
+      "sha256": "sha256:3406cd16cbd2ee0ff6a08241686561a2524d8aa936b07beb083f4a1b886d9ff3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/vpnL2vpntermination.go",
+      "size": 12547,
+      "sha256": "sha256:442aae8c1ef0666684ef04e7f429d7fea101318872598586cabe7e7e718b06b2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/vpnL2vpntermination_client_test.go",
+      "size": 9523,
+      "sha256": "sha256:b45af45b5a3b95e6f59982c20c39d348acdb9b3f0d11b1075f25f94a62a8343a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/vpnTunnel.go",
+      "size": 11477,
+      "sha256": "sha256:ea7b96d631d455ca1f7829a8468332ee9db4cbd046788760f6c09c10048a5672"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/vpnTunnel_client_test.go",
+      "size": 9733,
+      "sha256": "sha256:913cb0ae548236894148e208c9592b89886ba5f1421db0e0e5f4add6f90306e6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/vpnTunnelgroup.go",
+      "size": 12012,
+      "sha256": "sha256:389f4514115be5edd82fbab26b7321f23725e78fb10c83c55cba5dfb4e7ff9f2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/vpnTunnelgroup_client_test.go",
+      "size": 9265,
+      "sha256": "sha256:0106ab4fa6e282723699caf9c1dafc659a7b559dd9f0026337cd52ca2fee6f51"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/vpnTunneltermination.go",
+      "size": 12654,
+      "sha256": "sha256:79d1154c62bf8461abbbd7d4a2735eb50d8f6debf6904c8c74de3b303a7a0b56"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/vpnTunneltermination_client_test.go",
+      "size": 9693,
+      "sha256": "sha256:e9d64b52743e5e13f301ac1e3a89386b42e2cd7709b16bad14103f68f9f80068"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/wirelessWirelesslan.go",
+      "size": 12547,
+      "sha256": "sha256:db12d64b035d695366571e05ac3561831a707e23a5b446378607c91bf344442e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/wirelessWirelesslan_client_test.go",
+      "size": 10721,
+      "sha256": "sha256:7fc8929a3dff6c7d8f24c375edb16492c1c155b4a96519364ee91b0a48cedadc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/wirelessWirelesslangroup.go",
+      "size": 13082,
+      "sha256": "sha256:92b4d57174eb78a83a4fbfc15a0d8d08d3d29b32e3b637107887545e981d8b02"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/wirelessWirelesslangroup_client_test.go",
+      "size": 10149,
+      "sha256": "sha256:8d7711bf656e80ec02291a08f3580c8b4aedee9d50a4842d068d0783a399de76"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/wirelessWirelesslink.go",
+      "size": 12654,
+      "sha256": "sha256:dcf9c92b22603a886227a5d1ab8d05e2860dd1aeac53930412d4d9e6bdb35f06"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/internal/service/wirelessWirelesslink_client_test.go",
+      "size": 10957,
+      "sha256": "sha256:d573511f5c1d7b5a0c5aa481f636b81f9084440449d02223f7613368148cf145"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/quality/check_coverage.sh",
+      "size": 7131,
+      "sha256": "sha256:8dfeab9fb51e02f721030469ab5f9aa1a35a3edb3cda456e14ae846da57f2fd9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/quality/check_coverage_test.sh",
+      "size": 2672,
+      "sha256": "sha256:26e6426873ab65839a51bc793f3cfe6bf802acd2640e5302468dbe07d377dca8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/quality/coverage-baseline.tsv",
+      "size": 2519,
+      "sha256": "sha256:534e41f7c4bffddf832b1f8860b3c79c521606bc04b8c7aa9d28a714c787b0d7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/quality/legacy-exclusions.yml",
+      "size": 1522,
+      "sha256": "sha256:e41947c3926b224a430f7e3f53ca607ce0b9f46057f4b202bd214a0d44f88cb3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/scripts/binary-package.sh",
+      "size": 689,
+      "sha256": "sha256:bc0fd57c28300429984b1304bebf1f0154772adfb5523ca9e4d1406558dcb384"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/scripts/build/Dockerfile",
+      "size": 567,
+      "sha256": "sha256:64149022d08b7d09e853497cf24ef7a969be4c5b2309b9a7988a3f970af6d6b3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/scripts/build/Dockerfile_build",
+      "size": 1466,
+      "sha256": "sha256:8c41e7c29c291293c2db7ffbd804bf68472f8c7305e2349a61d7b5e27bb55731"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/scripts/build/Dockerfile_test",
+      "size": 502,
+      "sha256": "sha256:cedc1172c82126b3094fdb9172423149150b9b95c9e829f921e2d3b8804c78e6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/scripts/build/README.md",
+      "size": 259,
+      "sha256": "sha256:16da159276877e22321239c2707727d3a01b5132987e962b4ba809455862e568"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/scripts/deploy-binary.sh",
+      "size": 624,
+      "sha256": "sha256:fd48987b8df7785d1f4d91653d9fc4e2024fcee99107294d75b74c7848518391"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/scripts/deploy-docker.sh",
+      "size": 757,
+      "sha256": "sha256:a9d23383c1e387e7e7d599168584e3cc5e470cb340f36f9684b5844ebbbe4212"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/scripts/deploy-k8s.sh",
+      "size": 667,
+      "sha256": "sha256:79f184064e85316340df843cdef2faa39bf17d809b5f4ae0ee44c7122e607cc4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/scripts/image-build-local.sh",
+      "size": 1723,
+      "sha256": "sha256:63880e01f3f0bb569e0b3277d404a4439ee88b7562c244a204cd1ccc9667a5df"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/scripts/image-build.sh",
+      "size": 2369,
+      "sha256": "sha256:3e97a92ffb4a8f11d269fde1cfb95d73902d84ee1d8fbfd57930acc6c8faa0f7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/scripts/image-build2.sh",
+      "size": 1279,
+      "sha256": "sha256:ac7e597afd4401262c64ed2dce0c27d97a8b6e56dee7f709d8a7bf02d0bcc471"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/scripts/image-push.sh",
+      "size": 1341,
+      "sha256": "sha256:c4daeeb807267c10d622c2fd80b97a34a2496337d9c38697ab7c688e0b7f2c5c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/scripts/image-rpc-test.sh",
+      "size": 1076,
+      "sha256": "sha256:2471c112be3220e2a9a010ebe5ec9d67053c52a3d912f6482275d36ed368894b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/scripts/parseYaml.sh",
+      "size": 2468,
+      "sha256": "sha256:96248c8c2469bad5ce06d534cc23549afede059e9f55100e05396ebe60fb27b5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/scripts/patch-mono.sh",
+      "size": 723,
+      "sha256": "sha256:0fbd28deacd17f491237301a4481d1614c940b05890368fceb09af2b8eb91cfe"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/scripts/patch.sh",
+      "size": 1639,
+      "sha256": "sha256:98886d70402702fecbdee4c532031145c7beca00b132519116776db305ef9ab5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/scripts/proto-doc.sh",
+      "size": 894,
+      "sha256": "sha256:1cfc2716a01d2435e1201c08d8357ee5c0a07ff7e498b712face139f6950e802"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/scripts/protoc.sh",
+      "size": 7033,
+      "sha256": "sha256:6ea4875be53dba8a957972230b65262978535f8c06cf0fa9e7f2222495af1de5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/scripts/run-nohup.sh",
+      "size": 3220,
+      "sha256": "sha256:e7ba38274df47afc78cbd691b2ea80285a5f9e42e6e7673343c5d8b6e14a9dab"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/scripts/run.sh",
+      "size": 575,
+      "sha256": "sha256:0114e11c5626e18f83d2d1527408536cfbfd8daffd717c394e2e2b6f2be328d6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/scripts/swag-docs.sh",
+      "size": 1647,
+      "sha256": "sha256:3eff09d2fd4d891bf9592f302d2182613c90b8203834f92f88fdd61ff02c4514"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/test/contract/grpc/surface_test.go",
+      "size": 2243,
+      "sha256": "sha256:f5bdb5dc8660a08127ab3372e382a8a87d7454eb0d2eb2f284ec6a1c78554640"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/test/contract/rest/surface_test.go",
+      "size": 2116,
+      "sha256": "sha256:74c9e61fb3d57ce0aefd291f389bf90b920dbae63b18dc33d1cd2c851481e8b8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/test/parity/device_role_scalar_presence_test.go",
+      "size": 10986,
+      "sha256": "sha256:e6dcd8e184ae76c0a28e07ff0d0b44bfa573a0bb0b7cceea17f48628600e9195"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/test/parity/device_type_scalar_presence_test.go",
+      "size": 14024,
+      "sha256": "sha256:a2a648e815b4c1bd6c2417cf6498673e29e042ba7f365f00139f909611478e58"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/test/parity/grpc_profile_errors_assignment_test.go",
+      "size": 16177,
+      "sha256": "sha256:fcb49a31f3f17a8f623ffbc064431bcb77398440808e8e1f63ea67c73a3ab1ed"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/test/parity/grpc_profile_lifecycle_test.go",
+      "size": 25816,
+      "sha256": "sha256:a4ddc76ba89a563489978e0ef1329d4752862895064970da0fcf4bd72eb260fe"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/test/parity/identity_grpc_test.go",
+      "size": 25168,
+      "sha256": "sha256:927d535abf2ae4c26c507a06f171e70b63e30f1dd016383ecbdaf6f7aeccac1e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/test/parity/identity_password_change_test.go",
+      "size": 22233,
+      "sha256": "sha256:dc41304fba311ca4fcd196657151dcabef686adffb6aa03f5d4c2567a84363e6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/test/parity/interface_template_scalar_presence_test.go",
+      "size": 22182,
+      "sha256": "sha256:8f1b3366426d91cfe17c3b5cdc182557647dbb4e9360344f0f89fe33ffbc83ed"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/test/parity/ip_address_scalar_presence_test.go",
+      "size": 14796,
+      "sha256": "sha256:f930c328b42558dc10f6cc1504e7c427e5c5acf33cec86822f537d03d76586ac"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/test/parity/manufacturer_scalar_presence_test.go",
+      "size": 25107,
+      "sha256": "sha256:82455b4c70f00dbe9e2fc1756027fc641048658f8cf5f926d61e5a4ba54bee1f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/test/parity/rack_role_scalar_presence_test.go",
+      "size": 26105,
+      "sha256": "sha256:7b5e62fb3c037478b8c8f98029688fd339d1011c6e37902721711139e7f36a9b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/test/parity/rack_scalar_presence_test.go",
+      "size": 22541,
+      "sha256": "sha256:710fa02fb378ed6fdd5452fb14fe4f4aaec2860aa7eadae4b9b92c50bcc023ab"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/test/parity/rack_type_scalar_presence_test.go",
+      "size": 24138,
+      "sha256": "sha256:4a688b8c445929be7123a65ec2c453079bba7adf2032c7909808b5e780b1bd6d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/test/parity/resource_parity_test.go",
+      "size": 23912,
+      "sha256": "sha256:2bb0de34c77e7de764a8577e4b9d056a3b42a59e006d4b887735f7e0f7d0e157"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/test/parity/site_parity_test.go",
+      "size": 2493,
+      "sha256": "sha256:bc39eebffa83ddb841517a32663d838c9e644aec3e5fa8d5c09bd4878aabaa06"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/test/parity/site_scalar_presence_test.go",
+      "size": 28594,
+      "sha256": "sha256:ef67f79c8f52cc5fc40f29d839e16c5f810d5c1c1a40bdc6d3c0b11959d10e6c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/test/parity/site_visibility_parity_test.go",
+      "size": 3603,
+      "sha256": "sha256:4e59dcd0ee533bc0379735c3c4da424c0537b39f57932714aeaf707f794bbd84"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/test/parity/typed_profile_stack_test.go",
+      "size": 1734,
+      "sha256": "sha256:47cdf16749c5aa93084b9e9361e6c1fa8bfa851fee60ff4a2ef101a0f5a6ad5b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/gogo/protobuf/gogoproto/gogo.proto",
+      "size": 4831,
+      "sha256": "sha256:f2f77edf7de807ded7884813d851656f4ccb18262db717a8f31061995f3e7324"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/BUILD.bazel",
+      "size": 14248,
+      "sha256": "sha256:57990c289e2951eaaa1edd19935a335bf37643485ad807e3787a7789b547d653"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/README.md",
+      "size": 197,
+      "sha256": "sha256:9da5a19dfcdb1a3169f98969ae55004ab95428cf799c90fd75778bfd89ef6034"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/annotations.proto",
+      "size": 1051,
+      "sha256": "sha256:bff7c47b78bd25d34e70efc06f49764ec24f55e665067b9be49e53e825250ce8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/auth.proto",
+      "size": 8910,
+      "sha256": "sha256:a897232ca63064262b2a261cf0c9df8a226e1985866ca917b16741ff08d21456"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/backend.proto",
+      "size": 6957,
+      "sha256": "sha256:7dc9f9e7aec39c106134e14c94b21e248517b4258c4d1260018f5dbd81f9c444"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/billing.proto",
+      "size": 3083,
+      "sha256": "sha256:dbe505e55929748ba7f8379ad90cf40f8f7fbf833e8f955ace1d48708a75a9e8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/client.proto",
+      "size": 3392,
+      "sha256": "sha256:683886c9d7c67506bceb83951046a6a42bedaac81d1978493d7d7cc790c7f689"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/config_change.proto",
+      "size": 3166,
+      "sha256": "sha256:bacae33fa03402f40a4eb6f87d962dc1c32efb33e98227833af00f565e354048"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/consumer.proto",
+      "size": 2718,
+      "sha256": "sha256:37be078a7d55b05fef6e4749a8573d31a68ad711bc621ade74f64786e1223c6c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/context.proto",
+      "size": 3054,
+      "sha256": "sha256:60bd38c420170434d4e14b16518b0ba85fbdce52d4f64065d619a0f126b6a59f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/control.proto",
+      "size": 1223,
+      "sha256": "sha256:53ee1a1de23a04e9772dcc7b5a6541fce95430c1bc98fcfe8e2805d9175dbab7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/distribution.proto",
+      "size": 8646,
+      "sha256": "sha256:1f51fe8df676a1e0f314d729387ff1c90b89f7b819e9fd92c73c3f8441a2c412"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/documentation.proto",
+      "size": 6456,
+      "sha256": "sha256:4658cb007ca9be8a68533ec1ef04d615cdc35a145ed94159fc94e80d5452a0d1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/endpoint.proto",
+      "size": 2722,
+      "sha256": "sha256:e1b108d5caa75db03242bd41e30a271834bda282375b5477a38753fd062d88bf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/expr/BUILD.bazel",
+      "size": 32,
+      "sha256": "sha256:744b958ef3ead43f2d416e3a31ad200134d0039816f98d2cafb49519451cbfdf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/expr/cel.yaml",
+      "size": 2729,
+      "sha256": "sha256:2be7fbe5ec95d08af1a189240970a75308f25d83915e546c0ad83fa8bce46a2b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/expr/v1alpha1/BUILD.bazel",
+      "size": 7732,
+      "sha256": "sha256:5935dfc21d82afc3d8251e0f0689f38834e3caeabbe9dbde5572b7b846f3910a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/expr/v1alpha1/checked.proto",
+      "size": 11399,
+      "sha256": "sha256:40e4f270e0b746f74ad8fa4eb435cb638ab4186fb44d732d6f417a339900d204"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/expr/v1alpha1/conformance_service.proto",
+      "size": 5581,
+      "sha256": "sha256:721ac853924187ae703520170396c3b39de43ca6a495ac5669844ce5ef4e87c2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/expr/v1alpha1/eval.proto",
+      "size": 4128,
+      "sha256": "sha256:12ba7b6e89e289652adf92fa5987d4ec22185c9151326ddcf9fcc26be00e2cb9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/expr/v1alpha1/explain.proto",
+      "size": 1757,
+      "sha256": "sha256:ceea67d0428441850708cdfb23534a65ce45ca2b713372abeeb8da3b45b475c6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/expr/v1alpha1/syntax.proto",
+      "size": 11203,
+      "sha256": "sha256:1c646a9a82d2f51f43fc84171e7852762a32d822955c636560176b6fef1b574b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/expr/v1alpha1/value.proto",
+      "size": 2843,
+      "sha256": "sha256:db8ec7f3017a82d2b01f9b13d6bc12b962e3844789f22e509351fbdf974c608d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/expr/v1beta1/BUILD.bazel",
+      "size": 1825,
+      "sha256": "sha256:771e8476776488f118c7f25d53f1b46534c0ae0ba7e10e65aa85ecf5b488d560"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/expr/v1beta1/decl.proto",
+      "size": 2226,
+      "sha256": "sha256:299f946fa05e42e814facaff96d79a0e12f11a82c23c4f8835ea0f3a41a80fdf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/expr/v1beta1/eval.proto",
+      "size": 4215,
+      "sha256": "sha256:6a875830568572e330b05a91e941ce1ab3652e6bb08a5681d20bb1f0788c46a2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/expr/v1beta1/expr.proto",
+      "size": 8868,
+      "sha256": "sha256:535ce5c6396700c832525384e2d50b5f79f4b588bee1c0f6a9aeef410839c361"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/expr/v1beta1/source.proto",
+      "size": 2155,
+      "sha256": "sha256:f141cdf1a4383858ef12fff63303e27b8b86707d992b3bb2624cf0c909b80719"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/expr/v1beta1/value.proto",
+      "size": 2845,
+      "sha256": "sha256:e433b5d971903f2f9d1d9480b614c6251cdd68e1575d4bd8c080a4f5ac3c1082"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/field_behavior.proto",
+      "size": 3019,
+      "sha256": "sha256:73f90993d8dcf4b191c63533b66f02c513b8e655768bcb13f45b7a508cd6d9d6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/http.proto",
+      "size": 15140,
+      "sha256": "sha256:318d8693316003d9c6a289c9b488dac626ebba8192a507a0eb66cf2f8627ab93"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/httpbody.proto",
+      "size": 2671,
+      "sha256": "sha256:59272dfed24fb5c6e0e2c22ca1a1ecc7a64caf891cefa24e867e7f0004ed1fec"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/label.proto",
+      "size": 1389,
+      "sha256": "sha256:116bbd1a6e921953d40f2956f865ddbe54a3af827b9cbfa335bd987f29963d4c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/launch_stage.proto",
+      "size": 3084,
+      "sha256": "sha256:6d5613f053365f80d1d3094d7ecadc6eb360db03600f693300831fd9fff2e0bf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/log.proto",
+      "size": 2043,
+      "sha256": "sha256:6ddfb7b54ae50c252d860783d8f2b7d941913d67e614221bb098a023126ddaf2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/logging.proto",
+      "size": 3167,
+      "sha256": "sha256:231f295d4b2db094380da9833500ead78fc4a4f0fc37a785ebb3d04991c3736b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/metric.proto",
+      "size": 10577,
+      "sha256": "sha256:b3f13045a4f9b0470f27098b50ec5425cf0740173e221a3969aec8adc596f59b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/monitored_resource.proto",
+      "size": 5472,
+      "sha256": "sha256:910ef7db6c8d49d74f5ba1a870acb12528cf44bdda3ee576fcbddab83697970c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/monitoring.proto",
+      "size": 4443,
+      "sha256": "sha256:5717d96ba4074a2035aebf57b21da8ad3a8d0b0b8736a2e88c7789619b9196f3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/quota.proto",
+      "size": 7140,
+      "sha256": "sha256:6aa68e906347e4b3461260d9df15f6a986ea36fcce2b19f4bf96fe08e1cb97ab"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/resource.proto",
+      "size": 11347,
+      "sha256": "sha256:837e7c800d67faf5ed5f77af5c4b2bbeaba4302b459482fd4ca0cf25c03c3186"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/service.proto",
+      "size": 6172,
+      "sha256": "sha256:b71e240abaf657bdf2f554ae862d87e99a88f66522496fec3f2d61e07216ff0c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/serviceconfig.yaml",
+      "size": 646,
+      "sha256": "sha256:d2c3c91bd209d823b39c96e147447645b04bd4ca3b4f3563217b7d486747f37e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/servicecontrol/BUILD.bazel",
+      "size": 0,
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/servicecontrol/README.md",
+      "size": 5538,
+      "sha256": "sha256:a112ad4f654cf765b8358605ffbee1b91e50b9c31b8f8f6d0ab3586418b71c92"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/servicecontrol/v1/BUILD.bazel",
+      "size": 1484,
+      "sha256": "sha256:e446277b4891a163406b2796f99a5941b77b906b63c236a56e51e506450da053"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/servicecontrol/v1/check_error.proto",
+      "size": 4351,
+      "sha256": "sha256:7073e6e9dba518e6c7844ca92502f31842c863f92f13b18e6244c9c228668b8a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/servicecontrol/v1/distribution.proto",
+      "size": 6812,
+      "sha256": "sha256:b380b4edac3e3c2abb14294ad0742b1184461777a4f04ebfe9aa21dc81a47e07"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/servicecontrol/v1/http_request.proto",
+      "size": 3468,
+      "sha256": "sha256:b88c19e7b82e1da5fcb6a3917c90e4da9a7e79b1250a05ffd450168a2c5c6d89"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/servicecontrol/v1/log_entry.proto",
+      "size": 4894,
+      "sha256": "sha256:6aa73bf4d1e4c905843569f6804597622ea9f816f84ef555990dbcefb8331f9e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/servicecontrol/v1/metric_value.proto",
+      "size": 2895,
+      "sha256": "sha256:88c22e7024eed3fad08d36ccd5d2b39665246982b7e2ffcb3cad2fa66751817b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/servicecontrol/v1/operation.proto",
+      "size": 5181,
+      "sha256": "sha256:6232f0bf3fd7fd4b270ec4e2445c0ae3294479b67eb1a3a1624b863cbb3b4b6a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/servicecontrol/v1/quota_controller.proto",
+      "size": 9770,
+      "sha256": "sha256:dc3422470fcbffe6479665d87eedbecb6f40c8bab17f3a6415a95e156c75fb3d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/servicecontrol/v1/service_controller.proto",
+      "size": 10058,
+      "sha256": "sha256:1be2adae8568524e1066ca5bfca9da3fbadb262ad017de711cd67501a95ec8ce"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/servicecontrol/v1/servicecontrol.yaml",
+      "size": 7617,
+      "sha256": "sha256:e61a29603a5317fc6ef1483a8130007a2685cfc805479e1e1a8a4a565191bcfd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/servicemanagement/BUILD.bazel",
+      "size": 31,
+      "sha256": "sha256:42af8793d31799272c28ce03568c5faeab7f99411897577e5697113c80f61ee4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/servicemanagement/README.md",
+      "size": 5083,
+      "sha256": "sha256:682740eba73a98b9e3faaf0328154cf9e1a52bc100a2cfb61f70f2c6fc4c99c8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/servicemanagement/v1/BUILD.bazel",
+      "size": 11646,
+      "sha256": "sha256:99f972c8ceee7a2d8fdd618c1683b5ebf8959af58056387fc70754b0cd6d0ad4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/servicemanagement/v1/resources.proto",
+      "size": 10140,
+      "sha256": "sha256:d24fce3acaad8c734436b18a37badccd91c853982cc232ca42e72f98cb35dcf0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/servicemanagement/v1/servicemanagement_gapic.legacy.yaml",
+      "size": 9333,
+      "sha256": "sha256:43d0dc9591c2904e2837c93e10fd25d89b21cf31467698005b51c3f0b0638094"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/servicemanagement/v1/servicemanagement_gapic.yaml",
+      "size": 598,
+      "sha256": "sha256:1ff4891e63160363b49aa340c71f0802a6df896d2dc1ea4f03e64386c404c39f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/servicemanagement/v1/servicemanagement_grpc_service_config.json",
+      "size": 178,
+      "sha256": "sha256:04af1d11e1f11b7c9dae2a70bac69b695b444b6391191856f96e548a20143ba0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/servicemanagement/v1/servicemanagement_v1.yaml",
+      "size": 12070,
+      "sha256": "sha256:4c4e6f45890a9bc4f3b90de00ce5c51008acd7f5b9b4ad273d38f68c805c625c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/servicemanagement/v1/servicemanager.proto",
+      "size": 22622,
+      "sha256": "sha256:89241b056b3505a4a4b03a5d28450b150b61011b5e1fb9abe9a2f57167d2fc5b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/source_info.proto",
+      "size": 1091,
+      "sha256": "sha256:f6a7b224e3eba653503855166543ccb145ccbcdb10fe92d5765962da4a6298fb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/system_parameter.proto",
+      "size": 3470,
+      "sha256": "sha256:33ecc80b2f2af07184f0477fc503eb2595a901914c12573aacc7af99b8116f17"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/api/usage.proto",
+      "size": 3471,
+      "sha256": "sha256:554fdc41b882e835b1ee1e11c79e1c6fbee207682f88bfb4831906e7d67e655a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/protobuf/annotations.proto",
+      "size": 1051,
+      "sha256": "sha256:bff7c47b78bd25d34e70efc06f49764ec24f55e665067b9be49e53e825250ce8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/protobuf/any.proto",
+      "size": 5916,
+      "sha256": "sha256:d7c79a05a5c7fae89f0aff26d112e0b60f082fc7fc424e8910be99c86b656260"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/protobuf/api.proto",
+      "size": 7734,
+      "sha256": "sha256:4d050ed6172b20717022f081e26ddaaa9e534c58fc7b4cf1e88bde62ebed3c9b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/protobuf/compiler/plugin.proto",
+      "size": 8754,
+      "sha256": "sha256:cd2173be546c551d04a9d713821c0e00a82e83f8bc79ad585dc97e555571047f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/protobuf/descriptor.proto",
+      "size": 37969,
+      "sha256": "sha256:39ee456754055d52a3c8789dfcea8b2e2ea52db6b5836971853002da5d3605cc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/protobuf/duration.proto",
+      "size": 4895,
+      "sha256": "sha256:099047097e8fe73657b49ef67af914a7a686ac6154f9d872882708b5eb3db04c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/protobuf/empty.proto",
+      "size": 2429,
+      "sha256": "sha256:23b75ded84bd2ee81f0098850ffaa0d5e1a6d881a9e1a760f730989e90534ec3"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/protobuf/field_mask.proto",
+      "size": 8185,
+      "sha256": "sha256:ed78e81d3f16618964b65692a02d229da6591bbec6eafc2ee4f052eaccf25b8a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/protobuf/source_context.proto",
+      "size": 2341,
+      "sha256": "sha256:28377609fb1df35293d637112cb574879465a987d943cd5e6c8feb8845438793"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/protobuf/struct.proto",
+      "size": 3778,
+      "sha256": "sha256:7accb70d741132475ef30ac125dfef95835239c792b83ff453a5e132e235a68d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/protobuf/timestamp.proto",
+      "size": 6459,
+      "sha256": "sha256:9489462cbd4eff7c013d10de596be38da1087c7824ea34357669bc21bf5c0800"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/protobuf/type.proto",
+      "size": 6126,
+      "sha256": "sha256:18e4e0335dd6a5cd0d52530d818496c954ad95a69b304f1c8103d7b2ca2d509a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/google/protobuf/wrappers.proto",
+      "size": 4042,
+      "sha256": "sha256:020c88776e814647da13c1cd5675031a3ffd35b016e64f721c5e066d375d4f43"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/protoc-gen-openapiv2/options/annotations.proto",
+      "size": 2058,
+      "sha256": "sha256:1f8e23ce506c358349d5ce0e54c336e3b2f3bf17c5d9e7d965e24a6e3429c2c9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/protoc-gen-openapiv2/options/openapiv2.proto",
+      "size": 30153,
+      "sha256": "sha256:ca1833903416822ad9540529f727b0010d77ecaf6987ae8b15f3b6acb005b6e8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/tagger/tagger.proto",
+      "size": 404,
+      "sha256": "sha256:724f22457176487ed1125e19f2cecb0f312ea765d646d02ee8bfcc48abf28dc2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-backend/third_party/validate/validate.proto",
+      "size": 31250,
+      "sha256": "sha256:bf7ca2ac45a75b8b9ff12f38efd7f48ee460ede1a7919d60c93fad3a64fc2eee"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/.gitignore",
+      "size": 262,
+      "sha256": "sha256:cdd33be642627be33d826509d54af577d0a17249ac67a2b980489e6b8301358f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/.node-version",
+      "size": 8,
+      "sha256": "sha256:55075b5ec4e8b31936cbbc282b8829116d1fd48f2f2f1856dee592a6650700ce"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/.nvmrc",
+      "size": 8,
+      "sha256": "sha256:55075b5ec4e8b31936cbbc282b8829116d1fd48f2f2f1856dee592a6650700ce"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/.prettierignore",
+      "size": 218,
+      "sha256": "sha256:ab3111fca4cfd3e5ea993767fe32addbea780163913818e799ff8b5c73548cdd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/.prettierrc.json",
+      "size": 331,
+      "sha256": "sha256:663757eca9444b404381963f0678734dbf0a249d7b3b7b327ae35ad126a46a18"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/.vscode/extensions.json",
+      "size": 91,
+      "sha256": "sha256:c4c9e0ea08a3d2be5a9f4a9c1d031dec405d2dc2af55f61ba99e031056e5425d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/Dockerfile",
+      "size": 547,
+      "sha256": "sha256:b01f19b02dbcc944b40872f77a64ef475e122fb5bd9244e2fc4b62c7f68fc7ca"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/README.md",
+      "size": 2797,
+      "sha256": "sha256:fe322258ec114b15f08872746b1a91abdfd0ac4a815180dd7816002ce876609e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/eslint.config.js",
+      "size": 5085,
+      "sha256": "sha256:27e06bf10b3ff6651bef0f802d0b6b96fc209e5f65c66599c80f6b88785cf448"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/index.html",
+      "size": 663,
+      "sha256": "sha256:0ecb9ceaf6bd9c1d4164e621746cf52503666c49f944ab3ef6be0ba7f38b8731"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/package-lock.json",
+      "size": 242329,
+      "sha256": "sha256:b4a83385b35cd1a32fcc307f86a737b1257c687b45e2d51ac436d346be32a128"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/package.json",
+      "size": 1959,
+      "sha256": "sha256:9fc0a410ffe09b4831bf2558172bddaf8b2766d474932b83d6010f11c905c214"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/postcss.config.js",
+      "size": 80,
+      "sha256": "sha256:190c877db466995bf1482f4a16abd06e04a89ede3119341e2a86ff96e1737b27"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/public/favicon.svg",
+      "size": 9522,
+      "sha256": "sha256:61bc9a161de58248288e6905425d7180f0624c2865007b97d763fdac12043a66"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/public/icons.svg",
+      "size": 5031,
+      "sha256": "sha256:b45fa506195cfcdef406ba9f0c77b36ddc1a7c224040926ec70abc2fdea7b93a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/scripts/check-toolchain.mjs",
+      "size": 798,
+      "sha256": "sha256:c50fe49009360af2cdb9b006146b3a8ddc44cc453df12a36e0c001d199b97c9d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/App.vue",
+      "size": 463,
+      "sha256": "sha256:0a49a312aa9b9a83586c53ad28ba35914098ec2aff4bc2d77e0b3aff286d137f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/api/errors.ts",
+      "size": 836,
+      "sha256": "sha256:7e75abcc0cdd55278bd1043d80d2bb8c939303d2a91fc818b76829b90a838016"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/api/http.test.ts",
+      "size": 731,
+      "sha256": "sha256:9f26841e50164c31fef6d4a488dd5a409ef38875aa4a3cce6e5f92901716e384"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/api/http.ts",
+      "size": 2369,
+      "sha256": "sha256:4f7b683bd2e89227746c2bf384175db288f437577d6bac839281dbc2c074f042"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/assets/hero.png",
+      "size": 13057,
+      "sha256": "sha256:881ffbcaafc212e49addad08846a5b82761355fa20624253af3477ba33262c5c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/assets/vite.svg",
+      "size": 8709,
+      "sha256": "sha256:5be21acd42eb7b896e517f4e0f0f11eb5c5d9e54fbbcebe9453f033008fcca6f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/assets/vue.svg",
+      "size": 496,
+      "sha256": "sha256:5532db34f1c52841881bab8aeca6c3e8d092bd21a689a65f4d8f8cf8041eef9d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/dashboard/ChartWidget.vue",
+      "size": 1504,
+      "sha256": "sha256:bd4523674c5004d47d6a35672139525e8eb293cb6f3c21fdb326b7949ee8b8a1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/dashboard/ObjectCountWidget.vue",
+      "size": 1817,
+      "sha256": "sha256:e9d0676fd716ed449c0ed27296865379046c8d86d1d5fbddaf5128d57cd4e336"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/detail/PropertiesTable.vue",
+      "size": 4178,
+      "sha256": "sha256:2bdb39fe9b333c3ca9d4e5f1ea1231d392af6871b9205e6287a2007344241335"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/filter/ApiSelectFilter.test.ts",
+      "size": 1237,
+      "sha256": "sha256:89f3ec11df4c93feca6e4d40bc606dd1bf3b07b093a958a04014bcebb40534d8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/filter/ApiSelectFilter.vue",
+      "size": 4010,
+      "sha256": "sha256:a3fd58fe397eed5b9434010f49c75ee1bc4d84b4480541872d3eca94174f0393"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/filter/BooleanFilter.vue",
+      "size": 1061,
+      "sha256": "sha256:3b9fb1661f519b2c4a2f2c87e9a45813e94d853410a82a27f911687d4b28f338"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/filter/DateRangeFilter.vue",
+      "size": 1778,
+      "sha256": "sha256:a06ba5ed74f39dd89d88e609bc99615beec2062c6b4f6455ca6b0560cd4fb872"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/filter/FilterField.vue",
+      "size": 1278,
+      "sha256": "sha256:c34715bffe23b9b9107a655f7a78ba067d802e9839c99949c2b3bd82dbc939dc"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/filter/FilterPanel.vue",
+      "size": 3465,
+      "sha256": "sha256:bce897d6dbf63deadb1ad90102c8850608df53ca83ad5b30dc6023ff23fed48f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/filter/IntegerRangeFilter.vue",
+      "size": 1626,
+      "sha256": "sha256:d6c89dd0ddba90e433e6abaa1e0f21e393678450227d64f95561e47a50bc92f5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/filter/SelectFilter.vue",
+      "size": 716,
+      "sha256": "sha256:1bfb3ba3099b1ada6ae4332c39531b794a9cbf33973d9a3aa6294fe80fedf4b8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/filter/TextFilter.vue",
+      "size": 591,
+      "sha256": "sha256:1f8c28fa73c470e3d41edcd18b8f15f86961622bd9aed21c071678c6be78aae7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/form/ApiSelectField.test.ts",
+      "size": 3204,
+      "sha256": "sha256:19fc5f2cee2a71093a4daaf5eadc281c23be33a6119034b9d5c88066b13a5bd0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/form/ApiSelectField.vue",
+      "size": 6901,
+      "sha256": "sha256:8a8b88335d3bcc0f01ab3245567e5fe323356fa5bdde8619d0cad040f215c387"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/form/BooleanField.vue",
+      "size": 873,
+      "sha256": "sha256:44709825bbf8fb57b555fd112362bb81d04d3d8f6e993c4bd3e3810ceccb8c07"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/form/CsvImportField.vue",
+      "size": 6517,
+      "sha256": "sha256:3eee15de78596af623bb4454a7275fbc2945bf51d0d9a9496d924cda88284df6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/form/DateField.test.ts",
+      "size": 1174,
+      "sha256": "sha256:93d0a2af50b3df897dc9bcab8d05d6fea3d24652602b6787fe088ec386500b35"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/form/DateField.vue",
+      "size": 1026,
+      "sha256": "sha256:e810f6ed3c13d7e0db37e753c832a5be8559f00a82d629a173f0a50b77f25e1f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/form/DateTimeField.vue",
+      "size": 1036,
+      "sha256": "sha256:0ae6665ba2397bc246ba3beb924d3c18d25fdc600497d95358e15c499746c202"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/form/DynamicField.test.ts",
+      "size": 4471,
+      "sha256": "sha256:9be364c9b1828e2f35a89d5e74ecb44e7ceda34f2bcdf41ad10799bc0702abca"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/form/DynamicField.vue",
+      "size": 2814,
+      "sha256": "sha256:edc1dc1842d7add44344d5eb7734c7d035e5869088fa322d0452af28185a52b7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/form/DynamicForm.test.ts",
+      "size": 5047,
+      "sha256": "sha256:837dc11c062f02bd9833c8e5ffbae230321a3f659dbe3fecef1401546f1acbf4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/form/DynamicForm.vue",
+      "size": 4542,
+      "sha256": "sha256:4ad7ab13a37032defb2eda088725a112e35e748e7a2eb403e33d69e52cbbb600"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/form/JsonField.test.ts",
+      "size": 1441,
+      "sha256": "sha256:42460fc3affc12fce03f8c898dd9650252d62789261a5e81a9c4ef8785f21dcd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/form/JsonField.vue",
+      "size": 2688,
+      "sha256": "sha256:6095ab6c058823245d0de7eaceaa5b72630e5d5d88f6fd88a58e5ba882ce9f42"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/form/MarkdownField.vue",
+      "size": 3570,
+      "sha256": "sha256:8d9684875c00b9a35ac27681601138a1e5270b58b24bdfd72b7c9bbbabc2105b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/form/NumberField.test.ts",
+      "size": 1898,
+      "sha256": "sha256:b13ba088cbb4a340ffa088f913bd835afb1bfe01422f2a6da205a845c475d909"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/form/NumberField.vue",
+      "size": 1539,
+      "sha256": "sha256:d968e9e1ff426c036e0be4185df43b28f7a54c5929f951da1e30771f36c503f6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/form/SelectField.test.ts",
+      "size": 1457,
+      "sha256": "sha256:e43f808d9cc7030a30f5fc08d5aefa2d798750abf03af16f16e71dacac620688"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/form/SelectField.vue",
+      "size": 2232,
+      "sha256": "sha256:b8d2320704cafde927a02f89eb8d83f75b45898061debf0de80677cde0b43002"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/form/SlugField.test.ts",
+      "size": 1230,
+      "sha256": "sha256:56814b366d8b6d433153ffb32c1ae11da703819a0089b5914ba97e2394d6df60"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/form/SlugField.vue",
+      "size": 2779,
+      "sha256": "sha256:87a4f585eedb6490319377af62c9a1f43ccc38d8a021cf6b563ca0ea32a8827b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/form/TagInputField.vue",
+      "size": 2104,
+      "sha256": "sha256:5f345c679804fdc515be2acc5ce42e00a722787d218c4921d1c48d5a55e1f74d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/form/TextField.vue",
+      "size": 1098,
+      "sha256": "sha256:f66ba56f7141610adb91fef25a680531b1c4455d593e749f318e087c7df26ff5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/form/TextareaField.vue",
+      "size": 871,
+      "sha256": "sha256:929f5bcf713e89c02d10f6d52b5d3b1222a3eb8147755063aa8a663e361c24f0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/layout/PageHeader.vue",
+      "size": 1109,
+      "sha256": "sha256:6e486ecbf18d082d40cd92e5c090511b9e272133e247dffe39d6283043cc6713"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/layout/SidebarMenuGroup.vue",
+      "size": 1644,
+      "sha256": "sha256:4513133fdca4c3dcf2564ce1072d58bda325af7106bc335da65fa4245dd6f1f1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/layout/SidebarMenuItem.vue",
+      "size": 1466,
+      "sha256": "sha256:3863ba34a65b342a195574fa6eee9d0f6adb335711ad408fe3f2b7339bcfc309"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/layout/SidebarNav.vue",
+      "size": 2237,
+      "sha256": "sha256:f52b2163e7f40d441afccf76b95db09774eb64fb56b1f36c5dd3ee772e6f01a4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/layout/ThemeToggle.vue",
+      "size": 472,
+      "sha256": "sha256:d626537dbb8572090b97b9acbef83e3eadcedc423d3937d140b2558b41b36ad1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/layout/TopBar.vue",
+      "size": 789,
+      "sha256": "sha256:cdba034430410e40333b2aea8fa330a7c50253037e6bdfbd967e80677acb2bc8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/layout/UserMenu.vue",
+      "size": 1602,
+      "sha256": "sha256:04bf6f6a3e0974581ebf0086b35de0e10993d9c3ed0c908dc6dcf8969278d21e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/layout/navigationIcons.ts",
+      "size": 638,
+      "sha256": "sha256:f3ded819324bd91b46b4ee5cdd3dcb0a7abc740d7099c05647836dde78c5722a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/shared/CodeBlock.vue",
+      "size": 453,
+      "sha256": "sha256:e0855aa45244d248a2d989596d6e29f2dddb72042d29d17c0567e3e4ff010284"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/shared/ConfirmButton.vue",
+      "size": 1834,
+      "sha256": "sha256:c00b4aa0c9d2bf2f60f0693842db3cc3eaa0fbdaab4fc425aa58113e82f5c78a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/shared/ConfirmModal.vue",
+      "size": 1212,
+      "sha256": "sha256:52a61ce1fd983a8160a37eb72d66946d99118d255de3302390b21df7d4e35875"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/shared/CopyToClipboard.vue",
+      "size": 1306,
+      "sha256": "sha256:7f213a28baa9fc80ba64a9259f03c99f366072a6649dec24a02c8d0670e7344a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/shared/CountBadge.vue",
+      "size": 734,
+      "sha256": "sha256:b932de86faef1b3685c5be020a4b37ec6207858fcf61bbb20db2a769eb68a529"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/shared/DiffViewer.vue",
+      "size": 3155,
+      "sha256": "sha256:3d4eb2133b797b16bebd060d4b26f43a8670b80247e1627dd7e5e402106607d8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/shared/EmptyState.vue",
+      "size": 545,
+      "sha256": "sha256:3afc956d169eee067956aba5e53ae27ddf460c538ddff9b4f6454022039429a1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/shared/ErrorState.vue",
+      "size": 1171,
+      "sha256": "sha256:5a3a93d0428db0e669efbac0d119e265f39b6a91ab8eb0e684ea8698abd17d5e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/shared/ExternalLink.vue",
+      "size": 466,
+      "sha256": "sha256:85edaa141590b3fc64fb23b69a9a799ae72c265c247d2645c54d4fcd47f3958c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/shared/JsonNode.vue",
+      "size": 2328,
+      "sha256": "sha256:5dd9a13bcaa1b19a1bd88d48dd9dc05bb65df8c6df5403d148368d4f385b010e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/shared/JsonViewer.vue",
+      "size": 727,
+      "sha256": "sha256:4bbf73a77afd89e999be030471345c550bd00bb9b48d74f79140cea2504f3518"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/shared/LoadingSpinner.vue",
+      "size": 325,
+      "sha256": "sha256:76a654601dcf251f7ffa72791c491173f77bc550ea7db5d6b4b38dd9961ab3c1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/shared/Modal.vue",
+      "size": 1212,
+      "sha256": "sha256:6d4f32da0e87faaad68e85ed2208b585db33f65d81181a7de49cc7560b614d45"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/shared/PaginationControls.vue",
+      "size": 2839,
+      "sha256": "sha256:edc985e91cbe4bb00eb2d457720892ef839c7b2345511069bfc4ffb36e0e0c0c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/shared/PillBadge.vue",
+      "size": 1152,
+      "sha256": "sha256:e91e1fa117e0b495b97d9f06ddc636063e2c3edf9a06e8fb0f030a1cfa39219b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/shared/RelativeTime.vue",
+      "size": 1656,
+      "sha256": "sha256:c9a99fd6a0ca6f1841769bbc77cabf79ad79331e2e5270c1323d256e6f116292"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/shared/SanitizedMarkdown.test.ts",
+      "size": 1296,
+      "sha256": "sha256:dc5989382b73d37c28781395f8f669a3fca5f41e7a53eda984af11f2474aad96"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/shared/SanitizedMarkdown.vue",
+      "size": 466,
+      "sha256": "sha256:684ea1409316db01a49b45d879b1e5908c4f17294e46044635c6ea7524bbbcc6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/shared/SkeletonLoader.vue",
+      "size": 1878,
+      "sha256": "sha256:893947e242fb15d6d1ca89bd9e33b99a2845e692c74d5eb455d5b88620c38ac6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/shared/StatusBadge.vue",
+      "size": 1137,
+      "sha256": "sha256:848941f76ded6ca5a175271e2a34b56ce84e2a339a66c9b37ab883cf8827d4a6"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/shared/ToastContainer.vue",
+      "size": 1318,
+      "sha256": "sha256:1c1f857b6196f11407d50f5b86cebd52d86dfe8683157c3819bac3d3ac849f86"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/table/BulkSelectBar.vue",
+      "size": 795,
+      "sha256": "sha256:674ef6b323454f224d05f7025cef62a667f590958a5fbe418362c36498950a13"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/table/DataTable.vue",
+      "size": 3215,
+      "sha256": "sha256:5eb70a9e96cfb03f99ec3f95cebf92fdd3935fe2675c2beb09ddc914fd693bea"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/table/ExportButton.vue",
+      "size": 697,
+      "sha256": "sha256:5f1a9b441b8d2bf89e86c7df81f9ed59203d0686548e1e157d90201ac5f01893"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/components/table/VirtualTable.vue",
+      "size": 3878,
+      "sha256": "sha256:e39ae0b3311d9f6c90b8979671c123f5601447a04216ad38e3b6d8337a1ce61c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/composables/useCoreResource.ts",
+      "size": 1654,
+      "sha256": "sha256:40b07d4b011fdd52ecb10890eeccadc096f694dda58b103493ed8ca205d0f58f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/composables/useDebounce.test.ts",
+      "size": 2175,
+      "sha256": "sha256:c08acf3bcba4df09360a36ea2e79e031f8a553fd35b157593c44d964cc5cc65e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/composables/useDebounce.ts",
+      "size": 1210,
+      "sha256": "sha256:0f6a7f011f76b3bc2dcb95c7912f53d7258f96e553688f77393a7594078b8120"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/composables/usePermissions.test.ts",
+      "size": 1449,
+      "sha256": "sha256:c12a18ebb04a4ce52148f72b5227480a5e37267f239f405487c924204e7c696d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/composables/usePermissions.ts",
+      "size": 1828,
+      "sha256": "sha256:09cfba964dade52d6b530c1c95cdb386849f5977ba486a57d0fd2e448b8292cb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/composables/useTable.test.ts",
+      "size": 3246,
+      "sha256": "sha256:e598d964702948554591584a715c4ffd4733d472d2b6a6e03e46b081476dc78d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/composables/useTable.ts",
+      "size": 4578,
+      "sha256": "sha256:72fe8fc03801f748d0ef55d7382a5f26edc837bae815cf9e7888fa234ea095b1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/config/app.ts",
+      "size": 1530,
+      "sha256": "sha256:6a4dbbe7141f6cf162f1f4d04ef56493758f84cf72079b01907fd6bac8a1e314"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/config/navigation.ts",
+      "size": 1327,
+      "sha256": "sha256:be008a91de29eac72eb2fdaddc2ae49462a75ce868107f1303a5df9e6cb064be"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/directives/can.ts",
+      "size": 1266,
+      "sha256": "sha256:d9d46d9f65e0d89f249898f2269daffe44e61d74c79f7ed699d4ea448a6f1544"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/features/core/adapters.test.ts",
+      "size": 37276,
+      "sha256": "sha256:3936d2b857184134ed3e31db9a42f8e1d58030767ef57105e999e389bf6f6302"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/features/core/adapters.ts",
+      "size": 29965,
+      "sha256": "sha256:31d2b1c938405c3099c042d0def4df523bfaf4afe641f9f9be39f1de92662f6f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/features/core/api.test.ts",
+      "size": 2475,
+      "sha256": "sha256:e9b1ade38b8fc61fcebcfbbb01d496f91246d8231d6008e93f4487489afc914c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/features/core/api.ts",
+      "size": 3885,
+      "sha256": "sha256:57ffbd7e02dc16fd23edf8adcc05b1e07171d99c6d40ca8291438afdc21d7705"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/features/core/links.test.ts",
+      "size": 648,
+      "sha256": "sha256:747867baf26c319ef581d2feb23349819ec04ef42e46a29721c82f056870e37e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/features/core/links.ts",
+      "size": 673,
+      "sha256": "sha256:5c15347fe0b380b016320c9e2a9b11004de644c1939d486bf3488d4d03e9efa8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/features/core/manifest.ts",
+      "size": 2636,
+      "sha256": "sha256:3e6d5afd831d8ee6a85d7c3de39afbc0553808d13736cde4ae34664aa6027e59"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/features/core/resources.ts",
+      "size": 20056,
+      "sha256": "sha256:5f5b0cb341ee884b2e7109049ba174fbc537652826f5a36e558d18db4f21d998"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/features/dcim/interface-types.test.ts",
+      "size": 958,
+      "sha256": "sha256:7c99cde9c1e925c146d2a788b6197bbff2718bc9d2620f3c6a8571a6192693e9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/features/dcim/interface-types.ts",
+      "size": 3299,
+      "sha256": "sha256:6e9f4c362f6fbfd09239996d9f5d1b245cf3b6f154cfd5018dfde9ae4452bae2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/features/identity/api.test.ts",
+      "size": 1584,
+      "sha256": "sha256:15ac4aa4a2a56ffbdc8e6802d118abe892568b4249f87cd6377875998db8d189"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/features/identity/api.ts",
+      "size": 1003,
+      "sha256": "sha256:00e00419b8390bfca5ee9fb8eb9923b24d015a768b8d462d38c6f38c30f1892e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/features/ipam/assignment.ts",
+      "size": 1157,
+      "sha256": "sha256:136d16d9af6a61a758ab3c9e16cd9181ddc5c813aa06f679cc3aa1d1f4d9316a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/features/ipam/components/IPAddressAssignmentPanel.test.ts",
+      "size": 3655,
+      "sha256": "sha256:53f53d98680b0764c21046923ecde0348fbc53475f2f85cda4188c3a84d55a20"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/features/ipam/components/IPAddressAssignmentPanel.vue",
+      "size": 4591,
+      "sha256": "sha256:cf7759d04c2737554f460aed9d8f452dad9a98e367c2d7a819549e91674ac782"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/layouts/AuthLayout.vue",
+      "size": 420,
+      "sha256": "sha256:5016650d5f6cbab3fcae097aca3ccf4084e3c77597960149427ac05053139a0d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/layouts/DefaultLayout.vue",
+      "size": 1193,
+      "sha256": "sha256:4e390d1d4caae935cb624ab7cfe1cbd87be0e24add75385aba5548f5291d6d97"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/main.ts",
+      "size": 635,
+      "sha256": "sha256:5b8b151958a117367301f77e8c47f86cdfb09b99714df48a0ff80417d76165d7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/pages/auth/LoginPage.test.ts",
+      "size": 2067,
+      "sha256": "sha256:6eb765d3a2222cc565ce76ff1a86451366296ef9ba3332b82070376ab5659cbf"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/pages/auth/LoginPage.vue",
+      "size": 2394,
+      "sha256": "sha256:b982a5ef8a8757796b2e965ecb103228585154cc69d6c11b7071f652bd4a36d0"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/pages/auth/LogoutAction.vue",
+      "size": 687,
+      "sha256": "sha256:587dd7bd667ceea8faf07a28acf0640fa37bc1ec9202af2a6a10064cf3e27b0d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/pages/core/CoreResourceDeleteView.test.ts",
+      "size": 3023,
+      "sha256": "sha256:957f49a6c449b352d64830dc540b4a49b42b30036d8623f5ba52b98921c1a41b"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/pages/core/CoreResourceDeleteView.vue",
+      "size": 5453,
+      "sha256": "sha256:a02f5bda094cda906e2f3277be70d3d7b8e89ad802d18eb2312a96a805638c67"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/pages/core/CoreResourceDetailView.vue",
+      "size": 4363,
+      "sha256": "sha256:e9ae8735c42835441aa367170a2beda277b590d1b7be83ea83734c747d6848f9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/pages/core/CoreResourceEditView.vue",
+      "size": 3105,
+      "sha256": "sha256:fbc63f32014a601fd873b3f29fab6ddcf783e8e970774f72af3cc10e259cc201"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/pages/core/CoreResourceListView.vue",
+      "size": 6584,
+      "sha256": "sha256:3776bf11784baf9402a31b2d436d4f0c360f9c9fdec54b2549079c3ea837e36c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/pages/errors/ForbiddenView.vue",
+      "size": 654,
+      "sha256": "sha256:3ecb3e6c5e2ad66560c75f84b41bd3b665b579c6cf54df0c5ac2f67f5b3ecd5a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/pages/errors/NotFoundView.vue",
+      "size": 421,
+      "sha256": "sha256:5d8c75fcf37c6f9bf60c5a90387a746963282a019008dbd05665bbbe7b88730e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/pages/errors/ServerErrorView.vue",
+      "size": 672,
+      "sha256": "sha256:bc959d47552642575d1e318ada1a962c77ee3e15c5972b70cdf7a1eb3e436baa"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/pages/special/ApiDocsView.test.ts",
+      "size": 1379,
+      "sha256": "sha256:bed9f16b663b9f57d0353d235fbaa343bb6d94c978dc2b7ef7cc477479c0366e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/pages/special/ApiDocsView.vue",
+      "size": 8353,
+      "sha256": "sha256:5fa74645b88afe8fa3c375847cedf161f03c44617d757178efafed1a5b51684d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/pages/special/DashboardView.vue",
+      "size": 1684,
+      "sha256": "sha256:ac0a98f363f09b309406d95e434826e34fb740bdac2b710252e4a7ea68a68d68"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/router/core-resource-registry.test.ts",
+      "size": 9654,
+      "sha256": "sha256:c2c1b7f0cf3b8a69a56e22a981e99feff9755d607c60d14c88dce1959b3c0779"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/router/core-resource-registry.ts",
+      "size": 743,
+      "sha256": "sha256:1699d88808be3fc20441ea8c07471320a3ac2ffb9ac7caec636864d3551d70e9"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/router/index.ts",
+      "size": 3980,
+      "sha256": "sha256:f999ea78ade3f3c9f640907069f2cecd844fe827e12636acd8ebddd795f07fed"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/router/models/core-profile.test.ts",
+      "size": 36508,
+      "sha256": "sha256:b7ca4663d1c4fc70f6c3678fa4f03f541d9c6bb1c1ec15dfe58d717db2bb7703"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/router/models/core-profile.ts",
+      "size": 31981,
+      "sha256": "sha256:09fad615077d31d1b86439fec050243427846cfc6b31a57b6c5148162989054f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/stores/auth.test.ts",
+      "size": 2312,
+      "sha256": "sha256:e0d242203d51e2b581ae9286cb72606092546456663bc6ca159782bd83e1c76a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/stores/auth.ts",
+      "size": 1984,
+      "sha256": "sha256:f164f5daaf5272cfa18e12edbd7677859968eb990bff69f75e6eada2669ebff7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/stores/cache.test.ts",
+      "size": 2512,
+      "sha256": "sha256:bd4cb98eeaab04d019708af3c7b086a13e75931a8c682fa41171ff20d193c13e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/stores/cache.ts",
+      "size": 3375,
+      "sha256": "sha256:b3620723fefd0985763f61bbd0be47031f920513239cac33e6cb83fd5be10f82"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/stores/notifications.ts",
+      "size": 995,
+      "sha256": "sha256:b07832d9e50d0a2f757edd5523b640decfa1e2b199d13c895173d69de54eee53"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/stores/table.ts",
+      "size": 1324,
+      "sha256": "sha256:5dee0b8dd8d608e84f6618fddb1ca8aaadd8a433161efc9293d11315888d0836"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/stores/ui.ts",
+      "size": 859,
+      "sha256": "sha256:0a63cddae00da98b4ed2e708af3bf0b0f627c763f76957923cc548ef93016242"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/style.css",
+      "size": 917,
+      "sha256": "sha256:de4883fc99ae415b78b2a8b3108f08e15d901b03d966952cc507aaa1fa471d70"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/types/index.ts",
+      "size": 4510,
+      "sha256": "sha256:65718df5d63095aa54da7b7f4c7b32ca6d8c1698f8b7422718642d740f30f9bd"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/utils/contentType.test.ts",
+      "size": 1217,
+      "sha256": "sha256:8145ce9ed65b6fae81bad9e7fb1fc0fd6d4e24c7ae311f95fc270462079dbc8f"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/utils/contentType.ts",
+      "size": 2991,
+      "sha256": "sha256:4d132e41fb309f19d7c44158a88bc778ee8ba7274cdae270877edc888448261c"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/utils/csv.test.ts",
+      "size": 3838,
+      "sha256": "sha256:1a5e17332ad3235712fb24db7b91f811f73f875cdc2b7975c997b7ea123dbd71"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/utils/csv.ts",
+      "size": 4169,
+      "sha256": "sha256:aa6bca956a483492680f0590841bea38781ed1f94323ff6c15cc7559a3508cab"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/src/utils/markdown.ts",
+      "size": 2934,
+      "sha256": "sha256:f173c351b09710a8eae4e4061a479303afe9f9acaf8e115e21839a643c6f02d4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/tailwind.config.js",
+      "size": 744,
+      "sha256": "sha256:cce3e2549a2ff8f77524b0d6dc623df6c003f8de30639c698d0b32313c41f57e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/tsconfig.app.json",
+      "size": 564,
+      "sha256": "sha256:796a8636aee1a96c37e077ac2f2951c8ebe35273c812d9bd8841e29c51e40a51"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/tsconfig.json",
+      "size": 159,
+      "sha256": "sha256:c282118f1ef0fe0a8c41fa286e6169df4697e50d44585d70ad3d2856fa4cce09"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/tsconfig.node.json",
+      "size": 558,
+      "sha256": "sha256:d366cc0827139db39c61815f22491bbfda56c654354a42ad7795143d314e45e8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/tsconfig.test.json",
+      "size": 285,
+      "sha256": "sha256:3736abeaa2997c9087a1005a068e8737369d35727e52cba3b5208ec7c8a0b51a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "netbox-frontend/vite.config.ts",
+      "size": 1374,
+      "sha256": "sha256:2116c3a23a32dfe23e4c434efd70ac465938c6013c52f126af7c0af0d939b814"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "scripts/check_markdown_links.mjs",
+      "size": 2420,
+      "sha256": "sha256:9560bb1fbc6bde6d13a44b3088299eda6dbb5d3dfc637a7711a704a4881f5665"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "scripts/generate_contract_docs.mjs",
+      "size": 17441,
+      "sha256": "sha256:6818ebf6949e515f6bcde3c49a68b471b3f61ca20ba1e94b682850ae8efaa09a"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "scripts/generate_contract_inventory.mjs",
+      "size": 15840,
+      "sha256": "sha256:cc96b879355fa06935f3ec3bc60d6a44af69dc53b8bfe79d0e4248fc73cd0e94"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "scripts/source_digest.mjs",
+      "size": 15289,
+      "sha256": "sha256:557951321f849b8221959684275490c0539aea0e9bbdec6138b817dc17fd4b4d"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "scripts/validate_capability_profile.mjs",
+      "size": 16732,
+      "sha256": "sha256:8fa54cff43e6382f39ac1b1edd600b730ebff1271df016dfea8431c3e0f11c95"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "scripts/validate_capability_profile.test.mjs",
+      "size": 86912,
+      "sha256": "sha256:86f2275932467515a54bb5e607020979d7aaf9458af3c72fccc5522c0d03a0c5"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "scripts/validate_contract_inventory.mjs",
+      "size": 7427,
+      "sha256": "sha256:ae80641ed9585feb25a62220eb92a4698e6a7ed707f07ae854c41356275cb1d7"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "scripts/validate_openapi.mjs",
+      "size": 24464,
+      "sha256": "sha256:62bd0f1f2d1c4a0884a485e21e5f61af6ef0744c912b54089e8b090ef37d0cdb"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "scripts/validate_traceability.mjs",
+      "size": 119843,
+      "sha256": "sha256:0ff7650ad6843d11f219d7890fb47ef8097890607337ba5bf27e10fc7cbd5add"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "scripts/validate_traceability.test.mjs",
+      "size": 106691,
+      "sha256": "sha256:369602f8292e7eb51df5a21e236e429594d96b986577db1d42745597d39dd6e2"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "tests/browser/README.md",
+      "size": 2218,
+      "sha256": "sha256:1c9d3461c4c0ffa70731f744c379693bbe3659b57d0c263f38d8f0be1d00400d"
+    },
+    {
+      "kind": "file",
+      "mode": "100755",
+      "path": "tests/browser/browser_e2e.mjs",
+      "size": 38803,
+      "sha256": "sha256:3590de5aaa17fc27e0afbce1360d6f50c85ba471572c073cee937bbcba0c1318"
+    },
+    {
+      "kind": "file",
+      "mode": "100755",
+      "path": "tests/browser/run.sh",
+      "size": 2583,
+      "sha256": "sha256:25a2a35d7e1c59c696efd9b760a2c561a228933b8766c384703a4e13f6e280d8"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "tests/compatibility/README.md",
+      "size": 3140,
+      "sha256": "sha256:4409be270b74de3f8e3a3ecae635898dce5b15f305da9dbdb10cb02ada718a57"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "tests/compatibility/comparator.mjs",
+      "size": 11743,
+      "sha256": "sha256:09643a88710a79b969e2a708673f1ac6ee2f3bf5de360f8265b7f8cd6b44f675"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "tests/compatibility/comparator_self_test.mjs",
+      "size": 4091,
+      "sha256": "sha256:f117416084c032a4e86f5edddef3bd12c3342f72361eb1fee7dd354a20e0f8f4"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "tests/compatibility/compose.yaml",
+      "size": 2708,
+      "sha256": "sha256:43dd0b2e85ebe72c6f66a2c40b926dab16ce4a568af7f477aa916138f4d9b755"
+    },
+    {
+      "kind": "file",
+      "mode": "100755",
+      "path": "tests/compatibility/materialize_oracle_source.sh",
+      "size": 3653,
+      "sha256": "sha256:7d90969d9833c2570193ea462f9f309e7b6c1c5746c3b5fb8de48bd69a10755e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "tests/compatibility/oracle_configuration.py",
+      "size": 1209,
+      "sha256": "sha256:4c6cb6c69365dd0b1807f5f5327401c8ba5f68dbce280a1ff7f57c5cea045f3e"
+    },
+    {
+      "kind": "file",
+      "mode": "100755",
+      "path": "tests/compatibility/oracle_source_self_test.sh",
+      "size": 6310,
+      "sha256": "sha256:c11efd032fa3597be4bc7b9548d186ffce0415d1e4f4b60a6c425c42978e65d1"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "tests/compatibility/run.mjs",
+      "size": 54820,
+      "sha256": "sha256:f3fad4848fc0dbab3237450fcbd43ff32f84358975a943557d5e3823b0b0b227"
+    },
+    {
+      "kind": "file",
+      "mode": "100755",
+      "path": "tests/compatibility/run.sh",
+      "size": 10764,
+      "sha256": "sha256:3599da1f97e8ae1774fae24c63dc3b3113485365856465913c2bdcde59c36b7e"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "tests/deployment/Dockerfile.smoke",
+      "size": 918,
+      "sha256": "sha256:21aaa3820890b62922adb473208d46df23132b396b0bc388d983ed2fdeff6c91"
+    },
+    {
+      "kind": "file",
+      "mode": "100644",
+      "path": "tests/deployment/compose.smoke.yaml",
+      "size": 1361,
+      "sha256": "sha256:993b4eb65fc0f3329e3b367c50aeb198e6309c1b2ecb92e4ec10b535d1538495"
+    },
+    {
+      "kind": "file",
+      "mode": "100755",
+      "path": "tests/deployment/compose_smoke.sh",
+      "size": 8930,
+      "sha256": "sha256:ad455870599c9a4911861023966e25799db52b77af461221956c72581f460b32"
+    }
+  ]
+}
+```
+
+## Complete derived source-manifest diff
+
+The block below is the complete canonical JSON diff between the tested
+manifest and the byte-identical evidence-only claim worktree.
+
+```json
+{
+  "schema_version": 1,
+  "tested_digest": "source-v2:sha256:343a1767534de69acad81e7fdfbf8bd23cf1e7a22450c00df70b038c4c54c152",
+  "attestation_digest": "source-v2:sha256:343a1767534de69acad81e7fdfbf8bd23cf1e7a22450c00df70b038c4c54c152",
+  "tested_files": 3071,
+  "attestation_files": 3071,
+  "path_and_kind_sets_equal": true,
+  "added": [],
+  "deleted": [],
+  "type_changed": [],
+  "mode_changed": [],
+  "symlink_retargeted": [],
+  "changed": []
+}
+```
