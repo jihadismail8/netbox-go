@@ -148,6 +148,78 @@ const RACK_TYPE_FIELD_CONTRACTS = {
   },
 };
 
+const RACK_FIELD_CONTRACTS = {
+  response: {
+    nullable_fields: [
+      "facility_id",
+      "rack_type",
+      "role",
+      "asset_tag",
+      "form_factor",
+      "airflow",
+      "created",
+      "last_updated",
+    ],
+  },
+  create: {
+    required_fields: ["site", "name"],
+    nullable_fields: [
+      "facility_id",
+      "rack_type",
+      "role",
+      "asset_tag",
+      "form_factor",
+    ],
+    blank_fields: [
+      "facility_id",
+      "serial",
+      "asset_tag",
+      "form_factor",
+      "airflow",
+      "description",
+      "comments",
+    ],
+  },
+  replace: {
+    required_fields: ["site", "name"],
+    nullable_fields: [
+      "facility_id",
+      "rack_type",
+      "role",
+      "asset_tag",
+      "form_factor",
+    ],
+    blank_fields: [
+      "facility_id",
+      "serial",
+      "asset_tag",
+      "form_factor",
+      "airflow",
+      "description",
+      "comments",
+    ],
+  },
+  update: {
+    required_fields: [],
+    nullable_fields: [
+      "facility_id",
+      "rack_type",
+      "role",
+      "asset_tag",
+      "form_factor",
+    ],
+    blank_fields: [
+      "facility_id",
+      "serial",
+      "asset_tag",
+      "form_factor",
+      "airflow",
+      "description",
+      "comments",
+    ],
+  },
+};
+
 const DEVICE_ROLE_FIELD_CONTRACTS = {
   response: {
     nullable_fields: ["parent", "created", "last_updated"],
@@ -306,6 +378,16 @@ function withRackTypeResourceFixture(mutator, callback) {
   );
 }
 
+function withRackResourceFixture(mutator, callback) {
+  withResourceContractFixture(
+    DCIM_RELATIVE_PATH,
+    "Rack",
+    RACK_FIELD_CONTRACTS,
+    mutator,
+    callback,
+  );
+}
+
 function withDeviceRoleResourceFixture(mutator, callback) {
   withResourceContractFixture(
     DCIM_RELATIVE_PATH,
@@ -436,6 +518,27 @@ function assertRackTypeProfileRejected(name, mutator, expectedDiagnostic) {
         diagnostics(result),
         expectedDiagnostic,
         "validator must identify the malformed RackType field contract",
+      );
+    });
+  });
+}
+
+function assertRackProfileRejected(name, mutator, expectedDiagnostic) {
+  test(name, () => {
+    withRackResourceFixture(mutator, (profilePath) => {
+      const result = runNode(
+        "scripts/validate_capability_profile.mjs",
+        profilePath,
+      );
+      assert.notEqual(
+        result.status,
+        0,
+        `expected rejection; ${diagnostics(result)}`,
+      );
+      assert.match(
+        diagnostics(result),
+        expectedDiagnostic,
+        "validator must identify the malformed Rack field contract",
       );
     });
   });
@@ -587,6 +690,15 @@ test("current capability metadata validates", () => {
     RACK_TYPE_FIELD_CONTRACTS,
     "current RackType presence metadata must match the independently pinned contract",
   );
+  const rack = dcimMetadata.resources.find(
+    (resource) => resource.name === "Rack",
+  );
+  assert.ok(rack, "current metadata must contain Rack");
+  assert.deepStrictEqual(
+    rack.field_contracts,
+    RACK_FIELD_CONTRACTS,
+    "current Rack presence metadata must match the independently pinned contract",
+  );
   const deviceRole = dcimMetadata.resources.find(
     (resource) => resource.name === "DeviceRole",
   );
@@ -639,7 +751,7 @@ test("DeviceRole scalar-presence traceability delta remains bounded", () => {
       rows: traceability.rows.length,
     },
     {
-      assessment_sets: 11,
+      assessment_sets: 12,
       reference_sets: 19,
       proof_sets: 15,
       applicability_sets: 15,
@@ -648,7 +760,7 @@ test("DeviceRole scalar-presence traceability delta remains bounded", () => {
       row_applicability: 293,
       rows: 293,
     },
-    "I6, I7, and I8 must add only their bounded assessments without changing reviewed row authority counts",
+    "I6, I7, I8, and I9 must add only their bounded assessments without changing reviewed row authority counts",
   );
 
   const expectedRows = [
@@ -750,6 +862,42 @@ test("InterfaceTemplate scalar-presence traceability delta remains bounded", () 
     ).length,
     8,
     "InterfaceTemplate resource/list/get/delete, ownership, uniqueness, instantiation, and non-retroactivity rules remain unresolved-v2",
+  );
+});
+
+test("Rack scalar-presence traceability delta remains bounded", () => {
+  const traceability = JSON.parse(fs.readFileSync(TRACEABILITY_PATH, "utf8"));
+  const expectedRows = [
+    "operation.dcim.rack.create",
+    "operation.dcim.rack.replace",
+    "operation.dcim.rack.update",
+  ];
+  const assessedRows = traceability.rows
+    .filter((row) => row.assessment_set === "unresolved-rack-scalar-presence")
+    .map((row) => row.id)
+    .sort();
+  assert.deepStrictEqual(
+    assessedRows,
+    expectedRows,
+    "I9 must repoint exactly the Rack create/replace/update rows",
+  );
+
+  const rackRows = traceability.rows.filter(
+    (row) => row.capability === "dcim.Rack",
+  );
+  assert.equal(rackRows.length, 13);
+  assert.deepStrictEqual(
+    rackRows
+      .filter((row) => row.assessment_set === "contradicted-dcim-filter-names")
+      .map((row) => row.id)
+      .sort(),
+    ["operation.dcim.rack.list", "resource.dcim.rack.contract"],
+    "Rack resource/list filter contradictions must remain unchanged",
+  );
+  assert.equal(
+    rackRows.filter((row) => row.assessment_set === "unresolved-v2").length,
+    8,
+    "Rack get/delete, protection, direct-save, and location-scoped uniqueness rules remain unresolved-v2",
   );
 });
 
@@ -1229,6 +1377,96 @@ assertRackTypeProfileRejected(
   /dcim\.RackType: field_contracts\.update\.required_fields must be empty for PATCH/u,
 );
 
+assertRackProfileRejected(
+  "Rack field contracts are mandatory",
+  (rack) => {
+    delete rack.field_contracts;
+  },
+  /dcim\.Rack: field_contracts must declare operation-specific presence semantics/u,
+);
+
+assertRackProfileRejected(
+  "Rack field contracts require every operation",
+  (rack) => {
+    delete rack.field_contracts.replace;
+  },
+  /dcim\.Rack: field_contracts must declare exactly response, create, replace, and update/u,
+);
+
+assertRackProfileRejected(
+  "Rack operation fields reject undeclared fields",
+  (rack) => {
+    rack.field_contracts.create.required_fields.push("location");
+  },
+  /dcim\.Rack: field_contracts\.create\.required_fields contains undeclared field location/u,
+);
+
+assertRackProfileRejected(
+  "Rack nullable fields remain a writable-field subset",
+  (rack) => {
+    rack.field_contracts.replace.nullable_fields.push("display");
+  },
+  /dcim\.Rack: field_contracts\.replace\.nullable_fields contains undeclared field display/u,
+);
+
+assertRackProfileRejected(
+  "Rack blank fields remain a writable-field subset",
+  (rack) => {
+    rack.field_contracts.update.blank_fields.push("device_count");
+  },
+  /dcim\.Rack: field_contracts\.update\.blank_fields contains undeclared field device_count/u,
+);
+
+assertRackProfileRejected(
+  "Rack blank fields reject relationship identifiers",
+  (rack) => {
+    rack.field_contracts.create.blank_fields.push("site");
+  },
+  /dcim\.Rack: field_contracts\.create\.blank_fields contains non-string field site/u,
+);
+
+assertRackProfileRejected(
+  "Rack blank fields reject integer fields",
+  (rack) => {
+    rack.field_contracts.replace.blank_fields.push("starting_unit");
+  },
+  /dcim\.Rack: field_contracts\.replace\.blank_fields contains non-string field starting_unit/u,
+);
+
+assertRackProfileRejected(
+  "Rack blank fields reject boolean fields",
+  (rack) => {
+    rack.field_contracts.update.blank_fields.push("desc_units");
+  },
+  /dcim\.Rack: field_contracts\.update\.blank_fields contains non-string field desc_units/u,
+);
+
+assertRackProfileRejected(
+  "Rack operation fields reject duplicates",
+  (rack) => {
+    rack.field_contracts.create.blank_fields.push("facility_id");
+  },
+  /dcim\.Rack: field_contracts\.create\.blank_fields contains duplicate field facility_id/u,
+);
+
+assertRackProfileRejected(
+  "Rack response and write contracts cannot be conflated",
+  (rack) => {
+    rack.field_contracts.response = structuredClone(
+      rack.field_contracts.create,
+    );
+  },
+  /dcim\.Rack: field_contracts\.response must declare exactly nullable_fields/u,
+);
+
+assertRackProfileRejected(
+  "Rack PATCH contracts cannot require fields",
+  (rack) => {
+    rack.field_contracts.update.required_fields.push("name");
+  },
+  /dcim\.Rack: field_contracts\.update\.required_fields must be empty for PATCH/u,
+);
+
 assertSiteProfileRejected(
   "Site field contracts require every operation",
   (site) => {
@@ -1694,6 +1932,196 @@ assertOpenAPIRejected(
     spec.components.schemas.RackType.properties.desc_units.type = "string";
   },
   /RackType\.desc_units base type must be boolean/u,
+);
+
+for (const [name, pathName, method, expectedSchema] of [
+  ["POST", "/api/dcim/racks/", "post", "RackCreate"],
+  ["PUT", "/api/dcim/racks/{id}/", "put", "RackReplace"],
+  ["PATCH", "/api/dcim/racks/{id}/", "patch", "RackUpdate"],
+]) {
+  assertOpenAPIRejected(
+    `OpenAPI validation rejects a stale Rack ${name} request reference`,
+    (spec) => {
+      spec.paths[pathName][method].requestBody.content[
+        "application/json"
+      ].schema = { $ref: "#/components/schemas/RackWrite" };
+    },
+    new RegExp(
+      escapeRegExp(
+        `${name} ${pathName} must reference #/components/schemas/${expectedSchema}`,
+      ),
+      "u",
+    ),
+  );
+}
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects a stale shared Rack write schema",
+  (spec) => {
+    spec.components.schemas.RackWrite = structuredClone(
+      spec.components.schemas.RackCreate ?? spec.components.schemas.RackWrite,
+    );
+  },
+  /Rack must not retain a conflated shared write schema/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Rack create requiredness",
+  (spec) => {
+    spec.components.schemas.RackCreate.required = [];
+  },
+  /RackCreate required fields must match field_contracts\.create/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Rack replace requiredness",
+  (spec) => {
+    spec.components.schemas.RackReplace.required.push("status");
+  },
+  /RackReplace required fields must match field_contracts\.replace/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Rack update requiredness",
+  (spec) => {
+    spec.components.schemas.RackUpdate.required = ["name"];
+  },
+  /RackUpdate required fields must match field_contracts\.update/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale nullable Rack relationship requests",
+  (spec) => {
+    spec.components.schemas.RackUpdate.properties.rack_type.type = "integer";
+  },
+  /RackUpdate\.rack_type nullability must match field_contracts\.update/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects nullable Rack airflow requests",
+  (spec) => {
+    spec.components.schemas.RackCreate.properties.airflow.type = [
+      "string",
+      "null",
+    ];
+  },
+  /RackCreate\.airflow nullability must match resource metadata/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Rack request blankability",
+  (spec) => {
+    spec.components.schemas.RackUpdate.properties.serial.minLength = 1;
+  },
+  /RackUpdate\.serial blankability must match field_contracts\.update/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects missing Rack nonblank constraints",
+  (spec) => {
+    delete spec.components.schemas.RackReplace.properties.name.minLength;
+  },
+  /RackReplace\.name blankability must match field_contracts\.replace/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Rack relationship identifier types",
+  (spec) => {
+    const site = spec.components.schemas.RackCreate.properties.site;
+    site.type = "string";
+    delete site.format;
+  },
+  /RackCreate\.site base type must be integer/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Rack choice request shapes",
+  (spec) => {
+    spec.components.schemas.RackReplace.properties.status.type = "object";
+  },
+  /RackReplace\.status must remain scalar/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Rack integer choice types",
+  (spec) => {
+    spec.components.schemas.RackCreate.properties.width.type = "string";
+    delete spec.components.schemas.RackCreate.properties.width.format;
+  },
+  /RackCreate\.width base type must be integer/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Rack numeric scalar types",
+  (spec) => {
+    spec.components.schemas.RackUpdate.properties.starting_unit.type = "string";
+  },
+  /RackUpdate\.starting_unit base type must be integer/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Rack boolean scalar types",
+  (spec) => {
+    spec.components.schemas.RackReplace.properties.desc_units.type = "string";
+  },
+  /RackReplace\.desc_units base type must be boolean/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects nullable Rack Site responses",
+  (spec) => {
+    spec.components.schemas.Rack.properties.site.oneOf.push({ type: "null" });
+  },
+  /Rack\.site response nullability must match field_contracts\.response/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale RackType response references on Rack",
+  (spec) => {
+    spec.components.schemas.Rack.properties.rack_type.oneOf[0].$ref =
+      "#/components/schemas/RackType";
+  },
+  /Rack\.rack_type must reference #\/components\/schemas\/ObjectReference/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Rack choice response envelopes",
+  (spec) => {
+    const formFactor = spec.components.schemas.Rack.properties.form_factor;
+    formFactor.oneOf.find((candidate) => candidate.type === "object").required =
+      ["value"];
+  },
+  /Rack\.form_factor choice response must require value and label/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects non-null Rack airflow responses",
+  (spec) => {
+    const airflow = spec.components.schemas.Rack.properties.airflow;
+    airflow.oneOf = airflow.oneOf.filter(
+      (candidate) => candidate.type !== "null",
+    );
+  },
+  /Rack\.airflow response nullability must match resource metadata/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Rack response timestamp nullability",
+  (spec) => {
+    spec.components.schemas.Rack.properties.created.type = "string";
+  },
+  /Rack\.created response nullability must match field_contracts\.response/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects undeclared Rack response nullability",
+  (spec) => {
+    spec.components.schemas.Rack.properties.description.type = [
+      "string",
+      "null",
+    ];
+  },
+  /Rack\.description response nullability must match field_contracts\.response/u,
 );
 
 for (const [name, pathName, method, expectedSchema] of [

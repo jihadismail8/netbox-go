@@ -16,6 +16,8 @@ import type {
   IPAddressForm,
   ManufacturerDTO,
   ManufacturerForm,
+  RackDTO,
+  RackForm,
   RackRoleDTO,
   RackRoleForm,
   RackTypeDTO,
@@ -375,6 +377,204 @@ describe('RackType core profile form contract', () => {
 
     const form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as RackTypeForm
     expect(adapter.mutationFromForm(form, true)).toEqual({ description: '' })
+  })
+})
+
+describe('Rack core profile form contract', () => {
+  it('pins exact owned fields, required relationships, defaults, choices, and numeric ranges', () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'rack')!
+    const fields = new Map(config.fields.map((field) => [field.key, field]))
+
+    expect(config.fields.map((field) => field.key)).toEqual([
+      'site',
+      'name',
+      'facility_id',
+      'rack_type',
+      'status',
+      'role',
+      'serial',
+      'asset_tag',
+      'form_factor',
+      'width',
+      'u_height',
+      'starting_unit',
+      'desc_units',
+      'airflow',
+      'description',
+      'comments',
+    ])
+    expect(fields.get('site')).toEqual(
+      expect.objectContaining({ required: true, type: 'api-select', relationResource: 'site' }),
+    )
+    expect(fields.get('name')?.required).toBe(true)
+    expect(fields.get('rack_type')).toEqual(
+      expect.objectContaining({ type: 'api-select', relationResource: 'racktype' }),
+    )
+    expect(fields.get('role')).toEqual(
+      expect.objectContaining({ type: 'api-select', relationResource: 'rackrole' }),
+    )
+    expect(fields.get('status')).toEqual(
+      expect.objectContaining({ required: true, default: 'active' }),
+    )
+    expect(fields.get('status')?.options?.map((option) => option.value)).toEqual([
+      'reserved',
+      'available',
+      'planned',
+      'active',
+      'deprecated',
+    ])
+    expect(fields.get('form_factor')?.options?.map((option) => option.value)).toEqual([
+      '2-post-frame',
+      '4-post-frame',
+      '4-post-cabinet',
+      'wall-frame',
+      'wall-frame-vertical',
+      'wall-cabinet',
+      'wall-cabinet-vertical',
+    ])
+    expect(fields.get('width')).toEqual(
+      expect.objectContaining({ default: 19, options: expect.any(Array) }),
+    )
+    expect(fields.get('width')?.options?.map((option) => option.value)).toEqual([10, 19, 21, 23])
+    expect(fields.get('airflow')?.options?.map((option) => option.value)).toEqual([
+      'front-to-rear',
+      'rear-to-front',
+    ])
+    expect(fields.get('u_height')).toEqual(
+      expect.objectContaining({ default: 42, min: 1, max: 100 }),
+    )
+    expect(fields.get('starting_unit')).toEqual(
+      expect.objectContaining({ default: 1, min: 1, max: 32767 }),
+    )
+    expect(fields.get('desc_units')).toEqual(expect.objectContaining({ default: false }))
+
+    for (const physical of ['form_factor', 'width', 'u_height', 'starting_unit', 'desc_units']) {
+      expect(fields.get(physical)).toEqual(
+        expect.objectContaining({ disabledWhenFieldTruthy: 'rack_type' }),
+      )
+    }
+
+    const rangeWrapper = mount(DynamicForm, {
+      props: {
+        fields: [fields.get('starting_unit')!],
+        modelValue: { starting_unit: 1 },
+      },
+    })
+    const startingUnitInput = rangeWrapper.get('input[type="number"]')
+    expect(startingUnitInput.attributes('min')).toBe('1')
+    expect(startingUnitInput.attributes('max')).toBe('32767')
+  })
+
+  it('routes field-scoped REST validation to the matching Rack field', () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'rack')!
+    const visibleFields = config.fields.filter((field) =>
+      ['status', 'starting_unit'].includes(field.key),
+    )
+    const wrapper = mount(DynamicForm, {
+      props: {
+        fields: visibleFields,
+        modelValue: { status: 'active', starting_unit: 32768 },
+        errors: {
+          starting_unit: ['Ensure this value is less than or equal to 32767.'],
+        },
+      },
+    })
+
+    const startingUnit = wrapper
+      .findAllComponents(DynamicField)
+      .find((field) => field.props('field').key === 'starting_unit')
+    const status = wrapper
+      .findAllComponents(DynamicField)
+      .find((field) => field.props('field').key === 'status')
+    expect(startingUnit).toBeDefined()
+    expect(startingUnit?.props('error')).toBe('Ensure this value is less than or equal to 32767.')
+    expect(status).toBeDefined()
+    expect(status?.props('error')).toBeUndefined()
+  })
+
+  it('types nullable Rack response timestamps exactly', () => {
+    expectTypeOf<RackDTO['created']>().toEqualTypeOf<string | null>()
+    expectTypeOf<RackDTO['last_updated']>().toEqualTypeOf<string | null>()
+  })
+
+  it('contains RackType-controlled dirty fields through the real DynamicForm edit flow', async () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'rack')!
+    const adapter = getCoreResourceAdapter('rack')
+    const rackType = {
+      id: 4,
+      url: '/api/dcim/rack-types/4/',
+      display: 'Acme R42',
+    }
+    const dto: RackDTO = {
+      id: 8,
+      url: '/api/dcim/racks/8/',
+      display: 'R1',
+      created: null,
+      last_updated: null,
+      site: { id: 3, url: '/api/dcim/sites/3/', display: 'Moscow' },
+      name: 'R1',
+      facility_id: 'MOW-01',
+      rack_type: rackType,
+      status: { value: 'active', label: 'Active' },
+      role: { id: 5, url: '/api/dcim/rack-roles/5/', display: 'Production' },
+      serial: 'SER-01',
+      asset_tag: 'ASSET-01',
+      form_factor: { value: '4-post-cabinet', label: '4-post cabinet' },
+      width: { value: 19, label: '19 inches' },
+      u_height: 42,
+      starting_unit: 1,
+      desc_units: false,
+      airflow: { value: 'front-to-rear', label: 'Front to rear' },
+      description: 'Core rack',
+      comments: 'Operator note',
+      device_count: 3,
+    }
+    const physicalFields = ['form_factor', 'width', 'u_height', 'starting_unit', 'desc_units']
+    const wrapper = mount(DynamicForm, {
+      props: {
+        fields: config.fields.filter((field) =>
+          ['rack_type', ...physicalFields].includes(field.key),
+        ),
+        modelValue: adapter.formFromDTO(dto),
+        editing: true,
+      },
+    })
+
+    for (const field of physicalFields) {
+      const component = wrapper
+        .findAllComponents(DynamicField)
+        .find((candidate) => candidate.props('field').key === field)
+      expect(component?.props('disabled'), field).toBe(true)
+    }
+
+    const rackTypeField = wrapper
+      .findAllComponents(DynamicField)
+      .find((field) => field.props('field').key === 'rack_type')
+    expect(rackTypeField).toBeDefined()
+    rackTypeField!.vm.$emit('update:modelValue', null)
+    await nextTick()
+
+    const clearedForm = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as RackForm
+    expect(adapter.mutationFromForm(clearedForm, true)).toEqual({ rack_type: null })
+    for (const field of physicalFields) {
+      const component = wrapper
+        .findAllComponents(DynamicField)
+        .find((candidate) => candidate.props('field').key === field)
+      expect(component?.props('disabled'), field).toBe(false)
+    }
+
+    const uHeight = wrapper
+      .findAllComponents(DynamicField)
+      .find((field) => field.props('field').key === 'u_height')
+    expect(uHeight).toBeDefined()
+    uHeight!.vm.$emit('update:modelValue', 48)
+    await nextTick()
+
+    const changedForm = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as RackForm
+    expect(adapter.mutationFromForm(changedForm, true)).toEqual({
+      rack_type: null,
+      u_height: 48,
+    })
   })
 })
 

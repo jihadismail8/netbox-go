@@ -337,6 +337,26 @@ func (rack *Rack) ApplyPatch(patch RackPatch, now shared.Timestamp) error {
 			Field: "update_mask", Reason: "required", Description: "At least one writable field must be supplied.",
 		})
 	}
+	return rack.Replace(rack.valuesWithPatch(patch), now)
+}
+
+// ValidatePatch previews a Rack mutation without changing aggregate state.
+// Application services use it to merge command, relationship, and domain
+// violations before any persistence or object-change work begins. Empty
+// previews are valid; ApplyPatch retains ownership of the public update-mask
+// requirement.
+func (rack *Rack) ValidatePatch(patch RackPatch) error {
+	if rack == nil {
+		return shared.NewError(shared.ErrorReasonInternal, "Cannot validate a patch for a nil Rack.")
+	}
+	_, violations := validateRackValues(rack.valuesWithPatch(patch))
+	if len(violations) > 0 {
+		return shared.NewValidationError(violations...)
+	}
+	return nil
+}
+
+func (rack Rack) valuesWithPatch(patch RackPatch) RackValues {
 	values := rack.Values()
 	if patch.Site != nil {
 		values.Site = *patch.Site
@@ -370,7 +390,7 @@ func (rack *Rack) ApplyPatch(patch RackPatch, now shared.Timestamp) error {
 	}
 	setString(&values.Description, patch.Description)
 	setString(&values.Comments, patch.Comments)
-	return rack.Replace(values, now)
+	return values
 }
 
 func (rack *Rack) ApplyRackTypeOwnership(now shared.Timestamp) error {
@@ -487,7 +507,6 @@ type normalizedRackValues struct {
 
 func validateRackValues(values RackValues) (normalizedRackValues, []shared.FieldViolation) {
 	values.Name = strings.TrimSpace(values.Name)
-	values.Status = strings.TrimSpace(values.Status)
 	values.Serial = strings.TrimSpace(values.Serial)
 	values.Description = strings.TrimSpace(values.Description)
 	values.Comments = strings.TrimSpace(values.Comments)
@@ -514,7 +533,6 @@ func validateRackValues(values RackValues) (normalizedRackValues, []shared.Field
 	}
 	formFactor := NullRackValue[RackFormFactor]()
 	if value, present := values.FormFactor.Get(); present {
-		value = strings.TrimSpace(value)
 		if value == "" {
 			formFactor = NonNullRackValue(RackFormFactor(""))
 		} else if parsed, valid := ParseRackFormFactor(value); valid {
@@ -544,7 +562,6 @@ func validateRackValues(values RackValues) (normalizedRackValues, []shared.Field
 	}
 	airflow := NullRackValue[RackAirflow]()
 	if value, present := values.Airflow.Get(); present {
-		value = strings.TrimSpace(value)
 		if parsed, valid := ParseRackAirflow(value); valid {
 			airflow = NonNullRackValue(parsed)
 		} else {

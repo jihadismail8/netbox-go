@@ -254,67 +254,37 @@ func typedRackUpdateCommand(
 	for _, path := range mask.Paths {
 		switch path {
 		case "site":
-			if fields.site.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateRackCommand{}, invalidTypedRackMask()
-			}
-			command.Site = fields.site
+			command.Site = nullableTypedRackField(fields.site)
 		case "name":
-			if fields.name.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateRackCommand{}, invalidTypedRackMask()
-			}
-			command.Name = fields.name
+			command.Name = nullableTypedRackField(fields.name)
 		case "facility_id":
 			command.FacilityID = nullableTypedRackField(fields.facilityID)
 		case "rack_type":
 			command.RackType = nullableTypedRackField(fields.rackType)
 		case "status":
-			if fields.status.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateRackCommand{}, invalidTypedRackMask()
-			}
-			command.Status = fields.status
+			command.Status = nullableTypedRackField(fields.status)
 		case "role":
 			command.Role = nullableTypedRackField(fields.role)
 		case "serial":
-			if fields.serial.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateRackCommand{}, invalidTypedRackMask()
-			}
-			command.Serial = fields.serial
+			command.Serial = nullableTypedRackField(fields.serial)
 		case "asset_tag":
 			command.AssetTag = nullableTypedRackField(fields.assetTag)
 		case "form_factor":
 			command.FormFactor = nullableTypedRackField(fields.formFactor)
 		case "width":
-			if fields.width.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateRackCommand{}, invalidTypedRackMask()
-			}
-			command.Width = fields.width
+			command.Width = nullableTypedRackField(fields.width)
 		case "u_height":
-			if fields.uHeight.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateRackCommand{}, invalidTypedRackMask()
-			}
-			command.UHeight = fields.uHeight
+			command.UHeight = nullableTypedRackField(fields.uHeight)
 		case "starting_unit":
-			if fields.startingUnit.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateRackCommand{}, invalidTypedRackMask()
-			}
-			command.StartingUnit = fields.startingUnit
+			command.StartingUnit = nullableTypedRackField(fields.startingUnit)
 		case "desc_units":
-			if fields.descUnits.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateRackCommand{}, invalidTypedRackMask()
-			}
-			command.DescUnits = fields.descUnits
+			command.DescUnits = nullableTypedRackField(fields.descUnits)
 		case "airflow":
 			command.Airflow = nullableTypedRackField(fields.airflow)
 		case "description":
-			if fields.description.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateRackCommand{}, invalidTypedRackMask()
-			}
-			command.Description = fields.description
+			command.Description = nullableTypedRackField(fields.description)
 		case "comments":
-			if fields.comments.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateRackCommand{}, invalidTypedRackMask()
-			}
-			command.Comments = fields.comments
+			command.Comments = nullableTypedRackField(fields.comments)
 		default:
 			return applicationdcim.UpdateRackCommand{}, invalidTypedRackMask()
 		}
@@ -333,7 +303,7 @@ func invalidTypedRackMask() error {
 	return shared.NewValidationError(
 		shared.FieldViolation{
 			Field:       "update_mask",
-			Description: "Every update_mask path must name a supported field with an explicit value, or a nullable field to clear.",
+			Description: "Every update_mask path must name a supported field.",
 		},
 	)
 }

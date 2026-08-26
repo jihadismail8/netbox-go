@@ -31,6 +31,7 @@ import {
   type PrefixForm,
   type RackDTO,
   type RackForm,
+  type RackMutation,
   type RackRoleDTO,
   type RackRoleForm,
   type RackRoleMutation,
@@ -302,6 +303,78 @@ const rackTypeAdapter: CoreResourceAdapter<'racktype'> = {
   }),
 }
 
+const rackOriginalMutation = Symbol('rack-original-mutation')
+
+const rackMutationFields = [
+  'site',
+  'name',
+  'facility_id',
+  'rack_type',
+  'status',
+  'role',
+  'serial',
+  'asset_tag',
+  'form_factor',
+  'width',
+  'u_height',
+  'starting_unit',
+  'desc_units',
+  'airflow',
+  'description',
+  'comments',
+] as const satisfies readonly (keyof RackMutation)[]
+
+const rackTypePhysicalFields = [
+  'form_factor',
+  'width',
+  'u_height',
+  'starting_unit',
+  'desc_units',
+] as const satisfies readonly (keyof RackMutation)[]
+
+type TrackedRackForm = RackForm & {
+  [rackOriginalMutation]?: RackMutation
+}
+
+function rackMutation(form: RackForm): RackMutation {
+  const mutation: RackMutation = {}
+  if (hasFormField(form, 'site')) mutation.site = relationID(form.site)
+  if (hasFormField(form, 'name')) mutation.name = form.name
+  if (hasFormField(form, 'facility_id')) mutation.facility_id = form.facility_id
+  if (hasFormField(form, 'rack_type')) mutation.rack_type = relationID(form.rack_type)
+  if (hasFormField(form, 'status')) mutation.status = form.status
+  if (hasFormField(form, 'role')) mutation.role = relationID(form.role)
+  if (hasFormField(form, 'serial')) mutation.serial = form.serial
+  if (hasFormField(form, 'asset_tag')) mutation.asset_tag = form.asset_tag
+  if (hasFormField(form, 'form_factor')) mutation.form_factor = form.form_factor
+  if (hasFormField(form, 'width')) mutation.width = form.width
+  if (hasFormField(form, 'u_height')) mutation.u_height = form.u_height
+  if (hasFormField(form, 'starting_unit')) mutation.starting_unit = form.starting_unit
+  if (hasFormField(form, 'desc_units')) mutation.desc_units = form.desc_units
+  if (hasFormField(form, 'airflow')) mutation.airflow = form.airflow
+  if (hasFormField(form, 'description')) mutation.description = form.description
+  if (hasFormField(form, 'comments')) mutation.comments = form.comments
+  return mutation
+}
+
+function rackMutationDelta(current: RackMutation, original: RackMutation): RackMutation {
+  const delta = { ...current }
+  for (const field of rackMutationFields) {
+    if (Object.is(current[field], original[field])) Reflect.deleteProperty(delta, field)
+  }
+  return delta
+}
+
+function suppressRackTypePhysicalFields(
+  mutation: RackMutation,
+  rackType: number | null | undefined,
+): RackMutation {
+  if (rackType === null || rackType === undefined) return mutation
+  const result = { ...mutation }
+  for (const field of rackTypePhysicalFields) Reflect.deleteProperty(result, field)
+  return result
+}
+
 const rackAdapter: CoreResourceAdapter<'rack'> = {
   resource: 'rack',
   emptyForm: () => ({
@@ -311,48 +384,33 @@ const rackAdapter: CoreResourceAdapter<'rack'> = {
     starting_unit: 1,
     desc_units: false,
   }),
-  formFromDTO: (dto: RackDTO): RackForm => ({
-    site: dto.site,
-    name: dto.name,
-    facility_id: dto.facility_id,
-    rack_type: dto.rack_type,
-    status: choiceValue(dto.status),
-    role: dto.role,
-    serial: dto.serial,
-    asset_tag: dto.asset_tag,
-    form_factor: choiceValue(dto.form_factor),
-    width: choiceValue(dto.width),
-    u_height: dto.u_height,
-    starting_unit: dto.starting_unit,
-    desc_units: dto.desc_units,
-    airflow: choiceValue(dto.airflow),
-    description: dto.description,
-    comments: dto.comments,
-  }),
-  mutationFromForm: (form) => {
-    const rackType = relationID(form.rack_type)
-    return {
-      site: relationID(form.site),
-      name: form.name,
-      facility_id: form.facility_id,
-      rack_type: rackType,
-      status: form.status,
-      role: relationID(form.role),
-      serial: form.serial,
-      asset_tag: form.asset_tag,
-      ...(rackType
-        ? {}
-        : {
-            form_factor: form.form_factor,
-            width: form.width,
-            u_height: form.u_height,
-            starting_unit: form.starting_unit,
-            desc_units: form.desc_units,
-          }),
-      airflow: form.airflow,
-      description: form.description,
-      comments: form.comments,
+  formFromDTO: (dto: RackDTO): RackForm => {
+    const form: TrackedRackForm = {
+      site: dto.site,
+      name: dto.name,
+      facility_id: dto.facility_id,
+      rack_type: dto.rack_type,
+      status: choiceValue(dto.status),
+      role: dto.role,
+      serial: dto.serial,
+      asset_tag: dto.asset_tag,
+      form_factor: choiceValue(dto.form_factor),
+      width: choiceValue(dto.width),
+      u_height: dto.u_height,
+      starting_unit: dto.starting_unit,
+      desc_units: dto.desc_units,
+      airflow: choiceValue(dto.airflow),
+      description: dto.description,
+      comments: dto.comments,
     }
+    form[rackOriginalMutation] = rackMutation(form)
+    return form
+  },
+  mutationFromForm: (form, editing) => {
+    const mutation = rackMutation(form)
+    const original = (form as TrackedRackForm)[rackOriginalMutation]
+    const outgoing = editing && original ? rackMutationDelta(mutation, original) : mutation
+    return suppressRackTypePhysicalFields(outgoing, relationID(form.rack_type))
   },
   filtersFromState: (state) => ({
     site_id: state.site_id,

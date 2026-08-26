@@ -2236,7 +2236,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RackWrite"
+                "$ref": "#/components/schemas/RackCreate"
               }
             }
           }
@@ -2306,7 +2306,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RackWrite"
+                "$ref": "#/components/schemas/RackReplace"
               }
             }
           }
@@ -2345,7 +2345,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RackWrite"
+                "$ref": "#/components/schemas/RackUpdate"
               }
             }
           }
@@ -5298,17 +5298,11 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/ObjectReference"
-              },
-              {
-                "type": "null"
               }
             ]
           },
           "name": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "facility_id": {
             "type": [
@@ -5353,10 +5347,7 @@
             ]
           },
           "serial": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "asset_tag": {
             "type": [
@@ -5439,16 +5430,10 @@
             ]
           },
           "description": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "comments": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "id": {
             "type": "integer",
@@ -5459,10 +5444,7 @@
             "format": "uri"
           },
           "display": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "created": {
             "type": [
@@ -5481,6 +5463,87 @@
           "device_count": {
             "type": "integer",
             "format": "int64"
+          }
+        }
+      },
+      "RackCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "site",
+          "name"
+        ],
+        "properties": {
+          "site": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "facility_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "rack_type": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1
+          },
+          "role": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "serial": {
+            "type": "string"
+          },
+          "asset_tag": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "form_factor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "width": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "u_height": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "starting_unit": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "desc_units": {
+            "type": "boolean"
+          },
+          "airflow": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "comments": {
+            "type": "string"
           }
         }
       },
@@ -5515,6 +5578,87 @@
             "items": {
               "$ref": "#/components/schemas/Rack"
             }
+          }
+        }
+      },
+      "RackReplace": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "site",
+          "name"
+        ],
+        "properties": {
+          "site": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "facility_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "rack_type": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1
+          },
+          "role": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "serial": {
+            "type": "string"
+          },
+          "asset_tag": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "form_factor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "width": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "u_height": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "starting_unit": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "desc_units": {
+            "type": "boolean"
+          },
+          "airflow": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "comments": {
+            "type": "string"
           }
         }
       },
@@ -5938,22 +6082,17 @@
           }
         }
       },
-      "RackWrite": {
+      "RackUpdate": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
           "site": {
-            "type": [
-              "integer",
-              "null"
-            ],
+            "type": "integer",
             "format": "int64"
           },
           "name": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "minLength": 1
           },
           "facility_id": {
             "type": [
@@ -5969,7 +6108,8 @@
             "format": "int64"
           },
           "status": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "role": {
             "type": [
@@ -5979,10 +6119,7 @@
             "format": "int64"
           },
           "serial": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "asset_tag": {
             "type": [
@@ -6012,22 +6149,13 @@
             "type": "boolean"
           },
           "airflow": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "description": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "comments": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           }
         }
       },

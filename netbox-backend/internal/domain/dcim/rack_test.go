@@ -12,7 +12,16 @@ import (
 	"netbox-go/internal/domain/shared"
 )
 
+func TestRackScalarNormalizationContract(t *testing.T) {
+	testRackScalarNormalizationContract(t)
+}
+
 func TestRackNormalizesStateAndPreservesNullableBlankValues(t *testing.T) {
+	testRackScalarNormalizationContract(t)
+}
+
+func testRackScalarNormalizationContract(t *testing.T) {
+	t.Helper()
 	t.Parallel()
 
 	rack, err := dcim.NewRack(dcim.RackValues{
@@ -41,6 +50,62 @@ func TestRackNormalizesStateAndPreservesNullableBlankValues(t *testing.T) {
 	assert.Equal(t, dcim.RackFormFactor(""), rackNullableValue(t, rack.FormFactor()))
 	assert.Equal(t, dcim.RackAirflow(""), rackNullableValue(t, rack.Airflow()))
 	assert.Equal(t, "A01", rack.Display())
+
+	atLimit, err := dcim.NewRack(dcim.RackValues{
+		Site: rackSiteReference(t, 3, "Moscow", "moscow"), Name: "A02",
+		Status: "active", Width: 19, UHeight: 100,
+		StartingUnit: dcim.RackTypeMaximumStartingUnit,
+	}, testTime)
+	require.NoError(t, err)
+	assert.Equal(t, dcim.RackTypeMaximumStartingUnit, atLimit.StartingUnit())
+
+	for _, test := range []struct {
+		name   string
+		values dcim.RackValues
+		field  string
+	}{
+		{
+			name: "status choice whitespace is not trimmed",
+			values: dcim.RackValues{
+				Site: rackSiteReference(t, 3, "Moscow", "moscow"), Name: "A03",
+				Status: " active ", Width: 19, UHeight: 42, StartingUnit: 1,
+			},
+			field: "status",
+		},
+		{
+			name: "form factor choice whitespace is not trimmed",
+			values: dcim.RackValues{
+				Site: rackSiteReference(t, 3, "Moscow", "moscow"), Name: "A04",
+				Status: "active", FormFactor: dcim.NonNullRackValue(" wall-frame "),
+				Width: 19, UHeight: 42, StartingUnit: 1,
+			},
+			field: "form_factor",
+		},
+		{
+			name: "airflow choice whitespace is not trimmed",
+			values: dcim.RackValues{
+				Site: rackSiteReference(t, 3, "Moscow", "moscow"), Name: "A05",
+				Status: "active", Airflow: dcim.NonNullRackValue(" front-to-rear "),
+				Width: 19, UHeight: 42, StartingUnit: 1,
+			},
+			field: "airflow",
+		},
+		{
+			name: "starting unit exceeds small integer storage",
+			values: dcim.RackValues{
+				Site: rackSiteReference(t, 3, "Moscow", "moscow"), Name: "A06",
+				Status: "active", Width: 19, UHeight: 42,
+				StartingUnit: dcim.RackTypeMaximumStartingUnit + 1,
+			},
+			field: "starting_unit",
+		},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			_, createErr := dcim.NewRack(test.values, testTime)
+			require.Error(t, createErr)
+			require.Equal(t, test.field, shared.ViolationsOf(createErr)[0].Field)
+		})
+	}
 }
 
 func TestRackTypeOwnsAllPhysicalFieldsOnEverySave(t *testing.T) {

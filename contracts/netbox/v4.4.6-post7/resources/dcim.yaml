@@ -139,6 +139,26 @@
       "writable_fields": ["site", "name", "facility_id", "rack_type", "status", "role", "serial", "asset_tag", "form_factor", "width", "u_height", "starting_unit", "desc_units", "airflow", "description", "comments"],
       "response_only_fields": ["id", "url", "display", "created", "last_updated", "device_count"],
       "choice_fields": {"status": {"value_type": "string", "nullable": false}, "form_factor": {"value_type": "string", "nullable": true}, "width": {"value_type": "integer", "nullable": false}, "airflow": {"value_type": "string", "nullable": true}},
+      "field_contracts": {
+        "response": {
+          "nullable_fields": ["facility_id", "rack_type", "role", "asset_tag", "form_factor", "airflow", "created", "last_updated"]
+        },
+        "create": {
+          "required_fields": ["site", "name"],
+          "nullable_fields": ["facility_id", "rack_type", "role", "asset_tag", "form_factor"],
+          "blank_fields": ["facility_id", "serial", "asset_tag", "form_factor", "airflow", "description", "comments"]
+        },
+        "replace": {
+          "required_fields": ["site", "name"],
+          "nullable_fields": ["facility_id", "rack_type", "role", "asset_tag", "form_factor"],
+          "blank_fields": ["facility_id", "serial", "asset_tag", "form_factor", "airflow", "description", "comments"]
+        },
+        "update": {
+          "required_fields": [],
+          "nullable_fields": ["facility_id", "rack_type", "role", "asset_tag", "form_factor"],
+          "blank_fields": ["facility_id", "serial", "asset_tag", "form_factor", "airflow", "description", "comments"]
+        }
+      },
       "filters": ["site_id", "site_slug", "name", "status", "role_id", "role_slug", "rack_type_id", "rack_type_slug"],
       "ordering": ["id", "site", "name", "facility_id", "status", "u_height", "created", "last_updated"],
       "relationships": ["site", "rack_type", "role"],

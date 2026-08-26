@@ -160,18 +160,14 @@ func (service *RackService) CreateRack(
 	}
 	var rack *dcimdomain.Rack
 	err := service.unitOfWork.WithinTransaction(ctx, func(transactionContext context.Context) error {
-		commandValues, valuesErr := command.values()
-		if valuesErr != nil {
-			return valuesErr
-		}
-		values, valuesErr := service.resolveValues(transactionContext, commandValues)
-		if valuesErr != nil {
-			return valuesErr
-		}
+		commandValues, commandErr := command.values()
+		values, relationshipErr := service.resolveValues(transactionContext, commandValues)
 		now := service.clock.Now()
 		candidate, domainErr := dcimdomain.NewRack(values, now)
-		if domainErr != nil {
-			return domainErr
+		if validationErr := mergeRackMutationErrors(
+			commandErr, relationshipErr, domainErr,
+		); validationErr != nil {
+			return validationErr
 		}
 		if ownershipErr := candidate.ApplyRackTypeOwnership(now); ownershipErr != nil {
 			return ownershipErr
@@ -216,18 +212,18 @@ func (service *RackService) ReplaceRack(
 		if authorizeErr := service.authorize(transactionContext, principal, authz.Change, loaded); authorizeErr != nil {
 			return authorizeErr
 		}
-		commandValues, valuesErr := command.values()
-		if valuesErr != nil {
-			return valuesErr
-		}
-		values, valuesErr := service.resolveValues(transactionContext, commandValues)
-		if valuesErr != nil {
-			return valuesErr
+		commandPatch, commandErr := command.patch()
+		patch, relationshipErr := service.resolvePatch(transactionContext, commandPatch)
+		domainErr := loaded.ValidatePatch(patch)
+		if validationErr := mergeRackMutationErrors(
+			commandErr, relationshipErr, domainErr,
+		); validationErr != nil {
+			return validationErr
 		}
 		before := loaded.Snapshot()
 		previousSite := loaded.Site().ID()
 		now := service.clock.Now()
-		if replaceErr := loaded.Replace(values, now); replaceErr != nil {
+		if replaceErr := loaded.ApplyPatch(patch, now); replaceErr != nil {
 			return replaceErr
 		}
 		if ownershipErr := loaded.ApplyRackTypeOwnership(now); ownershipErr != nil {
@@ -278,13 +274,13 @@ func (service *RackService) UpdateRack(
 		if authorizeErr := service.authorize(transactionContext, principal, authz.Change, loaded); authorizeErr != nil {
 			return authorizeErr
 		}
-		commandPatch, patchErr := command.patch()
-		if patchErr != nil {
-			return patchErr
-		}
-		patch, patchErr := service.resolvePatch(transactionContext, commandPatch)
-		if patchErr != nil {
-			return patchErr
+		commandPatch, commandErr := command.patch()
+		patch, relationshipErr := service.resolvePatch(transactionContext, commandPatch)
+		domainErr := loaded.ValidatePatch(patch)
+		if validationErr := mergeRackMutationErrors(
+			commandErr, relationshipErr, domainErr,
+		); validationErr != nil {
+			return validationErr
 		}
 		before := loaded.Snapshot()
 		previousSite := loaded.Site().ID()
@@ -354,26 +350,42 @@ func (service *RackService) resolveValues(
 	ctx context.Context,
 	values rackCommandValues,
 ) (dcimdomain.RackValues, error) {
-	site, err := service.resolveSite(ctx, values.siteID)
-	if err != nil {
-		return dcimdomain.RackValues{}, err
-	}
-	rackType, err := service.resolveOptionalRackType(ctx, values.rackTypeID)
-	if err != nil {
-		return dcimdomain.RackValues{}, err
-	}
-	role, err := service.resolveOptionalRackRole(ctx, values.roleID)
-	if err != nil {
-		return dcimdomain.RackValues{}, err
-	}
-	return dcimdomain.RackValues{
-		Site: site, Name: values.name, FacilityID: values.facilityID,
-		RackType: rackType, Status: values.status, Role: role,
-		Serial: values.serial, AssetTag: values.assetTag, FormFactor: values.formFactor,
+	domainValues := dcimdomain.RackValues{
+		Name: values.name, FacilityID: values.facilityID,
+		RackType: dcimdomain.NullRackValue[dcimdomain.RackTypeReference](),
+		Status:   values.status,
+		Role:     dcimdomain.NullRackValue[dcimdomain.RackRoleReference](),
+		Serial:   values.serial, AssetTag: values.assetTag, FormFactor: values.formFactor,
 		Width: values.width, UHeight: values.uHeight, StartingUnit: values.startingUnit,
 		DescUnits: values.descUnits, Airflow: values.airflow,
 		Description: values.description, Comments: values.comments,
-	}, nil
+	}
+	var relationshipErrs []error
+	if values.siteID.IsValid() {
+		site, err := service.resolveSite(ctx, values.siteID)
+		if err != nil {
+			relationshipErrs = append(relationshipErrs, err)
+		} else {
+			domainValues.Site = site
+		}
+	}
+	if id, present := values.rackTypeID.Get(); !present || id.IsValid() {
+		rackType, err := service.resolveOptionalRackType(ctx, values.rackTypeID)
+		if err != nil {
+			relationshipErrs = append(relationshipErrs, err)
+		} else {
+			domainValues.RackType = rackType
+		}
+	}
+	if id, present := values.roleID.Get(); !present || id.IsValid() {
+		role, err := service.resolveOptionalRackRole(ctx, values.roleID)
+		if err != nil {
+			relationshipErrs = append(relationshipErrs, err)
+		} else {
+			domainValues.Role = role
+		}
+	}
+	return domainValues, mergeRackMutationErrors(relationshipErrs...)
 }
 
 func (service *RackService) resolvePatch(
@@ -387,28 +399,38 @@ func (service *RackService) resolvePatch(
 		DescUnits: patch.descUnits, Airflow: patch.airflow,
 		Description: patch.description, Comments: patch.comments,
 	}
-	if patch.siteID != nil {
+	var relationshipErrs []error
+	if patch.siteID != nil && patch.siteID.IsValid() {
 		site, err := service.resolveSite(ctx, *patch.siteID)
 		if err != nil {
-			return dcimdomain.RackPatch{}, err
+			relationshipErrs = append(relationshipErrs, err)
+		} else {
+			domainPatch.Site = &site
 		}
-		domainPatch.Site = &site
 	}
 	if patch.rackTypeID != nil {
-		rackType, err := service.resolveOptionalRackType(ctx, *patch.rackTypeID)
-		if err != nil {
-			return dcimdomain.RackPatch{}, err
+		id, present := patch.rackTypeID.Get()
+		if !present || id.IsValid() {
+			rackType, err := service.resolveOptionalRackType(ctx, *patch.rackTypeID)
+			if err != nil {
+				relationshipErrs = append(relationshipErrs, err)
+			} else {
+				domainPatch.RackType = &rackType
+			}
 		}
-		domainPatch.RackType = &rackType
 	}
 	if patch.roleID != nil {
-		role, err := service.resolveOptionalRackRole(ctx, *patch.roleID)
-		if err != nil {
-			return dcimdomain.RackPatch{}, err
+		id, present := patch.roleID.Get()
+		if !present || id.IsValid() {
+			role, err := service.resolveOptionalRackRole(ctx, *patch.roleID)
+			if err != nil {
+				relationshipErrs = append(relationshipErrs, err)
+			} else {
+				domainPatch.Role = &role
+			}
 		}
-		domainPatch.Role = &role
 	}
-	return domainPatch, nil
+	return domainPatch, mergeRackMutationErrors(relationshipErrs...)
 }
 
 func (service *RackService) resolveSite(

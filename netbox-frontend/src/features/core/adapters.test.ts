@@ -15,6 +15,8 @@ import {
   type IPAddressForm,
   type ManufacturerDTO,
   type ManufacturerForm,
+  type RackDTO,
+  type RackForm,
   type RackRoleDTO,
   type RackRoleForm,
   type RackTypeDTO,
@@ -543,6 +545,178 @@ describe('typed core resource adapters', () => {
     expect(
       adapter.mutationFromForm(withFormField(hydrated, 'comments', '') as RackTypeForm, true),
     ).toEqual({ comments: '' })
+  })
+
+  it('preserves Rack create omissions, defaults, IDs, and concrete scalar states', () => {
+    const adapter = getCoreResourceAdapter('rack')
+
+    expect(adapter.mutationFromForm({}, false)).toEqual({})
+    expect(adapter.mutationFromForm(adapter.emptyForm(), false)).toEqual({
+      status: 'active',
+      width: 19,
+      u_height: 42,
+      starting_unit: 1,
+      desc_units: false,
+    })
+    expect(
+      adapter.mutationFromForm(
+        {
+          site,
+          name: 'R1',
+          facility_id: '',
+          rack_type: null,
+          status: 'planned',
+          role: rackRole,
+          serial: '',
+          asset_tag: null,
+          form_factor: null,
+          width: 23,
+          u_height: 0,
+          starting_unit: 0,
+          desc_units: false,
+          airflow: null,
+          description: '',
+          comments: '',
+        },
+        false,
+      ),
+    ).toEqual({
+      site: 3,
+      name: 'R1',
+      facility_id: '',
+      rack_type: null,
+      status: 'planned',
+      role: 5,
+      serial: '',
+      asset_tag: null,
+      form_factor: null,
+      width: 23,
+      u_height: 0,
+      starting_unit: 0,
+      desc_units: false,
+      airflow: null,
+      description: '',
+      comments: '',
+    })
+    expect(
+      adapter.mutationFromForm(
+        {
+          site,
+          name: 'R2',
+          facility_id: 'MOW-02',
+          rack_type: rackType,
+          status: 'active',
+          role: rackRole,
+          serial: 'SER-02',
+          asset_tag: 'ASSET-02',
+          form_factor: '2-post-frame',
+          width: 23,
+          u_height: 48,
+          starting_unit: 2,
+          desc_units: true,
+          airflow: 'front-to-rear',
+          description: 'Core rack',
+          comments: 'Operator note',
+        },
+        false,
+      ),
+    ).toEqual({
+      site: 3,
+      name: 'R2',
+      facility_id: 'MOW-02',
+      rack_type: 4,
+      status: 'active',
+      role: 5,
+      serial: 'SER-02',
+      asset_tag: 'ASSET-02',
+      airflow: 'front-to-rear',
+      description: 'Core rack',
+      comments: 'Operator note',
+    })
+  })
+
+  it('keeps a private normalized Rack baseline and contains RackType-controlled deltas', () => {
+    const adapter = getCoreResourceAdapter('rack')
+    const dto: RackDTO = {
+      id: 8,
+      url: '/api/dcim/racks/8/',
+      display: 'R1',
+      created: null,
+      last_updated: null,
+      site,
+      name: 'R1',
+      facility_id: 'MOW-01',
+      rack_type: rackType,
+      status: { value: 'active', label: 'Active' },
+      role: rackRole,
+      serial: 'SER-01',
+      asset_tag: 'ASSET-01',
+      form_factor: { value: '4-post-cabinet', label: '4-post cabinet' },
+      width: { value: 19, label: '19 inches' },
+      u_height: 42,
+      starting_unit: 1,
+      desc_units: false,
+      airflow: { value: 'front-to-rear', label: 'Front to rear' },
+      description: 'Core rack',
+      comments: 'Operator note',
+      device_count: 3,
+    }
+    const hydrated = adapter.formFromDTO(dto)
+
+    expect(Object.entries(hydrated)).toEqual([
+      ['site', site],
+      ['name', 'R1'],
+      ['facility_id', 'MOW-01'],
+      ['rack_type', rackType],
+      ['status', 'active'],
+      ['role', rackRole],
+      ['serial', 'SER-01'],
+      ['asset_tag', 'ASSET-01'],
+      ['form_factor', '4-post-cabinet'],
+      ['width', 19],
+      ['u_height', 42],
+      ['starting_unit', 1],
+      ['desc_units', false],
+      ['airflow', 'front-to-rear'],
+      ['description', 'Core rack'],
+      ['comments', 'Operator note'],
+    ])
+    expect(adapter.mutationFromForm({ ...hydrated }, true)).toEqual({})
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'site', { ...site }) as RackForm, true),
+    ).toEqual({})
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'name', 'R1A') as RackForm, true),
+    ).toEqual({ name: 'R1A' })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'comments', '') as RackForm, true),
+    ).toEqual({ comments: '' })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'u_height', 48) as RackForm, true),
+    ).toEqual({})
+
+    const otherRackType: CoreReference = {
+      id: 12,
+      url: '/api/dcim/rack-types/12/',
+      display: 'Acme R48',
+    }
+    expect(
+      adapter.mutationFromForm(
+        withFormField(hydrated, 'rack_type', otherRackType) as RackForm,
+        true,
+      ),
+    ).toEqual({ rack_type: 12 })
+
+    const cleared = withFormField(hydrated, 'rack_type', null) as RackForm
+    expect(adapter.mutationFromForm(cleared, true)).toEqual({ rack_type: null })
+    expect(
+      adapter.mutationFromForm(withFormField(cleared, 'u_height', 48) as RackForm, true),
+    ).toEqual({ rack_type: null, u_height: 48 })
+
+    const withoutRackType = adapter.formFromDTO({ ...dto, rack_type: null })
+    expect(
+      adapter.mutationFromForm(withFormField(withoutRackType, 'u_height', 48) as RackForm, true),
+    ).toEqual({ u_height: 48 })
   })
 
   it('preserves DeviceRole create omissions, defaults, IDs, and concrete scalar states', () => {

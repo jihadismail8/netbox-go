@@ -567,6 +567,7 @@ export const CORE_PROFILE_MODELS: ModelConfig[] = [
       numberField('starting_unit', 'Starting Unit', 'Rack', {
         default: 1,
         min: 1,
+        max: 32767,
         disabledWhenFieldTruthy: 'rack_type',
         helpText: 'Inherited from the Rack Type when one is selected.',
       }),

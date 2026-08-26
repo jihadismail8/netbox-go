@@ -349,6 +349,10 @@ if (profile && baseline && oracle && schema) {
     "dcim.RackType: field_contracts must declare operation-specific presence semantics",
   );
   assert(
+    metadataResources.get("dcim.Rack")?.field_contracts !== undefined,
+    "dcim.Rack: field_contracts must declare operation-specific presence semantics",
+  );
+  assert(
     metadataResources.get("dcim.DeviceRole")?.field_contracts !== undefined,
     "dcim.DeviceRole: field_contracts must declare operation-specific presence semantics",
   );

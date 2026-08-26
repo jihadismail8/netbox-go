@@ -93,7 +93,7 @@ func TestTypedRackGRPCFieldMaskClearsNullableFieldsAndRequiresNonNullableValues(
 	response, err := handler.UpdateRack(rackGRPCContext(t), &dcimv1.UpdateRackRequest{
 		Id: 41, Rack: &dcimv1.RackInput{},
 		UpdateMask: &fieldmaskpb.FieldMask{Paths: []string{
-			"facility_id", "rack_type", "role", "asset_tag", "form_factor", "airflow",
+			"facility_id", "rack_type", "role", "asset_tag", "form_factor",
 		}},
 	})
 	require.NoError(t, err)
@@ -102,17 +102,43 @@ func TestTypedRackGRPCFieldMaskClearsNullableFieldsAndRequiresNonNullableValues(
 	assert.Equal(t, applicationdcim.FieldNull, service.updateCommand.Role.State())
 	assert.Equal(t, applicationdcim.FieldNull, service.updateCommand.AssetTag.State())
 	assert.Equal(t, applicationdcim.FieldNull, service.updateCommand.FormFactor.State())
-	assert.Equal(t, applicationdcim.FieldNull, service.updateCommand.Airflow.State())
+	assert.Equal(t, applicationdcim.FieldOmitted, service.updateCommand.Airflow.State())
 	assert.Equal(t, applicationdcim.FieldOmitted, service.updateCommand.Name.State())
 	assert.Equal(t, int64(41), response.Rack.Id)
 
+	for _, field := range []string{
+		"site", "name", "status", "serial", "width", "u_height", "starting_unit",
+		"desc_units", "airflow", "description", "comments",
+	} {
+		field := field
+		t.Run("supported absent field reaches shared service validation/"+field, func(t *testing.T) {
+			service.updateErr = shared.NewValidationError(shared.FieldViolation{
+				Field: field, Reason: "null", Description: "This field may not be null.",
+			})
+			beforeCalls := service.updateCalls
+			_, updateErr := handler.UpdateRack(rackGRPCContext(t), &dcimv1.UpdateRackRequest{
+				Id: 41, Rack: &dcimv1.RackInput{},
+				UpdateMask: &fieldmaskpb.FieldMask{Paths: []string{field}},
+			})
+			require.Error(t, updateErr)
+			assert.Equal(t, codes.InvalidArgument, status.Code(updateErr))
+			assert.Equal(t, beforeCalls+1, service.updateCalls)
+			assert.Equal(t, applicationdcim.FieldNull, rackUpdateGRPCStates(service.updateCommand)[field])
+			assert.Equal(t, []shared.FieldViolation{{
+				Field: field, Reason: "null", Description: "This field may not be null.",
+			}}, shared.ViolationsOf(service.updateErr))
+		})
+	}
+
+	service.updateErr = nil
+	beforeCalls := service.updateCalls
 	_, err = handler.UpdateRack(rackGRPCContext(t), &dcimv1.UpdateRackRequest{
 		Id: 41, Rack: &dcimv1.RackInput{},
-		UpdateMask: &fieldmaskpb.FieldMask{Paths: []string{"name"}},
+		UpdateMask: &fieldmaskpb.FieldMask{Paths: []string{"unknown"}},
 	})
 	require.Error(t, err)
 	assert.Equal(t, codes.InvalidArgument, status.Code(err))
-	assert.Equal(t, 1, service.updateCalls)
+	assert.Equal(t, beforeCalls, service.updateCalls, "unknown masks fail before service invocation")
 }
 
 func TestRackRPCDispatchesAllMethodsAndRequiresAuthentication(t *testing.T) {
@@ -193,6 +219,7 @@ type rackGRPCServiceSpy struct {
 	deleteCommand  applicationdcim.DeleteRackCommand
 	listCalls      int
 	updateCalls    int
+	updateErr      error
 }
 
 func (service *rackGRPCServiceSpy) ListRacks(
@@ -244,6 +271,9 @@ func (service *rackGRPCServiceSpy) UpdateRack(
 ) (*domaindcim.Rack, error) {
 	service.updateCalls++
 	service.updateCommand = command
+	if service.updateErr != nil {
+		return nil, service.updateErr
+	}
 	return service.rack, nil
 }
 

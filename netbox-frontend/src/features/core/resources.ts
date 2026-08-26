@@ -100,7 +100,9 @@ export interface RackTypeDTO extends Omit<CoreResourceBase, 'created' | 'last_up
   comments: string
 }
 
-export interface RackDTO extends CoreResourceBase {
+export interface RackDTO extends Omit<CoreResourceBase, 'created' | 'last_updated'> {
+  created: string | null
+  last_updated: string | null
   site: CoreReference
   name: string
   facility_id: string | null
