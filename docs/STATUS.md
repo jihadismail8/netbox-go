@@ -170,15 +170,25 @@ result, so T2/T3 remain unearned and the Vue unit/type boundary earns no T4.
 DeviceType uniqueness, positioned-Device height transitions,
 deletion/cascades, list/query behavior, full CRUD, every tier/consumer, the
 parent, profile promotion, and every later child remain open.
-`CW1-V2-02-I8` is the active reviewed increment for InterfaceTemplate
-`device_type`, `name`, `label`, `type`, `enabled`, `mgmt_only`, and
-`description` common POST/PUT/PATCH presence across generated contracts,
-typed REST/gRPC/application semantics, PostgreSQL, and Vue. It claims no
-implementation evidence yet. It exercises existing DeviceType-owner
-containment without closing owner immutability and excludes uniqueness,
-ModuleType ownership, bridge behavior, Device instantiation/snapshot/rollback,
-non-retroactivity, deletion, list/query behavior, full CRUD, every tier and
-consumer, the parent, and profile promotion.
+`CW1-V2-02-I8` has exact tested candidate
+`b216d4c217cf863a8760494fd6499e54899ef368` at source digest
+`source-v2:sha256:da2b93d51dbdc2dfbcb6e348e2f5b23f42439b5973169f683ddc39de285c5048`
+with 3,064 entries. Its focused, race, real-PostgreSQL, complete L4,
+generated-contract, Vue, repository, candidate-CI, evidence-claim, and
+pre-acceptance receipt boundaries are green. The project owner accepted only
+this bounded result at `2026-08-26T02:27:06Z`. Its `done` state is conditional
+on the exact owner-accepted closeout claim passing repository CI; the excluded
+receipt then remains. I8 owns only InterfaceTemplate `device_type`, `name`,
+`label`, `type`, `enabled`, `mgmt_only`, and `description` common writable-field
+presence across POST/PUT/PATCH, operation-specific generated contracts, typed
+REST/gRPC/application semantics, PostgreSQL durability, Vue dirty-field
+handling, and the eight fixed tests. No retained differential accompanies the
+result, so T2/T3 remain unearned and the Vue unit/type boundary earns no T4.
+Existing DeviceType-owner containment is exercised without closing owner
+immutability. InterfaceTemplate uniqueness, ModuleType ownership, bridge
+behavior, Device instantiation/snapshot/rollback, non-retroactivity,
+deletion, list/query behavior, full CRUD, every tier/consumer, the parent,
+profile promotion, and every later child remain open.
 
 > **Operational boundary:** this is a development build for disposable data.
 > Production TLS, schema upgrades, backup/restore, operational hardening, and
@@ -428,7 +438,7 @@ replacement completes ADR 0004's governing gate and CP-13.
 | ------------------------ | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
 | V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                                 | Refresh for the active source and every later relevant merged digest                                                             | Continuous; entry source retained          |
 | V1 identity/RBAC         | Persisted identity, retained CORS, accepted I1/I2/I3, and retained I4 evidence                          | Obtain I4 owner review; complete password-policy/throttle/proxy/streaming plus RBAC/admin/secret work                            | I4 evidence; parent open                   |
-| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, accepted IPAddress I1/Site I2/Manufacturer I3/RackRole I4/RackType I5/DeviceRole I6/DeviceType I7, and active InterfaceTemplate I8 | Implement and retain I8, then complete remaining invariant, rollback, side-effect, concurrency, and tier cases | I1-I7 done; I8 active; parent open |
+| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, accepted IPAddress I1/Site I2/Manufacturer I3/RackRole I4/RackType I5/DeviceRole I6/DeviceType I7, and owner-accepted InterfaceTemplate I8 | Retain I8 closeout, then complete remaining invariant, rollback, side-effect, concurrency, and tier cases | I1-I7 done; I8 done claim conditional; parent open |
 | V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, and Compose harness                                               | Dependency-aware HTTP/gRPC readiness, dependency loss/recovery, remaining locking cases, retained external run                   | Implementation and evidence pending        |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                             | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report                       | T1; implementation/evidence pending        |
 | V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                         | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes                  | T1; implementation/evidence pending        |

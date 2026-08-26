@@ -152,16 +152,25 @@ matching REST/gRPC semantics, PostgreSQL durability, Vue form
 serialization/validation, and eight fixed tests. It does not close uniqueness,
 height transitions, deletion/cascades, list/query behavior, full CRUD, another
 resource, a tier/consumer, the parent, the profile, or any later child.
-`CW1-V2-02-I8` is the active rewrite increment and owns only
-InterfaceTemplate `device_type`, `name`, `label`, `type`, `enabled`,
-`mgmt_only`, and `description` common create/PUT/PATCH presence,
-operation-specific generated API contracts, matching REST/gRPC semantics,
-PostgreSQL durability, Vue form serialization/validation, and eight fixed
-tests. It exercises the existing DeviceType-owner containment but does not
-close owner immutability, uniqueness, Device
-instantiation/snapshot/rollback, non-retroactivity, bridge behavior, deletion,
-list/query behavior, full CRUD, another resource, a tier/consumer, the parent,
-or the profile. Do not begin or merge another Capability Profile while V0 is
+`CW1-V2-02-I8` has exact tested candidate
+`b216d4c217cf863a8760494fd6499e54899ef368` at source digest
+`source-v2:sha256:da2b93d51dbdc2dfbcb6e348e2f5b23f42439b5973169f683ddc39de285c5048`
+with 3,064 entries. Its focused, race, real-PostgreSQL, complete L4,
+generated-contract, Vue, repository, candidate-CI, evidence-claim, and
+pre-acceptance receipt boundaries are green. The project owner's acceptance
+of only this bounded result was recorded at `2026-08-26T02:27:06Z`. I8 is
+conditional `done`; that state becomes effective only after the exact
+owner-accepted closeout claim passes repository CI, and its excluded receipt
+must then pass exact-SHA CI. I8 owns only InterfaceTemplate `device_type`,
+`name`, `label`, `type`, `enabled`, `mgmt_only`, and `description` common
+create/PUT/PATCH presence, operation-specific generated API contracts,
+matching REST/gRPC semantics, PostgreSQL durability, Vue form
+serialization/validation, and eight fixed tests. It exercises existing
+DeviceType-owner containment but does not close owner immutability,
+uniqueness, Device instantiation/snapshot/rollback, non-retroactivity, bridge
+behavior, deletion, list/query behavior, full CRUD, another resource, a
+tier/consumer, the parent, the profile, or any later child. Do not begin or
+merge another Capability Profile while V0 is
 red or before `CW1-V6-03`. Once those gates are
 durably closed, follow the next accepted profile in the roadmap and playbook
 rather than this dated snapshot.
