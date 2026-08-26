@@ -48,7 +48,8 @@ implementation exists.
 | `CW1-V2-02-I5` | `done`        | Codex GPT-5.6 Sol | [RackType scalar write presence](CW1-V2-02-I5.md)       |
 | `CW1-V2-02-I6` | `done`        | Codex GPT-5.6 Sol | [DeviceRole scalar write presence](CW1-V2-02-I6.md)     |
 | `CW1-V2-02-I7` | `done`        | Codex GPT-5.6 Sol | [DeviceType scalar write presence](CW1-V2-02-I7.md)     |
-| `CW1-V2-02-I8` | `done`*       | Codex GPT-5.6 Sol | [InterfaceTemplate scalar write presence](CW1-V2-02-I8.md) |
+| `CW1-V2-02-I8` | `done`        | Codex GPT-5.6 Sol | [InterfaceTemplate scalar write presence](CW1-V2-02-I8.md) |
+| `CW1-V2-02-I9` | `in-progress` | Codex GPT-5.6 Sol | [Rack scalar write presence](CW1-V2-02-I9.md)              |
 
 `in-progress` means the packet owns only its explicitly active bounded
 increment; no implementation evidence or parent-goal completion is implied.
@@ -166,8 +167,8 @@ child remain open.
 `b216d4c217cf863a8760494fd6499e54899ef368` and green candidate,
 evidence-claim, and pre-acceptance receipt exact-SHA CI boundaries. The
 project owner accepted only this bounded result at `2026-08-26T02:27:06Z`.
-Its `done` state is conditional on the exact owner-accepted closeout claim
-passing repository CI; the excluded receipt then remains. I8 owns only the
+Its owner-accepted closeout claim and excluded receipt passed exact-SHA
+repository CI, so I8 is effectively `done`. I8 owns only the
 seven declared InterfaceTemplate writable fields across create/PUT/PATCH
 operation metadata, typed domain/application behavior, REST/gRPC semantics,
 PostgreSQL durability, Vue dirty-field serialization, and eight fixed tests.
@@ -177,6 +178,11 @@ behavior, Device instantiation/snapshot/rollback, non-retroactivity,
 deletion, list/query behavior, full CRUD, all tiers, every consumer, the
 parent, profile promotion, and every later child remain open.
 
-The I8 asterisk records that owner-accepted `done` becomes effective only
-after the exact closeout claim passes repository CI and its excluded receipt
-then passes exact-SHA CI. It does not close the parent or claim a later child.
+`CW1-V2-02-I9` is the active reviewed packet for the 16 declared Rack writable
+fields across create/PUT/PATCH operation metadata, typed domain/application
+behavior, REST/gRPC semantics, PostgreSQL durability, Vue dirty-field
+serialization, direct-save RackType copy precedence, and eight fixed tests. It
+has no implementation evidence at entry. Rack uniqueness, mounted-device and
+placement rules, RackType-update propagation, Device site propagation,
+deletion, list/query behavior, full CRUD, all tiers, every consumer, the
+parent, profile promotion, and later children remain open.
