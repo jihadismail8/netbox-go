@@ -208,16 +208,26 @@ ModuleType ownership, bridge behavior, Device instantiation/snapshot/rollback,
 non-retroactivity, deletion, list/query, full CRUD, the parent, profile
 promotion, every tier, and every later child remain open.
 
-`CW1-V2-02-I9` is the active reviewed packet for Rack `site`, `name`,
-`facility_id`, `rack_type`, `status`, `role`, `serial`, `asset_tag`,
-`form_factor`, `width`, `u_height`, `starting_unit`, `desc_units`, `airflow`,
-`description`, and `comments` create/PUT/PATCH presence, generated OpenAPI,
-shared REST/gRPC semantics, direct-save RackType copy precedence, PostgreSQL
-durability, Vue dirty-field handling, and eight fixed tests. It has no
-implementation evidence at entry. Rack uniqueness, mounted-device and
-placement rules, RackType-update propagation, Device site propagation,
-deletion, list/query, full CRUD, the parent, profile promotion, every tier,
-and later children remain open.
+`CW1-V2-02-I9` has exact tested candidate
+`9c257b04b7cf798199c5aa4b7ae076cebbbbdff1` at source digest
+`source-v2:sha256:343a1767534de69acad81e7fdfbf8bd23cf1e7a22450c00df70b038c4c54c152`
+with 3,071 entries. Its eight named Rack domain, application, REST, gRPC,
+real-PostgreSQL, and parity tests passed, as did the exact affected/race,
+generated-contract, focused Vue adapter/form, complete L4,
+backend/frontend/root, candidate-CI, evidence-claim, and pre-acceptance receipt
+boundaries. The project owner accepted only this bounded result at
+`2026-08-26T11:01:23Z`. Its `done` state is conditional on the exact
+owner-accepted closeout claim passing repository CI; the excluded receipt then
+remains. The matrix is limited to Rack `site`, `name`, `facility_id`,
+`rack_type`, `status`, `role`, `serial`, `asset_tag`, `form_factor`, `width`,
+`u_height`, `starting_unit`, `desc_units`, `airflow`, `description`, and
+`comments` create/PUT/PATCH presence, generated OpenAPI, shared REST/gRPC
+semantics, direct-save RackType copy precedence, PostgreSQL durability, and
+Vue dirty-field handling. No differential was run, so T2/T3 remain unearned;
+the Vue boundary earns no T4. Rack uniqueness, mounted-device and placement
+rules, RackType-update propagation, Device site propagation, deletion,
+list/query, full CRUD, the parent, profile promotion, every tier, and every
+later child remain open.
 
 ## Owned external gates
 
@@ -356,7 +366,7 @@ and exact change-state outcomes remain to be added and retained.
 | ------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage                       | `make check` retained green on each exact relevant source digest                                                          | Entry source-v2 retained; active-source refresh required |
 | V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests                      | Pass I4's exact claim CI, retain its receipt, obtain owner review, then complete the remaining identity matrix            | I4 evidence claim conditional; parent open               |
-| V2 profile behavior      | Shared 13-resource service, broad tests, accepted IPAddress I1/Site I2/Manufacturer I3/RackRole I4/RackType I5/DeviceRole I6/DeviceType I7/InterfaceTemplate I8, and active Rack I9 | Implement and retain I9, then trace every remaining invariant, rollback, and external-tier boundary | I1-I8 done; I9 active; parent open |
+| V2 profile behavior      | Shared 13-resource service, broad tests, accepted IPAddress I1/Site I2/Manufacturer I3/RackRole I4/RackType I5/DeviceRole I6/DeviceType I7/InterfaceTemplate I8, and owner-accepted Rack I9 | Retain I9 closeout, then trace every remaining invariant, rollback, and external-tier boundary | I1-I8 done; I9 done claim conditional; parent open |
 | V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness                                 | Truthful readiness, loss/recovery, real PostgreSQL and deployment artifacts                                               | Implementation/evidence gap                              |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites                            | Complete T2 scenario report, then equivalent T3 report                                                                    | T1; implementation gap                                   |
 | V5 Vue workflow          | Typed adapters and real-browser harness                                                    | Both workflows and every required negative/state case retained green                                                      | T1; implementation gap                                   |

@@ -169,16 +169,25 @@ DeviceType-owner containment but does not close owner immutability,
 uniqueness, Device instantiation/snapshot/rollback, non-retroactivity, bridge
 behavior, deletion, list/query behavior, full CRUD, another resource, a
 tier/consumer, the parent, the profile, or any later child.
-`CW1-V2-02-I9` is the active reviewed Rack increment. It owns only `site`,
-`name`, `facility_id`, `rack_type`, `status`, `role`, `serial`, `asset_tag`,
-`form_factor`, `width`, `u_height`, `starting_unit`, `desc_units`, `airflow`,
-`description`, and `comments` common create/PUT/PATCH presence, direct-save
-RackType copy precedence, operation-specific generated contracts, matching
-REST/gRPC semantics, PostgreSQL durability, Vue dirty-field handling, and
-eight fixed tests. It excludes uniqueness, mounted-device/placement rules,
-RackType-update propagation, Device site propagation, deletion, list/query,
-full CRUD, another resource, every tier/consumer, the parent, the profile, and
-later children. Do not begin or merge another Capability Profile while V0 is
+`CW1-V2-02-I9` has exact tested candidate
+`9c257b04b7cf798199c5aa4b7ae076cebbbbdff1` at source digest
+`source-v2:sha256:343a1767534de69acad81e7fdfbf8bd23cf1e7a22450c00df70b038c4c54c152`
+with 3,071 entries. Its focused, race, real-PostgreSQL, complete L4,
+generated-contract, Vue, repository, candidate-CI, evidence-claim, and
+pre-acceptance receipt boundaries are green. The project owner's acceptance
+of only this bounded result was recorded at `2026-08-26T11:01:23Z`. I9 is
+conditional `done`; that state becomes effective only after the exact
+owner-accepted closeout claim passes repository CI, and its excluded receipt
+must then pass exact-SHA CI. I9 owns only Rack `site`, `name`, `facility_id`,
+`rack_type`, `status`, `role`, `serial`, `asset_tag`, `form_factor`, `width`,
+`u_height`, `starting_unit`, `desc_units`, `airflow`, `description`, and
+`comments` common create/PUT/PATCH presence, direct-save RackType copy
+precedence, operation-specific generated contracts, matching REST/gRPC
+semantics, PostgreSQL durability, Vue dirty-field handling, and eight fixed
+tests. It excludes uniqueness, mounted-device/placement rules, RackType-update
+propagation, Device site propagation, deletion, list/query, full CRUD, another
+resource, every tier/consumer, the parent, the profile, and later children. Do
+not begin or merge another Capability Profile while V0 is
 red or before `CW1-V6-03`. Once those gates are
 durably closed, follow the next accepted profile in the roadmap and playbook
 rather than this dated snapshot.
