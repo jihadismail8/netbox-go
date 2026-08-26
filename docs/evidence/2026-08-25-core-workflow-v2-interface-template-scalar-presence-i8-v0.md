@@ -5,11 +5,11 @@
 - Goal: `CW1-V2-02`.
 - Increment: `CW1-V2-02-I8`.
 - Executor: Codex GPT-5.6 Sol.
-- State: conditional `done` only for bounded I8. The project owner accepted
-  its evidence at `2026-08-26T02:27:06Z`; `done` becomes effective only after
-  the exact owner-accepted closeout revision passes repository CI, and its
-  source-v2-excluded receipt must then pass exact-SHA CI.
-- Result: **the bounded source candidate and pre-closeout evidence receipt
+- State: effective `done` only for bounded I8. Owner-accepted closeout revision
+  `9f69a1e31e012074a36d55281fbc5153b9e500fd` passed exact-SHA repository
+  CI. This source-v2-excluded receipt preserves that result and still requires
+  its own exact-SHA CI.
+- Result: **the bounded source candidate and owner-accepted closeout
   passed every required local, real-PostgreSQL, generated-contract, frontend,
   pinned repository, and independent exact-SHA CI boundary available in this
   environment**.
@@ -30,9 +30,9 @@ readiness.
 No `netbox-go-evidence-v2` marker is present because I8 promotes no tier,
 profile state, traceability consumer, or completed parent goal. The bounded
 `evidence` claim and excluded receipt passed exact-SHA CI before the project
-owner accepted only I8 evidence. The owner-accepted closeout remains
-conditional on its exact-SHA CI; a source-v2-excluded receipt must then retain
-that result and pass its own exact-SHA CI.
+owner accepted only I8 evidence. The exact closeout claim CI made only bounded
+I8 `done`. This source-v2-excluded receipt changes no owned source and remains
+a separate exact-SHA retention boundary.
 
 ## Entry and tested source
 
@@ -68,13 +68,17 @@ that result and pass its own exact-SHA CI.
   `354400176f0b122de6d654e12988048afff78e47`.
 - Project-owner evidence acceptance recorded:
   `2026-08-26T02:27:06Z`.
-- Proposed owner-accepted closeout source digest:
+- Owner-accepted closeout revision:
+  `9f69a1e31e012074a36d55281fbc5153b9e500fd`.
+- Owner-accepted closeout source digest:
   `source-v2:sha256:75c7bf7d02294ec5e3550c846fcd987791c0e3936e088121ddbabaae49fdb3b2`
   with 3,064 entries.
-- Proposed owner-accepted closeout source-manifest output SHA-256:
+- Owner-accepted closeout source-manifest output SHA-256:
   `aed970496d17e4dc86af2c24fb084f13cd77d18ae30f095c1f06e89bc9cae422`.
-- Proposed complete closeout source-manifest diff SHA-256:
+- Complete closeout source-manifest diff SHA-256:
   `ac71766950ea8941ce790271efbc46517dacdc770a99423dacd50695436f1224`.
+- Exact closeout eight-path mapping SHA-256:
+  `751a254a7f01ebad42a5ef6fe93ac5f47569d677d86f1a4d0c7b7d76fe6f7e29`.
 - Pinned NetBox oracle revision:
   `fbb948d30e79ce657fac62994a22aca72c1770a9`
   (`v4.4.6-7-gfbb948d30`).
@@ -404,8 +408,9 @@ environment restrictions, not product failures, and no command was weakened.
   claim-assembly and final no-edit local replays, and exact-SHA claim CI
   passed. The excluded evidence receipt's exact-SHA CI and project-owner
   evidence review also passed. The owner-accepted closeout assembly replay
-  passed; its final no-later-edit replay and closeout exact-SHA CI remain,
-  followed by the source-v2-excluded receipt CI.
+  and final no-later-edit replay passed; exact-SHA closeout CI then passed,
+  making only bounded I8 `done`. This source-v2-excluded receipt retains that
+  result and must pass its own exact-SHA CI.
 
 No skipped or unavailable boundary is implied by focused, PostgreSQL,
 frontend, local, or candidate-CI results.
@@ -461,24 +466,26 @@ no unavailable or unexecuted boundary.
   with 3,064 entries.
 - Pre-closeout source-manifest output SHA-256:
   `49eb62d3d7304c051c4aee19153de3b5580d7c2f539542083b02a81a473d225c`.
-- Proposed owner-accepted closeout source digest:
+- Owner-accepted closeout source digest:
   `source-v2:sha256:75c7bf7d02294ec5e3550c846fcd987791c0e3936e088121ddbabaae49fdb3b2`
   with 3,064 entries.
-- Proposed owner-accepted closeout source-manifest output SHA-256:
+- Owner-accepted closeout source-manifest output SHA-256:
   `aed970496d17e4dc86af2c24fb084f13cd77d18ae30f095c1f06e89bc9cae422`.
-- Complete proposed closeout source-manifest diff SHA-256:
+- Complete closeout source-manifest diff SHA-256:
   `ac71766950ea8941ce790271efbc46517dacdc770a99423dacd50695436f1224`.
 
-The exact eight-path closeout mapping is retained verbatim in the future
-owner-accepted closeout revision's commit message. The complete manifests
-prove identical 3,064-entry path/kind sets, exactly the six declared
-source-governance content changes, and no addition, deletion, type, mode, or
-symlink-target change.
+The exact eight-path closeout mapping is retained verbatim in owner-accepted
+closeout revision `9f69a1e31e012074a36d55281fbc5153b9e500fd`'s commit
+message. Its canonical JSON SHA-256 is
+`751a254a7f01ebad42a5ef6fe93ac5f47569d677d86f1a4d0c7b7d76fe6f7e29`.
+The complete manifests prove identical 3,064-entry path/kind sets, exactly the
+six declared source-governance content changes, and no addition, deletion,
+type, mode, or symlink-target change.
 
-Conditional `done` becomes effective only when that exact closeout revision
-passes repository CI. A two-path excluded receipt must then retain the exact
-claim SHA, CI provenance, mapping hash, digest, and manifest without another
-source change and pass its own exact-SHA CI.
+Bounded `done` became effective when that exact closeout revision passed
+repository CI. This two-path excluded receipt retains the exact closeout SHA,
+CI provenance, mapping hash, digest, and manifest without another source
+change and must pass its own exact-SHA CI.
 
 The external differential was not run. REST T2, corresponding gRPC T3,
 browser T4, InterfaceTemplate uniqueness, owner-immutability traceability
@@ -488,9 +495,9 @@ query, broader RBAC, full CRUD, `CW1-V2-02`, V2, V6, profile publication, the
 full rewrite, deployment, and production readiness remain open. No later V2
 child is claimed.
 
-## Owner-accepted closeout claim boundary
+## Owner-accepted closeout claim and receipt boundary
 
-The proposed owner-accepted closeout changes exactly these eight paths:
+The exact committed owner-accepted closeout changed exactly these eight paths:
 
 1. `AGENTS.md`
 2. `docs/ROADMAP.md`
@@ -528,11 +535,34 @@ packages with one reviewed exclusion, 29 frontend files and 173 tests,
 inventory, generated consistency, and valid links across 174 Markdown files.
 Its credential-free log has SHA-256
 `39b5c5b170b9d45cf6e51d3082942134e933b81b12b4434168a3230a29ae9451`.
-The final no-later-edit pinned repository replay remains before the
-conditional closeout claim can be committed and pushed. Bounded `done`
-remains conditional on exact-SHA closeout CI; its later source-v2-excluded
-receipt must preserve the accepted closeout digest and manifest and pass its
-own exact-SHA CI.
+The final no-later-edit replay used the same pinned command from
+`2026-08-26T02:57:47Z` through `2026-08-26T03:02:55Z`; it exited 0, no
+closeout path changed before commit, and its credential-free log has SHA-256
+`754e7973f369eaa5961f6addc6c5a8f837bf52d3fa39e944d61dc13d2f2c3a7e`.
+
+The independent exact-SHA closeout-claim result was:
+
+- Workflow: `repository-gate`.
+- Run: [32925200202](https://github.com/jihadismail8/netbox-go/actions/runs/32925200202).
+- Job `check`: [98046595566](https://github.com/jihadismail8/netbox-go/actions/runs/32925200202/job/98046595566).
+- Branch: `work/cw1-v2-02-i8-interface-template-presence`.
+- Head SHA: `9f69a1e31e012074a36d55281fbc5153b9e500fd`.
+- Run start/completion: `2026-08-26T03:06:26Z`–`2026-08-26T03:22:00Z`.
+- Job start/completion: `2026-08-26T03:06:28Z`–`2026-08-26T03:21:59Z`.
+- Conclusion: **success**; every setup, repository, post, and completion step
+  succeeded.
+
+That exact result made only bounded `CW1-V2-02-I8` `done`. It attested the
+3,064-entry closeout digest and manifest, complete six-entry source diff, and
+exact eight-path mapping hashes recorded above.
+
+This receipt changes only this artifact and the evidence ledger. Both paths
+are excluded from `source-v2`, so the accepted digest, entry count, complete
+manifest, and source diff remain unchanged. The receipt contains no
+attestation marker and no secret material. Its exact two-path old/new mapping
+is retained in the receipt commit message; the receipt's own exact-SHA CI must
+pass and is reported externally without embedding a self-referential receipt
+SHA or run here.
 
 ## Complete tested source manifest
 
@@ -22022,7 +22052,7 @@ manifest and the byte-identical evidence-only claim worktree.
 
 ## Complete owner-accepted closeout source manifest
 
-The block below is the exact proposed owner-accepted closeout manifest. It
+The block below is the exact committed owner-accepted closeout manifest. It
 contains the same 3,064 path/kind entries as the tested and pre-closeout
 manifests and differs in content only for the six declared source-governance
 files.
@@ -43486,7 +43516,7 @@ files.
 ## Complete owner-accepted closeout source-manifest diff
 
 The block below is the complete canonical JSON diff from pre-closeout receipt
-`354400176f0b122de6d654e12988048afff78e47` source to the proposed
+`354400176f0b122de6d654e12988048afff78e47` source to the committed
 owner-accepted closeout source. It proves identical path/kind sets, no added,
 deleted, type-changed, mode-changed, or symlink-retargeted entry, and exactly
 the six governance-file content changes declared above.
