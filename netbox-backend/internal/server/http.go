@@ -17,6 +17,7 @@ import (
 	"netbox-go/internal/config"
 	"netbox-go/internal/database"
 	"netbox-go/internal/platform/composition"
+	"netbox-go/internal/platform/readiness"
 )
 
 var _ app.IServer = (*httpServer)(nil)
@@ -86,7 +87,10 @@ func newServer(server *http.Server, tls config.TLS) *httpsrv.Server {
 }
 
 // NewHTTPServer creates a new http server
-func NewHTTPServer(addr string, opts ...HTTPOption) app.IServer {
+func NewHTTPServer(addr string, readinessChecker readiness.Checker, opts ...HTTPOption) app.IServer {
+	if readinessChecker == nil {
+		panic("HTTP server requires a readiness checker")
+	}
 	o := defaultHTTPOptions()
 	o.apply(opts...)
 
@@ -103,6 +107,7 @@ func NewHTTPServer(addr string, opts ...HTTPOption) app.IServer {
 		core.Sites,
 		secureCookies,
 		o.corsAllowedOrigins,
+		readinessChecker,
 		workflowhttp.WithOrganizationServices(core.Manufacturers, core.RackRoles),
 		workflowhttp.WithRackTypeService(core.RackTypes),
 		workflowhttp.WithRackService(core.Racks),

@@ -2,44 +2,85 @@ package initial
 
 import (
 	"strconv"
+	"time"
 
 	"github.com/go-dev-frame/sponge/pkg/app"
 
 	"netbox-go/internal/config"
+	"netbox-go/internal/database"
 	runtimeconfig "netbox-go/internal/platform/config"
+	"netbox-go/internal/platform/readiness"
 	"netbox-go/internal/server"
 )
 
+const readinessCheckTimeout = time.Second
+
+type httpServerConstructor func(string, readiness.Checker, ...server.HTTPOption) app.IServer
+type grpcServerConstructor func(string, readiness.Checker, ...server.GrpcOption) app.IServer
+
 // CreateServices create services
 func CreateServices(httpRuntime runtimeconfig.HTTPRuntime) []app.IServer {
+	return createServices(
+		httpRuntime,
+		newReadinessChecker(),
+		server.NewHTTPServer,
+		server.NewGRPCServer,
+	)
+}
+
+func createServices(
+	httpRuntime runtimeconfig.HTTPRuntime,
+	readinessChecker readiness.Checker,
+	newHTTPServer httpServerConstructor,
+	newGRPCServer grpcServerConstructor,
+) []app.IServer {
+	if readinessChecker == nil {
+		panic("service composition requires a readiness checker")
+	}
+	if newHTTPServer == nil || newGRPCServer == nil {
+		panic("service composition requires server constructors")
+	}
+
 	var cfg = config.Get()
 	var servers []app.IServer
 	var httpAddr = ":" + strconv.Itoa(cfg.HTTP.Port)
 	var grpcAddr = ":" + strconv.Itoa(cfg.Grpc.Port)
 
 	// case 1, create http and grpc services without registry
-	httpServer := server.NewHTTPServer(httpAddr,
+	httpServer := newHTTPServer(httpAddr, readinessChecker,
 		server.WithHTTPIsProd(cfg.App.Env == "prod"),
 		server.WithHTTPTLS(cfg.HTTP.TLS),
 		server.WithHTTPCORSAllowedOrigins(httpRuntime.CORSAllowedOrigins()),
 	)
-	grpcServer := server.NewGRPCServer(grpcAddr)
+	grpcServer := newGRPCServer(grpcAddr, readinessChecker)
 
 	// case 2, create http and grpc services and register them with consul or etcd or nacos
 	//httpRegistry, httpInstance := registerService("http", cfg.App.Host, cfg.HTTP.Port)
-	//httpServer := server.NewHTTPServer(httpAddr,
+	//httpServer := server.NewHTTPServer(httpAddr, readinessChecker,
 	//	server.WithHTTPRegistry(httpRegistry, httpInstance),
 	//	server.WithHTTPIsProd(cfg.App.Env == "prod"),
 	//	server.WithHTTPTLS(cfg.HTTP.TLS),
 	//)
 	//grpcRegistry, grpcInstance := registerService("grpc", cfg.App.Host, cfg.Grpc.Port)
-	//grpcServer := server.NewGRPCServer(grpcAddr,
+	//grpcServer := server.NewGRPCServer(grpcAddr, readinessChecker,
 	//	server.WithGrpcRegistry(grpcRegistry, grpcInstance),
 	//)
 
 	servers = append(servers, httpServer, grpcServer)
 
 	return servers
+}
+
+func newReadinessChecker() readiness.Checker {
+	db := database.GetDB()
+	if db == nil {
+		return readiness.NewPostgreSQL(nil, readinessCheckTimeout)
+	}
+	sqlDB, err := db.DB()
+	if err != nil {
+		return readiness.NewPostgreSQL(nil, readinessCheckTimeout)
+	}
+	return readiness.NewPostgreSQL(sqlDB, readinessCheckTimeout)
 }
 
 // register service with consul or etcd or nacos, select one of them to use

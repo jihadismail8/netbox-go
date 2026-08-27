@@ -741,9 +741,11 @@ increment specifications declare disjoint permitted files and ownership.
 
 Active packet: [CW1-V3-01 dependency-aware readiness](increments/CW1-V3-01.md).
 It owns only process liveness, request-time PostgreSQL readiness, standard
-empty-service gRPC Health Check state, shared constructor injection, and seven
-deterministic tests. It has no implementation evidence at packet entry and
-makes no tier, deployment, V3-parent, or production-readiness claim.
+empty-service gRPC Health Check state, shared constructor injection, seven
+fixed named tests, and auxiliary constructor coverage. Its exact packet and
+amendment gates are green, and the implementation candidate has green local
+gates; exact committed replay, candidate CI, and evidence remain. It makes no
+tier, deployment, V3-parent, or production-readiness claim.
 
 - [ ] Define liveness as process-alive only.
 - [ ] Make HTTP `/ready` check required PostgreSQL connectivity.

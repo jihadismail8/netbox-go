@@ -185,13 +185,14 @@ precedence, operation-specific generated contracts, matching REST/gRPC
 semantics, PostgreSQL durability, Vue dirty-field handling, and eight fixed
 tests. It excludes uniqueness, mounted-device/placement rules, RackType-update
 propagation, Device site propagation, deletion, list/query, full CRUD, another
-resource, every tier/consumer, the parent, the profile, and later children. Do
-`CW1-V3-01` is the active independently reviewed operational packet. It owns
-only
+resource, every tier/consumer, the parent, the profile, and later children.
+`CW1-V3-01` has independently reviewed packet amendments and green exact-SHA
+packet gates. Its implementation candidate has green local gates. It owns only
 process-only HTTP liveness, request-time PostgreSQL readiness, empty-service
 gRPC Health Check state, fail-closed named-service and Watch behavior, shared
-constructor injection, and seven deterministic tests. It owns no Managed
-Object behavior, profile metadata, deployment loss/recovery, tier, V3 parent,
+constructor injection, seven fixed named tests, and auxiliary constructor
+coverage. Exact committed replay, candidate CI, and evidence remain. It owns no
+Managed Object behavior, profile metadata, deployment loss/recovery, tier, V3 parent,
 rewrite, or production-readiness claim. Do not begin or merge another
 Capability Profile while V0 is
 red or before `CW1-V6-03`. Once those gates are

@@ -2,13 +2,16 @@ package router
 
 import (
 	"bytes"
+	"context"
 	"crypto/subtle"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -25,6 +28,7 @@ import (
 	"netbox-go/internal/config"
 	identitydomain "netbox-go/internal/domain/identity"
 	"netbox-go/internal/platform/composition"
+	"netbox-go/internal/platform/readiness"
 )
 
 func TestBaselineAndIdentityAuthenticationStatusesRemainDistinct(t *testing.T) {
@@ -34,7 +38,7 @@ func TestBaselineAndIdentityAuthenticationStatusesRemainDistinct(t *testing.T) {
 		t.Fatal(err)
 	}
 	core := composition.NewCore(db)
-	router := New(core.Identity, core.Sites, false, nil, runtimeWorkflowOptions(core)...)
+	router := New(core.Identity, core.Sites, false, nil, alwaysReadyChecker(), runtimeWorkflowOptions(core)...)
 
 	for _, test := range []struct {
 		path string
@@ -164,14 +168,16 @@ func TestBaselineTokenHTTPMethodSafety(t *testing.T) {
 	}
 }
 
-func TestRuntimePublicProbeBoundary(t *testing.T) {
+func TestRuntimePublicProbesTrackPostgreSQLReadiness(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	t.Setenv("NETBOX_WEB_ASSETS_PATH", filepath.Join(t.TempDir(), "missing"))
 	config.Set(&config.Config{})
 	db, err := gorm.Open(sqlite.Open("file:runtime_public_probes?mode=memory&cache=shared"), &gorm.Config{})
 	require.NoError(t, err)
 	core := composition.NewCore(db)
-	runtime := New(core.Identity, core.Sites, false, nil, runtimeWorkflowOptions(core)...)
+	dependencyCause := errors.New("database endpoint secret must not escape")
+	checker := &scriptedReadinessChecker{results: []error{nil, dependencyCause, nil}}
+	runtime := New(core.Identity, core.Sites, false, nil, checker, runtimeWorkflowOptions(core)...)
 
 	routes := make(map[string]struct{}, len(runtime.Routes()))
 	for _, route := range runtime.Routes() {
@@ -182,16 +188,31 @@ func TestRuntimePublicProbeBoundary(t *testing.T) {
 	require.NotContains(t, routes, http.MethodGet+" /ping")
 
 	for _, test := range []struct {
-		path string
-		want int
+		name       string
+		readyCode  int
+		readyState string
 	}{
-		{path: "/health", want: http.StatusOK},
-		{path: "/ready", want: http.StatusOK},
-		{path: "/ping", want: http.StatusNotFound},
+		{name: "available", readyCode: http.StatusOK, readyState: "UP"},
+		{name: "lost", readyCode: http.StatusServiceUnavailable, readyState: "DOWN"},
+		{name: "recovered", readyCode: http.StatusOK, readyState: "UP"},
 	} {
-		response := runtimeRequest(runtime, http.MethodGet, test.path, nil, nil)
-		require.Equal(t, test.want, response.Code, "GET %s: %s", test.path, response.Body.String())
+		t.Run(test.name, func(t *testing.T) {
+			callsBeforeHealth := checker.Calls()
+			health := runtimeRequest(runtime, http.MethodGet, "/health", nil, nil)
+			require.Equal(t, http.StatusOK, health.Code, health.Body.String())
+			require.Equal(t, callsBeforeHealth, checker.Calls(), "liveness must not probe PostgreSQL")
+			requireProbeResponse(t, health, "UP")
+
+			ready := runtimeRequest(runtime, http.MethodGet, "/ready", nil, nil)
+			require.Equal(t, test.readyCode, ready.Code, ready.Body.String())
+			requireProbeResponse(t, ready, test.readyState)
+			require.NotContains(t, ready.Body.String(), dependencyCause.Error())
+		})
 	}
+	require.Equal(t, 3, checker.Calls())
+
+	ping := runtimeRequest(runtime, http.MethodGet, "/ping", nil, nil)
+	require.Equal(t, http.StatusNotFound, ping.Code, ping.Body.String())
 }
 
 func TestRuntimeRouterServesSPAHistoryFallback(t *testing.T) {
@@ -207,7 +228,7 @@ func TestRuntimeRouterServesSPAHistoryFallback(t *testing.T) {
 	}
 	core := composition.NewCore(db)
 	recorder := httptest.NewRecorder()
-	New(core.Identity, core.Sites, false, nil, runtimeWorkflowOptions(core)...).ServeHTTP(
+	New(core.Identity, core.Sites, false, nil, alwaysReadyChecker(), runtimeWorkflowOptions(core)...).ServeHTTP(
 		recorder,
 		httptest.NewRequest(http.MethodGet, "/dcim/sites/", nil),
 	)
@@ -234,6 +255,7 @@ func TestRuntimeAccessLogDoesNotRecordIdentitySecrets(t *testing.T) {
 		core.Sites,
 		false,
 		nil,
+		alwaysReadyChecker(),
 		zap.New(logCore),
 		runtimeWorkflowOptions(core)...,
 	)
@@ -384,7 +406,7 @@ func TestRuntimeCORSCSRFAndToken(t *testing.T) {
 	writeToken, err := core.Identity.CreateToken(t.Context(), administrator.Principal(), identityapp.CreateTokenInput{Description: "CORS write", WriteEnabled: true})
 	require.NoError(t, err)
 
-	runtime := New(core.Identity, core.Sites, false, []string{corsTestTrustedOrigin}, runtimeWorkflowOptions(core)...)
+	runtime := New(core.Identity, core.Sites, false, []string{corsTestTrustedOrigin}, alwaysReadyChecker(), runtimeWorkflowOptions(core)...)
 
 	csrfResponse := runtimeRequest(
 		runtime,
@@ -499,7 +521,7 @@ func TestRuntimeCORSCSRFAndToken(t *testing.T) {
 	requireVaryTokenCount(t, noOriginResponse.Header(), "Origin", 1)
 	requireVaryTokenCount(t, untrustedResponse.Header(), "Origin", 1)
 
-	emptyRuntime := New(core.Identity, core.Sites, false, nil, runtimeWorkflowOptions(core)...)
+	emptyRuntime := New(core.Identity, core.Sites, false, nil, alwaysReadyChecker(), runtimeWorkflowOptions(core)...)
 	emptyPolicyResponse := runtimeRequest(
 		emptyRuntime,
 		http.MethodGet,
@@ -528,9 +550,9 @@ func TestRuntimeCORSRouteInventory(t *testing.T) {
 	require.NoError(t, err)
 	core := composition.NewCore(db)
 
-	emptyRuntime := New(core.Identity, core.Sites, false, nil, runtimeWorkflowOptions(core)...)
+	emptyRuntime := New(core.Identity, core.Sites, false, nil, alwaysReadyChecker(), runtimeWorkflowOptions(core)...)
 	allowedOrigins := []string{corsTestTrustedOrigin}
-	corsRuntime := New(core.Identity, core.Sites, false, allowedOrigins, runtimeWorkflowOptions(core)...)
+	corsRuntime := New(core.Identity, core.Sites, false, allowedOrigins, alwaysReadyChecker(), runtimeWorkflowOptions(core)...)
 	allowedOrigins[0] = "https://mutated.example.test"
 
 	require.Equal(t, semanticRouteInventory(emptyRuntime), semanticRouteInventory(corsRuntime))
@@ -622,4 +644,47 @@ func runtimeWorkflowOptions(core composition.Core) []workflowhttp.HandlerOption 
 		workflowhttp.WithPrefixService(core.Prefixes),
 		workflowhttp.WithIPAddressService(core.IPAddresses),
 	}
+}
+
+type scriptedReadinessChecker struct {
+	mu      sync.Mutex
+	results []error
+	calls   int
+}
+
+func (checker *scriptedReadinessChecker) Check(context.Context) error {
+	checker.mu.Lock()
+	defer checker.mu.Unlock()
+	if checker.calls >= len(checker.results) {
+		return errors.New("unexpected readiness check")
+	}
+	result := checker.results[checker.calls]
+	checker.calls++
+	return result
+}
+
+func (checker *scriptedReadinessChecker) Calls() int {
+	checker.mu.Lock()
+	defer checker.mu.Unlock()
+	return checker.calls
+}
+
+func alwaysReadyChecker() readiness.Checker {
+	return readinessCheckerFunc(func(context.Context) error { return nil })
+}
+
+type readinessCheckerFunc func(context.Context) error
+
+func (check readinessCheckerFunc) Check(ctx context.Context) error { return check(ctx) }
+
+func requireProbeResponse(t *testing.T, response *httptest.ResponseRecorder, status string) {
+	t.Helper()
+	var body struct {
+		Status   string `json:"status"`
+		Hostname string `json:"hostname"`
+	}
+	require.NoError(t, json.Unmarshal(response.Body.Bytes(), &body))
+	require.Equal(t, status, body.Status)
+	require.NotEmpty(t, body.Hostname)
+	require.Equal(t, "application/json; charset=utf-8", response.Header().Get("Content-Type"))
 }

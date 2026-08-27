@@ -1,6 +1,7 @@
 package restcontract
 
 import (
+	"context"
 	"encoding/json"
 	"strings"
 	"testing"
@@ -14,6 +15,7 @@ import (
 	workflowhttp "netbox-go/internal/adapters/rest/netbox/workflow"
 	"netbox-go/internal/config"
 	"netbox-go/internal/platform/composition"
+	"netbox-go/internal/platform/readiness"
 )
 
 func TestRuntimeRoutesConformToGeneratedOpenAPI(t *testing.T) {
@@ -39,6 +41,7 @@ func TestRuntimeRoutesConformToGeneratedOpenAPI(t *testing.T) {
 		core.Sites,
 		false,
 		nil,
+		contractReadyChecker{},
 		workflowhttp.WithOrganizationServices(core.Manufacturers, core.RackRoles),
 		workflowhttp.WithRackTypeService(core.RackTypes),
 		workflowhttp.WithRackService(core.Racks),
@@ -61,3 +64,9 @@ func TestRuntimeRoutesConformToGeneratedOpenAPI(t *testing.T) {
 	}
 	require.Equal(t, expected, actual)
 }
+
+type contractReadyChecker struct{}
+
+func (contractReadyChecker) Check(context.Context) error { return nil }
+
+var _ readiness.Checker = contractReadyChecker{}

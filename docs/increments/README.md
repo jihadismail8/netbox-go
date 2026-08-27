@@ -196,7 +196,9 @@ and every later child remain open.
 `CW1-V3-01` is the active packet for process-only HTTP liveness and
 PostgreSQL-aware HTTP/gRPC readiness. It owns request-time `PingContext`, exact
 public `/health` and `/ready` state mapping, empty-service gRPC Health Check,
-fail-closed named-service/Watch behavior, shared constructor injection, and
-seven deterministic tests. It has no implementation evidence at packet entry.
-V3-02 through V3-05, deployment loss/recovery, streaming monitoring, tiers,
+fail-closed named-service/Watch behavior, shared constructor injection, seven
+fixed named tests, and auxiliary constructor coverage. Its independently
+reviewed exact packet and amendment gates are green, and the implementation
+candidate has green local gates; exact committed replay, candidate CI, and
+evidence remain. V3-02 through V3-05, deployment loss/recovery, streaming monitoring, tiers,
 the profile, rewrite completion, and production readiness remain open.

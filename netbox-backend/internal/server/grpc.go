@@ -7,9 +7,10 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/health"
+	"google.golang.org/grpc/codes"
 	healthv1 "google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/reflection"
+	"google.golang.org/grpc/status"
 
 	"github.com/go-dev-frame/sponge/pkg/app"
 	"github.com/go-dev-frame/sponge/pkg/grpc/gtls"
@@ -28,6 +29,7 @@ import (
 	"netbox-go/internal/database"
 	"netbox-go/internal/ecode"
 	"netbox-go/internal/platform/composition"
+	"netbox-go/internal/platform/readiness"
 )
 
 var _ app.IServer = (*grpcServer)(nil)
@@ -236,7 +238,10 @@ func (s *grpcServer) setOptions() []grpc.ServerOption {
 }
 
 // NewGRPCServer creates a new grpc server
-func NewGRPCServer(addr string, opts ...GrpcOption) app.IServer {
+func NewGRPCServer(addr string, readinessChecker readiness.Checker, opts ...GrpcOption) app.IServer {
+	if readinessChecker == nil {
+		panic("gRPC server requires a readiness checker")
+	}
 	var err error
 	o := defaultGrpcOptions()
 	o.apply(opts...)
@@ -253,7 +258,7 @@ func NewGRPCServer(addr string, opts ...GrpcOption) app.IServer {
 	}
 
 	s.server = grpc.NewServer(s.setOptions()...)
-	registerRuntimeServices(s.server, core)
+	registerRuntimeServices(s.server, core, readinessChecker)
 	return s
 }
 
@@ -261,10 +266,43 @@ func NewGRPCServer(addr string, opts ...GrpcOption) app.IServer {
 // with the standard operational services required by gRPC clients. Reflection
 // is intentionally registered only after the legacy generated services have
 // been excluded, so discovery cannot advertise unsupported capabilities.
-func registerRuntimeServices(server *grpc.Server, core composition.Core) {
+func registerRuntimeServices(server *grpc.Server, core composition.Core, readinessChecker readiness.Checker) {
 	registerCanonicalServices(server, core)
-	healthv1.RegisterHealthServer(server, health.NewServer())
+	healthv1.RegisterHealthServer(server, newReadinessHealthServer(readinessChecker))
 	reflection.Register(server)
+}
+
+type readinessHealthServer struct {
+	healthv1.UnimplementedHealthServer
+	checker readiness.Checker
+}
+
+func newReadinessHealthServer(checker readiness.Checker) *readinessHealthServer {
+	if checker == nil {
+		panic("gRPC health requires a readiness checker")
+	}
+	return &readinessHealthServer{checker: checker}
+}
+
+func (server *readinessHealthServer) Check(
+	ctx context.Context,
+	request *healthv1.HealthCheckRequest,
+) (*healthv1.HealthCheckResponse, error) {
+	if request.GetService() != "" {
+		return nil, status.Error(codes.NotFound, "unknown service")
+	}
+	servingStatus := healthv1.HealthCheckResponse_SERVING
+	if err := server.checker.Check(ctx); err != nil {
+		servingStatus = healthv1.HealthCheckResponse_NOT_SERVING
+	}
+	return &healthv1.HealthCheckResponse{Status: servingStatus}, nil
+}
+
+func (*readinessHealthServer) Watch(
+	*healthv1.HealthCheckRequest,
+	grpc.ServerStreamingServer[healthv1.HealthCheckResponse],
+) error {
+	return status.Error(codes.Unimplemented, "health watch is not supported")
 }
 
 func registerCanonicalServices(server *grpc.Server, core composition.Core) {

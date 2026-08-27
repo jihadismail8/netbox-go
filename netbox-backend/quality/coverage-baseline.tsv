@@ -2,8 +2,8 @@ schema_version	1
 owner	backend-rewrite
 unit_scope	module-packages-minus-reviewed-exclusions-v1
 coverage_mode	atomic
-baseline_covered_statements	36013
-baseline_total_statements	290425
+baseline_covered_statements	37876
+baseline_total_statements	291613
 package	netbox-go/api/netbox_go/v1
 package	netbox-go/api/openapi
 package	netbox-go/api/types
@@ -51,6 +51,7 @@ package	netbox-go/internal/handler
 package	netbox-go/internal/model
 package	netbox-go/internal/platform/composition
 package	netbox-go/internal/platform/config
+package	netbox-go/internal/platform/readiness
 package	netbox-go/internal/routers
 package	netbox-go/internal/routers/dcim
 package	netbox-go/internal/routers/ipam

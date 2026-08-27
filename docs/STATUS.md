@@ -210,13 +210,15 @@ RackType-update propagation, Device site propagation, deletion, list/query
 behavior, full CRUD, every tier/consumer, the parent, profile promotion, and
 every later child remain open.
 
-`CW1-V3-01` is the active independently reviewed packet for process-only HTTP
-liveness and
-request-time PostgreSQL-aware HTTP/gRPC readiness. It owns exact `/health` and
+`CW1-V3-01` has an independently reviewed packet and green exact packet-claim
+CI. Its implementation candidate owns process-only HTTP liveness and
+request-time PostgreSQL-aware HTTP/gRPC readiness, including exact `/health` and
 `/ready` state mapping, empty-service gRPC Health Check, fail-closed
-named-service and Watch behavior, one injected checker, and seven deterministic
-tests. It has no implementation evidence at packet entry. It changes no
-Managed Object behavior, profile metadata, compatibility tier, deployment
+named-service and Watch behavior, one injected checker, seven fixed named tests,
+and auxiliary constructor coverage. Focused, affected, race, coverage, backend,
+root repository, and complete L4 PostgreSQL local gates are green; exact
+committed replay, candidate CI, and evidence remain. It changes no Managed
+Object behavior, profile metadata, compatibility tier, deployment
 claim, V3 parent, rewrite state, or production-readiness boundary.
 
 > **Operational boundary:** this is a development build for disposable data.
@@ -468,7 +470,7 @@ replacement completes ADR 0004's governing gate and CP-13.
 | V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                                 | Refresh for the active source and every later relevant merged digest                                                             | Continuous; entry source retained          |
 | V1 identity/RBAC         | Persisted identity, retained CORS, accepted I1/I2/I3, and retained I4 evidence                          | Obtain I4 owner review; complete password-policy/throttle/proxy/streaming plus RBAC/admin/secret work                            | I4 evidence; parent open                   |
 | V2 domain behavior       | Typed shared services, reviewed 293-row traceability, and accepted IPAddress I1/Site I2/Manufacturer I3/RackRole I4/RackType I5/DeviceRole I6/DeviceType I7/InterfaceTemplate I8/Rack I9 | Complete remaining invariant, rollback, side-effect, concurrency, and tier cases | I1-I9 done; parent open |
-| V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, Compose harness, and reviewed V3-01 packet                       | Pass the packet gate and implement dependency-aware HTTP/gRPC readiness, then dependency loss/recovery, locking cases, and retained external run | V3-01 implementation gated on packet CI |
+| V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, Compose harness, and green V3-01 packet gate                    | Finish and retain dependency-aware HTTP/gRPC readiness, then dependency loss/recovery, locking cases, and retained external run | V3-01 implementation candidate in progress |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                             | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report                       | T1; implementation/evidence pending        |
 | V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                         | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes                  | T1; implementation/evidence pending        |
 | V6 sign-off              | First-profile legacy stacks physically retired                                                          | V0-V5 retained green together, per-capability review, protobuf freeze/breaking baseline, joint sign-off                          | Not earned                                 |

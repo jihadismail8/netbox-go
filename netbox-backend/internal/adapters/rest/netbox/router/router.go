@@ -14,6 +14,7 @@ import (
 	"github.com/go-dev-frame/sponge/pkg/gin/handlerfunc"
 	"github.com/go-dev-frame/sponge/pkg/gin/middleware"
 	"github.com/go-dev-frame/sponge/pkg/logger"
+	"github.com/go-dev-frame/sponge/pkg/utils"
 	"go.uber.org/zap"
 
 	"netbox-go/api/openapi"
@@ -22,6 +23,7 @@ import (
 	dcimapp "netbox-go/internal/application/dcim"
 	identityapp "netbox-go/internal/application/identity"
 	"netbox-go/internal/config"
+	"netbox-go/internal/platform/readiness"
 )
 
 const defaultWebAssetsPath = "/app/web/dist"
@@ -33,6 +35,7 @@ func New(
 	siteService *dcimapp.SiteService,
 	secureCookies bool,
 	corsAllowedOrigins []string,
+	readinessChecker readiness.Checker,
 	workflowOptions ...workflowhttp.HandlerOption,
 ) *gin.Engine {
 	return newWithLogger(
@@ -40,6 +43,7 @@ func New(
 		siteService,
 		secureCookies,
 		corsAllowedOrigins,
+		readinessChecker,
 		logger.Get(),
 		workflowOptions...,
 	)
@@ -50,11 +54,15 @@ func newWithLogger(
 	siteService *dcimapp.SiteService,
 	secureCookies bool,
 	corsAllowedOrigins []string,
+	readinessChecker readiness.Checker,
 	log *zap.Logger,
 	workflowOptions ...workflowhttp.HandlerOption,
 ) *gin.Engine {
 	if identityService == nil {
 		panic("runtime router requires an identity service")
+	}
+	if readinessChecker == nil {
+		panic("runtime router requires a readiness checker")
 	}
 
 	r := gin.New()
@@ -80,7 +88,7 @@ func newWithLogger(
 	}
 
 	r.GET("/health", handlerfunc.CheckHealth)
-	r.GET("/ready", handlerfunc.CheckHealth)
+	r.GET("/ready", readinessHandler(readinessChecker))
 
 	identityHandler := identityhttp.NewHandler(identityService, secureCookies)
 	identityHandler.Register(r)
@@ -92,6 +100,19 @@ func newWithLogger(
 
 	registerSPA(r, webAssetsPath())
 	return r
+}
+
+func readinessHandler(checker readiness.Checker) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		if err := checker.Check(c.Request.Context()); err != nil {
+			c.JSON(http.StatusServiceUnavailable, handlerfunc.CheckHealthReply{
+				Status:   "DOWN",
+				Hostname: utils.GetHostname(),
+			})
+			return
+		}
+		handlerfunc.CheckHealth(c)
+	}
 }
 
 // pathOnlyAccessLog intentionally records only request/response metadata. In
