@@ -178,10 +178,12 @@ The
 passed its exact-name, affected, race, complete L4 PostgreSQL-regression,
 coverage, pinned repository, and independent exact-candidate CI boundaries on
 exact revision `58241d7f87b642e6b7eca279592ad3759a0f5a06`. This two-path,
-source-v2-excluded claim must pass its own exact-SHA repository CI before only
-bounded V3-01 becomes `evidence`; its excluded receipt and project-owner review
-remain separate later boundaries. Actual deployment dependency loss/recovery
-remains V3-04, so V3 and production readiness stay open.
+source-v2-excluded claim revision
+`e3b416d37e9dfb3f220122414b0bea658d993b3a` passed its pinned local gates and
+exact-SHA repository CI, making only bounded V3-01 `evidence`. This excluded
+receipt must pass its own exact-SHA CI; project-owner review remains a separate
+later boundary. Actual deployment dependency loss/recovery remains V3-04, so
+V3 and production readiness stay open.
 The project owner reviewed and retained the entry V0, CORS, bounded token I1,
 bounded token I2, bounded browser-session I3, bounded IPAddress I1, and bounded
 Site I2, Manufacturer I3, RackRole I4, RackType I5, DeviceRole I6, DeviceType
