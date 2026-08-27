@@ -121,7 +121,7 @@ production release through PROD-1 and PROD-2.
 | 0    | Stable language and decisions       | CONTEXT plus ADR 0001–0005              | `done`                                                                   |
 | 1    | Repository/shared-core baseline     | `CW1-G00`                               | `continuous`                                                             |
 | 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01/I1/I2/I3 `done`; I4 `evidence`; parent open                        |
-| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01/I1–I8 done; Rack I9 done claim conditional; parent/T2/T3 open      |
+| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01/I1–I9 done; parent/T2/T3 open                                     |
 | 4    | First Core Workflow Profile         | `CW1-V1-*` through `CW1-V6-*`           | T1; active program                                                       |
 | 5    | In-scope feature expansion          | `CP-P01`–`CP-P19`, then `MC-01`–`MC-10` | `blocked`                                                                |
 | 6    | Extension Service contracts         | `EXT-01`                                | `blocked` on a named inventory                                           |
@@ -305,10 +305,10 @@ operation-specific contracts, shared typed semantics, PostgreSQL durability,
 and Vue dirty-field handling. Its candidate, evidence-claim, and
 pre-acceptance receipt exact-SHA CI boundaries are green. The project owner's
 acceptance of only this bounded result was recorded at
-`2026-08-26T11:01:23Z`; `done` becomes effective when the current
-owner-accepted closeout revision passes exact-SHA CI. Its excluded receipt
-then remains. No retained differential accompanies the result, so T2/T3
-remain unearned. Rack uniqueness, mounted-device and placement rules,
+`2026-08-26T11:01:23Z`; its owner-accepted closeout claim and excluded receipt
+passed exact-SHA CI, so bounded I9 is effectively `done`. No retained
+differential accompanies the result, so T2/T3 remain unearned. Rack
+uniqueness, mounted-device and placement rules,
 RackType-update propagation, Device site propagation, deletion, list/query,
 full CRUD, every tier/consumer, this parent, the profile, and every later child
 remain open.
@@ -323,7 +323,7 @@ remain open.
 | `CW1-V1-02-I4`      | `evidence`    | Obtain project-owner review                         | Accepted/done I3 and current `CW1-G00` |
 | `CW1-V1-03`–`V1-04` | `blocked`     | Complete and retain remaining identity/security     | Preceding V1 goal                      |
 | `CW1-V2-01`         | `done`        | Accepted structural rule/scenario traceability      | Fresh source-v2 V0 follows this gate   |
-| `CW1-V2-02`         | `in-progress` | Retain owner-accepted Rack I9 closeout               | Accepted V2-01 and current `CW1-G00`   |
+| `CW1-V2-02`         | `in-progress` | Complete remaining common CRUD children             | Accepted V2-01 and current `CW1-G00`   |
 | `CW1-V2-02-I1`      | `done`        | Accepted bounded IPAddress scalar write presence    | Tested candidate and current `CW1-G00` |
 | `CW1-V2-02-I2`      | `done`        | Accepted bounded Site scalar write presence         | Done I1 and current `CW1-G00`          |
 | `CW1-V2-02-I3`      | `done`        | Accepted bounded Manufacturer scalar write presence | Done I2 and current `CW1-G00`          |
@@ -332,9 +332,9 @@ remain open.
 | `CW1-V2-02-I6`      | `done`        | Accepted bounded DeviceRole scalar write presence   | Done I5 and current `CW1-G00`          |
 | `CW1-V2-02-I7`      | `done`        | Accepted bounded DeviceType scalar write presence   | Done I6 and current `CW1-G00`          |
 | `CW1-V2-02-I8`      | `done`        | Accepted InterfaceTemplate scalar write presence    | Done I7 and current `CW1-G00`          |
-| `CW1-V2-02-I9`      | `done`*       | Accepted Rack scalar write presence                 | Done I8 and current `CW1-G00`          |
+| `CW1-V2-02-I9`      | `done`        | Accepted Rack scalar write presence                 | Done I8 and current `CW1-G00`          |
 | `CW1-V2-03`–`V2-08` | `blocked`     | Close later typed business behavior                 | V2-02 and named lane dependencies      |
-| `CW1-V3-01`         | `ready`       | Make HTTP/gRPC readiness dependency-aware           | `CW1-G00`                              |
+| `CW1-V3-01`         | `in-progress` | Make HTTP/gRPC readiness dependency-aware           | `CW1-G00`                              |
 | `CW1-V3-02`–`V3-05` | `blocked`     | Close PostgreSQL/deployment evidence                | Named V2/V3 dependencies               |
 | `CW1-V4-01`–`V4-03` | `blocked`     | Earn complete first-profile REST T2                 | V1–V3 as declared                      |
 | `CW1-V4-04`         | `blocked`     | Retain the identity extension report                | `CW1-V1-04`                            |
@@ -344,11 +344,6 @@ remain open.
 | `CW1-V5-05`         | `blocked`     | Retain T4 for exercised workflows                   | Corresponding T2/T3 and V5 authoring   |
 | `CW1-V6-*`          | `blocked`     | Converge evidence and sign off the first profile    | V1–V5                                  |
 | `CP-P01`–`CP-P19`   | `blocked`     | Expand accepted feature breadth                     | `CW1-V6-03`                            |
-
-The I9 asterisk records that owner-accepted `done` becomes effective only
-after the exact closeout-claim revision passes repository CI. It does not
-weaken or broaden the meaning of `done`, close the parent, or claim a later
-child.
 
 No owner is assigned merely because a goal is `ready`. An executor claims one
 goal by recording its increment specification before editing code.
@@ -627,10 +622,9 @@ Bounded children:
   propagation, deletion, list/query behavior, full CRUD, tiers, this parent,
   and every traceability consumer remain open. Its exact candidate, evidence
   claim, and pre-acceptance receipt passed exact-SHA CI. The project owner
-  accepted only this bounded result at `2026-08-26T11:01:23Z`; bounded `done`
-  is conditional on the exact owner-accepted closeout claim passing repository
-  CI, after which the excluded two-path receipt must also pass. No later child
-  is claimed.
+  accepted only this bounded result at `2026-08-26T11:01:23Z`; its
+  owner-accepted closeout claim and excluded two-path receipt passed exact-SHA
+  CI, so bounded I9 is effectively `done`. No later child is claimed.
 
 - [ ] Represent all 13 resources × list/get/create/PUT/PATCH/delete.
 - [ ] Cover defaults, read-only fields, and nullability.
@@ -744,6 +738,12 @@ both DCIM and IPAM lanes.
 
 Entry: `CW1-G00` is current. This may overlap early V1/V2 work only when the
 increment specifications declare disjoint permitted files and ownership.
+
+Active packet: [CW1-V3-01 dependency-aware readiness](increments/CW1-V3-01.md).
+It owns only process liveness, request-time PostgreSQL readiness, standard
+empty-service gRPC Health Check state, shared constructor injection, and seven
+deterministic tests. It has no implementation evidence at packet entry and
+makes no tier, deployment, V3-parent, or production-readiness claim.
 
 - [ ] Define liveness as process-alive only.
 - [ ] Make HTTP `/ready` check required PostgreSQL connectivity.

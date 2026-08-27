@@ -195,9 +195,9 @@ profile promotion, and every later child remain open.
 with 3,071 entries. Its focused, race, real-PostgreSQL, complete L4,
 generated-contract, Vue, repository, candidate-CI, evidence-claim, and
 pre-acceptance receipt boundaries are green. The project owner accepted only
-this bounded result at `2026-08-26T11:01:23Z`. Its `done` state is conditional
-on the exact owner-accepted closeout claim passing repository CI; the excluded
-receipt then remains. I9 owns only Rack `site`, `name`, `facility_id`,
+this bounded result at `2026-08-26T11:01:23Z`. Its owner-accepted closeout
+claim and excluded receipt passed exact-SHA repository CI, so bounded I9 is
+effectively `done`. I9 owns only Rack `site`, `name`, `facility_id`,
 `rack_type`, `status`, `role`, `serial`, `asset_tag`, `form_factor`, `width`,
 `u_height`, `starting_unit`, `desc_units`, `airflow`, `description`, and
 `comments` common writable-field presence across POST/PUT/PATCH,
@@ -209,6 +209,15 @@ boundary earns no T4. Rack uniqueness, mounted-device and placement rules,
 RackType-update propagation, Device site propagation, deletion, list/query
 behavior, full CRUD, every tier/consumer, the parent, profile promotion, and
 every later child remain open.
+
+`CW1-V3-01` is the active independently reviewed packet for process-only HTTP
+liveness and
+request-time PostgreSQL-aware HTTP/gRPC readiness. It owns exact `/health` and
+`/ready` state mapping, empty-service gRPC Health Check, fail-closed
+named-service and Watch behavior, one injected checker, and seven deterministic
+tests. It has no implementation evidence at packet entry. It changes no
+Managed Object behavior, profile metadata, compatibility tier, deployment
+claim, V3 parent, rewrite state, or production-readiness boundary.
 
 > **Operational boundary:** this is a development build for disposable data.
 > Production TLS, schema upgrades, backup/restore, operational hardening, and
@@ -458,8 +467,8 @@ replacement completes ADR 0004's governing gate and CP-13.
 | ------------------------ | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
 | V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                                 | Refresh for the active source and every later relevant merged digest                                                             | Continuous; entry source retained          |
 | V1 identity/RBAC         | Persisted identity, retained CORS, accepted I1/I2/I3, and retained I4 evidence                          | Obtain I4 owner review; complete password-policy/throttle/proxy/streaming plus RBAC/admin/secret work                            | I4 evidence; parent open                   |
-| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, accepted IPAddress I1/Site I2/Manufacturer I3/RackRole I4/RackType I5/DeviceRole I6/DeviceType I7/InterfaceTemplate I8, and owner-accepted Rack I9 | Retain I9 closeout, then complete remaining invariant, rollback, side-effect, concurrency, and tier cases | I1-I8 done; I9 done claim conditional; parent open |
-| V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, and Compose harness                                               | Dependency-aware HTTP/gRPC readiness, dependency loss/recovery, remaining locking cases, retained external run                   | Implementation and evidence pending        |
+| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, and accepted IPAddress I1/Site I2/Manufacturer I3/RackRole I4/RackType I5/DeviceRole I6/DeviceType I7/InterfaceTemplate I8/Rack I9 | Complete remaining invariant, rollback, side-effect, concurrency, and tier cases | I1-I9 done; parent open |
+| V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, Compose harness, and reviewed V3-01 packet                       | Pass the packet gate and implement dependency-aware HTTP/gRPC readiness, then dependency loss/recovery, locking cases, and retained external run | V3-01 implementation gated on packet CI |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                             | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report                       | T1; implementation/evidence pending        |
 | V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                         | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes                  | T1; implementation/evidence pending        |
 | V6 sign-off              | First-profile legacy stacks physically retired                                                          | V0-V5 retained green together, per-capability review, protobuf freeze/breaking baseline, joint sign-off                          | Not earned                                 |

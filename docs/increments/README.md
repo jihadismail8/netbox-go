@@ -49,7 +49,8 @@ implementation exists.
 | `CW1-V2-02-I6` | `done`        | Codex GPT-5.6 Sol | [DeviceRole scalar write presence](CW1-V2-02-I6.md)     |
 | `CW1-V2-02-I7` | `done`        | Codex GPT-5.6 Sol | [DeviceType scalar write presence](CW1-V2-02-I7.md)     |
 | `CW1-V2-02-I8` | `done`        | Codex GPT-5.6 Sol | [InterfaceTemplate scalar write presence](CW1-V2-02-I8.md) |
-| `CW1-V2-02-I9` | `done`*       | Codex GPT-5.6 Sol | [Rack scalar write presence](CW1-V2-02-I9.md)              |
+| `CW1-V2-02-I9` | `done`        | Codex GPT-5.6 Sol | [Rack scalar write presence](CW1-V2-02-I9.md)              |
+| `CW1-V3-01`    | `in-progress` | Codex GPT-5.6 Sol | [Dependency-aware readiness](CW1-V3-01.md)                 |
 
 `in-progress` means the packet owns only its explicitly active bounded
 increment; no implementation evidence or parent-goal completion is implied.
@@ -182,16 +183,20 @@ parent, profile promotion, and every later child remain open.
 `9c257b04b7cf798199c5aa4b7ae076cebbbbdff1` and green candidate,
 evidence-claim, and pre-acceptance receipt exact-SHA CI boundaries. The
 project owner accepted only this bounded result at `2026-08-26T11:01:23Z`.
-Its `done` state is conditional on the exact owner-accepted closeout claim
-passing repository CI; the excluded receipt then remains. I9 owns only the 16
-declared Rack writable fields across create/PUT/PATCH operation metadata,
-typed domain/application behavior, REST/gRPC semantics, PostgreSQL durability,
-Vue dirty-field serialization, direct-save RackType copy precedence, and eight
-fixed tests. No differential was run. Rack uniqueness, mounted-device and
-placement rules, RackType-update propagation, Device site propagation,
-deletion, list/query behavior, full CRUD, all tiers, every consumer, the
-parent, profile promotion, and every later child remain open.
+Its owner-accepted closeout claim and excluded receipt passed exact-SHA CI, so
+bounded I9 is effectively `done`. I9 owns only the 16 declared Rack writable
+fields across create/PUT/PATCH operation metadata, typed domain/application
+behavior, REST/gRPC semantics, PostgreSQL durability, Vue dirty-field
+serialization, direct-save RackType copy precedence, and eight fixed tests.
+No differential was run. Rack uniqueness, mounted-device and placement rules,
+RackType-update propagation, Device site propagation, deletion, list/query
+behavior, full CRUD, all tiers, every consumer, the parent, profile promotion,
+and every later child remain open.
 
-The I9 asterisk records that owner-accepted `done` becomes effective only
-after the exact closeout claim passes repository CI; its excluded receipt must
-then pass exact-SHA CI. It does not close the parent or claim a later child.
+`CW1-V3-01` is the active packet for process-only HTTP liveness and
+PostgreSQL-aware HTTP/gRPC readiness. It owns request-time `PingContext`, exact
+public `/health` and `/ready` state mapping, empty-service gRPC Health Check,
+fail-closed named-service/Watch behavior, shared constructor injection, and
+seven deterministic tests. It has no implementation evidence at packet entry.
+V3-02 through V3-05, deployment loss/recovery, streaming monitoring, tiers,
+the profile, rewrite completion, and production readiness remain open.

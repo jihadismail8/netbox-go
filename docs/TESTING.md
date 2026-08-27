@@ -216,9 +216,9 @@ real-PostgreSQL, and parity tests passed, as did the exact affected/race,
 generated-contract, focused Vue adapter/form, complete L4,
 backend/frontend/root, candidate-CI, evidence-claim, and pre-acceptance receipt
 boundaries. The project owner accepted only this bounded result at
-`2026-08-26T11:01:23Z`. Its `done` state is conditional on the exact
-owner-accepted closeout claim passing repository CI; the excluded receipt then
-remains. The matrix is limited to Rack `site`, `name`, `facility_id`,
+`2026-08-26T11:01:23Z`. Its owner-accepted closeout claim and excluded receipt
+passed exact-SHA repository CI, so bounded I9 is effectively `done`. The
+matrix is limited to Rack `site`, `name`, `facility_id`,
 `rack_type`, `status`, `role`, `serial`, `asset_tag`, `form_factor`, `width`,
 `u_height`, `starting_unit`, `desc_units`, `airflow`, `description`, and
 `comments` create/PUT/PATCH presence, generated OpenAPI, shared REST/gRPC
@@ -228,6 +228,16 @@ the Vue boundary earns no T4. Rack uniqueness, mounted-device and placement
 rules, RackType-update propagation, Device site propagation, deletion,
 list/query, full CRUD, the parent, profile promotion, every tier, and every
 later child remain open.
+
+`CW1-V3-01` is the active independently reviewed packet for process-only
+liveness and
+request-time PostgreSQL-aware HTTP/gRPC readiness. Its seven deterministic
+tests will prove `/health` remains 200 without a ping, `/ready` maps current
+dependency state to 200/503, empty-service gRPC Health Check maps it to
+SERVING/NOT_SERVING, named services and Watch fail closed, and missing
+composition cannot silently serve ready. No implementation evidence exists at
+packet entry. Real deployment loss/recovery remains V3-04; no T2/T3/T4,
+profile, V3-parent, deployment, rewrite, or production claim is made.
 
 ## Owned external gates
 
@@ -366,8 +376,8 @@ and exact change-state outcomes remain to be added and retained.
 | ------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage                       | `make check` retained green on each exact relevant source digest                                                          | Entry source-v2 retained; active-source refresh required |
 | V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests                      | Pass I4's exact claim CI, retain its receipt, obtain owner review, then complete the remaining identity matrix            | I4 evidence claim conditional; parent open               |
-| V2 profile behavior      | Shared 13-resource service, broad tests, accepted IPAddress I1/Site I2/Manufacturer I3/RackRole I4/RackType I5/DeviceRole I6/DeviceType I7/InterfaceTemplate I8, and owner-accepted Rack I9 | Retain I9 closeout, then trace every remaining invariant, rollback, and external-tier boundary | I1-I8 done; I9 done claim conditional; parent open |
-| V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness                                 | Truthful readiness, loss/recovery, real PostgreSQL and deployment artifacts                                               | Implementation/evidence gap                              |
+| V2 profile behavior      | Shared 13-resource service, broad tests, and accepted IPAddress I1/Site I2/Manufacturer I3/RackRole I4/RackType I5/DeviceRole I6/DeviceType I7/InterfaceTemplate I8/Rack I9 | Trace every remaining invariant, rollback, and external-tier boundary | I1-I9 done; parent open |
+| V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness, and reviewed V3-01 packet       | Pass the packet gate and implement truthful HTTP/gRPC readiness, then real loss/recovery and retained PostgreSQL/deployment artifacts | V3-01 implementation gated on packet CI |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites                            | Complete T2 scenario report, then equivalent T3 report                                                                    | T1; implementation gap                                   |
 | V5 Vue workflow          | Typed adapters and real-browser harness                                                    | Both workflows and every required negative/state case retained green                                                      | T1; implementation gap                                   |
 | V6 sign-off              | First-profile legacy stacks retired                                                        | V0-V5 green together with linked evidence                                                                                 | Not earned                                               |
