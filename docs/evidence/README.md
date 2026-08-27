@@ -173,6 +173,15 @@ receipt preserves that result without changing source and requires its own
 exact-SHA CI.
 No retained pinned differential accompanies this bounded result, so no T2/T3
 claim is made.
+The
+[bounded dependency-aware readiness result](2026-08-27-core-workflow-v3-dependency-readiness-v0.md)
+passed its exact-name, affected, race, complete L4 PostgreSQL-regression,
+coverage, pinned repository, and independent exact-candidate CI boundaries on
+exact revision `58241d7f87b642e6b7eca279592ad3759a0f5a06`. This two-path,
+source-v2-excluded claim must pass its own exact-SHA repository CI before only
+bounded V3-01 becomes `evidence`; its excluded receipt and project-owner review
+remain separate later boundaries. Actual deployment dependency loss/recovery
+remains V3-04, so V3 and production readiness stay open.
 The project owner reviewed and retained the entry V0, CORS, bounded token I1,
 bounded token I2, bounded browser-session I3, bounded IPAddress I1, and bounded
 Site I2, Manufacturer I3, RackRole I4, RackType I5, DeviceRole I6, DeviceType
