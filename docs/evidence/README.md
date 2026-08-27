@@ -166,9 +166,11 @@ source-digest-excluded claim revision
 exact-SHA repository CI, making only bounded I9 `evidence`. This
 source-excluded receipt `199a1e0ad7edd4afd987b573c91a879485d97ffd`
 also passed exact-SHA repository CI. The project owner accepted only this
-bounded result at `2026-08-26T11:01:23Z`. Its `done` state is conditional on
-the exact owner-accepted closeout claim passing repository CI; a two-path
-excluded receipt must then preserve that result and pass its own exact-SHA CI.
+bounded result at `2026-08-26T11:01:23Z`. Owner-accepted closeout revision
+`8d59ba3629267d3fe851bf2f4fe09f0bca540b45` passed its pinned local gates and
+exact-SHA repository CI, making only bounded I9 `done`. This two-path excluded
+receipt preserves that result without changing source and requires its own
+exact-SHA CI.
 No retained pinned differential accompanies this bounded result, so no T2/T3
 claim is made.
 The project owner reviewed and retained the entry V0, CORS, bounded token I1,
@@ -232,16 +234,16 @@ common scalar create/PUT/PATCH presence. This excluded receipt preserves that
 exact result without changing source and must pass its own exact-SHA CI. I8
 promotes no compatibility tier, profile state, parent, later child, or
 traceability consumer.
-`CW1-V2-02-I9` has owner-accepted conditional `done`, only for Rack common
-scalar create/PUT/PATCH presence. Its evidence claim and pre-acceptance receipt
-passed exact-SHA repository CI. The closeout becomes effective only after the
-exact owner-accepted claim revision passes repository CI; its excluded receipt
-then remains. I9 promotes no compatibility tier,
-profile state, parent, later child, or traceability consumer.
+`CW1-V2-02-I9` has an effective owner-accepted `done` closeout at exact
+revision `8d59ba3629267d3fe851bf2f4fe09f0bca540b45`, only for Rack common scalar
+create/PUT/PATCH presence. This excluded receipt preserves that exact result
+without changing source and must pass its own exact-SHA CI. I9 promotes no
+compatibility tier, profile state, parent, later child, or traceability
+consumer.
 
 | Evidence                 | Required command or boundary                                  | Current state                                                    |
 | ------------------------ | ------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Repository quality       | Revised `make check` including non-mutating backend coverage  | V1-I4 and V2-I1/I2/I3/I4 retained; V2-I5/I6/I7/I8 done; V2-I9 owner-accepted closeout claim conditional |
+| Repository quality       | Revised `make check` including non-mutating backend coverage  | V1-I4 and V2-I1/I2/I3/I4 retained; V2-I5/I6/I7/I8/I9 done        |
 | Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                          |
 | gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                            |
 | Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, V1-I4, V2-I1/I2/I3/I4/I5/I6, bounded V2-I7/I8/I9 passed; V1/V3 remain open |
