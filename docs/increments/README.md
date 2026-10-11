@@ -50,7 +50,8 @@ implementation exists.
 | `CW1-V2-02-I7` | `done`        | Codex GPT-5.6 Sol | [DeviceType scalar write presence](CW1-V2-02-I7.md)     |
 | `CW1-V2-02-I8` | `done`        | Codex GPT-5.6 Sol | [InterfaceTemplate scalar write presence](CW1-V2-02-I8.md) |
 | `CW1-V2-02-I9` | `done`        | Codex GPT-5.6 Sol | [Rack scalar write presence](CW1-V2-02-I9.md)              |
-| `CW1-V3-01`    | `done`*       | Codex GPT-5.6 Sol | [Dependency-aware readiness](CW1-V3-01.md)                 |
+| `CW1-V3-01`    | `done`        | Codex GPT-5.6 Sol | [Dependency-aware readiness](CW1-V3-01.md)                 |
+| `CW1-V3-02`    | `in-progress` | Codex             | [Bootstrap and schema contract](CW1-V3-02.md)              |
 
 `in-progress` means the packet owns only its explicitly active bounded
 increment; no implementation evidence or parent-goal completion is implied.
@@ -199,9 +200,10 @@ and every later child remain open.
 with 3,075 entries. Its focused, affected, race, complete-L4
 real-PostgreSQL, coverage, backend, repository, candidate-CI, evidence-claim,
 and pre-closeout receipt boundaries are green. The project owner accepted
-only this bounded result at `2026-08-27T21:48:42Z`. Its `done` state is
-conditional on this exact owner-accepted closeout claim passing repository
-CI; the excluded receipt then remains. It owns only process-only HTTP
+only this bounded result at `2026-08-27T21:48:42Z`. Its owner-accepted
+closeout claim `711d9e0e5ce34529fffeed840dc4812824c09f64` and excluded receipt
+`e2f1863b7d925c195d6e759185de85a6497cb5e0` passed exact-SHA repository CI,
+so bounded V3-01 is effectively `done`. It owns only process-only HTTP
 liveness, request-time PostgreSQL-aware HTTP/gRPC readiness, empty-service
 gRPC Health Check, fail-closed named-service/Watch behavior, shared
 constructor injection, seven fixed named tests, and auxiliary constructor
@@ -210,6 +212,7 @@ monitoring, schema/bootstrap, locking/rollback/reconnect/restart, every tier
 and consumer, the V3 parent, profile, rewrite completion, and production
 readiness remain open.
 
-The V3-01 asterisk records that owner-accepted `done` becomes effective only
-after this exact closeout claim passes repository CI; its excluded receipt
-must then pass exact-SHA CI. It does not close V3 or advance a later V3 goal.
+The independently reviewed V3-02 packet owns only bootstrap/schema proof. Its
+implementation begins after exact packet-revision repository CI. The packet does
+not close V3-02, V3, a compatibility tier, the profile, the rewrite, or
+production readiness.

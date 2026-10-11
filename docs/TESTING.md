@@ -235,8 +235,10 @@ later child remain open.
 with 3,075 entries. Its focused, affected, race, complete-L4
 real-PostgreSQL, coverage, backend, repository, candidate-CI, evidence-claim,
 and pre-closeout receipt boundaries are green. The project owner accepted
-only this bounded result at `2026-08-27T21:48:42Z`; `done` is conditional on
-this exact closeout claim's CI and its excluded receipt then remains. Seven
+only this bounded result at `2026-08-27T21:48:42Z`; its owner-accepted
+closeout claim `711d9e0e5ce34529fffeed840dc4812824c09f64` and excluded receipt
+`e2f1863b7d925c195d6e759185de85a6497cb5e0` passed exact-SHA repository CI,
+so bounded V3-01 is effectively `done`. Seven
 fixed named tests plus auxiliary constructor coverage prove `/health` remains
 200 without a ping, `/ready` maps current dependency state to 200/503,
 empty-service gRPC Health Check maps it to SERVING/NOT_SERVING, named services
@@ -324,6 +326,12 @@ constraints, locking, or concurrency.
 Current retained real-PostgreSQL/deployment runs remain required for V3-02
 through V3-05 and the V3 parent.
 
+The independently reviewed
+[CW1-V3-02 packet](increments/CW1-V3-02.md) fixes the pending bootstrap/schema
+proof boundary. It requires exact-SHA repository CI before test implementation
+begins. Existing broad PostgreSQL suites and count/spot-check tests do not by
+themselves close V3-02.
+
 ### Deployment smoke
 
 ```bash
@@ -384,7 +392,7 @@ and exact change-state outcomes remain to be added and retained.
 | V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage                       | `make check` retained green on each exact relevant source digest                                                          | Entry source-v2 retained; active-source refresh required |
 | V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests                      | Pass I4's exact claim CI, retain its receipt, obtain owner review, then complete the remaining identity matrix            | I4 evidence claim conditional; parent open               |
 | V2 profile behavior      | Shared 13-resource service, broad tests, and accepted IPAddress I1/Site I2/Manufacturer I3/RackRole I4/RackType I5/DeviceRole I6/DeviceType I7/InterfaceTemplate I8/Rack I9 | Trace every remaining invariant, rollback, and external-tier boundary | I1-I9 done; parent open |
-| V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness, and owner-accepted bounded V3-01 readiness evidence | Complete V3-02 through V3-05 and retain real PostgreSQL/deployment loss-recovery artifacts | V3-01 `done`* pending closeout CI; V3 parent open |
+| V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness, and owner-accepted bounded V3-01 readiness evidence | Pass the V3-02 packet gate, complete V3-02 through V3-05, and retain real PostgreSQL/deployment loss-recovery artifacts | V3-01 done; V3-02 packet in progress; V3 parent open |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites                            | Complete T2 scenario report, then equivalent T3 report                                                                    | T1; implementation gap                                   |
 | V5 Vue workflow          | Typed adapters and real-browser harness                                                    | Both workflows and every required negative/state case retained green                                                      | T1; implementation gap                                   |
 | V6 sign-off              | First-profile legacy stacks retired                                                        | V0-V5 green together with linked evidence                                                                                 | Not earned                                               |

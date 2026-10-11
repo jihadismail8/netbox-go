@@ -192,15 +192,18 @@ resource, every tier/consumer, the parent, the profile, and later children.
 with 3,075 entries. Its focused, affected, race, complete-L4
 real-PostgreSQL, coverage, backend, repository, candidate-CI, evidence-claim,
 and pre-closeout receipt boundaries are green. The project owner accepted
-only this bounded result at `2026-08-27T21:48:42Z`. `CW1-V3-01` is
-conditional `done`; that state becomes effective only after this exact
-owner-accepted closeout claim passes repository CI, and its source-v2-excluded
-receipt must then pass exact-SHA CI. It owns only process-only HTTP liveness,
+only this bounded result at `2026-08-27T21:48:42Z`. Its owner-accepted
+closeout claim `711d9e0e5ce34529fffeed840dc4812824c09f64` and excluded receipt
+`e2f1863b7d925c195d6e759185de85a6497cb5e0` passed exact-SHA repository CI,
+so `CW1-V3-01` is effectively `done`. It owns only process-only HTTP liveness,
 request-time PostgreSQL readiness, empty-service gRPC Health Check state,
 fail-closed named-service and Watch behavior, shared constructor injection,
 seven fixed named tests, and auxiliary constructor coverage. It owns no
 Managed Object behavior, profile metadata, schema/bootstrap or deployment
-loss/recovery, tier, V3 parent, rewrite, or production-readiness claim. Do not
+loss/recovery, tier, V3 parent, rewrite, or production-readiness claim.
+`CW1-V3-02` is the active independently reviewed bootstrap/schema packet; its
+implementation begins only after the exact packet revision passes repository
+CI. Do not
 begin or merge another
 Capability Profile while V0 is
 red or before `CW1-V6-03`. Once those gates are
