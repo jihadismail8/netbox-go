@@ -172,7 +172,9 @@ claim, and receipt exact-SHA CI boundaries are green. I4 has retained
 `evidence`; project-owner review remains before `done`. Bounded `CW1-V3-01`
 is effectively `done` after its owner-accepted closeout claim and excluded
 receipt passed exact-SHA CI. `CW1-V3-02` has an independently reviewed packet
-awaiting exact-SHA CI; V3-03 through V3-05 stay blocked by their named entry conditions. All
+and exact candidate `0cc4fe2365b7402929f65288eb776a425159d85b` with green
+real-PostgreSQL, repository, and candidate-CI boundaries; evidence and owner
+acceptance remain. V3-03 through V3-05 stay blocked by their named entry conditions. All
 merges serialize through `CW1-G00`. Production foundations may proceed in parallel only when
 they do not destabilize profile work or claim production readiness early.
 
@@ -335,7 +337,7 @@ remain open.
 | `CW1-V2-02-I9`      | `done`        | Accepted Rack scalar write presence                 | Done I8 and current `CW1-G00`          |
 | `CW1-V2-03`–`V2-08` | `blocked`     | Close later typed business behavior                 | V2-02 and named lane dependencies      |
 | `CW1-V3-01`         | `done`        | Accepted bounded dependency-aware readiness         | `CW1-G00`                              |
-| `CW1-V3-02`         | `in-progress` | Prove bootstrap and private schema contract          | Current `CW1-G00` and done `CW1-V2-01` |
+| `CW1-V3-02`         | `in-progress` | Retain bootstrap/schema evidence and obtain owner review | Current `CW1-G00` and done `CW1-V2-01` |
 | `CW1-V3-03`–`V3-05` | `blocked`     | Close later PostgreSQL/deployment evidence           | Named V2/V3 dependencies               |
 | `CW1-V4-01`–`V4-03` | `blocked`     | Earn complete first-profile REST T2                 | V1–V3 as declared                      |
 | `CW1-V4-04`         | `blocked`     | Retain the identity extension report                | `CW1-V1-04`                            |
@@ -346,10 +348,10 @@ remain open.
 | `CW1-V6-*`          | `blocked`     | Converge evidence and sign off the first profile    | V1–V5                                  |
 | `CP-P01`–`CP-P19`   | `blocked`     | Expand accepted feature breadth                     | `CW1-V6-03`                            |
 
-Bounded V3-01 is effectively `done`. V3-02 is active only at its packet gate;
-no V3-02 outcome is proved until the reviewed implementation and retained
-real-PostgreSQL evidence pass. Neither state closes V3 or claims deployment or
-production readiness.
+Bounded V3-01 is effectively `done`. V3-02's exact implementation candidate
+and candidate CI are green, but durable evidence, its excluded receipt, owner
+acceptance, and a separately reviewed closeout remain. Neither state closes V3
+or claims deployment or production readiness.
 
 No owner is assigned merely because a goal is `ready`. An executor claims one
 goal by recording its increment specification before editing code.
@@ -779,10 +781,17 @@ V3-04 real deployment PostgreSQL loss/recovery remains open.
 Entry: `CW1-G00` is current and `CW1-V2-01` traceability exists. This may
 overlap `CW1-V3-01` only with disjoint permitted files and ownership.
 
-Active independently reviewed packet:
+Reviewed packet and exact candidate:
 [CW1-V3-02 bootstrap and schema contract](increments/CW1-V3-02.md).
-Implementation remains blocked until exact packet-revision repository CI
-passes. No outcome below is proved by the packet alone.
+Packet `e59dcc58b99e0e3eaf452e9b3dc0f8940832a1f5` passed exact-SHA CI.
+Candidate `0cc4fe2365b7402929f65288eb776a425159d85b` at
+`source-v2:sha256:ecc65583666214d2a470ff02806fc684b642c14cb5abc0df33ccad6c8b5188d6`
+with 3,079 entries passed the registry-order regression plus six
+PostgreSQL-backed scenarios, race, complete L4, backend, repository, and
+exact-candidate CI. It changes no
+production source. Durable evidence, its excluded receipt, project-owner
+acceptance, and a separately reviewed closeout remain, so the goal stays
+`in-progress` and the outcome boxes remain unchecked.
 
 - [ ] Test empty-database bootstrap.
 - [ ] Prove a correct existing table remains untouched.

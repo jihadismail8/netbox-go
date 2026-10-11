@@ -223,6 +223,18 @@ so bounded `CW1-V3-01` is effectively `done`. It changes no Managed Object behav
 metadata, schema/bootstrap or deployment-loss/recovery claim, compatibility
 tier, V3 parent, rewrite state, or production-readiness boundary.
 
+`CW1-V3-02` has exact tested candidate
+`0cc4fe2365b7402929f65288eb776a425159d85b` at
+`source-v2:sha256:ecc65583666214d2a470ff02806fc684b642c14cb5abc0df33ccad6c8b5188d6`
+with 3,079 entries. Its exact 198-entry registry order, fresh/idempotent
+bootstrap, correct/malformed existing-table non-repair, missing-table creation,
+22-table private schema catalog, content-type uniqueness, focused/race,
+complete L4, backend, repository, and candidate-CI boundaries are green. It
+changes no production source. Evidence, the excluded receipt, project-owner
+acceptance, and a separately reviewed closeout remain, so V3-02 stays
+`in-progress` and closes no tier, consumer, V3 parent, profile, deployment,
+rewrite, production migration, or production-readiness boundary.
+
 > **Operational boundary:** this is a development build for disposable data.
 > Production TLS, schema upgrades, backup/restore, operational hardening, and
 > V1-V6 evidence are not complete. Do not expose it as a production service.
@@ -308,7 +320,8 @@ the generic raw-map workflow boundary is retired. This is strong structure for
 the first slice, not whole-system completion.
 
 Cross-cutting first-profile work still includes review and retained evidence
-for the implemented explicit CORS allowlist, V3-02 through V3-05
+for the implemented explicit CORS allowlist, V3-02 evidence/acceptance and
+V3-03 through V3-05
 PostgreSQL/deployment work beyond bounded V3-01 readiness,
 rule/test/evidence traceability, missing PostgreSQL concurrency cases, durable
 external-gate retention, and protobuf publication controls.
@@ -473,7 +486,7 @@ replacement completes ADR 0004's governing gate and CP-13.
 | V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                                 | Refresh for the active source and every later relevant merged digest                                                             | Continuous; entry source retained          |
 | V1 identity/RBAC         | Persisted identity, retained CORS, accepted I1/I2/I3, and retained I4 evidence                          | Obtain I4 owner review; complete password-policy/throttle/proxy/streaming plus RBAC/admin/secret work                            | I4 evidence; parent open                   |
 | V2 domain behavior       | Typed shared services, reviewed 293-row traceability, and accepted IPAddress I1/Site I2/Manufacturer I3/RackRole I4/RackType I5/DeviceRole I6/DeviceType I7/InterfaceTemplate I8/Rack I9 | Complete remaining invariant, rollback, side-effect, concurrency, and tier cases | I1-I9 done; parent open |
-| V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, Compose harness, and owner-accepted bounded V3-01 readiness evidence | Pass exact-SHA CI for the independently reviewed V3-02 bootstrap/schema packet, then execute it and complete V3-03 through V3-05 | V3-01 done; V3-02 packet in progress; V3 parent open |
+| V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, Compose harness, owner-accepted bounded V3-01, and exact green V3-02 candidate `0cc4fe2…` | Retain V3-02 evidence/receipt, obtain owner acceptance, then complete V3-03 through V3-05 | V3-01 done; V3-02 candidate in progress; V3 parent open |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                             | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report                       | T1; implementation/evidence pending        |
 | V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                         | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes                  | T1; implementation/evidence pending        |
 | V6 sign-off              | First-profile legacy stacks physically retired                                                          | V0-V5 retained green together, per-capability review, protobuf freeze/breaking baseline, joint sign-off                          | Not earned                                 |
@@ -490,8 +503,9 @@ See [Evidence](evidence/README.md) for the artifact policy and commands.
    every profile scenario and plan rule;
    implement every uncovered domain, presence, rollback, object-change, and
    PostgreSQL case.
-4. Pass the exact `CW1-V3-02` packet gate, then complete `CW1-V3-02` through
-   `CW1-V3-05`: close bootstrap/schema,
+4. Retain and obtain owner acceptance for exact `CW1-V3-02` candidate
+   `0cc4fe2…`, then complete `CW1-V3-03` through `CW1-V3-05`: close
+   bootstrap/schema evidence and
    locking/rollback/reconnect/restart, and real deployment loss/recovery, then
    retain the real-PostgreSQL and deployment V3 bundle.
 5. Complete `CW1-V4-01` through `CW1-V4-06`: expand the strict REST oracle from

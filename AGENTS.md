@@ -201,9 +201,19 @@ fail-closed named-service and Watch behavior, shared constructor injection,
 seven fixed named tests, and auxiliary constructor coverage. It owns no
 Managed Object behavior, profile metadata, schema/bootstrap or deployment
 loss/recovery, tier, V3 parent, rewrite, or production-readiness claim.
-`CW1-V3-02` is the active independently reviewed bootstrap/schema packet; its
-implementation begins only after the exact packet revision passes repository
-CI. Do not
+`CW1-V3-02` has exact tested candidate
+`0cc4fe2365b7402929f65288eb776a425159d85b` at source digest
+`source-v2:sha256:ecc65583666214d2a470ff02806fc684b642c14cb5abc0df33ccad6c8b5188d6`
+with 3,079 entries. Its exact packet CI, registry-order regression plus six
+PostgreSQL-backed scenarios, race, complete L4, backend, repository, and
+candidate-CI boundaries are green.
+It changes no production source and owns only deterministic 198-entry startup
+ordering, missing-table-only bootstrap/non-repair proof, the 22-table private
+schema catalog, content-type natural-key uniqueness, and their test fixtures.
+Its evidence claim, excluded receipt, project-owner acceptance, and separately
+reviewed closeout remain before `done`; it closes no tier, consumer, V3 parent,
+profile, deployment, rewrite, production migration, or production-readiness
+boundary. Do not
 begin or merge another
 Capability Profile while V0 is
 red or before `CW1-V6-03`. Once those gates are
