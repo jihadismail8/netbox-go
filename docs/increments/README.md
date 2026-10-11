@@ -50,7 +50,7 @@ implementation exists.
 | `CW1-V2-02-I7` | `done`        | Codex GPT-5.6 Sol | [DeviceType scalar write presence](CW1-V2-02-I7.md)     |
 | `CW1-V2-02-I8` | `done`        | Codex GPT-5.6 Sol | [InterfaceTemplate scalar write presence](CW1-V2-02-I8.md) |
 | `CW1-V2-02-I9` | `done`        | Codex GPT-5.6 Sol | [Rack scalar write presence](CW1-V2-02-I9.md)              |
-| `CW1-V3-01`    | `in-progress` | Codex GPT-5.6 Sol | [Dependency-aware readiness](CW1-V3-01.md)                 |
+| `CW1-V3-01`    | `done`*       | Codex GPT-5.6 Sol | [Dependency-aware readiness](CW1-V3-01.md)                 |
 
 `in-progress` means the packet owns only its explicitly active bounded
 increment; no implementation evidence or parent-goal completion is implied.
@@ -193,12 +193,23 @@ RackType-update propagation, Device site propagation, deletion, list/query
 behavior, full CRUD, all tiers, every consumer, the parent, profile promotion,
 and every later child remain open.
 
-`CW1-V3-01` is the active packet for process-only HTTP liveness and
-PostgreSQL-aware HTTP/gRPC readiness. It owns request-time `PingContext`, exact
-public `/health` and `/ready` state mapping, empty-service gRPC Health Check,
-fail-closed named-service/Watch behavior, shared constructor injection, seven
-fixed named tests, and auxiliary constructor coverage. Its independently
-reviewed exact packet and amendment gates are green, and the implementation
-candidate has green local gates; exact committed replay, candidate CI, and
-evidence remain. V3-02 through V3-05, deployment loss/recovery, streaming monitoring, tiers,
-the profile, rewrite completion, and production readiness remain open.
+`CW1-V3-01` has exact tested candidate
+`58241d7f87b642e6b7eca279592ad3759a0f5a06` at source digest
+`source-v2:sha256:5cb32b753a4ac62544b2db24720b70c89904b0ae24731627e236dcd6c68564e9`
+with 3,075 entries. Its focused, affected, race, complete-L4
+real-PostgreSQL, coverage, backend, repository, candidate-CI, evidence-claim,
+and pre-closeout receipt boundaries are green. The project owner accepted
+only this bounded result at `2026-08-27T21:48:42Z`. Its `done` state is
+conditional on this exact owner-accepted closeout claim passing repository
+CI; the excluded receipt then remains. It owns only process-only HTTP
+liveness, request-time PostgreSQL-aware HTTP/gRPC readiness, empty-service
+gRPC Health Check, fail-closed named-service/Watch behavior, shared
+constructor injection, seven fixed named tests, and auxiliary constructor
+coverage. V3-02 through V3-05, real deployment loss/recovery, streaming
+monitoring, schema/bootstrap, locking/rollback/reconnect/restart, every tier
+and consumer, the V3 parent, profile, rewrite completion, and production
+readiness remain open.
+
+The V3-01 asterisk records that owner-accepted `done` becomes effective only
+after this exact closeout claim passes repository CI; its excluded receipt
+must then pass exact-SHA CI. It does not close V3 or advance a later V3 goal.

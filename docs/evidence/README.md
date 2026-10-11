@@ -177,13 +177,17 @@ The
 [bounded dependency-aware readiness result](2026-08-27-core-workflow-v3-dependency-readiness-v0.md)
 passed its exact-name, affected, race, complete L4 PostgreSQL-regression,
 coverage, pinned repository, and independent exact-candidate CI boundaries on
-exact revision `58241d7f87b642e6b7eca279592ad3759a0f5a06`. This two-path,
+exact revision `58241d7f87b642e6b7eca279592ad3759a0f5a06`. Its two-path,
 source-v2-excluded claim revision
 `e3b416d37e9dfb3f220122414b0bea658d993b3a` passed its pinned local gates and
-exact-SHA repository CI, making only bounded V3-01 `evidence`. This excluded
-receipt must pass its own exact-SHA CI; project-owner review remains a separate
-later boundary. Actual deployment dependency loss/recovery remains V3-04, so
-V3 and production readiness stay open.
+exact-SHA repository CI, making only bounded V3-01 `evidence`. Its excluded
+receipt `0c4d39fafa03d7f9088d1258d5339e06dfd00e78` also passed exact-SHA
+repository CI. The project owner accepted only this bounded result at
+`2026-08-27T21:48:42Z`. Its `done` state is conditional on the exact ten-path
+owner-accepted closeout claim passing repository CI; a two-path excluded
+receipt must then preserve that result and pass its own exact-SHA CI. Actual
+deployment dependency loss/recovery remains `CW1-V3-04`, so V3 and production
+readiness stay open.
 The project owner reviewed and retained the entry V0, CORS, bounded token I1,
 bounded token I2, bounded browser-session I3, bounded IPAddress I1, and bounded
 Site I2, Manufacturer I3, RackRole I4, RackType I5, DeviceRole I6, DeviceType
@@ -251,14 +255,20 @@ create/PUT/PATCH presence. This excluded receipt preserves that exact result
 without changing source and must pass its own exact-SHA CI. I9 promotes no
 compatibility tier, profile state, parent, later child, or traceability
 consumer.
+`CW1-V3-01` has owner-accepted conditional `done` only for its bounded
+operational-probe slice. Its evidence claim and pre-closeout receipt passed
+exact-SHA CI. The closeout becomes effective only after the exact
+owner-accepted ten-path claim revision passes repository CI; its excluded
+receipt then remains. It promotes no compatibility tier, profile state, V3
+parent, traceability consumer, deployment, rewrite, or production boundary.
 
 | Evidence                 | Required command or boundary                                  | Current state                                                    |
 | ------------------------ | ------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Repository quality       | Revised `make check` including non-mutating backend coverage  | V1-I4 and V2-I1/I2/I3/I4 retained; V2-I5/I6/I7/I8/I9 done        |
+| Repository quality       | Revised `make check` including non-mutating backend coverage  | V1-I4 and V2-I1/I2/I3/I4 retained; V2-I5/I6/I7/I8/I9 done; V3-01 owner-accepted closeout conditional |
 | Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                          |
 | gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                            |
-| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, V1-I4, V2-I1/I2/I3/I4/I5/I6, bounded V2-I7/I8/I9 passed; V1/V3 remain open |
-| Standalone deployment    | `make deployment-smoke`                                       | CORS-scoped exact-commit result retained; V3 still open          |
+| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, V1-I4, V2-I1/I2/I3/I4/I5/I6, bounded V2-I7/I8/I9 and bounded V3-01 regression passed; V3-02 through V3-05 remain open |
+| Standalone deployment    | `make deployment-smoke`                                       | CORS-scoped exact-commit result retained; V3-04 remains open     |
 | Browser workflow         | `make browser-e2e`                                            | Harness present; current result pending                          |
 
 GitHub CI currently runs V0 only. Real PostgreSQL, deployment, differential

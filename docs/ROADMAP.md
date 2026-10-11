@@ -169,12 +169,12 @@ password-change/session child. Its exact tested candidate is
 with 3,013 owned entries. Its accepted-I3-based red-first, focused, race,
 real-PostgreSQL, complete L4, pinned repository, feature-candidate CI, main,
 claim, and receipt exact-SHA CI boundaries are green. I4 has retained
-`evidence`; project-owner review remains before `done`. I4 and ready
-`CW1-V3-01` may run in parallel only when
-their packets declare non-overlapping files and owners; otherwise serialize
-them. All merges serialize through `CW1-G00`. Production foundations may
-proceed in parallel only when they do not destabilize profile work or claim
-production readiness early.
+`evidence`; project-owner review remains before `done`. Bounded `CW1-V3-01`
+has owner-accepted evidence and conditional `done` pending this exact closeout
+claim's CI; its excluded receipt then remains. `CW1-V3-02` through
+`CW1-V3-05` stay blocked by their named entry conditions. All merges serialize
+through `CW1-G00`. Production foundations may proceed in parallel only when
+they do not destabilize profile work or claim production readiness early.
 
 `CW1-V2-02-I1` has an exact tested candidate at
 `7acba402f0de2bd59e5b342a6f05df268bc9120b`, source digest
@@ -334,7 +334,7 @@ remain open.
 | `CW1-V2-02-I8`      | `done`        | Accepted InterfaceTemplate scalar write presence    | Done I7 and current `CW1-G00`          |
 | `CW1-V2-02-I9`      | `done`        | Accepted Rack scalar write presence                 | Done I8 and current `CW1-G00`          |
 | `CW1-V2-03`–`V2-08` | `blocked`     | Close later typed business behavior                 | V2-02 and named lane dependencies      |
-| `CW1-V3-01`         | `in-progress` | Make HTTP/gRPC readiness dependency-aware           | `CW1-G00`                              |
+| `CW1-V3-01`         | `done`*       | Accepted bounded dependency-aware readiness         | `CW1-G00`                              |
 | `CW1-V3-02`–`V3-05` | `blocked`     | Close PostgreSQL/deployment evidence                | Named V2/V3 dependencies               |
 | `CW1-V4-01`–`V4-03` | `blocked`     | Earn complete first-profile REST T2                 | V1–V3 as declared                      |
 | `CW1-V4-04`         | `blocked`     | Retain the identity extension report                | `CW1-V1-04`                            |
@@ -344,6 +344,11 @@ remain open.
 | `CW1-V5-05`         | `blocked`     | Retain T4 for exercised workflows                   | Corresponding T2/T3 and V5 authoring   |
 | `CW1-V6-*`          | `blocked`     | Converge evidence and sign off the first profile    | V1–V5                                  |
 | `CP-P01`–`CP-P19`   | `blocked`     | Expand accepted feature breadth                     | `CW1-V6-03`                            |
+
+The V3-01 asterisk records that owner-accepted `done` becomes effective only
+after this exact closeout-claim revision passes repository CI; its excluded
+receipt must then pass exact-SHA CI. It does not close V3, satisfy a V3-02
+through V3-05 entry condition, or claim deployment or production readiness.
 
 No owner is assigned merely because a goal is `ready`. An executor claims one
 goal by recording its increment specification before editing code.
@@ -739,23 +744,32 @@ both DCIM and IPAM lanes.
 Entry: `CW1-G00` is current. This may overlap early V1/V2 work only when the
 increment specifications declare disjoint permitted files and ownership.
 
-Active packet: [CW1-V3-01 dependency-aware readiness](increments/CW1-V3-01.md).
-It owns only process liveness, request-time PostgreSQL readiness, standard
-empty-service gRPC Health Check state, shared constructor injection, seven
-fixed named tests, and auxiliary constructor coverage. Its exact packet and
-amendment gates are green, and the implementation candidate has green local
-gates; exact committed replay, candidate CI, and evidence remain. It makes no
-tier, deployment, V3-parent, or production-readiness claim.
+Bounded result: [CW1-V3-01 dependency-aware readiness](increments/CW1-V3-01.md).
+Exact tested candidate `58241d7f87b642e6b7eca279592ad3759a0f5a06` at
+`source-v2:sha256:5cb32b753a4ac62544b2db24720b70c89904b0ae24731627e236dcd6c68564e9`
+with 3,075 entries passed its focused, affected, race, complete-L4
+real-PostgreSQL, coverage, backend, root, candidate-CI, evidence-claim, and
+pre-closeout receipt boundaries. The project owner accepted only this bounded
+result at `2026-08-27T21:48:42Z`. `Done` is conditional on this exact closeout
+claim's repository CI; its excluded receipt then remains. It owns only process
+liveness, request-time PostgreSQL readiness, standard empty-service gRPC
+Health Check state, fail-closed named-service and Watch behavior, shared
+constructor injection, seven fixed named tests, and auxiliary constructor
+coverage. V3-02 through V3-05, every tier, deployment, the V3 parent, and
+production readiness remain open.
 
-- [ ] Define liveness as process-alive only.
-- [ ] Make HTTP `/ready` check required PostgreSQL connectivity.
-- [ ] Make gRPC health reflect required dependency state.
-- [ ] Make dependency loss fail readiness.
-- [ ] Make dependency recovery restore readiness.
-- [ ] Add deterministic tests without arbitrary sleeps.
-- [ ] Keep business logic out of probe adapters.
+- [x] Define liveness as process-alive only.
+- [x] Make HTTP `/ready` check required PostgreSQL connectivity.
+- [x] Make gRPC health reflect required dependency state.
+- [x] Make dependency loss fail readiness.
+- [x] Make dependency recovery restore readiness.
+- [x] Add deterministic tests without arbitrary sleeps.
+- [x] Keep business logic out of probe adapters.
 
 Exit: HTTP and gRPC readiness truthfully track PostgreSQL loss/recovery.
+
+This bounded exit is proved at the deterministic checker/adapter boundary;
+V3-04 real deployment PostgreSQL loss/recovery remains open.
 
 ### `CW1-V3-02` — bootstrap and schema contract
 

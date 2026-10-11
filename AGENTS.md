@@ -186,14 +186,22 @@ semantics, PostgreSQL durability, Vue dirty-field handling, and eight fixed
 tests. It excludes uniqueness, mounted-device/placement rules, RackType-update
 propagation, Device site propagation, deletion, list/query, full CRUD, another
 resource, every tier/consumer, the parent, the profile, and later children.
-`CW1-V3-01` has independently reviewed packet amendments and green exact-SHA
-packet gates. Its implementation candidate has green local gates. It owns only
-process-only HTTP liveness, request-time PostgreSQL readiness, empty-service
-gRPC Health Check state, fail-closed named-service and Watch behavior, shared
-constructor injection, seven fixed named tests, and auxiliary constructor
-coverage. Exact committed replay, candidate CI, and evidence remain. It owns no
-Managed Object behavior, profile metadata, deployment loss/recovery, tier, V3 parent,
-rewrite, or production-readiness claim. Do not begin or merge another
+`CW1-V3-01` has exact tested candidate
+`58241d7f87b642e6b7eca279592ad3759a0f5a06` at source digest
+`source-v2:sha256:5cb32b753a4ac62544b2db24720b70c89904b0ae24731627e236dcd6c68564e9`
+with 3,075 entries. Its focused, affected, race, complete-L4
+real-PostgreSQL, coverage, backend, repository, candidate-CI, evidence-claim,
+and pre-closeout receipt boundaries are green. The project owner accepted
+only this bounded result at `2026-08-27T21:48:42Z`. `CW1-V3-01` is
+conditional `done`; that state becomes effective only after this exact
+owner-accepted closeout claim passes repository CI, and its source-v2-excluded
+receipt must then pass exact-SHA CI. It owns only process-only HTTP liveness,
+request-time PostgreSQL readiness, empty-service gRPC Health Check state,
+fail-closed named-service and Watch behavior, shared constructor injection,
+seven fixed named tests, and auxiliary constructor coverage. It owns no
+Managed Object behavior, profile metadata, schema/bootstrap or deployment
+loss/recovery, tier, V3 parent, rewrite, or production-readiness claim. Do not
+begin or merge another
 Capability Profile while V0 is
 red or before `CW1-V6-03`. Once those gates are
 durably closed, follow the next accepted profile in the roadmap and playbook

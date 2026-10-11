@@ -229,17 +229,20 @@ rules, RackType-update propagation, Device site propagation, deletion,
 list/query, full CRUD, the parent, profile promotion, every tier, and every
 later child remain open.
 
-`CW1-V3-01` has an independently reviewed packet and green exact packet-claim
-CI. Its implementation candidate owns process-only liveness and request-time
-PostgreSQL-aware HTTP/gRPC readiness. Seven fixed named tests plus auxiliary
-constructor coverage prove `/health` remains 200 without a ping, `/ready` maps current
-dependency state to 200/503, empty-service gRPC Health Check maps it to
-SERVING/NOT_SERVING, named services and Watch fail closed, and missing
-composition cannot silently serve ready. Exact-name, affected, race, coverage,
-backend, root repository, and complete L4 PostgreSQL local gates are green;
-exact committed replay, candidate CI, and evidence remain. Real deployment
-loss/recovery remains V3-04; no T2/T3/T4, profile, V3-parent, deployment,
-rewrite, or production claim is made.
+`CW1-V3-01` has exact tested candidate
+`58241d7f87b642e6b7eca279592ad3759a0f5a06` at source digest
+`source-v2:sha256:5cb32b753a4ac62544b2db24720b70c89904b0ae24731627e236dcd6c68564e9`
+with 3,075 entries. Its focused, affected, race, complete-L4
+real-PostgreSQL, coverage, backend, repository, candidate-CI, evidence-claim,
+and pre-closeout receipt boundaries are green. The project owner accepted
+only this bounded result at `2026-08-27T21:48:42Z`; `done` is conditional on
+this exact closeout claim's CI and its excluded receipt then remains. Seven
+fixed named tests plus auxiliary constructor coverage prove `/health` remains
+200 without a ping, `/ready` maps current dependency state to 200/503,
+empty-service gRPC Health Check maps it to SERVING/NOT_SERVING, named services
+and Watch fail closed, and missing composition cannot silently serve ready.
+Real deployment loss/recovery remains V3-04; no T2/T3/T4, profile, V3-parent,
+deployment, rewrite, or production claim is made.
 
 ## Owned external gates
 
@@ -318,7 +321,8 @@ authenticated non-superuser creation, and authenticated model-permission
 grants. SQLite tests may support orchestration, but cannot prove PostgreSQL
 constraints, locking, or concurrency.
 
-A current retained run is still required for V3.
+Current retained real-PostgreSQL/deployment runs remain required for V3-02
+through V3-05 and the V3 parent.
 
 ### Deployment smoke
 
@@ -332,10 +336,11 @@ application, verifies health and schema/content-type bootstrap, restarts the
 application, checks idempotence, and tears everything down. It does not use a
 Django migration or initialization-SQL mount.
 
-The current smoke checks `/health`, while HTTP `/ready` and gRPC health do not
-yet reflect PostgreSQL dependency state. V3 therefore requires implementation
-of dependency-aware readiness plus dependency loss/recovery assertions before
-the deployment run can satisfy its exit condition.
+The current smoke checks `/health` but does not exercise actual PostgreSQL
+loss and recovery. The runtime `/ready` and empty-service gRPC Health Check now
+map request-time dependency state under the bounded deterministic V3-01 tests;
+V3-04 must extend the real deployment run with PostgreSQL loss/recovery before
+its exit condition can pass.
 
 ### Real-browser workflow
 
@@ -379,7 +384,7 @@ and exact change-state outcomes remain to be added and retained.
 | V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage                       | `make check` retained green on each exact relevant source digest                                                          | Entry source-v2 retained; active-source refresh required |
 | V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests                      | Pass I4's exact claim CI, retain its receipt, obtain owner review, then complete the remaining identity matrix            | I4 evidence claim conditional; parent open               |
 | V2 profile behavior      | Shared 13-resource service, broad tests, and accepted IPAddress I1/Site I2/Manufacturer I3/RackRole I4/RackType I5/DeviceRole I6/DeviceType I7/InterfaceTemplate I8/Rack I9 | Trace every remaining invariant, rollback, and external-tier boundary | I1-I9 done; parent open |
-| V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness, and green V3-01 packet gate      | Finish and retain truthful HTTP/gRPC readiness, then real loss/recovery and retained PostgreSQL/deployment artifacts | V3-01 implementation candidate in progress |
+| V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness, and owner-accepted bounded V3-01 readiness evidence | Complete V3-02 through V3-05 and retain real PostgreSQL/deployment loss-recovery artifacts | V3-01 `done`* pending closeout CI; V3 parent open |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites                            | Complete T2 scenario report, then equivalent T3 report                                                                    | T1; implementation gap                                   |
 | V5 Vue workflow          | Typed adapters and real-browser harness                                                    | Both workflows and every required negative/state case retained green                                                      | T1; implementation gap                                   |
 | V6 sign-off              | First-profile legacy stacks retired                                                        | V0-V5 green together with linked evidence                                                                                 | Not earned                                               |
