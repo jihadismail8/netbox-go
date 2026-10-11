@@ -4,10 +4,11 @@
 
 - Goal and increment: `CW1-V3-02`.
 - Executor: Codex GPT-5.
-- State: conditional `evidence`; effective only after the exact ten-path
-  claim commit carrying this artifact passes repository CI. A
-  source-v2-excluded receipt, project-owner acceptance, and a separately
-  reviewed closeout remain later boundaries.
+- State: effective `evidence` only for bounded `CW1-V3-02`. Evidence-claim
+  revision `979a1558bbba2993ebb4f0d512a94fb0036c6b8b` passed exact-SHA
+  repository CI. This source-v2-excluded receipt preserves that result and
+  still requires its own exact-SHA CI. Project-owner acceptance and a
+  separately reviewed closeout remain later boundaries.
 - Result: **the bounded test-only candidate passed its exact committed
   real-PostgreSQL scenarios, race, complete L4, backend, repository, and
   independent exact-SHA candidate-CI boundaries**.
@@ -27,9 +28,10 @@ profile state, traceability consumer, V3 parent, rewrite completion, or
 production readiness. V3-03 through V3-05 remain open.
 
 No `netbox-go-evidence-v2` marker is present because this increment promotes
-no tier, profile state, traceability consumer, or completed parent goal.
-Conditional `evidence` becomes effective only after exact-SHA CI of this
-claim. The excluded receipt remains a separate later retention boundary.
+no tier, profile state, traceability consumer, or completed parent goal. The
+exact-SHA claim CI made only bounded `CW1-V3-02` evidence effective. This
+source-v2-excluded receipt changes no owned source and remains a separate
+exact-SHA retention boundary.
 
 ## Entry, packet, and tested source
 
@@ -249,11 +251,47 @@ The exact ten-path claim assembly passed the pinned full repository gate from
 credential-free log SHA-256 is
 `ae88abda999a830a5a03ab477a188489329411722969557d78981da35d62636e`.
 
-After recording that result, all ten authorized claim paths are frozen for a
-final no-later-edit `make check`. That final gate and the canonical exact
-ten-path mapping are retained in claim-commit provenance to avoid
-self-reference. Exact-SHA claim CI remains the separate boundary that makes
-only bounded V3-02 `evidence` effective.
+After recording that result, all ten authorized claim paths were frozen for a
+final no-later-edit `make check`. That replay ran from
+`2026-10-11T22:42:48Z` through `2026-10-11T22:49:19Z`, exited 0, and has
+credential-free log SHA-256
+`07741ef3e189f6b69798e43ba1d46112144e36bbddad613dcb52dd6b443cd829`.
+Claim commit provenance retains the canonical exact ten-path mapping at
+SHA-256
+`d63e22f205d7ef195c90a461c2bf82633d21512d7f440f09a026f59d98cea967`.
+
+## Evidence claim exact-SHA CI and pre-acceptance receipt
+
+- Workflow: `repository-gate`.
+- Run:
+  [38182047571](https://github.com/jihadismail8/netbox-go/actions/runs/38182047571).
+- Job `check`:
+  [114596481594](https://github.com/jihadismail8/netbox-go/actions/runs/38182047571/job/114596481594).
+- Branch: `work/cw1-v3-02-bootstrap-schema`.
+- Head SHA: `979a1558bbba2993ebb4f0d512a94fb0036c6b8b`.
+- Run start/completion:
+  `2026-10-11T22:51:10Z`–`2026-10-11T23:10:15Z`.
+- Job start/completion:
+  `2026-10-11T22:51:13Z`–`2026-10-11T23:10:14Z`.
+- Conclusion: **success**; every setup, repository, post, and completion step
+  succeeded.
+
+Claim exact-SHA CI made only bounded `CW1-V3-02` evidence effective. Because
+both receipt paths are source-v2 excluded, the source digest, complete
+3,079-entry attestation manifest, and derived eight-governance-path diff stay
+unchanged. The receipt records no owner acceptance, `done` transition, tier,
+profile, parent, deployment, rewrite, migration, or production-readiness
+change.
+
+The two-path receipt assembly passed the pinned full repository gate from
+`2026-10-11T23:15:32Z` through `2026-10-11T23:22:16Z` with exit 0. Its
+credential-free log SHA-256 is
+`9adbdf9f21d35096bc6b6a1b1d4da795f341160ff825152e0cd424c2439c427b`.
+After recording this result, both receipt paths are frozen for a final
+no-later-edit repository gate. That final gate and the exact two-path receipt
+mapping are retained in receipt-commit provenance to avoid self-reference.
+This receipt still requires its own exact-SHA repository CI before
+project-owner review.
 
 ## External and residual limits
 
@@ -282,8 +320,9 @@ readiness.
 - L7 deployment: not run; PostgreSQL loss/recovery remains V3-04.
 - L8 browser: not applicable and not run; no T4 claim is made.
 - L9: tested revision/digest, complete manifest, exact path mappings, local
-  gates, candidate CI, proposed attestation manifest, and complete derived
-  source diff are retained. Claim and receipt exact-SHA CI remain separate.
+  gates, candidate CI, proposed attestation manifest, complete derived source
+  diff, and evidence-claim exact-SHA CI are retained. This source-v2-excluded
+  receipt still requires its own exact-SHA CI before project-owner review.
 
 No skipped, unavailable, or inapplicable boundary is implied by the focused,
 race, L4, backend, repository, or candidate-CI results.
@@ -305,9 +344,10 @@ The claim is restricted to exactly ten authorized paths:
 10. `docs/evidence/README.md` — source-v2 excluded
 
 The first eight paths record only the exact tested candidate and still-open
-boundaries. The two evidence paths carry this conditional claim. The complete
-derived manifest diff below proves the eight owned-source changes are
-governance text only; the evidence paths do not affect source-v2. No path may
+boundaries. The two evidence paths carried the conditional claim and now carry
+this source-v2-excluded receipt. The complete derived manifest diff below
+proves the eight owned-source changes are governance text only; the evidence
+paths do not affect source-v2. No path may
 change runtime behavior, schema, scenario/fixture/test behavior, comparator,
 normalizer, permission/security rule, dependency, toolchain, generated output,
 coverage policy, profile/traceability metadata, tier, parent, deployment,

@@ -195,11 +195,14 @@ passed its registry-order regression plus six PostgreSQL-backed scenarios,
 race, complete L4, backend, repository, and independent exact-candidate CI
 boundaries on exact revision
 `0cc4fe2365b7402929f65288eb776a425159d85b`. This ten-path claim records only
-candidate-state governance and source-v2-excluded evidence; it is conditional
-on its own exact-SHA repository CI. Its excluded receipt, project-owner
-acceptance, and a separately reviewed closeout remain before bounded V3-02 can
-become `done`. It promotes no tier, consumer, V3 parent, profile, deployment,
-rewrite, production migration, or production-readiness boundary.
+candidate-state governance and source-v2-excluded evidence. Exact claim
+revision `979a1558bbba2993ebb4f0d512a94fb0036c6b8b` passed its pinned local
+gates and exact-SHA repository CI, making only bounded V3-02 `evidence`. This
+two-path, source-v2-excluded receipt preserves that result without changing
+source and requires its own exact-SHA CI. Project-owner acceptance and a
+separately reviewed closeout remain before bounded V3-02 can become `done`.
+It promotes no tier, consumer, V3 parent, profile, deployment, rewrite,
+production migration, or production-readiness boundary.
 The project owner reviewed and retained the entry V0, CORS, bounded token I1,
 bounded token I2, bounded browser-session I3, bounded IPAddress I1, and bounded
 Site I2, Manufacturer I3, RackRole I4, RackType I5, DeviceRole I6, DeviceType
@@ -279,7 +282,7 @@ deployment, rewrite, or production boundary.
 | Repository quality       | Revised `make check` including non-mutating backend coverage  | V1-I4 and V2-I1/I2/I3/I4 retained; V2-I5/I6/I7/I8/I9 and V3-01 done |
 | Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                          |
 | gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                            |
-| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, V1-I4, V2-I1/I2/I3/I4/I5/I6, bounded V2-I7/I8/I9 and V3-01 passed; exact V3-02 candidate green with evidence pending; V3-03 through V3-05 open |
+| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, V1-I4, V2-I1/I2/I3/I4/I5/I6, bounded V2-I7/I8/I9 and V3-01 passed; exact V3-02 candidate green and bounded evidence effective; receipt CI, owner acceptance, closeout, and V3-03 through V3-05 open |
 | Standalone deployment    | `make deployment-smoke`                                       | CORS-scoped exact-commit result retained; V3-04 remains open     |
 | Browser workflow         | `make browser-e2e`                                            | Harness present; current result pending                          |
 
