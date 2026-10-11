@@ -1,0 +1,3330 @@
+{
+  "counts": {
+    "tables": 22,
+    "columns": 197,
+    "constraints": 47,
+    "primary_keys": 22,
+    "foreign_keys": 24,
+    "checks": 1,
+    "indexes": 99,
+    "primary_indexes": 22,
+    "unique_indexes": 22,
+    "non_unique_indexes": 55,
+    "sequences": 18
+  },
+  "tables": [
+    {
+      "name": "go_dcim_device_roles",
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "sequence",
+          "sequence": "go_dcim_device_roles_id_seq"
+        },
+        {
+          "name": "created",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "last_updated",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "parent_id",
+          "type": "bigint",
+          "nullable": true,
+          "default": "none"
+        },
+        {
+          "name": "name",
+          "type": "character varying(100)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "slug",
+          "type": "character varying(100)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "color",
+          "type": "character(6)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "vm_role",
+          "type": "boolean",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "description",
+          "type": "character varying(200)",
+          "nullable": false,
+          "default": "empty_string"
+        },
+        {
+          "name": "comments",
+          "type": "text",
+          "nullable": false,
+          "default": "empty_string"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "fk_go_dcim_device_roles_parent",
+          "kind": "foreign_key",
+          "columns": [
+            "parent_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true,
+          "referenced_table": "go_dcim_device_roles",
+          "referenced_columns": [
+            "id"
+          ],
+          "on_update": "CASCADE",
+          "on_delete": "RESTRICT"
+        },
+        {
+          "name": "go_dcim_device_roles_pkey",
+          "kind": "primary_key",
+          "columns": [
+            "id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true
+        }
+      ],
+      "indexes": [
+        {
+          "name": "go_dcim_device_roles_pkey",
+          "unique": true,
+          "primary": true,
+          "method": "btree",
+          "keys": [
+            "id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_dcim_device_roles_last_updated",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "last_updated"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_device_role_parent",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "parent_id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "uq_go_device_role_parent_name",
+          "unique": true,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "((\nCASE\n    WHEN parent_id IS NULL THEN '0'::text\n    ELSE parent_id::text\nEND || ':'::text) || name::text)"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "uq_go_device_role_parent_slug",
+          "unique": true,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "((\nCASE\n    WHEN parent_id IS NULL THEN '0'::text\n    ELSE parent_id::text\nEND || ':'::text) || slug::text)"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        }
+      ]
+    },
+    {
+      "name": "go_dcim_device_types",
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "sequence",
+          "sequence": "go_dcim_device_types_id_seq"
+        },
+        {
+          "name": "created",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "last_updated",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "manufacturer_id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "model",
+          "type": "character varying(100)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "slug",
+          "type": "character varying(100)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "part_number",
+          "type": "character varying(50)",
+          "nullable": false,
+          "default": "empty_string"
+        },
+        {
+          "name": "u_height",
+          "type": "numeric(4,1)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "exclude_from_utilization",
+          "type": "boolean",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "is_full_depth",
+          "type": "boolean",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "airflow",
+          "type": "character varying(50)",
+          "nullable": true,
+          "default": "none"
+        },
+        {
+          "name": "description",
+          "type": "character varying(200)",
+          "nullable": false,
+          "default": "empty_string"
+        },
+        {
+          "name": "comments",
+          "type": "text",
+          "nullable": false,
+          "default": "empty_string"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "fk_go_dcim_device_types_manufacturer",
+          "kind": "foreign_key",
+          "columns": [
+            "manufacturer_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true,
+          "referenced_table": "go_dcim_manufacturers",
+          "referenced_columns": [
+            "id"
+          ],
+          "on_update": "CASCADE",
+          "on_delete": "RESTRICT"
+        },
+        {
+          "name": "go_dcim_device_types_pkey",
+          "kind": "primary_key",
+          "columns": [
+            "id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true
+        }
+      ],
+      "indexes": [
+        {
+          "name": "go_dcim_device_types_pkey",
+          "unique": true,
+          "primary": true,
+          "method": "btree",
+          "keys": [
+            "id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_dcim_device_types_last_updated",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "last_updated"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_device_type_manufacturer",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "manufacturer_id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "uq_go_device_type_model",
+          "unique": true,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "manufacturer_id",
+            "model"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "uq_go_device_type_slug",
+          "unique": true,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "((manufacturer_id::text || ':'::text) || slug::text)"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        }
+      ]
+    },
+    {
+      "name": "go_dcim_devices",
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "sequence",
+          "sequence": "go_dcim_devices_id_seq"
+        },
+        {
+          "name": "created",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "last_updated",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "device_type_id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "role_id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "name",
+          "type": "character varying(64)",
+          "nullable": true,
+          "default": "none"
+        },
+        {
+          "name": "site_id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "rack_id",
+          "type": "bigint",
+          "nullable": true,
+          "default": "none"
+        },
+        {
+          "name": "position",
+          "type": "numeric(4,1)",
+          "nullable": true,
+          "default": "none"
+        },
+        {
+          "name": "face",
+          "type": "character varying(50)",
+          "nullable": false,
+          "default": "empty_string"
+        },
+        {
+          "name": "status",
+          "type": "character varying(50)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "serial",
+          "type": "character varying(50)",
+          "nullable": false,
+          "default": "empty_string"
+        },
+        {
+          "name": "asset_tag",
+          "type": "character varying(50)",
+          "nullable": true,
+          "default": "none"
+        },
+        {
+          "name": "airflow",
+          "type": "character varying(50)",
+          "nullable": true,
+          "default": "none"
+        },
+        {
+          "name": "description",
+          "type": "character varying(200)",
+          "nullable": false,
+          "default": "empty_string"
+        },
+        {
+          "name": "comments",
+          "type": "text",
+          "nullable": false,
+          "default": "empty_string"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "fk_go_dcim_devices_device_type",
+          "kind": "foreign_key",
+          "columns": [
+            "device_type_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true,
+          "referenced_table": "go_dcim_device_types",
+          "referenced_columns": [
+            "id"
+          ],
+          "on_update": "CASCADE",
+          "on_delete": "RESTRICT"
+        },
+        {
+          "name": "fk_go_dcim_devices_rack",
+          "kind": "foreign_key",
+          "columns": [
+            "rack_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true,
+          "referenced_table": "go_dcim_racks",
+          "referenced_columns": [
+            "id"
+          ],
+          "on_update": "CASCADE",
+          "on_delete": "RESTRICT"
+        },
+        {
+          "name": "fk_go_dcim_devices_role",
+          "kind": "foreign_key",
+          "columns": [
+            "role_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true,
+          "referenced_table": "go_dcim_device_roles",
+          "referenced_columns": [
+            "id"
+          ],
+          "on_update": "CASCADE",
+          "on_delete": "RESTRICT"
+        },
+        {
+          "name": "fk_go_dcim_devices_site",
+          "kind": "foreign_key",
+          "columns": [
+            "site_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true,
+          "referenced_table": "go_dcim_sites",
+          "referenced_columns": [
+            "id"
+          ],
+          "on_update": "CASCADE",
+          "on_delete": "RESTRICT"
+        },
+        {
+          "name": "go_dcim_devices_pkey",
+          "kind": "primary_key",
+          "columns": [
+            "id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true
+        }
+      ],
+      "indexes": [
+        {
+          "name": "go_dcim_devices_pkey",
+          "unique": true,
+          "primary": true,
+          "method": "btree",
+          "keys": [
+            "id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_dcim_devices_last_updated",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "last_updated"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_dcim_devices_status",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "status"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_device_position",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "\"position\""
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_device_rack",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "rack_id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_device_role",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "role_id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_device_site",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "site_id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_device_type",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "device_type_id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "uq_go_device_asset_tag",
+          "unique": true,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "asset_tag"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "uq_go_device_rack_position_face",
+          "unique": true,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "rack_id",
+            "\"position\"",
+            "face"
+          ],
+          "predicate": "rack_id IS NOT NULL AND \"position\" IS NOT NULL",
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "uq_go_device_site_name_ci",
+          "unique": true,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "site_id",
+            "lower(name::text)"
+          ],
+          "predicate": "name IS NOT NULL",
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        }
+      ]
+    },
+    {
+      "name": "go_dcim_interface_templates",
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "sequence",
+          "sequence": "go_dcim_interface_templates_id_seq"
+        },
+        {
+          "name": "created",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "last_updated",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "device_type_id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "name",
+          "type": "character varying(64)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "label",
+          "type": "character varying(64)",
+          "nullable": false,
+          "default": "empty_string"
+        },
+        {
+          "name": "type",
+          "type": "character varying(50)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "enabled",
+          "type": "boolean",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "mgmt_only",
+          "type": "boolean",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "description",
+          "type": "character varying(200)",
+          "nullable": false,
+          "default": "empty_string"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "fk_go_dcim_interface_templates_device_type",
+          "kind": "foreign_key",
+          "columns": [
+            "device_type_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true,
+          "referenced_table": "go_dcim_device_types",
+          "referenced_columns": [
+            "id"
+          ],
+          "on_update": "CASCADE",
+          "on_delete": "RESTRICT"
+        },
+        {
+          "name": "go_dcim_interface_templates_pkey",
+          "kind": "primary_key",
+          "columns": [
+            "id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true
+        }
+      ],
+      "indexes": [
+        {
+          "name": "go_dcim_interface_templates_pkey",
+          "unique": true,
+          "primary": true,
+          "method": "btree",
+          "keys": [
+            "id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_dcim_interface_templates_last_updated",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "last_updated"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_dcim_interface_templates_type",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "type"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_interface_template_type",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "device_type_id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "uq_go_interface_template_name",
+          "unique": true,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "device_type_id",
+            "name"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        }
+      ]
+    },
+    {
+      "name": "go_dcim_interfaces",
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "sequence",
+          "sequence": "go_dcim_interfaces_id_seq"
+        },
+        {
+          "name": "created",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "last_updated",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "device_id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "name",
+          "type": "character varying(64)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "label",
+          "type": "character varying(64)",
+          "nullable": false,
+          "default": "empty_string"
+        },
+        {
+          "name": "type",
+          "type": "character varying(50)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "enabled",
+          "type": "boolean",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "mgmt_only",
+          "type": "boolean",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "mtu",
+          "type": "integer",
+          "nullable": true,
+          "default": "none"
+        },
+        {
+          "name": "speed",
+          "type": "integer",
+          "nullable": true,
+          "default": "none"
+        },
+        {
+          "name": "duplex",
+          "type": "character varying(50)",
+          "nullable": true,
+          "default": "none"
+        },
+        {
+          "name": "description",
+          "type": "character varying(200)",
+          "nullable": false,
+          "default": "empty_string"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "fk_go_dcim_interfaces_device",
+          "kind": "foreign_key",
+          "columns": [
+            "device_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true,
+          "referenced_table": "go_dcim_devices",
+          "referenced_columns": [
+            "id"
+          ],
+          "on_update": "CASCADE",
+          "on_delete": "RESTRICT"
+        },
+        {
+          "name": "go_dcim_interfaces_pkey",
+          "kind": "primary_key",
+          "columns": [
+            "id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true
+        }
+      ],
+      "indexes": [
+        {
+          "name": "go_dcim_interfaces_pkey",
+          "unique": true,
+          "primary": true,
+          "method": "btree",
+          "keys": [
+            "id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_dcim_interfaces_last_updated",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "last_updated"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_dcim_interfaces_type",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "type"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_interface_device",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "device_id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "uq_go_interface_name",
+          "unique": true,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "device_id",
+            "name"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        }
+      ]
+    },
+    {
+      "name": "go_dcim_manufacturers",
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "sequence",
+          "sequence": "go_dcim_manufacturers_id_seq"
+        },
+        {
+          "name": "created",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "last_updated",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "name",
+          "type": "character varying(100)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "slug",
+          "type": "character varying(100)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "description",
+          "type": "character varying(200)",
+          "nullable": false,
+          "default": "empty_string"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "go_dcim_manufacturers_pkey",
+          "kind": "primary_key",
+          "columns": [
+            "id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true
+        }
+      ],
+      "indexes": [
+        {
+          "name": "go_dcim_manufacturers_pkey",
+          "unique": true,
+          "primary": true,
+          "method": "btree",
+          "keys": [
+            "id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_dcim_manufacturers_last_updated",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "last_updated"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "uq_go_manufacturer_name",
+          "unique": true,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "name"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "uq_go_manufacturer_slug",
+          "unique": true,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "slug"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        }
+      ]
+    },
+    {
+      "name": "go_dcim_rack_roles",
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "sequence",
+          "sequence": "go_dcim_rack_roles_id_seq"
+        },
+        {
+          "name": "created",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "last_updated",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "name",
+          "type": "character varying(100)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "slug",
+          "type": "character varying(100)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "color",
+          "type": "character(6)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "description",
+          "type": "character varying(200)",
+          "nullable": false,
+          "default": "empty_string"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "go_dcim_rack_roles_pkey",
+          "kind": "primary_key",
+          "columns": [
+            "id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true
+        }
+      ],
+      "indexes": [
+        {
+          "name": "go_dcim_rack_roles_pkey",
+          "unique": true,
+          "primary": true,
+          "method": "btree",
+          "keys": [
+            "id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_dcim_rack_roles_last_updated",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "last_updated"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "uq_go_rack_role_name",
+          "unique": true,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "name"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "uq_go_rack_role_slug",
+          "unique": true,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "slug"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        }
+      ]
+    },
+    {
+      "name": "go_dcim_rack_types",
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "sequence",
+          "sequence": "go_dcim_rack_types_id_seq"
+        },
+        {
+          "name": "created",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "last_updated",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "manufacturer_id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "model",
+          "type": "character varying(100)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "slug",
+          "type": "character varying(100)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "form_factor",
+          "type": "character varying(50)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "width",
+          "type": "smallint",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "u_height",
+          "type": "smallint",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "starting_unit",
+          "type": "smallint",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "desc_units",
+          "type": "boolean",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "description",
+          "type": "character varying(200)",
+          "nullable": false,
+          "default": "empty_string"
+        },
+        {
+          "name": "comments",
+          "type": "text",
+          "nullable": false,
+          "default": "empty_string"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "fk_go_dcim_rack_types_manufacturer",
+          "kind": "foreign_key",
+          "columns": [
+            "manufacturer_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true,
+          "referenced_table": "go_dcim_manufacturers",
+          "referenced_columns": [
+            "id"
+          ],
+          "on_update": "CASCADE",
+          "on_delete": "RESTRICT"
+        },
+        {
+          "name": "go_dcim_rack_types_pkey",
+          "kind": "primary_key",
+          "columns": [
+            "id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true
+        }
+      ],
+      "indexes": [
+        {
+          "name": "go_dcim_rack_types_pkey",
+          "unique": true,
+          "primary": true,
+          "method": "btree",
+          "keys": [
+            "id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_dcim_rack_types_form_factor",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "form_factor"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_dcim_rack_types_last_updated",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "last_updated"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_rack_type_manufacturer",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "manufacturer_id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "uq_go_rack_type_model",
+          "unique": true,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "manufacturer_id",
+            "model"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "uq_go_rack_type_slug",
+          "unique": true,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "slug"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        }
+      ]
+    },
+    {
+      "name": "go_dcim_racks",
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "sequence",
+          "sequence": "go_dcim_racks_id_seq"
+        },
+        {
+          "name": "created",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "last_updated",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "site_id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "name",
+          "type": "character varying(100)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "facility_id",
+          "type": "character varying(50)",
+          "nullable": true,
+          "default": "none"
+        },
+        {
+          "name": "rack_type_id",
+          "type": "bigint",
+          "nullable": true,
+          "default": "none"
+        },
+        {
+          "name": "status",
+          "type": "character varying(50)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "role_id",
+          "type": "bigint",
+          "nullable": true,
+          "default": "none"
+        },
+        {
+          "name": "serial",
+          "type": "character varying(50)",
+          "nullable": false,
+          "default": "empty_string"
+        },
+        {
+          "name": "asset_tag",
+          "type": "character varying(50)",
+          "nullable": true,
+          "default": "none"
+        },
+        {
+          "name": "form_factor",
+          "type": "character varying(50)",
+          "nullable": true,
+          "default": "none"
+        },
+        {
+          "name": "width",
+          "type": "smallint",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "u_height",
+          "type": "smallint",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "starting_unit",
+          "type": "smallint",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "desc_units",
+          "type": "boolean",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "airflow",
+          "type": "character varying(50)",
+          "nullable": true,
+          "default": "none"
+        },
+        {
+          "name": "description",
+          "type": "character varying(200)",
+          "nullable": false,
+          "default": "empty_string"
+        },
+        {
+          "name": "comments",
+          "type": "text",
+          "nullable": false,
+          "default": "empty_string"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "fk_go_dcim_racks_rack_type",
+          "kind": "foreign_key",
+          "columns": [
+            "rack_type_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true,
+          "referenced_table": "go_dcim_rack_types",
+          "referenced_columns": [
+            "id"
+          ],
+          "on_update": "CASCADE",
+          "on_delete": "RESTRICT"
+        },
+        {
+          "name": "fk_go_dcim_racks_role",
+          "kind": "foreign_key",
+          "columns": [
+            "role_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true,
+          "referenced_table": "go_dcim_rack_roles",
+          "referenced_columns": [
+            "id"
+          ],
+          "on_update": "CASCADE",
+          "on_delete": "RESTRICT"
+        },
+        {
+          "name": "fk_go_dcim_racks_site",
+          "kind": "foreign_key",
+          "columns": [
+            "site_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true,
+          "referenced_table": "go_dcim_sites",
+          "referenced_columns": [
+            "id"
+          ],
+          "on_update": "CASCADE",
+          "on_delete": "RESTRICT"
+        },
+        {
+          "name": "go_dcim_racks_pkey",
+          "kind": "primary_key",
+          "columns": [
+            "id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true
+        }
+      ],
+      "indexes": [
+        {
+          "name": "go_dcim_racks_pkey",
+          "unique": true,
+          "primary": true,
+          "method": "btree",
+          "keys": [
+            "id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_dcim_racks_facility_id",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "facility_id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_dcim_racks_last_updated",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "last_updated"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_dcim_racks_name",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "name"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_dcim_racks_status",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "status"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_rack_role",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "role_id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_rack_site",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "site_id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_rack_type",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "rack_type_id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "uq_go_rack_asset_tag",
+          "unique": true,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "asset_tag"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        }
+      ]
+    },
+    {
+      "name": "go_dcim_sites",
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "sequence",
+          "sequence": "go_dcim_sites_id_seq"
+        },
+        {
+          "name": "created",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "last_updated",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "name",
+          "type": "character varying(100)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "slug",
+          "type": "character varying(100)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "status",
+          "type": "character varying(50)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "facility",
+          "type": "character varying(50)",
+          "nullable": false,
+          "default": "empty_string"
+        },
+        {
+          "name": "description",
+          "type": "character varying(200)",
+          "nullable": false,
+          "default": "empty_string"
+        },
+        {
+          "name": "comments",
+          "type": "text",
+          "nullable": false,
+          "default": "empty_string"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "go_dcim_sites_pkey",
+          "kind": "primary_key",
+          "columns": [
+            "id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true
+        }
+      ],
+      "indexes": [
+        {
+          "name": "go_dcim_sites_pkey",
+          "unique": true,
+          "primary": true,
+          "method": "btree",
+          "keys": [
+            "id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_dcim_sites_last_updated",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "last_updated"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_dcim_sites_status",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "status"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "uq_go_site_name",
+          "unique": true,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "name"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "uq_go_site_slug",
+          "unique": true,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "slug"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        }
+      ]
+    },
+    {
+      "name": "go_identity_group_memberships",
+      "columns": [
+        {
+          "name": "user_id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "group_id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "none"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "fk_go_identity_group_memberships_group",
+          "kind": "foreign_key",
+          "columns": [
+            "group_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true,
+          "referenced_table": "go_identity_groups",
+          "referenced_columns": [
+            "id"
+          ],
+          "on_update": "CASCADE",
+          "on_delete": "CASCADE"
+        },
+        {
+          "name": "fk_go_identity_group_memberships_user",
+          "kind": "foreign_key",
+          "columns": [
+            "user_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true,
+          "referenced_table": "go_identity_users",
+          "referenced_columns": [
+            "id"
+          ],
+          "on_update": "CASCADE",
+          "on_delete": "CASCADE"
+        },
+        {
+          "name": "go_identity_group_memberships_pkey",
+          "kind": "primary_key",
+          "columns": [
+            "user_id",
+            "group_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true
+        }
+      ],
+      "indexes": [
+        {
+          "name": "go_identity_group_memberships_pkey",
+          "unique": true,
+          "primary": true,
+          "method": "btree",
+          "keys": [
+            "user_id",
+            "group_id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        }
+      ]
+    },
+    {
+      "name": "go_identity_group_permission_grants",
+      "columns": [
+        {
+          "name": "group_id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "permission_id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "none"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "fk_go_identity_group_permission_grants_group",
+          "kind": "foreign_key",
+          "columns": [
+            "group_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true,
+          "referenced_table": "go_identity_groups",
+          "referenced_columns": [
+            "id"
+          ],
+          "on_update": "CASCADE",
+          "on_delete": "CASCADE"
+        },
+        {
+          "name": "fk_go_identity_group_permission_grants_permission",
+          "kind": "foreign_key",
+          "columns": [
+            "permission_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true,
+          "referenced_table": "go_identity_permission_grants",
+          "referenced_columns": [
+            "id"
+          ],
+          "on_update": "CASCADE",
+          "on_delete": "CASCADE"
+        },
+        {
+          "name": "go_identity_group_permission_grants_pkey",
+          "kind": "primary_key",
+          "columns": [
+            "group_id",
+            "permission_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true
+        }
+      ],
+      "indexes": [
+        {
+          "name": "go_identity_group_permission_grants_pkey",
+          "unique": true,
+          "primary": true,
+          "method": "btree",
+          "keys": [
+            "group_id",
+            "permission_id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        }
+      ]
+    },
+    {
+      "name": "go_identity_groups",
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "sequence",
+          "sequence": "go_identity_groups_id_seq"
+        },
+        {
+          "name": "name",
+          "type": "character varying(150)",
+          "nullable": false,
+          "default": "none"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "go_identity_groups_pkey",
+          "kind": "primary_key",
+          "columns": [
+            "id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true
+        }
+      ],
+      "indexes": [
+        {
+          "name": "go_identity_groups_pkey",
+          "unique": true,
+          "primary": true,
+          "method": "btree",
+          "keys": [
+            "id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_identity_groups_name",
+          "unique": true,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "name"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        }
+      ]
+    },
+    {
+      "name": "go_identity_permission_grants",
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "sequence",
+          "sequence": "go_identity_permission_grants_id_seq"
+        },
+        {
+          "name": "name",
+          "type": "character varying(150)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "app_label",
+          "type": "character varying(100)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "action",
+          "type": "character varying(16)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "model",
+          "type": "character varying(100)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "object_id",
+          "type": "bigint",
+          "nullable": true,
+          "default": "none"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "go_identity_permission_grants_pkey",
+          "kind": "primary_key",
+          "columns": [
+            "id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true
+        }
+      ],
+      "indexes": [
+        {
+          "name": "go_identity_permission_grants_pkey",
+          "unique": true,
+          "primary": true,
+          "method": "btree",
+          "keys": [
+            "id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_identity_permission_grants_action",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "action"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_identity_permission_grants_app_label",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "app_label"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_identity_permission_grants_model",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "model"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_identity_permission_grants_object_id",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "object_id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        }
+      ]
+    },
+    {
+      "name": "go_identity_sessions",
+      "columns": [
+        {
+          "name": "secret_hash",
+          "type": "bytea",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "csrf_hash",
+          "type": "bytea",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "user_id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "created",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "expires",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "last_seen",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "fk_go_identity_sessions_user",
+          "kind": "foreign_key",
+          "columns": [
+            "user_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true,
+          "referenced_table": "go_identity_users",
+          "referenced_columns": [
+            "id"
+          ],
+          "on_update": "CASCADE",
+          "on_delete": "RESTRICT"
+        },
+        {
+          "name": "go_identity_sessions_pkey",
+          "kind": "primary_key",
+          "columns": [
+            "secret_hash"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true
+        }
+      ],
+      "indexes": [
+        {
+          "name": "go_identity_sessions_pkey",
+          "unique": true,
+          "primary": true,
+          "method": "btree",
+          "keys": [
+            "secret_hash"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_identity_sessions_expires",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "expires"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_identity_sessions_user_id",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "user_id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        }
+      ]
+    },
+    {
+      "name": "go_identity_tokens",
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "sequence",
+          "sequence": "go_identity_tokens_id_seq"
+        },
+        {
+          "name": "user_id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "display",
+          "type": "character varying(32)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "secret_hash",
+          "type": "bytea",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "description",
+          "type": "character varying(200)",
+          "nullable": false,
+          "default": "empty_string"
+        },
+        {
+          "name": "write_enabled",
+          "type": "boolean",
+          "nullable": false,
+          "default": "false"
+        },
+        {
+          "name": "allowed_ips",
+          "type": "jsonb",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "created",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "expires",
+          "type": "timestamp with time zone",
+          "nullable": true,
+          "default": "none"
+        },
+        {
+          "name": "last_used",
+          "type": "timestamp with time zone",
+          "nullable": true,
+          "default": "none"
+        },
+        {
+          "name": "revoked_at",
+          "type": "timestamp with time zone",
+          "nullable": true,
+          "default": "none"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "fk_go_identity_tokens_user",
+          "kind": "foreign_key",
+          "columns": [
+            "user_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true,
+          "referenced_table": "go_identity_users",
+          "referenced_columns": [
+            "id"
+          ],
+          "on_update": "CASCADE",
+          "on_delete": "RESTRICT"
+        },
+        {
+          "name": "go_identity_tokens_pkey",
+          "kind": "primary_key",
+          "columns": [
+            "id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true
+        }
+      ],
+      "indexes": [
+        {
+          "name": "go_identity_tokens_pkey",
+          "unique": true,
+          "primary": true,
+          "method": "btree",
+          "keys": [
+            "id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_identity_tokens_secret_hash",
+          "unique": true,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "secret_hash"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_identity_tokens_user_id",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "user_id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        }
+      ]
+    },
+    {
+      "name": "go_identity_user_permission_grants",
+      "columns": [
+        {
+          "name": "user_id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "permission_id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "none"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "fk_go_identity_user_permission_grants_permission",
+          "kind": "foreign_key",
+          "columns": [
+            "permission_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true,
+          "referenced_table": "go_identity_permission_grants",
+          "referenced_columns": [
+            "id"
+          ],
+          "on_update": "CASCADE",
+          "on_delete": "CASCADE"
+        },
+        {
+          "name": "fk_go_identity_user_permission_grants_user",
+          "kind": "foreign_key",
+          "columns": [
+            "user_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true,
+          "referenced_table": "go_identity_users",
+          "referenced_columns": [
+            "id"
+          ],
+          "on_update": "CASCADE",
+          "on_delete": "CASCADE"
+        },
+        {
+          "name": "go_identity_user_permission_grants_pkey",
+          "kind": "primary_key",
+          "columns": [
+            "user_id",
+            "permission_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true
+        }
+      ],
+      "indexes": [
+        {
+          "name": "go_identity_user_permission_grants_pkey",
+          "unique": true,
+          "primary": true,
+          "method": "btree",
+          "keys": [
+            "user_id",
+            "permission_id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        }
+      ]
+    },
+    {
+      "name": "go_identity_users",
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "sequence",
+          "sequence": "go_identity_users_id_seq"
+        },
+        {
+          "name": "username",
+          "type": "character varying(150)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "email",
+          "type": "character varying(254)",
+          "nullable": false,
+          "default": "empty_string"
+        },
+        {
+          "name": "first_name",
+          "type": "character varying(150)",
+          "nullable": false,
+          "default": "empty_string"
+        },
+        {
+          "name": "last_name",
+          "type": "character varying(150)",
+          "nullable": false,
+          "default": "empty_string"
+        },
+        {
+          "name": "password_hash",
+          "type": "character varying(128)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "is_staff",
+          "type": "boolean",
+          "nullable": false,
+          "default": "false"
+        },
+        {
+          "name": "is_superuser",
+          "type": "boolean",
+          "nullable": false,
+          "default": "false"
+        },
+        {
+          "name": "is_active",
+          "type": "boolean",
+          "nullable": false,
+          "default": "true"
+        },
+        {
+          "name": "permissions",
+          "type": "jsonb",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "created",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "updated",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "go_identity_users_pkey",
+          "kind": "primary_key",
+          "columns": [
+            "id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true
+        }
+      ],
+      "indexes": [
+        {
+          "name": "go_identity_users_pkey",
+          "unique": true,
+          "primary": true,
+          "method": "btree",
+          "keys": [
+            "id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_identity_users_username",
+          "unique": true,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "username"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        }
+      ]
+    },
+    {
+      "name": "go_ipam_ip_addresses",
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "sequence",
+          "sequence": "go_ipam_ip_addresses_id_seq"
+        },
+        {
+          "name": "created",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "last_updated",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "address",
+          "type": "character varying(64)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "vrf_id",
+          "type": "bigint",
+          "nullable": true,
+          "default": "none"
+        },
+        {
+          "name": "status",
+          "type": "character varying(50)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "role",
+          "type": "character varying(50)",
+          "nullable": true,
+          "default": "none"
+        },
+        {
+          "name": "dns_name",
+          "type": "character varying(255)",
+          "nullable": false,
+          "default": "empty_string"
+        },
+        {
+          "name": "description",
+          "type": "character varying(200)",
+          "nullable": false,
+          "default": "empty_string"
+        },
+        {
+          "name": "comments",
+          "type": "text",
+          "nullable": false,
+          "default": "empty_string"
+        },
+        {
+          "name": "assigned_object_type",
+          "type": "character varying(50)",
+          "nullable": true,
+          "default": "none"
+        },
+        {
+          "name": "assigned_object_id",
+          "type": "bigint",
+          "nullable": true,
+          "default": "none"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "chk_go_ip_assignment_pair",
+          "kind": "check",
+          "columns": [
+            "assigned_object_type",
+            "assigned_object_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true,
+          "expression": "assigned_object_type IS NULL AND assigned_object_id IS NULL OR assigned_object_type::text = 'dcim.interface'::text AND assigned_object_id IS NOT NULL"
+        },
+        {
+          "name": "fk_go_ipam_ip_addresses_assigned_interface",
+          "kind": "foreign_key",
+          "columns": [
+            "assigned_object_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true,
+          "referenced_table": "go_dcim_interfaces",
+          "referenced_columns": [
+            "id"
+          ],
+          "on_update": "CASCADE",
+          "on_delete": "RESTRICT"
+        },
+        {
+          "name": "fk_go_ipam_ip_addresses_vrf",
+          "kind": "foreign_key",
+          "columns": [
+            "vrf_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true,
+          "referenced_table": "go_ipam_vrfs",
+          "referenced_columns": [
+            "id"
+          ],
+          "on_update": "CASCADE",
+          "on_delete": "RESTRICT"
+        },
+        {
+          "name": "go_ipam_ip_addresses_pkey",
+          "kind": "primary_key",
+          "columns": [
+            "id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true
+        }
+      ],
+      "indexes": [
+        {
+          "name": "go_ipam_ip_addresses_pkey",
+          "unique": true,
+          "primary": true,
+          "method": "btree",
+          "keys": [
+            "id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_ip_address_value",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "vrf_id",
+            "address"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_ip_address_vrf",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "vrf_id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_ip_assignment",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "assigned_object_type",
+            "assigned_object_id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_ipam_ip_addresses_dns_name",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "dns_name"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_ipam_ip_addresses_last_updated",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "last_updated"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_ipam_ip_addresses_role",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "role"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_ipam_ip_addresses_status",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "status"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        }
+      ]
+    },
+    {
+      "name": "go_ipam_prefixes",
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "sequence",
+          "sequence": "go_ipam_prefixes_id_seq"
+        },
+        {
+          "name": "created",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "last_updated",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "prefix",
+          "type": "character varying(64)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "vrf_id",
+          "type": "bigint",
+          "nullable": true,
+          "default": "none"
+        },
+        {
+          "name": "status",
+          "type": "character varying(50)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "is_pool",
+          "type": "boolean",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "mark_utilized",
+          "type": "boolean",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "description",
+          "type": "character varying(200)",
+          "nullable": false,
+          "default": "empty_string"
+        },
+        {
+          "name": "comments",
+          "type": "text",
+          "nullable": false,
+          "default": "empty_string"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "fk_go_ipam_prefixes_vrf",
+          "kind": "foreign_key",
+          "columns": [
+            "vrf_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true,
+          "referenced_table": "go_ipam_vrfs",
+          "referenced_columns": [
+            "id"
+          ],
+          "on_update": "CASCADE",
+          "on_delete": "RESTRICT"
+        },
+        {
+          "name": "go_ipam_prefixes_pkey",
+          "kind": "primary_key",
+          "columns": [
+            "id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true
+        }
+      ],
+      "indexes": [
+        {
+          "name": "go_ipam_prefixes_pkey",
+          "unique": true,
+          "primary": true,
+          "method": "btree",
+          "keys": [
+            "id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_ipam_prefixes_last_updated",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "last_updated"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_ipam_prefixes_status",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "status"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_prefix_value",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "vrf_id",
+            "prefix"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_prefix_vrf",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "vrf_id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        }
+      ]
+    },
+    {
+      "name": "go_ipam_vrfs",
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "sequence",
+          "sequence": "go_ipam_vrfs_id_seq"
+        },
+        {
+          "name": "created",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "last_updated",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "name",
+          "type": "character varying(100)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "rd",
+          "type": "character varying(21)",
+          "nullable": true,
+          "default": "none"
+        },
+        {
+          "name": "enforce_unique",
+          "type": "boolean",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "description",
+          "type": "character varying(200)",
+          "nullable": false,
+          "default": "empty_string"
+        },
+        {
+          "name": "comments",
+          "type": "text",
+          "nullable": false,
+          "default": "empty_string"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "go_ipam_vrfs_pkey",
+          "kind": "primary_key",
+          "columns": [
+            "id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true
+        }
+      ],
+      "indexes": [
+        {
+          "name": "go_ipam_vrfs_pkey",
+          "unique": true,
+          "primary": true,
+          "method": "btree",
+          "keys": [
+            "id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_ipam_vrfs_last_updated",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "last_updated"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_ipam_vrfs_name",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "name"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "uq_go_vrf_rd",
+          "unique": true,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "rd"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        }
+      ]
+    },
+    {
+      "name": "go_object_changes",
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "sequence",
+          "sequence": "go_object_changes_id_seq"
+        },
+        {
+          "name": "actor_id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "action",
+          "type": "character varying(16)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "kind",
+          "type": "character varying(40)",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "object_id",
+          "type": "bigint",
+          "nullable": false,
+          "default": "none"
+        },
+        {
+          "name": "before_data",
+          "type": "jsonb",
+          "nullable": true,
+          "default": "none"
+        },
+        {
+          "name": "after_data",
+          "type": "jsonb",
+          "nullable": true,
+          "default": "none"
+        },
+        {
+          "name": "occurred_at",
+          "type": "timestamp with time zone",
+          "nullable": false,
+          "default": "none"
+        }
+      ],
+      "constraints": [
+        {
+          "name": "fk_go_object_changes_actor",
+          "kind": "foreign_key",
+          "columns": [
+            "actor_id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true,
+          "referenced_table": "go_identity_users",
+          "referenced_columns": [
+            "id"
+          ],
+          "on_update": "CASCADE",
+          "on_delete": "RESTRICT"
+        },
+        {
+          "name": "go_object_changes_pkey",
+          "kind": "primary_key",
+          "columns": [
+            "id"
+          ],
+          "deferrable": false,
+          "initially_deferred": false,
+          "validated": true
+        }
+      ],
+      "indexes": [
+        {
+          "name": "go_object_changes_pkey",
+          "unique": true,
+          "primary": true,
+          "method": "btree",
+          "keys": [
+            "id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_change_object",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "kind",
+            "object_id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_object_changes_action",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "action"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_object_changes_actor_id",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "actor_id"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        },
+        {
+          "name": "idx_go_object_changes_occurred_at",
+          "unique": false,
+          "primary": false,
+          "method": "btree",
+          "keys": [
+            "occurred_at"
+          ],
+          "valid": true,
+          "ready": true,
+          "nulls_not_distinct": false
+        }
+      ]
+    }
+  ],
+  "sequences": [
+    {
+      "name": "go_dcim_device_roles_id_seq",
+      "table": "go_dcim_device_roles",
+      "column": "id"
+    },
+    {
+      "name": "go_dcim_device_types_id_seq",
+      "table": "go_dcim_device_types",
+      "column": "id"
+    },
+    {
+      "name": "go_dcim_devices_id_seq",
+      "table": "go_dcim_devices",
+      "column": "id"
+    },
+    {
+      "name": "go_dcim_interface_templates_id_seq",
+      "table": "go_dcim_interface_templates",
+      "column": "id"
+    },
+    {
+      "name": "go_dcim_interfaces_id_seq",
+      "table": "go_dcim_interfaces",
+      "column": "id"
+    },
+    {
+      "name": "go_dcim_manufacturers_id_seq",
+      "table": "go_dcim_manufacturers",
+      "column": "id"
+    },
+    {
+      "name": "go_dcim_rack_roles_id_seq",
+      "table": "go_dcim_rack_roles",
+      "column": "id"
+    },
+    {
+      "name": "go_dcim_rack_types_id_seq",
+      "table": "go_dcim_rack_types",
+      "column": "id"
+    },
+    {
+      "name": "go_dcim_racks_id_seq",
+      "table": "go_dcim_racks",
+      "column": "id"
+    },
+    {
+      "name": "go_dcim_sites_id_seq",
+      "table": "go_dcim_sites",
+      "column": "id"
+    },
+    {
+      "name": "go_identity_groups_id_seq",
+      "table": "go_identity_groups",
+      "column": "id"
+    },
+    {
+      "name": "go_identity_permission_grants_id_seq",
+      "table": "go_identity_permission_grants",
+      "column": "id"
+    },
+    {
+      "name": "go_identity_tokens_id_seq",
+      "table": "go_identity_tokens",
+      "column": "id"
+    },
+    {
+      "name": "go_identity_users_id_seq",
+      "table": "go_identity_users",
+      "column": "id"
+    },
+    {
+      "name": "go_ipam_ip_addresses_id_seq",
+      "table": "go_ipam_ip_addresses",
+      "column": "id"
+    },
+    {
+      "name": "go_ipam_prefixes_id_seq",
+      "table": "go_ipam_prefixes",
+      "column": "id"
+    },
+    {
+      "name": "go_ipam_vrfs_id_seq",
+      "table": "go_ipam_vrfs",
+      "column": "id"
+    },
+    {
+      "name": "go_object_changes_id_seq",
+      "table": "go_object_changes",
+      "column": "id"
+    }
+  ]
+}
