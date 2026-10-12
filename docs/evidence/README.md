@@ -194,6 +194,24 @@ excluded receipt preserves that result without changing source and requires
 its own pinned local gates and exact-SHA CI. No retained pinned
 differential accompanies this bounded result, so no T2/T3 claim is made.
 The
+[bounded Interface scalar write-presence result](2026-10-12-core-workflow-v2-interface-scalar-presence-i11-v0.md)
+records exact candidate `8f4c6d6d3d8a981519a2bd8800428152b9b92d78` at
+`source-v2:sha256:e9e8520e5d2699f90e2e2d59a722112b12f5a84b2388da5d053ecb57fc4e4711`,
+3,093 entries. Its focused/race, real-PostgreSQL durability and six late-error
+rollbacks, complete L4, generated/Vue, repository, unchanged committed replay,
+and exact-candidate CI boundaries passed. This initial two-path excluded
+claim passed both independent artifact reviews and its assembly local gate
+(`2026-10-12T20:46:40.060Z`–`20:53:08.241Z`, exit 0, log SHA-256
+`ddb2210d9834e96fc04e26cfbc80ac18b8974308300373c1b0578d25822171a3`).
+Its final frozen-file local replay and own exact-SHA CI remain, then the
+separate receipt and standing-authorized bounded
+closeout gates. Source governance remains conservatively `in-progress`.
+No new human artifact inspection or formal retained-claim authentication,
+tier/consumer/parent/profile promotion, or production completion is claimed.
+The pinned oracle image is unavailable, so T2/T3 remain unearned; Vue checks
+earn no T4. The unchanged pinned dependency replay still reports 23 npm
+advisories (seven moderate, fourteen high, two critical).
+The
 [bounded dependency-aware readiness result](2026-08-27-core-workflow-v3-dependency-readiness-v0.md)
 passed its exact-name, affected, race, complete L4 PostgreSQL-regression,
 coverage, pinned repository, and independent exact-candidate CI boundaries on
