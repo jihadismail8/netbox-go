@@ -179,11 +179,12 @@ passed its exact-name, affected/race, real-PostgreSQL, complete L4,
 generated-contract, Vue, pinned repository, and independent exact-candidate
 CI boundaries on exact revision
 `c74821a0473a52873ea2bf26e781bf0fa5e33ebb`. Its current two-path,
-source-v2-excluded claim conditionally makes only bounded I10 `evidence`
-after the exact claim revision passes repository CI; its excluded receipt and
-artifact-specific project-owner review of that exact artifact then remain. No
-retained pinned differential accompanies this bounded result, so no T2/T3
-claim is made.
+source-v2-excluded claim revision
+`33b595a5d5c7a1cac5444213cc7531a5382b7415` passed its pinned local gates and
+exact-SHA repository CI, making only bounded I10 `evidence`. This
+source-v2-excluded receipt requires exact-SHA repository CI; artifact-specific
+project-owner evidence review remains. No retained pinned differential
+accompanies this bounded result, so no T2/T3 claim is made.
 The
 [bounded dependency-aware readiness result](2026-08-27-core-workflow-v3-dependency-readiness-v0.md)
 passed its exact-name, affected, race, complete L4 PostgreSQL-regression,
@@ -285,6 +286,12 @@ create/PUT/PATCH presence. This excluded receipt preserves that exact result
 without changing source and must pass its own exact-SHA CI. I9 promotes no
 compatibility tier, profile state, parent, later child, or traceability
 consumer.
+`CW1-V2-02-I10` is effective `evidence` at exact claim revision
+`33b595a5d5c7a1cac5444213cc7531a5382b7415` only for Device common scalar and
+relationship create/PUT/PATCH presence. Its source-v2-excluded receipt
+exact-SHA CI and artifact-specific project-owner evidence review remain. I10
+promotes no compatibility tier, profile state, parent, later child, or
+traceability consumer.
 `CW1-V3-01` has an effective owner-accepted `done` closeout at exact revision
 `711d9e0e5ce34529fffeed840dc4812824c09f64`, only for its bounded
 operational-probe slice. This excluded receipt preserves that exact result
@@ -300,10 +307,10 @@ deployment, migration, rewrite, or production boundary.
 
 | Evidence                 | Required command or boundary                                  | Current state                                                    |
 | ------------------------ | ------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Repository quality       | Revised `make check` including non-mutating backend coverage  | V1-I4 and V2-I1/I2/I3/I4 retained; V2-I5/I6/I7/I8/I9, V3-01, and bounded V3-02 done |
+| Repository quality       | Revised `make check` including non-mutating backend coverage  | V1-I4 and V2-I1/I2/I3/I4 retained; V2-I5/I6/I7/I8/I9, V3-01, and bounded V3-02 done; bounded V2-I10 evidence effective, receipt CI pending |
 | Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                          |
 | gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                            |
-| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, V1-I4, V2-I1/I2/I3/I4/I5/I6, bounded V2-I7/I8/I9, V3-01, and V3-02 passed; V3-03 through V3-05 open |
+| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, V1-I4, V2-I1/I2/I3/I4/I5/I6, bounded V2-I7/I8/I9/I10, V3-01, and V3-02 passed; V3-03 through V3-05 open |
 | Standalone deployment    | `make deployment-smoke`                                       | CORS-scoped exact-commit result retained; V3-04 remains open     |
 | Browser workflow         | `make browser-e2e`                                            | Harness present; current result pending                          |
 
