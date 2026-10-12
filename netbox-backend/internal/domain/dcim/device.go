@@ -446,6 +446,26 @@ func (device *Device) ApplyPatch(patch DevicePatch, now shared.Timestamp) error 
 			Description: "At least one writable field must be supplied.",
 		})
 	}
+	return device.Replace(device.valuesWithPatch(patch), now)
+}
+
+// ValidatePatch previews a Device mutation without changing aggregate state.
+// Empty previews are valid; ApplyPatch retains the public update-mask check.
+func (device *Device) ValidatePatch(patch DevicePatch) error {
+	if device == nil {
+		return shared.NewError(
+			shared.ErrorReasonInternal,
+			"Cannot validate a patch for a nil Device.",
+		)
+	}
+	_, violations := validateDeviceValues(device.valuesWithPatch(patch))
+	if len(violations) > 0 {
+		return shared.NewValidationError(violations...)
+	}
+	return nil
+}
+
+func (device Device) valuesWithPatch(patch DevicePatch) DeviceValues {
 	values := device.Values()
 	if patch.DeviceType != nil {
 		values.DeviceType = *patch.DeviceType
@@ -476,7 +496,7 @@ func (device *Device) ApplyPatch(patch DevicePatch, now shared.Timestamp) error 
 	}
 	setString(&values.Description, patch.Description)
 	setString(&values.Comments, patch.Comments)
-	return device.Replace(values, now)
+	return values
 }
 
 func (device Device) ID() shared.ID                           { return device.id }
@@ -600,13 +620,13 @@ func validateDeviceValues(
 	validateOptionalLength(&violations, "description", description, DeviceDescriptionMaxLength)
 	comments := strings.TrimSpace(values.Comments)
 
-	status, validStatus := ParseDeviceStatus(strings.TrimSpace(values.Status))
+	status, validStatus := ParseDeviceStatus(values.Status)
 	if !validStatus {
 		violations = append(violations, shared.FieldViolation{
 			Field: "status", Reason: "invalid_choice", Description: "Select a valid choice.",
 		})
 	}
-	face, validFace := ParseDeviceFace(strings.TrimSpace(values.Face))
+	face, validFace := ParseDeviceFace(values.Face)
 	if !validFace {
 		violations = append(violations, shared.FieldViolation{
 			Field: "face", Reason: "invalid_choice", Description: "Select a valid choice.",
@@ -667,7 +687,7 @@ func validateDeviceValues(
 	}
 
 	if airflow, present := values.Airflow.Get(); present {
-		parsed, valid := ParseDeviceAirflow(strings.TrimSpace(airflow.String()))
+		parsed, valid := ParseDeviceAirflow(airflow.String())
 		if !valid {
 			violations = append(violations, shared.FieldViolation{
 				Field: "airflow", Reason: "invalid_choice", Description: "Select a valid choice.",

@@ -339,7 +339,7 @@ remain open.
 | `CW1-V2-02-I7`      | `done`        | Accepted bounded DeviceType scalar write presence   | Done I6 and current `CW1-G00`          |
 | `CW1-V2-02-I8`      | `done`        | Accepted InterfaceTemplate scalar write presence    | Done I7 and current `CW1-G00`          |
 | `CW1-V2-02-I9`      | `done`        | Accepted Rack scalar write presence                 | Done I8 and current `CW1-G00`          |
-| `CW1-V2-02-I10`     | `packet`      | Gate Device scalar write-presence handoff           | Done I9 and current `CW1-G00`          |
+| `CW1-V2-02-I10`     | `in-progress` | Verify Device scalar write-presence candidate        | Done I9 and current `CW1-G00`          |
 | `CW1-V2-03`–`V2-08` | `blocked`     | Close later typed business behavior                 | V2-02 and named lane dependencies      |
 | `CW1-V3-01`         | `done`        | Accepted bounded dependency-aware readiness         | `CW1-G00`                              |
 | `CW1-V3-02`         | `done`        | Accepted bounded bootstrap/schema contract          | Current `CW1-G00` and done `CW1-V2-01` |
@@ -640,19 +640,21 @@ Bounded children:
   owner-accepted closeout claim and excluded two-path receipt passed exact-SHA
   CI, so bounded I9 is effectively `done`. I9 closes no later child.
 
-- [`CW1-V2-02-I10`](increments/CW1-V2-02-I10.md) is the packet-gated lane for
+- [`CW1-V2-02-I10`](increments/CW1-V2-02-I10.md) is the active bounded lane for
   Device `device_type`, `role`, `name`, `site`, `rack`, `position`, `face`,
   `status`, `serial`, `asset_tag`, `airflow`, `description`, and `comments`
   common create/PUT/PATCH presence, operation-specific generated contracts,
   matching representable REST/gRPC intent, create-only DeviceType-airflow
   inheritance, PostgreSQL durability, Vue dirty-field handling, and eight
-  fixed regressions. Behavior implementation remains blocked until its exact
-  nine-path packet claim passes repository CI. Fixtures contain no
-  InterfaceTemplates and use known-valid unpositioned state. Device
-  uniqueness, placement, template snapshot/instantiation transactions,
-  deletion, list/query behavior, full CRUD, tiers, this parent, and every
-  traceability consumer remain open; Device create stays assigned to the
-  `CW1-V2-04` template-order contradiction.
+  fixed regressions. Its exact packet claim and packet CI are green, and the
+  implementation candidate has passed the local contract, focused, race,
+  real-PostgreSQL, complete-L4, Vue, backend, frontend, and repository gates.
+  Exact committed replay, candidate CI, and evidence retention remain.
+  Fixtures contain no InterfaceTemplates and use known-valid unpositioned
+  state. Device uniqueness, placement, template snapshot/instantiation
+  transactions, deletion, list/query behavior, full CRUD, tiers, this parent,
+  and every traceability consumer remain open; Device create stays assigned
+  to the `CW1-V2-04` template-order contradiction.
 
 - [ ] Represent all 13 resources × list/get/create/PUT/PATCH/delete.
 - [ ] Cover defaults, read-only fields, and nullability.

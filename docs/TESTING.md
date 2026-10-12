@@ -229,17 +229,20 @@ rules, RackType-update propagation, Device site propagation, deletion,
 list/query, full CRUD, the parent, profile promotion, every tier, and every
 later child remain open.
 
-`CW1-V2-02-I10` has a nine-path Device scalar-presence packet at entry
-revision `ced8f3bb31536e92f8a87be827e925cec306afaa`, source digest
-`source-v2:sha256:e95f73d153d2926c80133c6e3d51baba9047800077ff057da9eb619b71ab3b7a`
-with 3,079 entries, and source-manifest SHA-256
-`aa36017d0ce33d64e07fa54b085ac1d6c4285d57d17c2cd40ffc3b8b6b82986c`.
-Its fixed eight-test matrix covers Device scalar normalization, command
-presence, pinned PUT omission defaults, failed-validation non-effects, REST,
-gRPC, real-PostgreSQL durability, and REST/gRPC parity. Behavior editing is
-blocked until the exact reviewed packet claim passes repository CI. The
-packet keeps Device create's template-snapshot contradiction, placement,
-uniqueness, list/get/delete, every tier, and the parent open.
+`CW1-V2-02-I10` has green exact packet claim
+`efc042b18194e4c33f4272e9c1fd08b32b5d53dc`. Its eight fixed Device tests
+exist exactly once and pass across scalar normalization, command presence,
+pinned PUT omission defaults, failed-validation non-effects, REST, gRPC,
+real-PostgreSQL durability, and REST/gRPC parity. The local candidate also
+passes 254 capability/OpenAPI adversarial tests, 96 traceability tests, the
+293-row profile check, 33-path/86-operation OpenAPI validation, affected and
+race suites, complete L4, 65 focused Vue tests and both typechecks, backend
+coverage, the 185-test frontend gate, and the repository gate. The disposable
+PostgreSQL role/database were removed and verified absent; no credential is
+retained. Exact committed replay and candidate CI remain. No differential was
+run, so T2/T3/T4 remain unearned. Device create's template-snapshot
+contradiction, placement, uniqueness, list/get/delete, every tier, and the
+parent remain open.
 
 `CW1-V3-01` has exact tested candidate
 `58241d7f87b642e6b7eca279592ad3759a0f5a06` at source digest
@@ -412,7 +415,7 @@ and exact change-state outcomes remain to be added and retained.
 | ------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage                       | `make check` retained green on each exact relevant source digest                                                          | Entry source-v2 retained; active-source refresh required |
 | V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests                      | Pass I4's exact claim CI, retain its receipt, obtain owner review, then complete the remaining identity matrix            | I4 evidence claim conditional; parent open               |
-| V2 profile behavior      | Shared 13-resource service, broad tests, accepted I1-I9, and the packet-gated Device I10 lane | Pass I10's exact packet gate; trace every remaining invariant, rollback, and external-tier boundary | I1-I9 done; I10 packet; parent open |
+| V2 profile behavior      | Shared 13-resource service, broad tests, accepted I1-I9, and the active Device I10 lane | Retain I10's exact candidate/evidence; trace every remaining invariant, rollback, and external-tier boundary | I1-I9 done; I10 in progress; parent open |
 | V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness, and owner-accepted bounded V3-01/V3-02 evidence with green closeout receipts | Complete V3-03 through V3-05 and retain deployment loss-recovery artifacts | V3-01/V3-02 done; V3 parent open |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites                            | Complete T2 scenario report, then equivalent T3 report                                                                    | T1; implementation gap                                   |
 | V5 Vue workflow          | Typed adapters and real-browser harness                                                    | Both workflows and every required negative/state case retained green                                                      | T1; implementation gap                                   |

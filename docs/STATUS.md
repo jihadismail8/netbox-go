@@ -210,16 +210,21 @@ RackType-update propagation, Device site propagation, deletion, list/query
 behavior, full CRUD, every tier/consumer, the parent, profile promotion, and
 every later child remain open.
 
-`CW1-V2-02-I10` has a nine-path Device scalar-presence packet at entry
-revision `ced8f3bb31536e92f8a87be827e925cec306afaa`, source digest
-`source-v2:sha256:e95f73d153d2926c80133c6e3d51baba9047800077ff057da9eb619b71ab3b7a`
-with 3,079 entries, and source-manifest SHA-256
-`aa36017d0ce33d64e07fa54b085ac1d6c4285d57d17c2cd40ffc3b8b6b82986c`.
-It is limited to the 13 Device common writable fields across create/PUT/PATCH
-presence, create-only DeviceType-airflow inheritance, operation-specific
-contracts, shared typed REST/gRPC intent, PostgreSQL durability, Vue
-dirty-field handling, and eight fixed regressions. Implementation is blocked
-until the exact reviewed packet claim passes repository CI. Device create's
+`CW1-V2-02-I10` has green exact nine-path packet claim
+`efc042b18194e4c33f4272e9c1fd08b32b5d53dc` at source digest
+`source-v2:sha256:75a7c025adaa7130d9710c2b0d1ecb1a7c0796317274c34d5d58209716d53e7d`
+with 3,080 entries and source-manifest SHA-256
+`0d3fa839e0f59515cc308b78d4fe6a1c82b24b4b41a298716b3dcd9f789c57b4`.
+Its bounded implementation candidate covers only the 13 Device common
+writable fields across create/PUT/PATCH presence, create-only
+DeviceType-airflow inheritance, operation-specific contracts, shared typed
+REST/gRPC intent, PostgreSQL durability, Vue dirty-field handling, and eight
+fixed regressions. Local contract/profile/OpenAPI, exact-name, affected,
+race, focused real-PostgreSQL, complete L4, Vue, backend, frontend, and
+repository gates are green; the disposable PostgreSQL role/database were
+removed and verified absent. Exact committed replay, candidate push and CI,
+and evidence retention remain. No differential was retained, so T2/T3 remain
+unearned and the Vue unit/type boundary earns no T4. Device create's
 InterfaceTemplate snapshot-order contradiction remains assigned to
 `CW1-V2-04`; uniqueness, placement, template transactions, list/get/delete,
 full CRUD, every tier/consumer, the parent, and profile promotion remain open.
@@ -501,7 +506,7 @@ replacement completes ADR 0004's governing gate and CP-13.
 | ------------------------ | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
 | V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                                 | Refresh for the active source and every later relevant merged digest                                                             | Continuous; entry source retained          |
 | V1 identity/RBAC         | Persisted identity, retained CORS, accepted I1/I2/I3, and retained I4 evidence                          | Obtain I4 owner review; complete password-policy/throttle/proxy/streaming plus RBAC/admin/secret work                            | I4 evidence; parent open                   |
-| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, accepted I1-I9, and the packet-gated Device I10 lane | Pass I10's exact packet gate, then complete remaining invariant, rollback, side-effect, concurrency, and tier cases | I1-I9 done; I10 packet; parent open |
+| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, accepted I1-I9, and the active Device I10 lane | Retain I10's exact candidate/evidence, then complete remaining invariant, rollback, side-effect, concurrency, and tier cases | I1-I9 done; I10 in progress; parent open |
 | V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, Compose harness, and owner-accepted bounded V3-01/V3-02 evidence with green closeout receipts | Complete V3-03 through V3-05 | V3-01/V3-02 done; V3 parent open |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                             | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report                       | T1; implementation/evidence pending        |
 | V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                         | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes                  | T1; implementation/evidence pending        |

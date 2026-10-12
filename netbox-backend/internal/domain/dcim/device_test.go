@@ -1,6 +1,7 @@
 package dcim_test
 
 import (
+	"strings"
 	"testing"
 	"time"
 
@@ -10,6 +11,135 @@ import (
 	"netbox-go/internal/domain/dcim"
 	"netbox-go/internal/domain/shared"
 )
+
+func TestDeviceScalarNormalizationContract(t *testing.T) {
+	t.Parallel()
+
+	unpositionedValues := func() dcim.DeviceValues {
+		values := validDeviceValues(t)
+		values.Rack = dcim.NullDeviceValue[dcim.RackReference]()
+		values.Position = dcim.NullDeviceValue[dcim.RackPosition]()
+		values.Face = ""
+		return values
+	}
+
+	t.Run("trims text while preserving nullable blank values", func(t *testing.T) {
+		values := unpositionedValues()
+		values.Name = dcim.NonNullDeviceValue("  edge-02  ")
+		values.Serial = "  SN-02  "
+		values.AssetTag = dcim.NonNullDeviceValue("   ")
+		values.Description = "  description  "
+		values.Comments = "  comments  "
+
+		device, err := dcim.NewDevice(values, testTime)
+		require.NoError(t, err)
+		name, present := device.Name().Get()
+		require.True(t, present)
+		assert.Equal(t, "edge-02", name)
+		assert.Equal(t, "SN-02", device.Serial())
+		assetTag, present := device.AssetTag().Get()
+		require.True(t, present)
+		assert.Empty(t, assetTag)
+		assert.Equal(t, "description", device.Description())
+		assert.Equal(t, "comments", device.Comments())
+	})
+
+	for _, test := range []struct {
+		name   string
+		field  string
+		mutate func(*dcim.DeviceValues)
+	}{
+		{name: "status", field: "status", mutate: func(values *dcim.DeviceValues) {
+			values.Status = " active "
+		}},
+		{name: "face", field: "face", mutate: func(values *dcim.DeviceValues) {
+			values.Face = " front "
+		}},
+		{name: "airflow", field: "airflow", mutate: func(values *dcim.DeviceValues) {
+			values.Airflow = dcim.NonNullDeviceAirflow(" front-to-rear ")
+		}},
+	} {
+		test := test
+		t.Run("choice whitespace rejected/"+test.name, func(t *testing.T) {
+			values := unpositionedValues()
+			test.mutate(&values)
+			_, err := dcim.NewDevice(values, testTime)
+			require.Error(t, err)
+			require.Contains(t, shared.ViolationsOf(err), shared.FieldViolation{
+				Field: test.field, Reason: "invalid_choice", Description: "Select a valid choice.",
+			})
+		})
+	}
+
+	for _, test := range []struct {
+		name   string
+		field  string
+		limit  int
+		mutate func(*dcim.DeviceValues, string)
+	}{
+		{name: "name", field: "name", limit: dcim.DeviceNameMaxLength, mutate: func(values *dcim.DeviceValues, value string) {
+			values.Name = dcim.NonNullDeviceValue(value)
+		}},
+		{name: "serial", field: "serial", limit: dcim.DeviceSerialMaxLength, mutate: func(values *dcim.DeviceValues, value string) {
+			values.Serial = value
+		}},
+		{name: "asset tag", field: "asset_tag", limit: dcim.DeviceAssetTagMaxLength, mutate: func(values *dcim.DeviceValues, value string) {
+			values.AssetTag = dcim.NonNullDeviceValue(value)
+		}},
+		{name: "description", field: "description", limit: dcim.DeviceDescriptionMaxLength, mutate: func(values *dcim.DeviceValues, value string) {
+			values.Description = value
+		}},
+	} {
+		test := test
+		t.Run("rune length enforced/"+test.name, func(t *testing.T) {
+			values := unpositionedValues()
+			test.mutate(&values, strings.Repeat("é", test.limit+1))
+			_, err := dcim.NewDevice(values, testTime)
+			require.Error(t, err)
+			require.Contains(t, shared.ViolationsOf(err), shared.FieldViolation{
+				Field: test.field, Reason: "max_length",
+				Description: "Ensure this field has no more than the supported number of characters.",
+			})
+		})
+	}
+
+	for _, test := range []struct {
+		name    string
+		request dcim.NullableDeviceAirflow
+		want    dcim.DeviceAirflow
+	}{
+		{name: "null inherits", request: dcim.NullDeviceAirflow(), want: dcim.DeviceAirflowFrontToRear},
+		{name: "blank inherits", request: dcim.NonNullDeviceAirflow(""), want: dcim.DeviceAirflowFrontToRear},
+		{name: "concrete wins", request: dcim.NonNullDeviceAirflow(dcim.DeviceAirflowRearToFront), want: dcim.DeviceAirflowRearToFront},
+	} {
+		test := test
+		t.Run(test.name+" DeviceType airflow", func(t *testing.T) {
+			values := unpositionedValues()
+			values.Airflow = test.request
+			device, err := dcim.NewDevice(values, testTime)
+			require.NoError(t, err)
+			airflow, present := device.Airflow().Get()
+			require.True(t, present)
+			assert.Equal(t, test.want, airflow)
+		})
+	}
+
+	t.Run("patch preview is atomic and blank airflow does not re-inherit", func(t *testing.T) {
+		device, err := dcim.NewDevice(unpositionedValues(), testTime)
+		require.NoError(t, err)
+		before := device.State()
+		blank := dcim.NonNullDeviceAirflow("")
+		patch := dcim.DevicePatch{Airflow: &blank}
+		require.NoError(t, device.ValidatePatch(patch))
+		assert.Equal(t, before, device.State())
+		require.NoError(t, device.ApplyPatch(
+			patch, shared.NewTimestamp(testTime.Add(time.Minute)),
+		))
+		airflow, present := device.Airflow().Get()
+		require.True(t, present)
+		assert.Empty(t, airflow)
+	})
+}
 
 func TestRackPositionUsesExactHalfUnits(t *testing.T) {
 	t.Parallel()

@@ -262,6 +262,81 @@ const DEVICE_TYPE_FIELD_CONTRACTS = {
   },
 };
 
+const DEVICE_FIELD_CONTRACTS = {
+  response: {
+    nullable_fields: [
+      "name",
+      "rack",
+      "position",
+      "face",
+      "asset_tag",
+      "airflow",
+      "created",
+      "last_updated",
+    ],
+  },
+  create: {
+    required_fields: ["device_type", "role", "site"],
+    nullable_fields: [
+      "name",
+      "rack",
+      "position",
+      "face",
+      "asset_tag",
+      "airflow",
+    ],
+    blank_fields: [
+      "name",
+      "face",
+      "serial",
+      "asset_tag",
+      "airflow",
+      "description",
+      "comments",
+    ],
+  },
+  replace: {
+    required_fields: ["device_type", "role", "site"],
+    nullable_fields: [
+      "name",
+      "rack",
+      "position",
+      "face",
+      "asset_tag",
+      "airflow",
+    ],
+    blank_fields: [
+      "name",
+      "face",
+      "serial",
+      "asset_tag",
+      "airflow",
+      "description",
+      "comments",
+    ],
+  },
+  update: {
+    required_fields: [],
+    nullable_fields: [
+      "name",
+      "rack",
+      "position",
+      "face",
+      "asset_tag",
+      "airflow",
+    ],
+    blank_fields: [
+      "name",
+      "face",
+      "serial",
+      "asset_tag",
+      "airflow",
+      "description",
+      "comments",
+    ],
+  },
+};
+
 const INTERFACE_TEMPLATE_FIELD_CONTRACTS = {
   response: {
     nullable_fields: ["created", "last_updated"],
@@ -403,6 +478,16 @@ function withDeviceTypeResourceFixture(mutator, callback) {
     DCIM_RELATIVE_PATH,
     "DeviceType",
     DEVICE_TYPE_FIELD_CONTRACTS,
+    mutator,
+    callback,
+  );
+}
+
+function withDeviceResourceFixture(mutator, callback) {
+  withResourceContractFixture(
+    DCIM_RELATIVE_PATH,
+    "Device",
+    DEVICE_FIELD_CONTRACTS,
     mutator,
     callback,
   );
@@ -586,6 +671,27 @@ function assertDeviceTypeProfileRejected(name, mutator, expectedDiagnostic) {
   });
 }
 
+function assertDeviceProfileRejected(name, mutator, expectedDiagnostic) {
+  test(name, () => {
+    withDeviceResourceFixture(mutator, (profilePath) => {
+      const result = runNode(
+        "scripts/validate_capability_profile.mjs",
+        profilePath,
+      );
+      assert.notEqual(
+        result.status,
+        0,
+        `expected rejection; ${diagnostics(result)}`,
+      );
+      assert.match(
+        diagnostics(result),
+        expectedDiagnostic,
+        "validator must identify the malformed Device field contract",
+      );
+    });
+  });
+}
+
 function assertInterfaceTemplateProfileRejected(
   name,
   mutator,
@@ -717,6 +823,15 @@ test("current capability metadata validates", () => {
     DEVICE_TYPE_FIELD_CONTRACTS,
     "current DeviceType presence metadata must match the independently pinned contract",
   );
+  const device = dcimMetadata.resources.find(
+    (resource) => resource.name === "Device",
+  );
+  assert.ok(device, "current metadata must contain Device");
+  assert.deepStrictEqual(
+    device.field_contracts,
+    DEVICE_FIELD_CONTRACTS,
+    "current Device presence metadata must match the independently pinned contract",
+  );
   const interfaceTemplate = dcimMetadata.resources.find(
     (resource) => resource.name === "InterfaceTemplate",
   );
@@ -751,7 +866,7 @@ test("DeviceRole scalar-presence traceability delta remains bounded", () => {
       rows: traceability.rows.length,
     },
     {
-      assessment_sets: 12,
+      assessment_sets: 13,
       reference_sets: 19,
       proof_sets: 15,
       applicability_sets: 15,
@@ -760,7 +875,7 @@ test("DeviceRole scalar-presence traceability delta remains bounded", () => {
       row_applicability: 293,
       rows: 293,
     },
-    "I6, I7, I8, and I9 must add only their bounded assessments without changing reviewed row authority counts",
+    "I6 through I10 must add only their bounded assessments without changing reviewed row authority counts",
   );
 
   const expectedRows = [
@@ -898,6 +1013,57 @@ test("Rack scalar-presence traceability delta remains bounded", () => {
     rackRows.filter((row) => row.assessment_set === "unresolved-v2").length,
     8,
     "Rack get/delete, protection, direct-save, and location-scoped uniqueness rules remain unresolved-v2",
+  );
+});
+
+test("Device scalar-presence traceability delta remains bounded", () => {
+  const traceability = JSON.parse(fs.readFileSync(TRACEABILITY_PATH, "utf8"));
+  const expectedRows = [
+    "operation.dcim.device.replace",
+    "operation.dcim.device.update",
+    "rule.plan.dcim.device.airflow-create-inheritance",
+    "rule.plan.dcim.device.name-nullable",
+  ];
+  const assessedRows = traceability.rows
+    .filter((row) => row.assessment_set === "unresolved-device-scalar-presence")
+    .map((row) => row.id)
+    .sort();
+  assert.deepStrictEqual(
+    assessedRows,
+    expectedRows,
+    "I10 must repoint exactly Device replace/update and the owned airflow/name rules",
+  );
+
+  const deviceRows = traceability.rows.filter(
+    (row) => row.capability === "dcim.Device",
+  );
+  assert.equal(deviceRows.length, 34);
+  assert.deepStrictEqual(
+    deviceRows
+      .filter((row) => row.assessment_set === "contradicted-dcim-filter-names")
+      .map((row) => row.id)
+      .sort(),
+    ["operation.dcim.device.list", "resource.dcim.device.contract"],
+    "Device resource/list filter contradictions must remain unchanged",
+  );
+  assert.deepStrictEqual(
+    deviceRows
+      .filter(
+        (row) =>
+          row.assessment_set === "contradicted-device-template-snapshot-order",
+      )
+      .map((row) => row.id)
+      .sort(),
+    [
+      "operation.dcim.device.create",
+      "rule.plan.dcim.device-create.snapshot-templates",
+    ],
+    "Device create snapshot-order contradictions must remain unchanged",
+  );
+  assert.equal(
+    deviceRows.filter((row) => row.assessment_set === "unresolved-v2").length,
+    26,
+    "Device get/delete, placement, uniqueness, template, list/query, and full-CRUD rules remain unresolved-v2",
   );
 });
 
@@ -1219,6 +1385,88 @@ assertDeviceTypeProfileRejected(
     deviceType.field_contracts.update.required_fields.push("manufacturer");
   },
   /dcim\.DeviceType: field_contracts\.update\.required_fields must be empty for PATCH/u,
+);
+
+assertDeviceProfileRejected(
+  "Device field contracts are mandatory",
+  (device) => {
+    delete device.field_contracts;
+  },
+  /dcim\.Device: field_contracts must declare operation-specific presence semantics/u,
+);
+
+assertDeviceProfileRejected(
+  "Device field contracts require every operation",
+  (device) => {
+    delete device.field_contracts.replace;
+  },
+  /dcim\.Device: field_contracts must declare exactly response, create, replace, and update/u,
+);
+
+assertDeviceProfileRejected(
+  "Device operation fields reject undeclared fields",
+  (device) => {
+    device.field_contracts.create.required_fields.push("platform");
+  },
+  /dcim\.Device: field_contracts\.create\.required_fields contains undeclared field platform/u,
+);
+
+assertDeviceProfileRejected(
+  "Device nullable fields remain a writable-field subset",
+  (device) => {
+    device.field_contracts.replace.nullable_fields.push("display");
+  },
+  /dcim\.Device: field_contracts\.replace\.nullable_fields contains undeclared field display/u,
+);
+
+assertDeviceProfileRejected(
+  "Device blank fields remain a writable-field subset",
+  (device) => {
+    device.field_contracts.update.blank_fields.push("interface_count");
+  },
+  /dcim\.Device: field_contracts\.update\.blank_fields contains undeclared field interface_count/u,
+);
+
+assertDeviceProfileRejected(
+  "Device blank fields reject relationship identifiers",
+  (device) => {
+    device.field_contracts.create.blank_fields.push("rack");
+  },
+  /dcim\.Device: field_contracts\.create\.blank_fields contains non-string field rack/u,
+);
+
+assertDeviceProfileRejected(
+  "Device blank fields reject decimal positions",
+  (device) => {
+    device.field_contracts.replace.blank_fields.push("position");
+  },
+  /dcim\.Device: field_contracts\.replace\.blank_fields contains non-string field position/u,
+);
+
+assertDeviceProfileRejected(
+  "Device operation fields reject duplicates",
+  (device) => {
+    device.field_contracts.create.blank_fields.push("name");
+  },
+  /dcim\.Device: field_contracts\.create\.blank_fields contains duplicate field name/u,
+);
+
+assertDeviceProfileRejected(
+  "Device response and write contracts cannot be conflated",
+  (device) => {
+    device.field_contracts.response = structuredClone(
+      device.field_contracts.create,
+    );
+  },
+  /dcim\.Device: field_contracts\.response must declare exactly nullable_fields/u,
+);
+
+assertDeviceProfileRejected(
+  "Device PATCH contracts cannot require fields",
+  (device) => {
+    device.field_contracts.update.required_fields.push("site");
+  },
+  /dcim\.Device: field_contracts\.update\.required_fields must be empty for PATCH/u,
 );
 
 assertInterfaceTemplateProfileRejected(
@@ -2452,6 +2700,234 @@ assertOpenAPIRejected(
     spec.components.schemas.DeviceType.properties.u_height.format = "int64";
   },
   /DeviceType\.u_height base type must be number/u,
+);
+
+for (const [name, pathName, method, expectedSchema] of [
+  ["POST", "/api/dcim/devices/", "post", "DeviceCreate"],
+  ["PUT", "/api/dcim/devices/{id}/", "put", "DeviceReplace"],
+  ["PATCH", "/api/dcim/devices/{id}/", "patch", "DeviceUpdate"],
+]) {
+  assertOpenAPIRejected(
+    `OpenAPI validation rejects a stale Device ${name} request reference`,
+    (spec) => {
+      spec.paths[pathName][method].requestBody.content[
+        "application/json"
+      ].schema = { $ref: "#/components/schemas/DeviceWrite" };
+    },
+    new RegExp(
+      escapeRegExp(
+        `${name} ${pathName} must reference #/components/schemas/${expectedSchema}`,
+      ),
+      "u",
+    ),
+  );
+}
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects a stale shared Device write schema",
+  (spec) => {
+    spec.components.schemas.DeviceWrite = structuredClone(
+      spec.components.schemas.DeviceCreate ??
+        spec.components.schemas.DeviceWrite,
+    );
+  },
+  /Device must not retain a conflated shared write schema/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Device create requiredness",
+  (spec) => {
+    const schema = structuredClone(
+      spec.components.schemas.DeviceCreate ??
+        spec.components.schemas.DeviceWrite,
+    );
+    schema.required = [];
+    spec.components.schemas.DeviceCreate = schema;
+  },
+  /DeviceCreate required fields must match field_contracts\.create/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Device replace requiredness",
+  (spec) => {
+    const schema = structuredClone(
+      spec.components.schemas.DeviceReplace ??
+        spec.components.schemas.DeviceWrite,
+    );
+    schema.required = ["device_type", "role", "site", "status"];
+    spec.components.schemas.DeviceReplace = schema;
+  },
+  /DeviceReplace required fields must match field_contracts\.replace/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Device update requiredness",
+  (spec) => {
+    const schema = structuredClone(
+      spec.components.schemas.DeviceUpdate ??
+        spec.components.schemas.DeviceWrite,
+    );
+    schema.required = ["site"];
+    spec.components.schemas.DeviceUpdate = schema;
+  },
+  /DeviceUpdate required fields must match field_contracts\.update/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale nullable Device relationship requests",
+  (spec) => {
+    spec.components.schemas.DeviceUpdate.properties.rack.type = "integer";
+  },
+  /DeviceUpdate\.rack nullability must match field_contracts\.update/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects nullable required Device relationship requests",
+  (spec) => {
+    spec.components.schemas.DeviceCreate.properties.device_type.type = [
+      "integer",
+      "null",
+    ];
+  },
+  /DeviceCreate\.device_type nullability must match field_contracts\.create/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Device choice request nullability",
+  (spec) => {
+    spec.components.schemas.DeviceUpdate.properties.airflow.type = "string";
+  },
+  /DeviceUpdate\.airflow nullability must match resource metadata/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Device scalar request nullability",
+  (spec) => {
+    spec.components.schemas.DeviceReplace.properties.position.type = "number";
+  },
+  /DeviceReplace\.position nullability must match field_contracts\.replace/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Device request blankability",
+  (spec) => {
+    spec.components.schemas.DeviceUpdate.properties.serial.minLength = 1;
+  },
+  /DeviceUpdate\.serial blankability must match field_contracts\.update/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects missing Device nonblank constraints",
+  (spec) => {
+    delete spec.components.schemas.DeviceReplace.properties.status.minLength;
+  },
+  /DeviceReplace\.status blankability must match field_contracts\.replace/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Device relationship identifier types",
+  (spec) => {
+    const site = spec.components.schemas.DeviceCreate.properties.site;
+    site.type = "string";
+    delete site.format;
+  },
+  /DeviceCreate\.site base type must be integer/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Device decimal position types",
+  (spec) => {
+    spec.components.schemas.DeviceUpdate.properties.position.type = [
+      "integer",
+      "null",
+    ];
+    spec.components.schemas.DeviceUpdate.properties.position.format = "int64";
+  },
+  /DeviceUpdate\.position base type must be number/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Device choice request shapes",
+  (spec) => {
+    spec.components.schemas.DeviceReplace.properties.face.type = "object";
+  },
+  /DeviceReplace\.face must remain scalar/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects nullable Device Site responses",
+  (spec) => {
+    spec.components.schemas.Device.properties.site.oneOf.push({ type: "null" });
+  },
+  /Device\.site response nullability must match field_contracts\.response/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects non-null Device Rack responses",
+  (spec) => {
+    const rack = spec.components.schemas.Device.properties.rack;
+    rack.oneOf = rack.oneOf.filter((candidate) => candidate.type !== "null");
+  },
+  /Device\.rack response nullability must match field_contracts\.response/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Device Rack response references",
+  (spec) => {
+    spec.components.schemas.Device.properties.rack.oneOf[0].$ref =
+      "#/components/schemas/Rack";
+  },
+  /Device\.rack must reference #\/components\/schemas\/ObjectReference/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Device face response envelopes",
+  (spec) => {
+    const face = spec.components.schemas.Device.properties.face;
+    face.oneOf.find((candidate) => candidate.type === "object").required = [
+      "value",
+    ];
+  },
+  /Device\.face choice response must require value and label/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects non-null Device airflow responses",
+  (spec) => {
+    const airflow = spec.components.schemas.Device.properties.airflow;
+    airflow.oneOf = airflow.oneOf.filter(
+      (candidate) => candidate.type !== "null",
+    );
+  },
+  /Device\.airflow response nullability must match resource metadata/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Device response timestamp nullability",
+  (spec) => {
+    spec.components.schemas.Device.properties.created.type = "string";
+  },
+  /Device\.created response nullability must match field_contracts\.response/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects undeclared Device response nullability",
+  (spec) => {
+    spec.components.schemas.Device.properties.serial.type = ["string", "null"];
+  },
+  /Device\.serial response nullability must match field_contracts\.response/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Device response decimal position shapes",
+  (spec) => {
+    spec.components.schemas.Device.properties.position.type = [
+      "integer",
+      "null",
+    ];
+    spec.components.schemas.Device.properties.position.format = "int64";
+  },
+  /Device\.position base type must be number/u,
 );
 
 for (const [name, pathName, method, expectedSchema] of [

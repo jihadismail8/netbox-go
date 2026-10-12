@@ -6,6 +6,8 @@ import DynamicForm from '@/components/form/DynamicForm.vue'
 import { getCoreResourceAdapter } from '@/features/core/adapters'
 import { INTERFACE_TYPE_CHOICES } from '@/features/dcim/interface-types'
 import type {
+  DeviceDTO,
+  DeviceForm,
   DeviceRoleDTO,
   DeviceRoleForm,
   DeviceTypeDTO,
@@ -905,6 +907,183 @@ describe('InterfaceTemplate core profile form contract', () => {
 
     const form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as InterfaceTemplateForm
     expect(adapter.mutationFromForm(form, true)).toEqual({ label: '' })
+  })
+})
+
+describe('Device core profile form contract', () => {
+  it('pins owned fields, required relationships, defaults, choices, and location metadata', () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'device')!
+    const fields = new Map(config.fields.map((field) => [field.key, field]))
+    const writableFields = [
+      'device_type',
+      'role',
+      'name',
+      'site',
+      'rack',
+      'position',
+      'face',
+      'status',
+      'serial',
+      'asset_tag',
+      'airflow',
+      'description',
+      'comments',
+    ]
+
+    expect(config.writableFields).toEqual(writableFields)
+    expect(config.fields.map((field) => field.key)).toEqual(writableFields)
+    expect(fields.get('device_type')).toEqual(
+      expect.objectContaining({
+        required: true,
+        type: 'api-select',
+        relationResource: 'devicetype',
+      }),
+    )
+    expect(fields.get('role')).toEqual(
+      expect.objectContaining({
+        required: true,
+        type: 'api-select',
+        relationResource: 'devicerole',
+      }),
+    )
+    expect(fields.get('site')).toEqual(
+      expect.objectContaining({ required: true, type: 'api-select', relationResource: 'site' }),
+    )
+    for (const optional of writableFields.filter(
+      (field) => !['device_type', 'role', 'site'].includes(field),
+    )) {
+      expect(fields.get(optional)?.required, optional).not.toBe(true)
+    }
+
+    expect(fields.get('rack')).toEqual(
+      expect.objectContaining({
+        type: 'api-select',
+        relationResource: 'rack',
+        relationFilterFields: { site_id: 'site' },
+        clearWhenFieldChanges: ['site'],
+      }),
+    )
+    expect(fields.get('position')).toEqual(
+      expect.objectContaining({
+        min: 1,
+        max: 100.5,
+        step: 0.5,
+        disabledUnlessFieldTruthy: 'rack',
+      }),
+    )
+    expect(fields.get('position')?.clearWhenFieldChanges).toBeUndefined()
+    expect(fields.get('face')).toEqual(
+      expect.objectContaining({
+        disabledUnlessFieldTruthy: 'rack',
+        requiredWhenFieldTruthy: 'position',
+      }),
+    )
+    expect(fields.get('face')?.clearWhenFieldChanges).toBeUndefined()
+    expect(fields.get('face')?.options?.map((option) => option.value)).toEqual(['front', 'rear'])
+    expect(fields.get('status')).toEqual(expect.objectContaining({ default: 'active' }))
+    expect(fields.get('status')?.options?.map((option) => option.value)).toEqual([
+      'offline',
+      'active',
+      'planned',
+      'staged',
+      'failed',
+      'inventory',
+      'decommissioning',
+    ])
+    expect(fields.get('airflow')?.options?.map((option) => option.value)).toEqual([
+      'front-to-rear',
+      'rear-to-front',
+      'left-to-right',
+      'right-to-left',
+      'side-to-rear',
+      'rear-to-side',
+      'bottom-to-top',
+      'top-to-bottom',
+      'passive',
+      'mixed',
+    ])
+  })
+
+  it('routes field-scoped REST validation to the matching Device field', () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'device')!
+    const wrapper = mount(DynamicForm, {
+      props: {
+        fields: config.fields.filter((field) => ['status', 'airflow'].includes(field.key)),
+        modelValue: { status: 'active', airflow: null },
+        errors: {
+          status: ['"unknown" is not a valid choice.'],
+        },
+      },
+    })
+
+    const status = wrapper
+      .findAllComponents(DynamicField)
+      .find((field) => field.props('field').key === 'status')
+    const airflow = wrapper
+      .findAllComponents(DynamicField)
+      .find((field) => field.props('field').key === 'airflow')
+    expect(status).toBeDefined()
+    expect(status?.props('error')).toBe('"unknown" is not a valid choice.')
+    expect(airflow).toBeDefined()
+    expect(airflow?.props('error')).toBeUndefined()
+  })
+
+  it('types nullable Device response timestamps exactly', () => {
+    expectTypeOf<DeviceDTO['created']>().toEqualTypeOf<string | null>()
+    expectTypeOf<DeviceDTO['last_updated']>().toEqualTypeOf<string | null>()
+  })
+
+  it('contains Rack clearing through the real DynamicForm dirty baseline', async () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'device')!
+    const adapter = getCoreResourceAdapter('device')
+    const dto: DeviceDTO = {
+      id: 16,
+      url: '/api/dcim/devices/16/',
+      display: 'edge-1',
+      created: null,
+      last_updated: null,
+      device_type: {
+        id: 6,
+        url: '/api/dcim/device-types/6/',
+        display: 'Acme Edge',
+      },
+      role: {
+        id: 7,
+        url: '/api/dcim/device-roles/7/',
+        display: 'Router',
+      },
+      name: 'edge-1',
+      site: { id: 3, url: '/api/dcim/sites/3/', display: 'Moscow' },
+      rack: { id: 8, url: '/api/dcim/racks/8/', display: 'R1' },
+      position: 10.5,
+      face: { value: 'front', label: 'Front' },
+      status: { value: 'active', label: 'Active' },
+      serial: 'SER-01',
+      asset_tag: 'ASSET-01',
+      airflow: { value: 'front-to-rear', label: 'Front to rear' },
+      description: 'Edge device',
+      comments: 'Operator note',
+      interface_count: 4,
+    }
+    const wrapper = mount(DynamicForm, {
+      props: {
+        fields: config.fields.filter((field) => ['rack', 'position', 'face'].includes(field.key)),
+        modelValue: adapter.formFromDTO(dto),
+        editing: true,
+      },
+    })
+
+    const rack = wrapper
+      .findAllComponents(DynamicField)
+      .find((field) => field.props('field').key === 'rack')
+    expect(rack).toBeDefined()
+    rack!.vm.$emit('update:modelValue', null)
+    await nextTick()
+
+    const form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as DeviceForm
+    expect(form.position).toBe(10.5)
+    expect(form.face).toBe('front')
+    expect(adapter.mutationFromForm(form, true)).toEqual({ rack: null })
   })
 })
 

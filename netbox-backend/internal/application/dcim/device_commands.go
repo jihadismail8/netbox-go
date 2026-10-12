@@ -1,6 +1,8 @@
 package dcim
 
 import (
+	"sort"
+
 	dcimdomain "netbox-go/internal/domain/dcim"
 	"netbox-go/internal/domain/shared"
 )
@@ -83,13 +85,9 @@ func (command CreateDeviceCommand) values() (deviceCommandValues, error) {
 	validateRequiredDeviceID(&violations, "site", command.Site, values.siteID)
 	validateNullableDeviceID(&violations, "rack", values.rackID)
 	if len(violations) > 0 {
-		return deviceCommandValues{}, shared.NewValidationError(violations...)
+		return values, newDeviceValidationError(violations)
 	}
 	return values, nil
-}
-
-func (command ReplaceDeviceCommand) values() (deviceCommandValues, error) {
-	return command.CreateDeviceCommand.values()
 }
 
 type deviceCommandPatch struct {
@@ -117,7 +115,26 @@ func (patch deviceCommandPatch) empty() bool {
 }
 
 func (command UpdateDeviceCommand) patch() (deviceCommandPatch, error) {
+	return buildDevicePatch(CreateDeviceCommand{
+		DeviceType: command.DeviceType, Role: command.Role, Name: command.Name,
+		Site: command.Site, Rack: command.Rack, Position: command.Position,
+		Face: command.Face, Status: command.Status, Serial: command.Serial,
+		AssetTag: command.AssetTag, Airflow: command.Airflow,
+		Description: command.Description, Comments: command.Comments,
+	}, false)
+}
+
+func (command ReplaceDeviceCommand) patch() (deviceCommandPatch, error) {
+	return buildDevicePatch(command.CreateDeviceCommand, true)
+}
+
+func buildDevicePatch(command CreateDeviceCommand, replace bool) (deviceCommandPatch, error) {
 	var violations []shared.FieldViolation
+	if replace {
+		requireDeviceField(&violations, "device_type", command.DeviceType)
+		requireDeviceField(&violations, "role", command.Role)
+		requireDeviceField(&violations, "site", command.Site)
+	}
 	patch := deviceCommandPatch{
 		deviceTypeID: patchFieldValue(&violations, "device_type", command.DeviceType),
 		roleID:       patchFieldValue(&violations, "role", command.Role),
@@ -133,6 +150,18 @@ func (command UpdateDeviceCommand) patch() (deviceCommandPatch, error) {
 		description:  patchValue(&violations, "description", command.Description),
 		comments:     patchValue(&violations, "comments", command.Comments),
 	}
+	if replace && command.Rack.State() == FieldOmitted {
+		value := dcimdomain.NullDeviceValue[shared.ID]()
+		patch.rackID = &value
+	}
+	if replace && command.Position.State() == FieldOmitted {
+		value := dcimdomain.NullDeviceValue[string]()
+		patch.position = &value
+	}
+	if replace && command.Face.State() == FieldOmitted {
+		value := ""
+		patch.face = &value
+	}
 	if patch.deviceTypeID != nil && !patch.deviceTypeID.IsValid() {
 		violations = append(violations, deviceChoiceViolation("device_type"))
 	}
@@ -146,15 +175,28 @@ func (command UpdateDeviceCommand) patch() (deviceCommandPatch, error) {
 		validateNullableDeviceID(&violations, "rack", *patch.rackID)
 	}
 	if len(violations) > 0 {
-		return deviceCommandPatch{}, shared.NewValidationError(violations...)
+		return patch, newDeviceValidationError(violations)
 	}
 	if patch.empty() {
-		return deviceCommandPatch{}, shared.NewValidationError(shared.FieldViolation{
+		return patch, newDeviceValidationError([]shared.FieldViolation{{
 			Field: "update_mask", Reason: "required",
 			Description: "At least one writable field must be supplied.",
-		})
+		}})
 	}
 	return patch, nil
+}
+
+func requireDeviceField[T any](
+	violations *[]shared.FieldViolation,
+	name string,
+	field Field[T],
+) {
+	if field.State() != FieldOmitted {
+		return
+	}
+	*violations = append(*violations, shared.FieldViolation{
+		Field: name, Reason: "required", Description: "This field is required.",
+	})
 }
 
 func fullDeviceNullable[T any](field Field[T]) dcimdomain.DeviceNullable[T] {
@@ -214,7 +256,7 @@ func patchDeviceAirflow(field Field[string]) *dcimdomain.NullableDeviceAirflow {
 		airflow := dcimdomain.NonNullDeviceAirflow(dcimdomain.DeviceAirflow(value))
 		return &airflow
 	case FieldNull:
-		airflow := dcimdomain.NullDeviceAirflow()
+		airflow := dcimdomain.NonNullDeviceAirflow("")
 		return &airflow
 	default:
 		return nil
@@ -247,4 +289,54 @@ func deviceChoiceViolation(field string) shared.FieldViolation {
 	return shared.FieldViolation{
 		Field: field, Reason: "invalid_choice", Description: "Select a valid choice.",
 	}
+}
+
+var deviceValidationFieldOrder = map[string]int{
+	"device_type": 0, "role": 1, "name": 2, "site": 3,
+	"rack": 4, "position": 5, "face": 6, "status": 7,
+	"serial": 8, "asset_tag": 9, "airflow": 10,
+	"description": 11, "comments": 12, "update_mask": 13,
+}
+
+func newDeviceValidationError(violations []shared.FieldViolation) error {
+	ordered := append([]shared.FieldViolation(nil), violations...)
+	sort.SliceStable(ordered, func(left, right int) bool {
+		leftOrder, leftKnown := deviceValidationFieldOrder[ordered[left].Field]
+		rightOrder, rightKnown := deviceValidationFieldOrder[ordered[right].Field]
+		switch {
+		case leftKnown && rightKnown:
+			return leftOrder < rightOrder
+		case leftKnown:
+			return true
+		case rightKnown:
+			return false
+		default:
+			return false
+		}
+	})
+	return shared.NewValidationError(ordered...)
+}
+
+func mergeDeviceMutationErrors(errs ...error) error {
+	for _, err := range errs {
+		if err != nil && !shared.HasReason(err, shared.ErrorReasonValidation) {
+			return err
+		}
+	}
+
+	seenFields := make(map[string]struct{})
+	var merged []shared.FieldViolation
+	for _, err := range errs {
+		for _, violation := range shared.ViolationsOf(err) {
+			if _, duplicate := seenFields[violation.Field]; duplicate {
+				continue
+			}
+			seenFields[violation.Field] = struct{}{}
+			merged = append(merged, violation)
+		}
+	}
+	if len(merged) > 0 {
+		return newDeviceValidationError(merged)
+	}
+	return nil
 }

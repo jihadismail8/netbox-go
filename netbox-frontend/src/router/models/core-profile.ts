@@ -738,7 +738,6 @@ export const CORE_PROFILE_MODELS: ModelConfig[] = [
         max: 100.5,
         step: 0.5,
         disabledUnlessFieldTruthy: 'rack',
-        clearWhenFieldChanges: ['rack'],
         helpText: 'A Rack and Face are required when a position is set.',
       }),
       selectField(
@@ -752,11 +751,9 @@ export const CORE_PROFILE_MODELS: ModelConfig[] = [
         {
           disabledUnlessFieldTruthy: 'rack',
           requiredWhenFieldTruthy: 'position',
-          clearWhenFieldChanges: ['rack'],
         },
       ),
       selectField('status', 'Status', 'Device', deviceStatuses, {
-        required: true,
         default: 'active',
       }),
       textField('serial', 'Serial Number', 'Device'),

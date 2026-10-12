@@ -217,10 +217,15 @@ ordering, missing-table-only bootstrap/non-repair proof, the 22-table private
 schema catalog, content-type natural-key uniqueness, and their test fixtures.
 It closes no tier, consumer, V3 parent, profile, deployment, rewrite,
 production migration, or production-readiness boundary. `CW1-V2-02-I10` has
-an authored Device scalar-presence packet at entry revision
-`ced8f3bb31536e92f8a87be827e925cec306afaa`. It owns no behavior until its
-exact nine-path packet claim passes repository CI, and it must retain Device
-create's InterfaceTemplate snapshot-order contradiction for `CW1-V2-04`. Do
+green exact nine-path packet claim `efc042b18194e4c33f4272e9c1fd08b32b5d53dc`
+at source digest
+`source-v2:sha256:75a7c025adaa7130d9710c2b0d1ecb1a7c0796317274c34d5d58209716d53e7d`
+with 3,080 entries. Its bounded Device scalar-presence implementation
+candidate has green local contract, focused, race, real-PostgreSQL, complete
+L4, Vue, backend, frontend, and repository gates. Exact committed replay,
+candidate CI, and evidence retention remain; no tier, parent, profile, or
+traceability-consumer claim exists. Device create's InterfaceTemplate
+snapshot-order contradiction remains assigned to `CW1-V2-04`. Do
 not begin or merge another
 Capability Profile while V0 is
 red or before `CW1-V6-03`. Once those gates are

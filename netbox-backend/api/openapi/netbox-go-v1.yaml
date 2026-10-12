@@ -781,7 +781,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DeviceWrite"
+                "$ref": "#/components/schemas/DeviceCreate"
               }
             }
           }
@@ -851,7 +851,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DeviceWrite"
+                "$ref": "#/components/schemas/DeviceReplace"
               }
             }
           }
@@ -890,7 +890,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DeviceWrite"
+                "$ref": "#/components/schemas/DeviceUpdate"
               }
             }
           }
@@ -3415,9 +3415,6 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/ObjectReference"
-              },
-              {
-                "type": "null"
               }
             ]
           },
@@ -3425,9 +3422,6 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/ObjectReference"
-              },
-              {
-                "type": "null"
               }
             ]
           },
@@ -3441,9 +3435,6 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/ObjectReference"
-              },
-              {
-                "type": "null"
               }
             ]
           },
@@ -3504,10 +3495,7 @@
             }
           },
           "serial": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "asset_tag": {
             "type": [
@@ -3539,16 +3527,10 @@
             ]
           },
           "description": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "comments": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "id": {
             "type": "integer",
@@ -3559,10 +3541,7 @@
             "format": "uri"
           },
           "display": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "created": {
             "type": [
@@ -3581,6 +3560,80 @@
           "interface_count": {
             "type": "integer",
             "format": "int64"
+          }
+        }
+      },
+      "DeviceCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "device_type",
+          "role",
+          "site"
+        ],
+        "properties": {
+          "device_type": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "role": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "site": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "rack": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "position": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "format": "double"
+          },
+          "face": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1
+          },
+          "serial": {
+            "type": "string"
+          },
+          "asset_tag": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "airflow": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "comments": {
+            "type": "string"
           }
         }
       },
@@ -3615,6 +3668,80 @@
             "items": {
               "$ref": "#/components/schemas/Device"
             }
+          }
+        }
+      },
+      "DeviceReplace": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "device_type",
+          "role",
+          "site"
+        ],
+        "properties": {
+          "device_type": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "role": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "site": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "rack": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "position": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "format": "double"
+          },
+          "face": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1
+          },
+          "serial": {
+            "type": "string"
+          },
+          "asset_tag": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "airflow": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "comments": {
+            "type": "string"
           }
         }
       },
@@ -4096,22 +4223,16 @@
           }
         }
       },
-      "DeviceWrite": {
+      "DeviceUpdate": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
           "device_type": {
-            "type": [
-              "integer",
-              "null"
-            ],
+            "type": "integer",
             "format": "int64"
           },
           "role": {
-            "type": [
-              "integer",
-              "null"
-            ],
+            "type": "integer",
             "format": "int64"
           },
           "name": {
@@ -4121,10 +4242,7 @@
             ]
           },
           "site": {
-            "type": [
-              "integer",
-              "null"
-            ],
+            "type": "integer",
             "format": "int64"
           },
           "rack": {
@@ -4148,13 +4266,11 @@
             ]
           },
           "status": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "serial": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "asset_tag": {
             "type": [
@@ -4169,16 +4285,10 @@
             ]
           },
           "description": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "comments": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           }
         }
       },

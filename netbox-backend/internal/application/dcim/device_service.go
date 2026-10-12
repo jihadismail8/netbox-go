@@ -159,18 +159,14 @@ func (service *DeviceService) CreateDevice(
 	}
 	var device *dcimdomain.Device
 	err := service.unitOfWork.WithinTransaction(ctx, func(transactionContext context.Context) error {
-		commandValues, err := command.values()
-		if err != nil {
-			return err
-		}
-		values, err := service.resolveValues(transactionContext, commandValues)
-		if err != nil {
-			return err
-		}
+		commandValues, commandErr := command.values()
+		values, relationshipErr := service.resolveValues(transactionContext, commandValues)
 		now := service.clock.Now()
-		candidate, err := dcimdomain.NewDevice(values, now)
-		if err != nil {
-			return err
+		candidate, domainErr := dcimdomain.NewDevice(values, now)
+		if validationErr := mergeDeviceMutationErrors(
+			commandErr, relationshipErr, domainErr,
+		); validationErr != nil {
+			return validationErr
 		}
 		if err := service.authorize(transactionContext, principal, authz.Add, candidate.ID()); err != nil {
 			return err
@@ -221,16 +217,16 @@ func (service *DeviceService) ReplaceDevice(
 		if err := service.authorize(transactionContext, principal, authz.Change, loaded.ID()); err != nil {
 			return err
 		}
-		commandValues, err := command.values()
-		if err != nil {
-			return err
-		}
-		values, err := service.resolveValues(transactionContext, commandValues)
-		if err != nil {
-			return err
+		commandPatch, commandErr := command.patch()
+		patch, relationshipErr := service.resolvePatch(transactionContext, commandPatch)
+		domainErr := loaded.ValidatePatch(patch)
+		if validationErr := mergeDeviceMutationErrors(
+			commandErr, relationshipErr, domainErr,
+		); validationErr != nil {
+			return validationErr
 		}
 		before, now := loaded.Snapshot(), service.clock.Now()
-		if err := loaded.Replace(values, now); err != nil {
+		if err := loaded.ApplyPatch(patch, now); err != nil {
 			return err
 		}
 		if err := service.validateRackPlacement(transactionContext, loaded); err != nil {
@@ -274,13 +270,13 @@ func (service *DeviceService) UpdateDevice(
 		if err := service.authorize(transactionContext, principal, authz.Change, loaded.ID()); err != nil {
 			return err
 		}
-		commandPatch, err := command.patch()
-		if err != nil {
-			return err
-		}
-		patch, err := service.resolvePatch(transactionContext, commandPatch)
-		if err != nil {
-			return err
+		commandPatch, commandErr := command.patch()
+		patch, relationshipErr := service.resolvePatch(transactionContext, commandPatch)
+		domainErr := loaded.ValidatePatch(patch)
+		if validationErr := mergeDeviceMutationErrors(
+			commandErr, relationshipErr, domainErr,
+		); validationErr != nil {
+			return validationErr
 		}
 		before, now := loaded.Snapshot(), service.clock.Now()
 		if err := loaded.ApplyPatch(patch, now); err != nil {
@@ -361,32 +357,53 @@ func (service *DeviceService) resolveValues(
 	ctx context.Context,
 	values deviceCommandValues,
 ) (dcimdomain.DeviceValues, error) {
-	deviceType, err := service.resolveDeviceType(ctx, values.deviceTypeID)
-	if err != nil {
-		return dcimdomain.DeviceValues{}, err
+	domainValues := dcimdomain.DeviceValues{
+		Name: values.name, Rack: dcimdomain.NullDeviceValue[dcimdomain.RackReference](),
+		Position: dcimdomain.NullDeviceValue[dcimdomain.RackPosition](),
+		Face:     values.face, Status: values.status,
+		Serial: values.serial, AssetTag: values.assetTag, Airflow: values.airflow,
+		Description: values.description, Comments: values.comments,
 	}
-	role, err := service.resolveRole(ctx, values.roleID)
-	if err != nil {
-		return dcimdomain.DeviceValues{}, err
+	var relationshipErrs []error
+	if values.deviceTypeID.IsValid() {
+		deviceType, err := service.resolveDeviceType(ctx, values.deviceTypeID)
+		if err != nil {
+			relationshipErrs = append(relationshipErrs, err)
+		} else {
+			domainValues.DeviceType = deviceType
+		}
 	}
-	site, err := service.resolveDeviceSite(ctx, values.siteID)
-	if err != nil {
-		return dcimdomain.DeviceValues{}, err
+	if values.roleID.IsValid() {
+		role, err := service.resolveRole(ctx, values.roleID)
+		if err != nil {
+			relationshipErrs = append(relationshipErrs, err)
+		} else {
+			domainValues.Role = role
+		}
 	}
-	rack, err := service.resolveRack(ctx, values.rackID)
-	if err != nil {
-		return dcimdomain.DeviceValues{}, err
+	if values.siteID.IsValid() {
+		site, err := service.resolveDeviceSite(ctx, values.siteID)
+		if err != nil {
+			relationshipErrs = append(relationshipErrs, err)
+		} else {
+			domainValues.Site = site
+		}
+	}
+	if id, present := values.rackID.Get(); !present || id.IsValid() {
+		rack, err := service.resolveRack(ctx, values.rackID)
+		if err != nil {
+			relationshipErrs = append(relationshipErrs, err)
+		} else {
+			domainValues.Rack = rack
+		}
 	}
 	position, err := resolveDevicePosition(values.position)
 	if err != nil {
-		return dcimdomain.DeviceValues{}, err
+		relationshipErrs = append(relationshipErrs, err)
+	} else {
+		domainValues.Position = position
 	}
-	return dcimdomain.DeviceValues{
-		DeviceType: deviceType, Role: role, Name: values.name, Site: site,
-		Rack: rack, Position: position, Face: values.face, Status: values.status,
-		Serial: values.serial, AssetTag: values.assetTag, Airflow: values.airflow,
-		Description: values.description, Comments: values.comments,
-	}, nil
+	return domainValues, mergeDeviceMutationErrors(relationshipErrs...)
 }
 
 func (service *DeviceService) resolvePatch(
@@ -398,42 +415,51 @@ func (service *DeviceService) resolvePatch(
 		AssetTag: patch.assetTag, Airflow: patch.airflow,
 		Description: patch.description, Comments: patch.comments,
 	}
-	if patch.deviceTypeID != nil {
+	var relationshipErrs []error
+	if patch.deviceTypeID != nil && patch.deviceTypeID.IsValid() {
 		value, err := service.resolveDeviceType(ctx, *patch.deviceTypeID)
 		if err != nil {
-			return dcimdomain.DevicePatch{}, err
+			relationshipErrs = append(relationshipErrs, err)
+		} else {
+			resolved.DeviceType = &value
 		}
-		resolved.DeviceType = &value
 	}
-	if patch.roleID != nil {
+	if patch.roleID != nil && patch.roleID.IsValid() {
 		value, err := service.resolveRole(ctx, *patch.roleID)
 		if err != nil {
-			return dcimdomain.DevicePatch{}, err
+			relationshipErrs = append(relationshipErrs, err)
+		} else {
+			resolved.Role = &value
 		}
-		resolved.Role = &value
 	}
-	if patch.siteID != nil {
+	if patch.siteID != nil && patch.siteID.IsValid() {
 		value, err := service.resolveDeviceSite(ctx, *patch.siteID)
 		if err != nil {
-			return dcimdomain.DevicePatch{}, err
+			relationshipErrs = append(relationshipErrs, err)
+		} else {
+			resolved.Site = &value
 		}
-		resolved.Site = &value
 	}
 	if patch.rackID != nil {
-		value, err := service.resolveRack(ctx, *patch.rackID)
-		if err != nil {
-			return dcimdomain.DevicePatch{}, err
+		id, present := patch.rackID.Get()
+		if !present || id.IsValid() {
+			value, err := service.resolveRack(ctx, *patch.rackID)
+			if err != nil {
+				relationshipErrs = append(relationshipErrs, err)
+			} else {
+				resolved.Rack = &value
+			}
 		}
-		resolved.Rack = &value
 	}
 	if patch.position != nil {
 		value, err := resolveDevicePosition(*patch.position)
 		if err != nil {
-			return dcimdomain.DevicePatch{}, err
+			relationshipErrs = append(relationshipErrs, err)
+		} else {
+			resolved.Position = &value
 		}
-		resolved.Position = &value
 	}
-	return resolved, nil
+	return resolved, mergeDeviceMutationErrors(relationshipErrs...)
 }
 
 func (service *DeviceService) resolveDeviceType(

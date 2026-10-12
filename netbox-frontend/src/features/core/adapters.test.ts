@@ -5,6 +5,8 @@ import {
   resourceField,
   withFormField,
   type CoreReference,
+  type DeviceDTO,
+  type DeviceForm,
   type DeviceRoleDTO,
   type DeviceRoleForm,
   type DeviceTypeDTO,
@@ -151,7 +153,7 @@ describe('typed core resource adapters', () => {
     })
   })
 
-  it('enforces edit immutability and dependent-field omission in the adapter', () => {
+  it('enforces Interface edit immutability without suppressing Device scalar presence', () => {
     expect(
       getCoreResourceAdapter('interface').mutationFromForm(
         { device, name: 'xe-0/0/1', type: '1000base-t' },
@@ -170,7 +172,14 @@ describe('typed core resource adapters', () => {
         },
         false,
       ),
-    ).toEqual({ device_type: 6, role: 7, site: 3, rack: null })
+    ).toEqual({
+      device_type: 6,
+      role: 7,
+      site: 3,
+      rack: null,
+      position: 10,
+      face: 'front',
+    })
   })
 
   it('preserves IPAddress scalar presence in create and PATCH mutations', () => {
@@ -1104,6 +1113,183 @@ describe('typed core resource adapters', () => {
         true,
       ),
     ).toEqual({ description: '' })
+  })
+
+  it('preserves Device create omissions, defaults, IDs, and concrete scalar states', () => {
+    const adapter = getCoreResourceAdapter('device')
+
+    expect(adapter.mutationFromForm({}, false)).toEqual({})
+    expect(adapter.mutationFromForm(adapter.emptyForm(), false)).toEqual({ status: 'active' })
+    expect(
+      adapter.mutationFromForm(
+        {
+          device_type: deviceType,
+          role: deviceRole,
+          name: null,
+          site,
+          rack: null,
+          position: 0,
+          face: '',
+          status: 'planned',
+          serial: '',
+          asset_tag: null,
+          airflow: null,
+          description: '',
+          comments: '',
+        },
+        false,
+      ),
+    ).toEqual({
+      device_type: 6,
+      role: 7,
+      name: null,
+      site: 3,
+      rack: null,
+      position: 0,
+      face: '',
+      status: 'planned',
+      serial: '',
+      asset_tag: null,
+      airflow: null,
+      description: '',
+      comments: '',
+    })
+    expect(
+      adapter.mutationFromForm(
+        {
+          device_type: 6,
+          role: 7,
+          name: 'edge-1',
+          site: 3,
+          rack: 8,
+          position: 10.5,
+          face: 'rear',
+          status: 'staged',
+          serial: 'SER-01',
+          asset_tag: 'ASSET-01',
+          airflow: 'rear-to-front',
+          description: 'Edge device',
+          comments: 'Operator note',
+        },
+        false,
+      ),
+    ).toEqual({
+      device_type: 6,
+      role: 7,
+      name: 'edge-1',
+      site: 3,
+      rack: 8,
+      position: 10.5,
+      face: 'rear',
+      status: 'staged',
+      serial: 'SER-01',
+      asset_tag: 'ASSET-01',
+      airflow: 'rear-to-front',
+      description: 'Edge device',
+      comments: 'Operator note',
+    })
+
+    const formWithResponseFields = {
+      device_type: deviceType,
+      role: deviceRole,
+      name: 'Owned fields only',
+      site,
+      id: 99,
+      url: '/api/dcim/devices/99/',
+      display: 'Must not leak',
+      created: null,
+      last_updated: null,
+      interface_count: 4,
+    } as DeviceForm
+    expect(adapter.mutationFromForm(formWithResponseFields, false)).toEqual({
+      device_type: 6,
+      role: 7,
+      name: 'Owned fields only',
+      site: 3,
+    })
+  })
+
+  it('keeps a private normalized Device baseline and emits only dirty PATCH fields', () => {
+    const adapter = getCoreResourceAdapter('device')
+    const dto: DeviceDTO = {
+      id: 16,
+      url: '/api/dcim/devices/16/',
+      display: 'edge-1',
+      created: null,
+      last_updated: null,
+      device_type: deviceType,
+      role: deviceRole,
+      name: 'edge-1',
+      site,
+      rack,
+      position: 10.5,
+      face: { value: 'front', label: 'Front' },
+      status: { value: 'active', label: 'Active' },
+      serial: 'SER-01',
+      asset_tag: 'ASSET-01',
+      airflow: { value: 'front-to-rear', label: 'Front to rear' },
+      description: 'Edge device',
+      comments: 'Operator note',
+      interface_count: 4,
+    }
+    const hydrated = adapter.formFromDTO(dto)
+
+    expect(Object.fromEntries(Object.entries(hydrated))).toEqual({
+      device_type: deviceType,
+      role: deviceRole,
+      name: 'edge-1',
+      site,
+      rack,
+      position: 10.5,
+      face: 'front',
+      status: 'active',
+      serial: 'SER-01',
+      asset_tag: 'ASSET-01',
+      airflow: 'front-to-rear',
+      description: 'Edge device',
+      comments: 'Operator note',
+    })
+    expect(adapter.mutationFromForm({ ...hydrated }, true)).toEqual({})
+    expect(
+      adapter.mutationFromForm(
+        withFormField(hydrated, 'device_type', { ...deviceType }) as DeviceForm,
+        true,
+      ),
+    ).toEqual({})
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'name', null) as DeviceForm, true),
+    ).toEqual({ name: null })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'position', 0) as DeviceForm, true),
+    ).toEqual({ position: 0 })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'serial', '') as DeviceForm, true),
+    ).toEqual({ serial: '' })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'asset_tag', null) as DeviceForm, true),
+    ).toEqual({ asset_tag: null })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'airflow', null) as DeviceForm, true),
+    ).toEqual({ airflow: null })
+
+    const rackCleared = withFormField(hydrated, 'rack', null) as DeviceForm
+    expect(rackCleared.position).toBe(10.5)
+    expect(rackCleared.face).toBe('front')
+    expect(adapter.mutationFromForm(rackCleared, true)).toEqual({ rack: null })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'position', null) as DeviceForm, true),
+    ).toEqual({ position: null })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'face', '') as DeviceForm, true),
+    ).toEqual({ face: '' })
+
+    const rackAndPositionCleared = withFormField(rackCleared, 'position', null) as DeviceForm
+    const independentlyCleared = withFormField(rackAndPositionCleared, 'face', null) as DeviceForm
+    expect(adapter.mutationFromForm(independentlyCleared, true)).toEqual({
+      rack: null,
+      position: null,
+      face: null,
+    })
   })
 
   it('omits unchanged IPAddress scalars without changing relationship serialization', () => {

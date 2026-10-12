@@ -50,7 +50,7 @@ implementation exists.
 | `CW1-V2-02-I7` | `done`        | Codex GPT-5.6 Sol | [DeviceType scalar write presence](CW1-V2-02-I7.md)     |
 | `CW1-V2-02-I8` | `done`        | Codex GPT-5.6 Sol | [InterfaceTemplate scalar write presence](CW1-V2-02-I8.md) |
 | `CW1-V2-02-I9` | `done`        | Codex GPT-5.6 Sol | [Rack scalar write presence](CW1-V2-02-I9.md)              |
-| `CW1-V2-02-I10`| `packet`      | Codex             | [Device scalar write presence](CW1-V2-02-I10.md)           |
+| `CW1-V2-02-I10`| `in-progress` | Codex             | [Device scalar write presence](CW1-V2-02-I10.md)           |
 | `CW1-V3-01`    | `done`        | Codex GPT-5.6 Sol | [Dependency-aware readiness](CW1-V3-01.md)                 |
 | `CW1-V3-02`    | `done`        | Codex             | [Bootstrap and schema contract](CW1-V3-02.md)              |
 
@@ -198,17 +198,18 @@ RackType-update propagation, Device site propagation, deletion, list/query
 behavior, full CRUD, all tiers, every consumer, the parent, profile promotion,
 and every later child remain open.
 
-`CW1-V2-02-I10` has a nine-path Device scalar-presence packet at exact entry
-receipt `ced8f3bb31536e92f8a87be827e925cec306afaa`. It owns only the 13
-declared Device writable fields across create/PUT/PATCH operation metadata,
-create-only DeviceType-airflow inheritance, typed shared behavior,
-representable REST/gRPC intent, PostgreSQL durability, Vue dirty-field
-handling, and eight fixed tests. Behavior remains blocked until its exact
-independently reviewed packet claim passes repository CI. Device create's
-InterfaceTemplate snapshot-order contradiction remains assigned to
-`CW1-V2-04`; uniqueness, placement, template transactions, list/get/delete,
-full CRUD, all tiers, every consumer, the parent, and profile promotion remain
-open.
+`CW1-V2-02-I10` has green exact packet claim
+`efc042b18194e4c33f4272e9c1fd08b32b5d53dc` and an implementation candidate
+with green local contract, focused, race, real-PostgreSQL, complete-L4, Vue,
+backend, frontend, and repository gates. It owns only the 13 declared Device
+writable fields across create/PUT/PATCH operation metadata, create-only
+DeviceType-airflow inheritance, typed shared behavior, representable
+REST/gRPC intent, PostgreSQL durability, Vue dirty-field handling, and eight
+fixed tests. Exact committed replay, candidate CI, and evidence retention
+remain. Device create's InterfaceTemplate snapshot-order contradiction
+remains assigned to `CW1-V2-04`; uniqueness, placement, template transactions,
+list/get/delete, full CRUD, all tiers, every consumer, the parent, and profile
+promotion remain open.
 
 `CW1-V3-01` has exact tested candidate
 `58241d7f87b642e6b7eca279592ad3759a0f5a06` at source digest

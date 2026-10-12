@@ -165,7 +165,9 @@ export interface InterfaceTemplateDTO extends Omit<CoreResourceBase, 'created' |
   description: string
 }
 
-export interface DeviceDTO extends CoreResourceBase {
+export interface DeviceDTO extends Omit<CoreResourceBase, 'created' | 'last_updated'> {
+  created: string | null
+  last_updated: string | null
   device_type: CoreReference
   role: CoreReference
   name: string | null

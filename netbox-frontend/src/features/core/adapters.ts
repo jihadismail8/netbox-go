@@ -10,6 +10,7 @@ import {
   type CoreResourceMutation,
   type DeviceDTO,
   type DeviceForm,
+  type DeviceMutation,
   type DeviceRoleDTO,
   type DeviceRoleForm,
   type DeviceRoleMutation,
@@ -644,40 +645,80 @@ const interfaceTemplateAdapter: CoreResourceAdapter<'interfacetemplate'> = {
   }),
 }
 
+const deviceOriginalMutation = Symbol('device-original-mutation')
+
+const deviceMutationFields = [
+  'device_type',
+  'role',
+  'name',
+  'site',
+  'rack',
+  'position',
+  'face',
+  'status',
+  'serial',
+  'asset_tag',
+  'airflow',
+  'description',
+  'comments',
+] as const satisfies readonly (keyof DeviceMutation)[]
+
+type TrackedDeviceForm = DeviceForm & {
+  [deviceOriginalMutation]?: DeviceMutation
+}
+
+function deviceMutation(form: DeviceForm): DeviceMutation {
+  const mutation: DeviceMutation = {}
+  if (hasFormField(form, 'device_type')) mutation.device_type = relationID(form.device_type)
+  if (hasFormField(form, 'role')) mutation.role = relationID(form.role)
+  if (hasFormField(form, 'name')) mutation.name = form.name
+  if (hasFormField(form, 'site')) mutation.site = relationID(form.site)
+  if (hasFormField(form, 'rack')) mutation.rack = relationID(form.rack)
+  if (hasFormField(form, 'position')) mutation.position = form.position
+  if (hasFormField(form, 'face')) mutation.face = form.face
+  if (hasFormField(form, 'status')) mutation.status = form.status
+  if (hasFormField(form, 'serial')) mutation.serial = form.serial
+  if (hasFormField(form, 'asset_tag')) mutation.asset_tag = form.asset_tag
+  if (hasFormField(form, 'airflow')) mutation.airflow = form.airflow
+  if (hasFormField(form, 'description')) mutation.description = form.description
+  if (hasFormField(form, 'comments')) mutation.comments = form.comments
+  return mutation
+}
+
+function deviceMutationDelta(current: DeviceMutation, original: DeviceMutation): DeviceMutation {
+  const delta = { ...current }
+  for (const field of deviceMutationFields) {
+    if (Object.is(current[field], original[field])) Reflect.deleteProperty(delta, field)
+  }
+  return delta
+}
+
 const deviceAdapter: CoreResourceAdapter<'device'> = {
   resource: 'device',
   emptyForm: () => ({ status: 'active' }),
-  formFromDTO: (dto: DeviceDTO): DeviceForm => ({
-    device_type: dto.device_type,
-    role: dto.role,
-    name: dto.name,
-    site: dto.site,
-    rack: dto.rack,
-    position: dto.position,
-    face: choiceValue(dto.face),
-    status: choiceValue(dto.status),
-    serial: dto.serial,
-    asset_tag: dto.asset_tag,
-    airflow: choiceValue(dto.airflow),
-    description: dto.description,
-    comments: dto.comments,
-  }),
-  mutationFromForm: (form) => {
-    const rack = relationID(form.rack)
-    return {
-      device_type: relationID(form.device_type),
-      role: relationID(form.role),
-      name: form.name,
-      site: relationID(form.site),
-      rack,
-      ...(rack ? { position: form.position, face: form.face } : {}),
-      status: form.status,
-      serial: form.serial,
-      asset_tag: form.asset_tag,
-      airflow: form.airflow,
-      description: form.description,
-      comments: form.comments,
+  formFromDTO: (dto: DeviceDTO): DeviceForm => {
+    const form: TrackedDeviceForm = {
+      device_type: dto.device_type,
+      role: dto.role,
+      name: dto.name,
+      site: dto.site,
+      rack: dto.rack,
+      position: dto.position,
+      face: choiceValue(dto.face),
+      status: choiceValue(dto.status),
+      serial: dto.serial,
+      asset_tag: dto.asset_tag,
+      airflow: choiceValue(dto.airflow),
+      description: dto.description,
+      comments: dto.comments,
     }
+    form[deviceOriginalMutation] = deviceMutation(form)
+    return form
+  },
+  mutationFromForm: (form, editing) => {
+    const mutation = deviceMutation(form)
+    const original = (form as TrackedDeviceForm)[deviceOriginalMutation]
+    return editing && original ? deviceMutationDelta(mutation, original) : mutation
   },
   filtersFromState: (state) => ({
     site_id: state.site_id,
