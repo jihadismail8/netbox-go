@@ -174,10 +174,11 @@ is effectively `done` after its owner-accepted closeout claim and excluded
 receipt passed exact-SHA CI. Exact `CW1-V3-02` candidate
 `0cc4fe2365b7402929f65288eb776a425159d85b` has green implementation,
 evidence-claim, and pre-closeout receipt boundaries. The project owner accepted
-only this bounded result at `2026-10-12T04:01:48Z`; its `done` state is
-conditional on this exact closeout claim's repository CI, with an excluded
-closeout receipt to follow. V3-03 through V3-05 stay blocked by their named
-entry conditions. All merges serialize through `CW1-G00`. Production
+only this bounded result at `2026-10-12T04:01:48Z`; owner-accepted closeout
+claim `60efc848d0e52d9e446307d3a730cf76128161ca` and excluded receipt
+`ced8f3bb31536e92f8a87be827e925cec306afaa` passed exact-SHA repository CI,
+so bounded V3-02 is effectively `done`. V3-03 through V3-05 stay blocked by
+their named entry conditions. All merges serialize through `CW1-G00`. Production
 foundations may proceed in parallel only when they do not destabilize profile
 work or claim production readiness early.
 
@@ -338,9 +339,10 @@ remain open.
 | `CW1-V2-02-I7`      | `done`        | Accepted bounded DeviceType scalar write presence   | Done I6 and current `CW1-G00`          |
 | `CW1-V2-02-I8`      | `done`        | Accepted InterfaceTemplate scalar write presence    | Done I7 and current `CW1-G00`          |
 | `CW1-V2-02-I9`      | `done`        | Accepted Rack scalar write presence                 | Done I8 and current `CW1-G00`          |
+| `CW1-V2-02-I10`     | `packet`      | Gate Device scalar write-presence handoff           | Done I9 and current `CW1-G00`          |
 | `CW1-V2-03`–`V2-08` | `blocked`     | Close later typed business behavior                 | V2-02 and named lane dependencies      |
 | `CW1-V3-01`         | `done`        | Accepted bounded dependency-aware readiness         | `CW1-G00`                              |
-| `CW1-V3-02`         | `done`*       | Accepted bounded bootstrap/schema contract          | Current `CW1-G00` and done `CW1-V2-01` |
+| `CW1-V3-02`         | `done`        | Accepted bounded bootstrap/schema contract          | Current `CW1-G00` and done `CW1-V2-01` |
 | `CW1-V3-03`–`V3-05` | `blocked`     | Close later PostgreSQL/deployment evidence           | Named V2/V3 dependencies               |
 | `CW1-V4-01`–`V4-03` | `blocked`     | Earn complete first-profile REST T2                 | V1–V3 as declared                      |
 | `CW1-V4-04`         | `blocked`     | Retain the identity extension report                | `CW1-V1-04`                            |
@@ -351,10 +353,9 @@ remain open.
 | `CW1-V6-*`          | `blocked`     | Converge evidence and sign off the first profile    | V1–V5                                  |
 | `CP-P01`–`CP-P19`   | `blocked`     | Expand accepted feature breadth                     | `CW1-V6-03`                            |
 
-Bounded V3-01 is effectively `done`. The V3-02 asterisk records that
-owner-accepted `done` becomes effective only after this exact closeout-claim
-revision passes repository CI; its excluded closeout receipt must then pass
-exact-SHA CI. It does not close V3 or satisfy V3-03's remaining entry gates.
+Bounded V3-01 and V3-02 are effectively `done` after their exact
+owner-accepted closeout claims and excluded receipts passed repository CI.
+Neither closes V3 or satisfies V3-03's remaining entry gates.
 `CW1-V1-03` and the corresponding `CW1-V2-03` through `CW1-V2-07` behavior
 remain incomplete, so V3-03 stays blocked.
 
@@ -637,7 +638,21 @@ Bounded children:
   claim, and pre-acceptance receipt passed exact-SHA CI. The project owner
   accepted only this bounded result at `2026-08-26T11:01:23Z`; its
   owner-accepted closeout claim and excluded two-path receipt passed exact-SHA
-  CI, so bounded I9 is effectively `done`. No later child is claimed.
+  CI, so bounded I9 is effectively `done`. I9 closes no later child.
+
+- [`CW1-V2-02-I10`](increments/CW1-V2-02-I10.md) is the packet-gated lane for
+  Device `device_type`, `role`, `name`, `site`, `rack`, `position`, `face`,
+  `status`, `serial`, `asset_tag`, `airflow`, `description`, and `comments`
+  common create/PUT/PATCH presence, operation-specific generated contracts,
+  matching representable REST/gRPC intent, create-only DeviceType-airflow
+  inheritance, PostgreSQL durability, Vue dirty-field handling, and eight
+  fixed regressions. Behavior implementation remains blocked until its exact
+  nine-path packet claim passes repository CI. Fixtures contain no
+  InterfaceTemplates and use known-valid unpositioned state. Device
+  uniqueness, placement, template snapshot/instantiation transactions,
+  deletion, list/query behavior, full CRUD, tiers, this parent, and every
+  traceability consumer remain open; Device create stays assigned to the
+  `CW1-V2-04` template-order contradiction.
 
 - [ ] Represent all 13 resources × list/get/create/PUT/PATCH/delete.
 - [ ] Cover defaults, read-only fields, and nullability.
@@ -794,9 +809,10 @@ Candidate `0cc4fe2365b7402929f65288eb776a425159d85b` at
 with 3,079 entries passed the registry-order regression plus six
 PostgreSQL-backed scenarios, race, complete L4, backend, repository, and
 candidate-CI, evidence-claim, and pre-closeout receipt boundaries. The project
-owner accepted only this bounded result at `2026-10-12T04:01:48Z`. `Done` is
-conditional on this exact owner-accepted closeout claim's repository CI; its
-source-v2-excluded closeout receipt then remains. It changes no production
+owner accepted only this bounded result at `2026-10-12T04:01:48Z`.
+Owner-accepted closeout claim `60efc848d0e52d9e446307d3a730cf76128161ca`
+and source-v2-excluded receipt `ced8f3bb31536e92f8a87be827e925cec306afaa`
+passed exact-SHA repository CI, so bounded V3-02 is effectively `done`. It changes no production
 source and owns only deterministic startup ordering, missing-table-only
 bootstrap/non-repair proof, the private schema catalog, content-type
 natural-key uniqueness, and their test fixtures.
@@ -822,7 +838,7 @@ tier, consumer, V3 parent, rewrite, or production-readiness boundary.
 Entry: `CW1-V3-02` is complete; `CW1-V1-03` is complete for identity rows; and
 the corresponding `CW1-V2-03` through `CW1-V2-07` behavior is complete.
 
-Even after bounded V3-02 becomes effective `done`, `CW1-V1-03` and the
+Although bounded V3-02 is effectively `done`, `CW1-V1-03` and the
 corresponding `CW1-V2-03` through `CW1-V2-07` behavior remain incomplete;
 V3-03 therefore stays blocked.
 

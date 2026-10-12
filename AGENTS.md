@@ -208,15 +208,20 @@ with 3,079 entries. Its exact packet CI, registry-order regression plus six
 PostgreSQL-backed scenarios, race, complete L4, backend, repository,
 candidate-CI, evidence-claim, and pre-closeout receipt boundaries are green.
 The project owner accepted only this bounded result at
-`2026-10-12T04:01:48Z`. `CW1-V3-02` is conditional `done`; that state becomes
-effective only after this exact owner-accepted closeout claim passes repository
-CI, and its source-v2-excluded closeout receipt must then pass exact-SHA CI.
+`2026-10-12T04:01:48Z`. Its owner-accepted closeout claim
+`60efc848d0e52d9e446307d3a730cf76128161ca` and source-v2-excluded receipt
+`ced8f3bb31536e92f8a87be827e925cec306afaa` passed exact-SHA repository CI,
+so bounded `CW1-V3-02` is effectively `done`.
 It changes no production source and owns only deterministic 198-entry startup
 ordering, missing-table-only bootstrap/non-repair proof, the 22-table private
 schema catalog, content-type natural-key uniqueness, and their test fixtures.
 It closes no tier, consumer, V3 parent, profile, deployment, rewrite,
-production migration, or production-readiness boundary. Do not
-begin or merge another
+production migration, or production-readiness boundary. `CW1-V2-02-I10` has
+an authored Device scalar-presence packet at entry revision
+`ced8f3bb31536e92f8a87be827e925cec306afaa`. It owns no behavior until its
+exact nine-path packet claim passes repository CI, and it must retain Device
+create's InterfaceTemplate snapshot-order contradiction for `CW1-V2-04`. Do
+not begin or merge another
 Capability Profile while V0 is
 red or before `CW1-V6-03`. Once those gates are
 durably closed, follow the next accepted profile in the roadmap and playbook

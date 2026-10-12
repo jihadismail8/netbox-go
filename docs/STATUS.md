@@ -210,6 +210,20 @@ RackType-update propagation, Device site propagation, deletion, list/query
 behavior, full CRUD, every tier/consumer, the parent, profile promotion, and
 every later child remain open.
 
+`CW1-V2-02-I10` has a nine-path Device scalar-presence packet at entry
+revision `ced8f3bb31536e92f8a87be827e925cec306afaa`, source digest
+`source-v2:sha256:e95f73d153d2926c80133c6e3d51baba9047800077ff057da9eb619b71ab3b7a`
+with 3,079 entries, and source-manifest SHA-256
+`aa36017d0ce33d64e07fa54b085ac1d6c4285d57d17c2cd40ffc3b8b6b82986c`.
+It is limited to the 13 Device common writable fields across create/PUT/PATCH
+presence, create-only DeviceType-airflow inheritance, operation-specific
+contracts, shared typed REST/gRPC intent, PostgreSQL durability, Vue
+dirty-field handling, and eight fixed regressions. Implementation is blocked
+until the exact reviewed packet claim passes repository CI. Device create's
+InterfaceTemplate snapshot-order contradiction remains assigned to
+`CW1-V2-04`; uniqueness, placement, template transactions, list/get/delete,
+full CRUD, every tier/consumer, the parent, and profile promotion remain open.
+
 `CW1-V3-01` has exact tested candidate
 `58241d7f87b642e6b7eca279592ad3759a0f5a06` at source digest
 `source-v2:sha256:5cb32b753a4ac62544b2db24720b70c89904b0ae24731627e236dcd6c68564e9`
@@ -231,11 +245,11 @@ bootstrap, correct/malformed existing-table non-repair, missing-table creation,
 22-table private schema catalog, content-type uniqueness, focused/race,
 complete L4, backend, repository, candidate-CI, evidence-claim, and
 pre-closeout receipt boundaries are green. The project owner accepted only
-this bounded result at `2026-10-12T04:01:48Z`. V3-02 is conditional `done`;
-that state becomes effective only after this exact owner-accepted closeout
-claim passes repository CI, and its excluded closeout receipt must then pass
-exact-SHA CI. It changes no production source and closes no tier, consumer, V3
-parent, profile, deployment, rewrite, production migration, or
+this bounded result at `2026-10-12T04:01:48Z`. Owner-accepted closeout claim
+`60efc848d0e52d9e446307d3a730cf76128161ca` and excluded receipt
+`ced8f3bb31536e92f8a87be827e925cec306afaa` passed exact-SHA repository CI,
+so bounded V3-02 is effectively `done`. It changes no production source and
+closes no tier, consumer, V3 parent, profile, deployment, rewrite, production migration, or
 production-readiness boundary.
 
 > **Operational boundary:** this is a development build for disposable data.
@@ -487,8 +501,8 @@ replacement completes ADR 0004's governing gate and CP-13.
 | ------------------------ | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
 | V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                                 | Refresh for the active source and every later relevant merged digest                                                             | Continuous; entry source retained          |
 | V1 identity/RBAC         | Persisted identity, retained CORS, accepted I1/I2/I3, and retained I4 evidence                          | Obtain I4 owner review; complete password-policy/throttle/proxy/streaming plus RBAC/admin/secret work                            | I4 evidence; parent open                   |
-| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, and accepted IPAddress I1/Site I2/Manufacturer I3/RackRole I4/RackType I5/DeviceRole I6/DeviceType I7/InterfaceTemplate I8/Rack I9 | Complete remaining invariant, rollback, side-effect, concurrency, and tier cases | I1-I9 done; parent open |
-| V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, Compose harness, owner-accepted bounded V3-01, and owner-accepted bounded V3-02 bootstrap/schema evidence | Pass the exact V3-02 closeout-claim and excluded-receipt gates, then complete V3-03 through V3-05 | V3-01 done; V3-02 `done`* pending closeout CI; V3 parent open |
+| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, accepted I1-I9, and the packet-gated Device I10 lane | Pass I10's exact packet gate, then complete remaining invariant, rollback, side-effect, concurrency, and tier cases | I1-I9 done; I10 packet; parent open |
+| V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, Compose harness, and owner-accepted bounded V3-01/V3-02 evidence with green closeout receipts | Complete V3-03 through V3-05 | V3-01/V3-02 done; V3 parent open |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                             | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report                       | T1; implementation/evidence pending        |
 | V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                         | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes                  | T1; implementation/evidence pending        |
 | V6 sign-off              | First-profile legacy stacks physically retired                                                          | V0-V5 retained green together, per-capability review, protobuf freeze/breaking baseline, joint sign-off                          | Not earned                                 |
@@ -505,8 +519,7 @@ See [Evidence](evidence/README.md) for the artifact policy and commands.
    every profile scenario and plan rule;
    implement every uncovered domain, presence, rollback, object-change, and
    PostgreSQL case.
-4. After the `CW1-V3-02` closeout-claim and excluded-receipt gates, complete
-   `CW1-V3-03` through `CW1-V3-05`: close
+4. Complete `CW1-V3-03` through `CW1-V3-05`: close
    locking/rollback/reconnect/restart and real deployment loss/recovery, then
    retain the real-PostgreSQL and deployment V3 bundle. V3-03 remains blocked
    until its separate V1-03 and V2-03 through V2-07 entry dependencies close.

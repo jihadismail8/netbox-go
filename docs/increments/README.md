@@ -50,11 +50,15 @@ implementation exists.
 | `CW1-V2-02-I7` | `done`        | Codex GPT-5.6 Sol | [DeviceType scalar write presence](CW1-V2-02-I7.md)     |
 | `CW1-V2-02-I8` | `done`        | Codex GPT-5.6 Sol | [InterfaceTemplate scalar write presence](CW1-V2-02-I8.md) |
 | `CW1-V2-02-I9` | `done`        | Codex GPT-5.6 Sol | [Rack scalar write presence](CW1-V2-02-I9.md)              |
+| `CW1-V2-02-I10`| `packet`      | Codex             | [Device scalar write presence](CW1-V2-02-I10.md)           |
 | `CW1-V3-01`    | `done`        | Codex GPT-5.6 Sol | [Dependency-aware readiness](CW1-V3-01.md)                 |
-| `CW1-V3-02`    | `done`*       | Codex             | [Bootstrap and schema contract](CW1-V3-02.md)              |
+| `CW1-V3-02`    | `done`        | Codex             | [Bootstrap and schema contract](CW1-V3-02.md)              |
 
 `in-progress` means the packet owns only its explicitly active bounded
 increment; no implementation evidence or parent-goal completion is implied.
+
+`packet` means implementation remains blocked until the exact independently
+reviewed packet claim passes repository CI.
 
 `blocked` means the packet is reviewed but a named hard entry gate remains.
 
@@ -194,6 +198,18 @@ RackType-update propagation, Device site propagation, deletion, list/query
 behavior, full CRUD, all tiers, every consumer, the parent, profile promotion,
 and every later child remain open.
 
+`CW1-V2-02-I10` has a nine-path Device scalar-presence packet at exact entry
+receipt `ced8f3bb31536e92f8a87be827e925cec306afaa`. It owns only the 13
+declared Device writable fields across create/PUT/PATCH operation metadata,
+create-only DeviceType-airflow inheritance, typed shared behavior,
+representable REST/gRPC intent, PostgreSQL durability, Vue dirty-field
+handling, and eight fixed tests. Behavior remains blocked until its exact
+independently reviewed packet claim passes repository CI. Device create's
+InterfaceTemplate snapshot-order contradiction remains assigned to
+`CW1-V2-04`; uniqueness, placement, template transactions, list/get/delete,
+full CRUD, all tiers, every consumer, the parent, and profile promotion remain
+open.
+
 `CW1-V3-01` has exact tested candidate
 `58241d7f87b642e6b7eca279592ad3759a0f5a06` at source digest
 `source-v2:sha256:5cb32b753a4ac62544b2db24720b70c89904b0ae24731627e236dcd6c68564e9`
@@ -218,16 +234,15 @@ with 3,079 entries passed its registry-order regression plus six
 PostgreSQL-backed scenarios, race, complete L4, backend, repository, and
 candidate-CI, evidence-claim, and pre-closeout receipt boundaries without
 changing production source. The project owner accepted only this bounded
-result at `2026-10-12T04:01:48Z`. Its `done` state is conditional on this exact
-owner-accepted closeout claim passing repository CI; the excluded closeout
-receipt then remains. It owns only deterministic startup ordering,
+result at `2026-10-12T04:01:48Z`. Owner-accepted closeout claim
+`60efc848d0e52d9e446307d3a730cf76128161ca` and excluded receipt
+`ced8f3bb31536e92f8a87be827e925cec306afaa` passed exact-SHA repository CI,
+so bounded V3-02 is effectively `done`. It owns only deterministic startup ordering,
 missing-table-only bootstrap/non-repair proof, the private schema catalog,
 content-type natural-key uniqueness, and their test fixtures. It closes no V3
 parent, compatibility tier, consumer, profile, deployment, rewrite, production
 migration, or production-readiness boundary.
 
-The V3-02 asterisk records that owner-accepted `done` becomes effective only
-after this exact closeout claim passes repository CI; its excluded receipt
-must then pass exact-SHA CI. It does not close V3 or make V3-03 ready because
+This bounded V3-02 closeout does not close V3 or make V3-03 ready because
 V1-03 and the corresponding V2-03 through V2-07 dependencies remain
 incomplete.
