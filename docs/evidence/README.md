@@ -201,11 +201,12 @@ gates and exact-SHA repository CI, making only bounded V3-02 `evidence`. This
 two-path, source-v2-excluded receipt
 `452f80dc257f02d1d0b03b524a208c84a1d66abc` passed exact-SHA repository CI
 without changing source. The project owner accepted only this bounded result
-at `2026-10-12T04:01:48Z`. Its `done` state is conditional on this exact
-ten-path owner-accepted closeout claim passing repository CI; a two-path
-excluded receipt must then preserve that result and pass its own exact-SHA CI.
-It promotes no tier, consumer, V3 parent, profile, deployment, rewrite,
-production migration, or production-readiness boundary.
+at `2026-10-12T04:01:48Z`. Owner-accepted closeout revision
+`60efc848d0e52d9e446307d3a730cf76128161ca` passed its pinned local gates and
+exact-SHA repository CI, making only bounded V3-02 `done`. This two-path
+excluded receipt preserves that result without changing source and requires
+its own exact-SHA CI. It promotes no tier, consumer, V3 parent, profile,
+deployment, rewrite, production migration, or production-readiness boundary.
 The project owner reviewed and retained the entry V0, CORS, bounded token I1,
 bounded token I2, bounded browser-session I3, bounded IPAddress I1, and bounded
 Site I2, Manufacturer I3, RackRole I4, RackType I5, DeviceRole I6, DeviceType
@@ -279,18 +280,19 @@ operational-probe slice. This excluded receipt preserves that exact result
 without changing source and must pass its own exact-SHA CI. It promotes no
 compatibility tier, profile state, V3 parent, traceability consumer,
 deployment, rewrite, or production boundary.
-`CW1-V3-02` has a conditional owner-accepted `done` closeout only for its
-bounded bootstrap/schema proof. The closeout becomes effective only after this
-exact ten-path claim revision passes repository CI; its excluded receipt then
-remains. It promotes no compatibility tier, profile state, V3 parent,
-traceability consumer, deployment, migration, rewrite, or production boundary.
+`CW1-V3-02` has an effective owner-accepted `done` closeout at exact revision
+`60efc848d0e52d9e446307d3a730cf76128161ca`, only for its bounded
+bootstrap/schema proof. This excluded receipt preserves that exact result
+without changing source and must pass its own exact-SHA CI. It promotes no
+compatibility tier, profile state, V3 parent, traceability consumer,
+deployment, migration, rewrite, or production boundary.
 
 | Evidence                 | Required command or boundary                                  | Current state                                                    |
 | ------------------------ | ------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Repository quality       | Revised `make check` including non-mutating backend coverage  | V1-I4 and V2-I1/I2/I3/I4 retained; V2-I5/I6/I7/I8/I9 and V3-01 done; V3-02 owner-accepted closeout conditional |
+| Repository quality       | Revised `make check` including non-mutating backend coverage  | V1-I4 and V2-I1/I2/I3/I4 retained; V2-I5/I6/I7/I8/I9, V3-01, and bounded V3-02 done |
 | Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                          |
 | gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                            |
-| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, V1-I4, V2-I1/I2/I3/I4/I5/I6, bounded V2-I7/I8/I9 and V3-01 passed; bounded V3-02 evidence owner-accepted with closeout conditional; V3-03 through V3-05 open |
+| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, V1-I4, V2-I1/I2/I3/I4/I5/I6, bounded V2-I7/I8/I9, V3-01, and V3-02 passed; V3-03 through V3-05 open |
 | Standalone deployment    | `make deployment-smoke`                                       | CORS-scoped exact-commit result retained; V3-04 remains open     |
 | Browser workflow         | `make browser-e2e`                                            | Harness present; current result pending                          |
 
