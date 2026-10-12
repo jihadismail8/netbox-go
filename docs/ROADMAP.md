@@ -121,7 +121,7 @@ production release through PROD-1 and PROD-2.
 | 0    | Stable language and decisions       | CONTEXT plus ADR 0001–0005              | `done`                                                                   |
 | 1    | Repository/shared-core baseline     | `CW1-G00`                               | `continuous`                                                             |
 | 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01/I1/I2/I3 `done`; I4 `evidence`; parent open                        |
-| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01/I1–I9 done; Device I10 done claim conditional; parent/T2/T3 open    |
+| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01/I1–I10 done; Interface I11 packet; parent/T2/T3 open              |
 | 4    | First Core Workflow Profile         | `CW1-V1-*` through `CW1-V6-*`           | T1; active program                                                       |
 | 5    | In-scope feature expansion          | `CP-P01`–`CP-P19`, then `MC-01`–`MC-10` | `blocked`                                                                |
 | 6    | Extension Service contracts         | `EXT-01`                                | `blocked` on a named inventory                                           |
@@ -332,15 +332,26 @@ owner accepted only the bounded evidence at receipt
 `dde91785d34c4d76cbae40b99a191ad76437e9fd`, recorded at
 `2026-10-12T14:07:30Z`; owner-closeout scope amendment
 `707c698c4dfc2952f0891935f3e6ba2e12f05e3c` also passed exact-SHA CI.
-Conditional `done` becomes effective only after the exact eight-path
-owner-accepted closeout claim passes repository CI at its exact SHA. Its
-two-path source-v2-excluded receipt must then retain that result and pass its
-own exact-SHA CI before durable closeout or another increment. No differential
+Owner-accepted closeout claim
+`9ae1bc3b46c0e8a5111b67d331355ee9e426abfd` and source-v2-excluded receipt
+`189633c42ab5aa9f9b2a7a271dbc5be48a4470f3` passed exact-SHA repository CI,
+so bounded I10 is effectively `done`. No differential
 was retained, so T2/T3 remain unearned; the Vue unit/type boundary earns no T4. Device
 create/template order remains assigned to `CW1-V2-04`; uniqueness,
 placement, template transactions, list/get/delete/full CRUD, broader RBAC,
 every tier/consumer, this parent, the profile, deployment, rewrite completion,
 production readiness, and every later child remain open.
+
+[`CW1-V2-02-I11`](increments/CW1-V2-02-I11.md) is the packet-only Interface
+lane for `device`, `name`, `label`, `type`, `enabled`, `mgmt_only`, `mtu`,
+`speed`, `duplex`, and `description` common create/PUT/PATCH presence,
+signed-int64 numeric intent, operation-specific contracts, shared typed
+REST/gRPC semantics, PostgreSQL tests, and Vue dirty-field handling. Entry is
+the exact green I10 closeout receipt. Independent review, a pinned local
+`make check`, and exact packet-claim CI remain required before behavior
+editing. There is no I11 implementation evidence or owner-immutability,
+template, uniqueness, deletion, list/query, tier, parent, profile, or consumer
+completion.
 
 ## Current execution board
 
@@ -362,7 +373,8 @@ production readiness, and every later child remain open.
 | `CW1-V2-02-I7`      | `done`        | Accepted bounded DeviceType scalar write presence   | Done I6 and current `CW1-G00`          |
 | `CW1-V2-02-I8`      | `done`        | Accepted InterfaceTemplate scalar write presence    | Done I7 and current `CW1-G00`          |
 | `CW1-V2-02-I9`      | `done`        | Accepted Rack scalar write presence                 | Done I8 and current `CW1-G00`          |
-| `CW1-V2-02-I10`     | `done`*       | Retain accepted Device scalar presence closeout      | Done I9 and current `CW1-G00`          |
+| `CW1-V2-02-I10`     | `done`        | Accepted Device scalar presence                    | Done I9 and current `CW1-G00`          |
+| `CW1-V2-02-I11`     | `packet`      | Gate Interface scalar write-presence handoff        | Done I10 and current `CW1-G00`         |
 | `CW1-V2-03`–`V2-08` | `blocked`     | Close later typed business behavior                 | V2-02 and named lane dependencies      |
 | `CW1-V3-01`         | `done`        | Accepted bounded dependency-aware readiness         | `CW1-G00`                              |
 | `CW1-V3-02`         | `done`        | Accepted bounded bootstrap/schema contract          | Current `CW1-G00` and done `CW1-V2-01` |
@@ -376,11 +388,10 @@ production readiness, and every later child remain open.
 | `CW1-V6-*`          | `blocked`     | Converge evidence and sign off the first profile    | V1–V5                                  |
 | `CP-P01`–`CP-P19`   | `blocked`     | Expand accepted feature breadth                     | `CW1-V6-03`                            |
 
-The I10 asterisk records conditional `done`: that state becomes effective only
-after the exact eight-path owner-accepted closeout claim passes repository
-CI. Its two-path source-v2-excluded receipt must then retain that result and
-pass its own exact-SHA CI before durable closeout or another increment. The
-parent and every later child remain open.
+I10 is effectively `done` only for its accepted bounded result. I11 remains
+`packet`; implementation requires independent packet review, the pinned local
+`make check`, and exact packet-claim CI. The parent and every later child
+remain open.
 
 Bounded V3-01 and V3-02 are effectively `done` after their exact
 owner-accepted closeout claims and excluded receipts passed repository CI.
@@ -683,10 +694,10 @@ Bounded children:
   `dde91785d34c4d76cbae40b99a191ad76437e9fd`, recorded at
   `2026-10-12T14:07:30Z`; the independently reviewed scope amendment
   `707c698c4dfc2952f0891935f3e6ba2e12f05e3c` passed exact-SHA CI.
-  Conditional `done` becomes effective only after the exact eight-path
-  owner-accepted closeout claim passes repository CI. Its two-path
-  source-v2-excluded receipt must then retain that result and pass its own
-  exact-SHA CI before durable closeout or another increment. No differential
+  Owner-accepted closeout claim
+  `9ae1bc3b46c0e8a5111b67d331355ee9e426abfd` and excluded receipt
+  `189633c42ab5aa9f9b2a7a271dbc5be48a4470f3` passed exact-SHA repository CI,
+  so bounded I10 is effectively `done`. No differential
   was retained, so T2/T3 remain unearned and the Vue unit/type boundary earns
   no T4.
   Fixtures contain no InterfaceTemplates and use known-valid unpositioned
@@ -694,6 +705,17 @@ Bounded children:
   transactions, deletion, list/query behavior, full CRUD, tiers, this parent,
   and every traceability consumer remain open; Device create stays assigned
   to the `CW1-V2-04` template-order contradiction.
+
+- [`CW1-V2-02-I11`](increments/CW1-V2-02-I11.md) defines only the Interface
+  common write-presence packet for `device`, `name`, `label`, `type`,
+  `enabled`, `mgmt_only`, `mtu`, `speed`, `duplex`, and `description`.
+  It plans signed-int64 numeric intent, operation-specific contracts, shared
+  typed REST/gRPC semantics, PostgreSQL durability/rollback tests, and Vue
+  dirty-field handling. Independent review, the pinned local `make check`,
+  and exact packet-claim CI must pass before behavior editing. The eight
+  fixed regressions are required work, not evidence. Owner immutability,
+  uniqueness, template transactions, deletion, list/query, all tiers and
+  consumers, this parent, and profile completion remain open.
 
 - [ ] Represent all 13 resources × list/get/create/PUT/PATCH/delete.
 - [ ] Cover defaults, read-only fields, and nullability.

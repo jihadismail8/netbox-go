@@ -40,6 +40,15 @@ still contains 19 candidate profiles, 10 module-closeout passes, and seven
 production-readiness programs. See [Project status](STATUS.md) for the exact
 module and evidence ledger.
 
+Bounded Device scalar presence `CW1-V2-02-I10` is effectively `done` after its
+owner-accepted closeout claim and excluded receipt passed exact-SHA CI.
+[`CW1-V2-02-I11`](increments/CW1-V2-02-I11.md) is the packet-only Interface
+common write-presence lane for the ten already-declared fields. Independent
+packet review, a pinned local `make check`, and exact packet-claim CI precede
+behavior editing. It provides no implementation evidence and closes no
+owner-immutability, template transaction, tier, parent, profile, or consumer
+boundary. The Phase 7 design and exits below remain required.
+
 ## Intended outcome
 
 From a clean disposable PostgreSQL database, an administrator can use the Go-owned identity flow and Vue application to complete both workflows:

@@ -227,10 +227,10 @@ owner accepted only this bounded evidence at receipt
 `dde91785d34c4d76cbae40b99a191ad76437e9fd`, recorded at
 `2026-10-12T14:07:30Z`. The independently reviewed owner-closeout scope
 amendment `707c698c4dfc2952f0891935f3e6ba2e12f05e3c` passed exact-SHA CI.
-I10 is conditional `done`; that state becomes effective only after the exact
-eight-path owner-accepted closeout claim passes repository CI. Its two-path
-source-v2-excluded receipt must then retain that result and pass its own
-exact-SHA CI before durable closeout or another increment. I10 owns only
+Owner-accepted closeout claim
+`9ae1bc3b46c0e8a5111b67d331355ee9e426abfd` and two-path source-v2-excluded
+receipt `189633c42ab5aa9f9b2a7a271dbc5be48a4470f3` passed exact-SHA
+repository CI, so bounded I10 is effectively `done`. I10 owns only
 Device
 `device_type`, `role`, `name`, `site`, `rack`, `position`, `face`, `status`,
 `serial`, `asset_tag`, `airflow`, `description`, and `comments` common
@@ -242,8 +242,16 @@ remain unearned and the Vue unit/type boundary earns no T4. Device create's
 InterfaceTemplate snapshot-order contradiction remains assigned to
 `CW1-V2-04`; uniqueness, placement, template transactions, list/get/delete,
 full CRUD, broader RBAC, every tier/consumer, the parent, profile, deployment,
-rewrite completion, production readiness, and every later child remain open. Do
-not begin or merge another
+rewrite completion, production readiness, and every later child remain open.
+`CW1-V2-02-I11` is the packet-only lane for Interface `device`, `name`,
+`label`, `type`, `enabled`, `mgmt_only`, `mtu`, `speed`, `duplex`, and
+`description` common create/PUT/PATCH presence, signed-int64 numeric intent,
+shared typed semantics, operation-specific contracts, PostgreSQL tests, and
+Vue dirty-field handling. Implementation may begin only after independent
+packet review, the pinned local `make check`, and exact packet-claim CI pass.
+No I11 implementation evidence, owner-immutability completion, tier, parent,
+profile, or traceability-consumer claim exists.
+Do not begin or merge another
 Capability Profile while V0 is
 red or before `CW1-V6-03`. Once those gates are
 durably closed, follow the next accepted profile in the roadmap and playbook

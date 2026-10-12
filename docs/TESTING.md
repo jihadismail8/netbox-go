@@ -246,15 +246,25 @@ retained. The project owner accepted only this bounded evidence at receipt
 `dde91785d34c4d76cbae40b99a191ad76437e9fd`, recorded at
 `2026-10-12T14:07:30Z`; the independently reviewed owner-closeout scope
 amendment `707c698c4dfc2952f0891935f3e6ba2e12f05e3c` passed exact-SHA
-repository CI. I10 is conditional `done`: that state becomes effective only
-after the exact eight-path owner-accepted closeout claim passes repository CI.
-Its two-path source-v2-excluded receipt must then retain that result and pass
-its own exact-SHA CI before durable closeout or another increment. The
+repository CI. Owner-accepted closeout claim
+`9ae1bc3b46c0e8a5111b67d331355ee9e426abfd` and excluded receipt
+`189633c42ab5aa9f9b2a7a271dbc5be48a4470f3` passed exact-SHA repository CI,
+so bounded I10 is effectively `done`. The
 [retained I10 artifact](evidence/2026-10-12-core-workflow-v2-device-scalar-presence-i10-v0.md)
 records the bounded tests and their command results. No differential was
 run, so T2/T3/T4 remain unearned. Device create's template-snapshot
 contradiction, placement, uniqueness, list/get/delete, every tier, and the
 parent remain open.
+
+The [`CW1-V2-02-I11` packet](increments/CW1-V2-02-I11.md) requires eight
+fixed Interface regressions across domain, command/application presence,
+validation non-effects, REST, gRPC, real-PostgreSQL durability/rollback, and
+representable transport parity, plus operation-specific contract and Vue
+dirty-field checks. They cover only the ten declared writable fields,
+including signed-int64 numeric intent. Independent packet review, a pinned
+local `make check`, and exact packet-claim CI precede behavior editing; no
+I11 test result or owner-immutability, tier, parent, profile, or consumer
+completion is retained yet.
 
 `CW1-V3-01` has exact tested candidate
 `58241d7f87b642e6b7eca279592ad3759a0f5a06` at source digest
@@ -427,7 +437,7 @@ and exact change-state outcomes remain to be added and retained.
 | ------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage                       | `make check` retained green on each exact relevant source digest                                                          | Entry source-v2 retained; active-source refresh required |
 | V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests                      | Pass I4's exact claim CI, retain its receipt, obtain owner review, then complete the remaining identity matrix            | I4 evidence claim conditional; parent open               |
-| V2 profile behavior      | Shared 13-resource service, broad tests, accepted I1-I9, and owner-accepted bounded Device I10 evidence | Retain I10 closeout claim/receipt CI; trace every remaining invariant, rollback, and external-tier boundary | I1-I9 done; I10 done claim conditional; parent open |
+| V2 profile behavior      | Shared 13-resource service, broad tests, accepted I1-I10, and Interface I11 packet | Gate I11; trace every remaining invariant, rollback, and external-tier boundary | I1-I10 done; I11 packet; parent open |
 | V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness, and owner-accepted bounded V3-01/V3-02 evidence with green closeout receipts | Complete V3-03 through V3-05 and retain deployment loss-recovery artifacts | V3-01/V3-02 done; V3 parent open |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites                            | Complete T2 scenario report, then equivalent T3 report                                                                    | T1; implementation gap                                   |
 | V5 Vue workflow          | Typed adapters and real-browser harness                                                    | Both workflows and every required negative/state case retained green                                                      | T1; implementation gap                                   |

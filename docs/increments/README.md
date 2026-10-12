@@ -50,7 +50,8 @@ implementation exists.
 | `CW1-V2-02-I7` | `done`        | Codex GPT-5.6 Sol | [DeviceType scalar write presence](CW1-V2-02-I7.md)     |
 | `CW1-V2-02-I8` | `done`        | Codex GPT-5.6 Sol | [InterfaceTemplate scalar write presence](CW1-V2-02-I8.md) |
 | `CW1-V2-02-I9` | `done`        | Codex GPT-5.6 Sol | [Rack scalar write presence](CW1-V2-02-I9.md)              |
-| `CW1-V2-02-I10`| `done`*       | Codex             | [Device scalar write presence](CW1-V2-02-I10.md)           |
+| `CW1-V2-02-I10`| `done`        | Codex             | [Device scalar write presence](CW1-V2-02-I10.md)           |
+| `CW1-V2-02-I11`| `packet`      | Codex             | [Interface scalar write presence](CW1-V2-02-I11.md)        |
 | `CW1-V3-01`    | `done`        | Codex GPT-5.6 Sol | [Dependency-aware readiness](CW1-V3-01.md)                 |
 | `CW1-V3-02`    | `done`        | Codex             | [Bootstrap and schema contract](CW1-V3-02.md)              |
 
@@ -208,6 +209,10 @@ owner accepted only the bounded evidence at receipt
 `dde91785d34c4d76cbae40b99a191ad76437e9fd`, recorded at
 `2026-10-12T14:07:30Z`; the independently reviewed owner-closeout scope
 amendment `707c698c4dfc2952f0891935f3e6ba2e12f05e3c` passed exact-SHA CI.
+Owner-accepted closeout claim
+`9ae1bc3b46c0e8a5111b67d331355ee9e426abfd` and excluded receipt
+`189633c42ab5aa9f9b2a7a271dbc5be48a4470f3` passed exact-SHA repository CI,
+so bounded I10 is effectively `done`.
 It owns only the 13 declared Device writable fields across create/PUT/PATCH
 operation metadata, create-only
 DeviceType-airflow inheritance, typed shared behavior, representable
@@ -219,11 +224,15 @@ placement, template transactions,
 list/get/delete, full CRUD, all tiers, every consumer, the parent, and profile
 promotion remain open.
 
-The I10 asterisk records conditional `done`: that state becomes effective only
-after the exact eight-path owner-accepted closeout claim passes repository CI.
-Its two-path source-v2-excluded receipt must then retain that result and pass
-its own exact-SHA CI before durable closeout or another increment. It closes
-no parent, tier, consumer, profile, or later child.
+`CW1-V2-02-I11` is the packet-only Interface common write-presence lane for
+`device`, `name`, `label`, `type`, `enabled`, `mgmt_only`, `mtu`, `speed`,
+`duplex`, and `description`. It plans signed-int64 numeric intent,
+operation-specific contracts, shared typed REST/gRPC semantics,
+PostgreSQL durability/rollback tests, Vue dirty-field handling, and eight
+fixed regressions. Independent review, a pinned local `make check`, and exact
+packet-claim CI must pass before behavior editing. No implementation evidence
+or owner-immutability, tier, parent, profile, or consumer completion is
+claimed.
 
 `CW1-V3-01` has exact tested candidate
 `58241d7f87b642e6b7eca279592ad3759a0f5a06` at source digest

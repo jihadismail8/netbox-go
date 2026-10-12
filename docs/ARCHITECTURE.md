@@ -278,6 +278,15 @@ traceability, missing oracle/parity cases, and missing browser outcomes—before
 their remaining external evidence can be retained and V6 reviewed. This
 structural recovery does not promote a compatibility tier.
 
+Bounded Device scalar presence `CW1-V2-02-I10` is effectively `done` after its
+owner-accepted closeout claim and excluded receipt passed exact-SHA CI.
+[`CW1-V2-02-I11`](increments/CW1-V2-02-I11.md) now defines only the Interface
+common write-presence packet. Its shared typed application, contract,
+PostgreSQL, and Vue work requires independent packet review, a pinned local
+`make check`, and exact packet-claim CI before implementation. It supplies no
+implementation evidence or owner-immutability, tier, parent, profile, or
+traceability-consumer completion.
+
 ## Migration direction
 
 Migration proceeds as a strangler refactor inside the Go application. The
