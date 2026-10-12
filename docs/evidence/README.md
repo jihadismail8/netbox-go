@@ -199,12 +199,23 @@ records exact candidate `8f4c6d6d3d8a981519a2bd8800428152b9b92d78` at
 `source-v2:sha256:e9e8520e5d2699f90e2e2d59a722112b12f5a84b2388da5d053ecb57fc4e4711`,
 3,093 entries. Its focused/race, real-PostgreSQL durability and six late-error
 rollbacks, complete L4, generated/Vue, repository, unchanged committed replay,
-and exact-candidate CI boundaries passed. This initial two-path excluded
-claim passed both independent artifact reviews and its assembly local gate
-(`2026-10-12T20:46:40.060Z`–`20:53:08.241Z`, exit 0, log SHA-256
-`ddb2210d9834e96fc04e26cfbc80ac18b8974308300373c1b0578d25822171a3`).
-Its final frozen-file local replay and own exact-SHA CI remain, then the
-separate receipt and standing-authorized bounded
+and exact-candidate CI boundaries passed. Initial two-path excluded claim
+`4874aa52c816660fb8077e0a798181ff2b7d83b4` passed both independent artifact
+reviews, its assembly local gate, and its final no-later-edit `make check`
+(`2026-10-12T20:57:35.063Z`–`21:04:03.428Z`, exit 0, log SHA-256
+`e772eca17e9947a0fc45f182994b33ca6d346b3e4c30b90a49a76052f9e5a959`).
+Its exact-head repository run
+[38309027966](https://github.com/jihadismail8/netbox-go/actions/runs/38309027966)
+and job
+[115009960122](https://github.com/jihadismail8/netbox-go/actions/runs/38309027966/job/115009960122)
+passed with all 12 reported steps successful; the artifact retains exact
+times, raw JSON commitments, and the frozen claim mapping. This separate
+two-path excluded receipt passed independent integrity review and its assembly
+`make check` (`2026-10-12T21:32:26.974Z`–`21:38:49.608Z`, exit 0, unchanged
+source, log SHA-256
+`ccc79153402d35cc712683cf17ecd5afe2f0a32a8564596f8da45fe74f581164`).
+Its final no-later-edit local replay and own exact-SHA CI remain required,
+followed by the standing-authorized bounded
 closeout gates. Source governance remains conservatively `in-progress`.
 No new human artifact inspection or formal retained-claim authentication,
 tier/consumer/parent/profile promotion, or production completion is claimed.

@@ -4,11 +4,12 @@
 
 - Goal: `CW1-V2-02`; increment: `CW1-V2-02-I11`; executor: Codex.
 - Capability Profile: `core-workflow-v1`, still T1 and pre-publication.
-- State: tested candidate and its independent exact-SHA CI are green. This
-  two-path, source-v2-excluded claim passed independent artifact review and
-  its assembly local gate. Final frozen-file local replay and its own
-  exact-SHA repository CI remain required. The separately gated receipt
-  and bounded closeout remain pending.
+- State: tested candidate and initial two-path evidence claim have green
+  independent exact-SHA CI and pinned local gates. This separate two-path,
+  source-v2-excluded receipt retains the initial claim's completed boundaries.
+  Its independent integrity review and assembly pinned local gate passed.
+  Final frozen-file local replay and its own exact-SHA repository CI remain
+  required before the separately gated bounded closeout.
 
 This artifact retains only `dcim.Interface` common create/PUT/PATCH presence
 for `device`, `name`, `label`, `type`, `enabled`, `mgmt_only`, `mtu`, `speed`,
@@ -374,7 +375,7 @@ dependency-audit claim is made; remediation belongs to separately reviewed
 security/dependency work. All capability/parent/profile and production
 limitations in the claim boundary remain open.
 
-## Two-path claim and pending exit gates
+## Initial two-path claim and remaining exit gates
 
 This initial claim changes only:
 
@@ -392,15 +393,15 @@ assembly `make check` passed `2026-10-12T20:46:40.060Z`–
 `2026-10-12T20:53:08.241Z`, exit 0, with source digest unchanged. Its
 credential-free log SHA-256 is
 `ddb2210d9834e96fc04e26cfbc80ac18b8974308300373c1b0578d25822171a3`.
-It includes successful links across 184 Markdown files. After this bounded
-receipt addition, the exact two files require their final no-later-edit pinned
-local replay and exact-SHA CI. The separate two-path excluded receipt remains
-required. After those gates, the existing standing acceptance may be applied
+It includes successful links across 184 Markdown files. That initial claim's
+final no-later-edit local replay and exact-SHA CI subsequently passed, as
+retained below. This separate two-path excluded receipt still requires its
+own gates. After those gates, the existing standing acceptance may be applied
 in the packet's separately reviewed exact eight-path closeout (six governance
 paths plus these two evidence paths), followed by its own two-path excluded
 receipt. Each requires its pinned local and exact-SHA CI boundaries.
 No new artifact-specific human inspection or formal authentication is
-asserted, and I11 is not yet `done` at this claim assembly boundary.
+asserted, and I11 is not yet `done` at this receipt assembly boundary.
 
 The exact final path/content-hash mapping, claim commit identity, and final
 no-later-edit local gate belong in commit/external provenance, avoiding
@@ -409,6 +410,68 @@ scenario, fixture, comparator, normalizer, permission/security rule,
 toolchain/dependency, coverage policy, or other increment is changed here.
 The next recommended child after durable I11 closeout is a separately
 reviewed `ipam.VRF` common scalar-presence slice; it is not closed here.
+
+## Initial evidence claim CI and excluded receipt
+
+Initial claim `4874aa52c816660fb8077e0a798181ff2b7d83b4` has exact parent
+and tested candidate `8f4c6d6d3d8a981519a2bd8800428152b9b92d78`. It changes
+exactly the two excluded evidence paths listed above. Its final frozen-file
+pinned `make check` passed `2026-10-12T20:57:35.063Z`–
+`2026-10-12T21:04:03.428Z`, exit 0, with unchanged tested source. Log
+SHA-256 is
+`e772eca17e9947a0fc45f182994b33ca6d346b3e4c30b90a49a76052f9e5a959`.
+
+The complete frozen old/new two-path mapping is durably retained in that
+reachable claim's actual commit message. Its canonical SHA-256 is
+`3a2c2054577bd1b06ec75512f2d10c218a2fae443102df21b1c9cebb051c3cc6`.
+The initial artifact was 777,519 bytes with SHA-256
+`1c5e52cf7d77329cb3fe1ccacc5e8107d35c179e0843884cb3e77b44ebddbedd`;
+the initial ledger was 27,249 bytes with SHA-256
+`50256a009f599194c232d356f8f3d776f1a2df8dae50568e31b837b45af6e044`.
+Both were regular non-executable `100644` files. These commitments describe
+the already-committed initial claim, not this later receipt's own bytes.
+
+Exact-head repository run
+[38309027966](https://github.com/jihadismail8/netbox-go/actions/runs/38309027966),
+attempt 1, completed success at
+`4874aa52c816660fb8077e0a798181ff2b7d83b4`. Its created/started time was
+`2026-10-12T21:11:10Z`; terminal updated time was
+`2026-10-12T21:30:02Z`. Job
+[115009960122](https://github.com/jihadismail8/netbox-go/actions/runs/38309027966/job/115009960122)
+passed `2026-10-12T21:11:13Z`–`2026-10-12T21:30:01Z`, all 12 reported
+steps successful. Retained raw run/job JSON SHA-256 values are
+`d95c5e97e26528862a5e508df4206dea87c395e35c00ae02d9176ad20417d564`
+and `99c41fa96850a68ff41828b09e68d120541ae0bea6c768f74f681b92342cde65`.
+An independent direct-API review confirmed the exact head, attempt, times,
+and successful steps without changing or rerunning the workflow.
+
+After this CI result, the complete tested source manifest was reverified in
+the CI capture recorded at `2026-10-12T21:30:51.476Z`. A subsequent separate
+freeze audit confirmed both initial claim evidence files unchanged before
+this receipt was edited; that audit has no separately retained exact timestamp.
+This receipt changes only the same two excluded evidence paths. Source-v2
+remains `source-v2:sha256:e9e8520e5d2699f90e2e2d59a722112b12f5a84b2388da5d053ecb57fc4e4711`
+with 3,093 entries; the complete manifest and empty source diff below remain
+verbatim and retain their original commitments. Source governance is still
+conservatively `in-progress`.
+
+This receipt passed independent integrity review after a narrow timestamp
+clarification distinguishing the source capture from the separately untimed
+claim-file freeze audit. Its pinned assembly `make check` passed
+`2026-10-12T21:32:26.974Z`–`2026-10-12T21:38:49.608Z`, exit 0, with the
+source digest unchanged. Credential-free log SHA-256 is
+`ccc79153402d35cc712683cf17ecd5afe2f0a32a8564596f8da45fe74f581164`;
+193 Vue tests and links across 184 Markdown files passed.
+
+After this narrow assembly receipt addition, the final no-later-edit pinned
+local replay, this receipt's own exact-SHA CI, and the subsequent separately
+reviewed eight-path standing-authorized closeout and two-path closeout receipt
+remain pending. Its own final frozen
+hashes, commit identity, and no-later-edit gate are retained in commit/external
+provenance rather than self-referential artifact edits. No standing acceptance
+has yet been applied to I11, no new human artifact inspection is asserted,
+and all external-tier, consumer, parent, profile, and production exclusions
+above remain unchanged.
 
 ## Complete tested source manifest
 
