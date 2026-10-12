@@ -174,6 +174,17 @@ exact-SHA CI.
 No retained pinned differential accompanies this bounded result, so no T2/T3
 claim is made.
 The
+[bounded Device scalar write-presence result](2026-10-12-core-workflow-v2-device-scalar-presence-i10-v0.md)
+passed its exact-name, affected/race, real-PostgreSQL, complete L4,
+generated-contract, Vue, pinned repository, and independent exact-candidate
+CI boundaries on exact revision
+`c74821a0473a52873ea2bf26e781bf0fa5e33ebb`. Its current two-path,
+source-v2-excluded claim conditionally makes only bounded I10 `evidence`
+after the exact claim revision passes repository CI; its excluded receipt and
+artifact-specific project-owner review of that exact artifact then remain. No
+retained pinned differential accompanies this bounded result, so no T2/T3
+claim is made.
+The
 [bounded dependency-aware readiness result](2026-08-27-core-workflow-v3-dependency-readiness-v0.md)
 passed its exact-name, affected, race, complete L4 PostgreSQL-regression,
 coverage, pinned repository, and independent exact-candidate CI boundaries on
