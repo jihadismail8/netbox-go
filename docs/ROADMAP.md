@@ -121,7 +121,7 @@ production release through PROD-1 and PROD-2.
 | 0    | Stable language and decisions       | CONTEXT plus ADR 0001–0005              | `done`                                                                   |
 | 1    | Repository/shared-core baseline     | `CW1-G00`                               | `continuous`                                                             |
 | 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01/I1/I2/I3 `done`; I4 `evidence`; parent open                        |
-| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01/I1–I10 done; Interface I11 packet; parent/T2/T3 open              |
+| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01/I1–I10 done; Interface I11 in-progress; parent/T2/T3 open         |
 | 4    | First Core Workflow Profile         | `CW1-V1-*` through `CW1-V6-*`           | T1; active program                                                       |
 | 5    | In-scope feature expansion          | `CP-P01`–`CP-P19`, then `MC-01`–`MC-10` | `blocked`                                                                |
 | 6    | Extension Service contracts         | `EXT-01`                                | `blocked` on a named inventory                                           |
@@ -342,14 +342,17 @@ placement, template transactions, list/get/delete/full CRUD, broader RBAC,
 every tier/consumer, this parent, the profile, deployment, rewrite completion,
 production readiness, and every later child remain open.
 
-[`CW1-V2-02-I11`](increments/CW1-V2-02-I11.md) is the packet-only Interface
+[`CW1-V2-02-I11`](increments/CW1-V2-02-I11.md) is the in-progress Interface
 lane for `device`, `name`, `label`, `type`, `enabled`, `mgmt_only`, `mtu`,
 `speed`, `duplex`, and `description` common create/PUT/PATCH presence,
 signed-int64 numeric intent, operation-specific contracts, shared typed
 REST/gRPC semantics, PostgreSQL tests, and Vue dirty-field handling. Entry is
-the exact green I10 closeout receipt. Independent review, a pinned local
-`make check`, and exact packet-claim CI remain required before behavior
-editing. There is no I11 implementation evidence or owner-immutability,
+the exact green I10 closeout receipt. Independently reviewed packet
+`840d889346e846b46efc98bb79305f0dcfb01957` passed the pinned local gate and
+exact-SHA CI run `38295273529`. All eight fixed tests and focused/race, real
+PostgreSQL/complete L4, generated/Vue, and repository gates are locally green.
+Unchanged committed replay, candidate CI, and retained evidence/receipt/
+closeout gates remain. There is no artifact-specific human review or owner-immutability,
 template, uniqueness, deletion, list/query, tier, parent, profile, or consumer
 completion.
 
@@ -374,7 +377,7 @@ completion.
 | `CW1-V2-02-I8`      | `done`        | Accepted InterfaceTemplate scalar write presence    | Done I7 and current `CW1-G00`          |
 | `CW1-V2-02-I9`      | `done`        | Accepted Rack scalar write presence                 | Done I8 and current `CW1-G00`          |
 | `CW1-V2-02-I10`     | `done`        | Accepted Device scalar presence                    | Done I9 and current `CW1-G00`          |
-| `CW1-V2-02-I11`     | `packet`      | Gate Interface scalar write-presence handoff        | Done I10 and current `CW1-G00`         |
+| `CW1-V2-02-I11`     | `in-progress` | Replay and retain Interface scalar presence         | Done I10 and green exact packet       |
 | `CW1-V2-03`–`V2-08` | `blocked`     | Close later typed business behavior                 | V2-02 and named lane dependencies      |
 | `CW1-V3-01`         | `done`        | Accepted bounded dependency-aware readiness         | `CW1-G00`                              |
 | `CW1-V3-02`         | `done`        | Accepted bounded bootstrap/schema contract          | Current `CW1-G00` and done `CW1-V2-01` |
@@ -388,10 +391,12 @@ completion.
 | `CW1-V6-*`          | `blocked`     | Converge evidence and sign off the first profile    | V1–V5                                  |
 | `CP-P01`–`CP-P19`   | `blocked`     | Expand accepted feature breadth                     | `CW1-V6-03`                            |
 
-I10 is effectively `done` only for its accepted bounded result. I11 remains
-`packet`; implementation requires independent packet review, the pinned local
-`make check`, and exact packet-claim CI. The parent and every later child
-remain open.
+I10 is effectively `done` only for its accepted bounded result. I11 is
+`in-progress` after its exact packet gate and locally green implementation.
+Its committed replay, candidate/evidence/receipt CI and bounded closeout
+remain. The parent and every later child remain open. Standing owner
+authorization replaces no required artifact-specific human inspection or
+separate row/consumer/tier/aggregate/profile sign-off.
 
 Bounded V3-01 and V3-02 are effectively `done` after their exact
 owner-accepted closeout claims and excluded receipts passed repository CI.
@@ -706,14 +711,15 @@ Bounded children:
   and every traceability consumer remain open; Device create stays assigned
   to the `CW1-V2-04` template-order contradiction.
 
-- [`CW1-V2-02-I11`](increments/CW1-V2-02-I11.md) defines only the Interface
-  common write-presence packet for `device`, `name`, `label`, `type`,
+- [`CW1-V2-02-I11`](increments/CW1-V2-02-I11.md) implements only the Interface
+  common write-presence slice for `device`, `name`, `label`, `type`,
   `enabled`, `mgmt_only`, `mtu`, `speed`, `duplex`, and `description`.
-  It plans signed-int64 numeric intent, operation-specific contracts, shared
+  It implements signed-int64 numeric intent, operation-specific contracts, shared
   typed REST/gRPC semantics, PostgreSQL durability/rollback tests, and Vue
-  dirty-field handling. Independent review, the pinned local `make check`,
-  and exact packet-claim CI must pass before behavior editing. The eight
-  fixed regressions are required work, not evidence. Owner immutability,
+  dirty-field handling. The reviewed exact packet gate passed; all eight
+  fixed regressions and focused/race, real PostgreSQL/complete L4, generated/
+  Vue, and repository gates passed locally. Unchanged committed replay and
+  candidate/evidence/receipt/closeout gates remain. Owner immutability,
   uniqueness, template transactions, deletion, list/query, all tiers and
   consumers, this parent, and profile completion remain open.
 

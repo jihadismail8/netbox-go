@@ -56,8 +56,8 @@ func TestInterfacePUTPATCHAndNullSemantics(t *testing.T) {
 			Type:        appdcim.FieldValue("1000base-t"),
 			Enabled:     appdcim.FieldValue(false),
 			MgmtOnly:    appdcim.FieldValue(true),
-			MTU:         appdcim.FieldValue(uint32(1500)),
-			Speed:       appdcim.FieldValue(uint64(1_000_000)),
+			MTU:         appdcim.FieldValue(int64(1500)),
+			Speed:       appdcim.FieldValue(int64(1_000_000)),
 			Duplex:      appdcim.FieldValue("full"),
 			Description: appdcim.FieldValue("old"),
 		},
@@ -66,7 +66,7 @@ func TestInterfacePUTPATCHAndNullSemantics(t *testing.T) {
 
 	networkInterface, err = service.UpdateInterface(
 		t.Context(), testPrincipal(), appdcim.UpdateInterfaceCommand{
-			ID: networkInterface.ID(), MTU: appdcim.NullField[uint32](),
+			ID: networkInterface.ID(), MTU: appdcim.NullField[int64](),
 			Duplex: appdcim.FieldValue(""),
 		},
 	)
@@ -89,12 +89,16 @@ func TestInterfacePUTPATCHAndNullSemantics(t *testing.T) {
 		},
 	)
 	require.NoError(t, err)
-	assert.True(t, networkInterface.Enabled())
-	assert.False(t, networkInterface.MgmtOnly())
+	assert.False(t, networkInterface.Enabled())
+	assert.True(t, networkInterface.MgmtOnly())
 	assert.True(t, networkInterface.MTU().IsNull())
-	assert.True(t, networkInterface.Speed().IsNull())
-	assert.True(t, networkInterface.Duplex().IsNull())
-	assert.Empty(t, networkInterface.Description())
+	speed, present := networkInterface.Speed().Get()
+	require.True(t, present)
+	assert.Equal(t, uint64(1_000_000), speed)
+	duplex, present = networkInterface.Duplex().Get()
+	require.True(t, present)
+	assert.Empty(t, duplex)
+	assert.Equal(t, "old", networkInterface.Description())
 }
 
 func TestInterfaceRejectsMoveAndPinsListContract(t *testing.T) {

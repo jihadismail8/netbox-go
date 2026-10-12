@@ -3231,6 +3231,12 @@
       "status": "unresolved",
       "reason": "Operation-specific Device metadata and the bounded implementation candidate now enforce device type, role, name, site, rack, position, face, status, serial, asset tag, airflow, description, and comments create/PUT/PATCH presence, defaults, validation, and create-only DeviceType-airflow inheritance across typed behavior, REST/gRPC, PostgreSQL, generated OpenAPI, and Vue. Device create's InterfaceTemplate snapshot ordering remains contradicted and owned by CW1-V2-04; the pinned differential oracle, retained evidence, project-owner review, remaining placement, uniqueness, template, list/get/delete/full-CRUD behavior, 13-resource parent, and higher tiers remain pending.",
       "resolution_goal": "CW1-V2-02"
+    },
+    {
+      "id": "unresolved-interface-scalar-presence",
+      "status": "unresolved",
+      "reason": "Operation-specific Interface metadata and the bounded scalar-presence lane own device, name, label, type, enabled, management-only, MTU, speed, duplex, and description create/PUT/PATCH presence, defaults, signed numeric validation, choice diagnostics, PostgreSQL durability, generated OpenAPI, and Vue dirty-field handling. The pinned differential oracle, formal retained-claim human review, remaining owner immutability, uniqueness, independent editing, template non-retroactivity, deletion and assigned-IP cascades, list/get/query/full CRUD, 13-resource parent, and higher tiers remain pending.",
+      "resolution_goal": "CW1-V2-02"
     }
   ],
   "verification_sets": [
@@ -5181,7 +5187,7 @@
       "capability": "dcim.Interface",
       "operation": "create",
       "reference_set": "dcim.Interface",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-interface-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {
@@ -5221,7 +5227,7 @@
       "capability": "dcim.Interface",
       "operation": "replace",
       "reference_set": "dcim.Interface",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-interface-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {
@@ -5231,7 +5237,7 @@
       "capability": "dcim.Interface",
       "operation": "update",
       "reference_set": "dcim.Interface",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-interface-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {

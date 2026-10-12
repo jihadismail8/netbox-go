@@ -51,7 +51,7 @@ implementation exists.
 | `CW1-V2-02-I8` | `done`        | Codex GPT-5.6 Sol | [InterfaceTemplate scalar write presence](CW1-V2-02-I8.md) |
 | `CW1-V2-02-I9` | `done`        | Codex GPT-5.6 Sol | [Rack scalar write presence](CW1-V2-02-I9.md)              |
 | `CW1-V2-02-I10`| `done`        | Codex             | [Device scalar write presence](CW1-V2-02-I10.md)           |
-| `CW1-V2-02-I11`| `packet`      | Codex             | [Interface scalar write presence](CW1-V2-02-I11.md)        |
+| `CW1-V2-02-I11`| `in-progress` | Codex             | [Interface scalar write presence](CW1-V2-02-I11.md)        |
 | `CW1-V3-01`    | `done`        | Codex GPT-5.6 Sol | [Dependency-aware readiness](CW1-V3-01.md)                 |
 | `CW1-V3-02`    | `done`        | Codex             | [Bootstrap and schema contract](CW1-V3-02.md)              |
 
@@ -224,15 +224,18 @@ placement, template transactions,
 list/get/delete, full CRUD, all tiers, every consumer, the parent, and profile
 promotion remain open.
 
-`CW1-V2-02-I11` is the packet-only Interface common write-presence lane for
+`CW1-V2-02-I11` is the in-progress Interface common write-presence lane for
 `device`, `name`, `label`, `type`, `enabled`, `mgmt_only`, `mtu`, `speed`,
-`duplex`, and `description`. It plans signed-int64 numeric intent,
+`duplex`, and `description`. It implements signed-int64 numeric intent,
 operation-specific contracts, shared typed REST/gRPC semantics,
 PostgreSQL durability/rollback tests, Vue dirty-field handling, and eight
-fixed regressions. Independent review, a pinned local `make check`, and exact
-packet-claim CI must pass before behavior editing. No implementation evidence
-or owner-immutability, tier, parent, profile, or consumer completion is
-claimed.
+fixed regressions. Independently reviewed packet
+`840d889346e846b46efc98bb79305f0dcfb01957` passed the pinned local gate and
+exact-SHA CI run `38295273529`. Focused/race, real PostgreSQL including six
+late-error rollbacks, complete L4, generated/Vue, and repository gates passed
+locally. Unchanged committed replay, candidate CI, and retained evidence/
+receipt/closeout gates remain. No artifact-specific human review or owner-
+immutability, tier, parent, profile, or consumer completion is claimed.
 
 `CW1-V3-01` has exact tested candidate
 `58241d7f87b642e6b7eca279592ad3759a0f5a06` at source digest

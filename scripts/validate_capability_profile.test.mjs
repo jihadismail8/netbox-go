@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import crypto from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -358,6 +359,27 @@ const INTERFACE_TEMPLATE_FIELD_CONTRACTS = {
   },
 };
 
+const INTERFACE_FIELD_CONTRACTS = {
+  response: {
+    nullable_fields: ["mtu", "speed", "duplex", "created", "last_updated"],
+  },
+  create: {
+    required_fields: ["device", "name", "type"],
+    nullable_fields: ["mtu", "speed", "duplex"],
+    blank_fields: ["label", "duplex", "description"],
+  },
+  replace: {
+    required_fields: ["device", "name", "type"],
+    nullable_fields: ["mtu", "speed", "duplex"],
+    blank_fields: ["label", "duplex", "description"],
+  },
+  update: {
+    required_fields: [],
+    nullable_fields: ["mtu", "speed", "duplex"],
+    blank_fields: ["label", "duplex", "description"],
+  },
+};
+
 function runNode(script, argument) {
   return spawnSync(process.execPath, [path.join(ROOT, script), argument], {
     cwd: ROOT,
@@ -498,6 +520,16 @@ function withInterfaceTemplateResourceFixture(mutator, callback) {
     DCIM_RELATIVE_PATH,
     "InterfaceTemplate",
     INTERFACE_TEMPLATE_FIELD_CONTRACTS,
+    mutator,
+    callback,
+  );
+}
+
+function withInterfaceResourceFixture(mutator, callback) {
+  withResourceContractFixture(
+    DCIM_RELATIVE_PATH,
+    "Interface",
+    INTERFACE_FIELD_CONTRACTS,
     mutator,
     callback,
   );
@@ -744,6 +776,32 @@ function assertOpenAPIRejected(name, mutator, expectedDiagnostic) {
   });
 }
 
+function assertInterfaceProfileRejected(name, mutator, expectedDiagnostic) {
+  test(name, () => {
+    withInterfaceResourceFixture(mutator, (profilePath) => {
+      const result = runNode(
+        "scripts/validate_capability_profile.mjs",
+        profilePath,
+      );
+      assert.notEqual(
+        result.status,
+        0,
+        `expected rejection; ${diagnostics(result)}`,
+      );
+      assert.match(diagnostics(result), expectedDiagnostic);
+    });
+  });
+}
+
+function interfaceOperationSchema(spec, suffix) {
+  const name = `Interface${suffix}`;
+  const schema =
+    spec.components.schemas[name] ??
+    structuredClone(spec.components.schemas.InterfaceWrite);
+  spec.components.schemas[name] = schema;
+  return schema;
+}
+
 test("current capability metadata validates", () => {
   const metadata = JSON.parse(
     fs.readFileSync(path.join(CONTRACT_ROOT, IPAM_RELATIVE_PATH), "utf8"),
@@ -845,6 +903,16 @@ test("current capability metadata validates", () => {
     "current InterfaceTemplate presence metadata must match the independently pinned contract",
   );
 
+  const networkInterface = dcimMetadata.resources.find(
+    (resource) => resource.name === "Interface",
+  );
+  assert.ok(networkInterface, "current metadata must contain Interface");
+  assert.deepStrictEqual(
+    networkInterface.field_contracts,
+    INTERFACE_FIELD_CONTRACTS,
+    "current Interface presence metadata must match the independently pinned contract",
+  );
+
   const result = runNode(
     "scripts/validate_capability_profile.mjs",
     path.join(CONTRACT_ROOT, PROFILE_RELATIVE_PATH),
@@ -866,7 +934,7 @@ test("DeviceRole scalar-presence traceability delta remains bounded", () => {
       rows: traceability.rows.length,
     },
     {
-      assessment_sets: 13,
+      assessment_sets: 14,
       reference_sets: 19,
       proof_sets: 15,
       applicability_sets: 15,
@@ -875,7 +943,7 @@ test("DeviceRole scalar-presence traceability delta remains bounded", () => {
       row_applicability: 293,
       rows: 293,
     },
-    "I6 through I10 must add only their bounded assessments without changing reviewed row authority counts",
+    "I6 through I11 must add only their bounded assessments without changing reviewed row authority counts",
   );
 
   const expectedRows = [
@@ -1064,6 +1132,46 @@ test("Device scalar-presence traceability delta remains bounded", () => {
     deviceRows.filter((row) => row.assessment_set === "unresolved-v2").length,
     26,
     "Device get/delete, placement, uniqueness, template, list/query, and full-CRUD rules remain unresolved-v2",
+  );
+});
+
+test("Interface scalar-presence traceability delta remains bounded", () => {
+  const traceability = JSON.parse(fs.readFileSync(TRACEABILITY_PATH, "utf8"));
+  const expectedRows = [
+    "operation.dcim.interface.create",
+    "operation.dcim.interface.replace",
+    "operation.dcim.interface.update",
+  ];
+  assert.deepStrictEqual(
+    traceability.rows
+      .filter(
+        (row) => row.assessment_set === "unresolved-interface-scalar-presence",
+      )
+      .map((row) => row.id)
+      .sort(),
+    expectedRows,
+    "I11 must repoint exactly the Interface create/replace/update rows",
+  );
+  const assessment = traceability.assessment_sets.find(
+    (candidate) => candidate.id === "unresolved-interface-scalar-presence",
+  );
+  assert.equal(assessment?.status, "unresolved");
+  assert.equal(assessment?.resolution_goal, "CW1-V2-02");
+  const interfaceRows = traceability.rows.filter(
+    (row) => row.capability === "dcim.Interface",
+  );
+  assert.equal(interfaceRows.length, 13);
+  const unchangedRows = interfaceRows.filter(
+    (row) => !expectedRows.includes(row.id),
+  );
+  assert.equal(unchangedRows.length, 10);
+  assert.equal(
+    crypto
+      .createHash("sha256")
+      .update(JSON.stringify(unchangedRows))
+      .digest("hex"),
+    "9c5bd20a029f94ed45e1340418218a5294528b9e51ee4f49bb66500b8225021b",
+    "I11 must preserve every member of the ten other Interface-owned rows",
   );
 });
 
@@ -3271,3 +3379,421 @@ assertOpenAPIRejected(
   },
   /IPAddress\.family\.value base type must be integer/u,
 );
+
+for (const [name, mutator, diagnostic] of [
+  [
+    "Interface field contracts are mandatory",
+    (resource) => {
+      delete resource.field_contracts;
+    },
+    /dcim\.Interface: field_contracts must declare operation-specific presence semantics/u,
+  ],
+  [
+    "Interface field contracts require every operation",
+    (resource) => {
+      delete resource.field_contracts.replace;
+    },
+    /dcim\.Interface: field_contracts must declare exactly response, create, replace, and update/u,
+  ],
+  [
+    "Interface field contracts reject extra operations",
+    (resource) => {
+      resource.field_contracts.delete = {};
+    },
+    /dcim\.Interface: field_contracts must declare exactly response, create, replace, and update/u,
+  ],
+  [
+    "Interface required fields reject undeclared fields",
+    (resource) => {
+      resource.field_contracts.create.required_fields.push("module");
+    },
+    /dcim\.Interface: field_contracts\.create\.required_fields contains undeclared field module/u,
+  ],
+  [
+    "Interface nullable fields remain a writable-field subset",
+    (resource) => {
+      resource.field_contracts.replace.nullable_fields.push("display");
+    },
+    /dcim\.Interface: field_contracts\.replace\.nullable_fields contains undeclared field display/u,
+  ],
+  [
+    "Interface blank fields remain a writable-field subset",
+    (resource) => {
+      resource.field_contracts.update.blank_fields.push("count_ipaddresses");
+    },
+    /dcim\.Interface: field_contracts\.update\.blank_fields contains undeclared field count_ipaddresses/u,
+  ],
+  [
+    "Interface required fields reject duplicates",
+    (resource) => {
+      resource.field_contracts.create.required_fields.push("name");
+    },
+    /dcim\.Interface: field_contracts\.create\.required_fields contains duplicate field name/u,
+  ],
+  [
+    "Interface nullable fields reject duplicates",
+    (resource) => {
+      resource.field_contracts.replace.nullable_fields.push("mtu");
+    },
+    /dcim\.Interface: field_contracts\.replace\.nullable_fields contains duplicate field mtu/u,
+  ],
+  [
+    "Interface blank fields reject duplicates",
+    (resource) => {
+      resource.field_contracts.update.blank_fields.push("duplex");
+    },
+    /dcim\.Interface: field_contracts\.update\.blank_fields contains duplicate field duplex/u,
+  ],
+  [
+    "Interface response fields reject undeclared names",
+    (resource) => {
+      resource.field_contracts.response.nullable_fields.push("module");
+    },
+    /dcim\.Interface: field_contracts\.response\.nullable_fields contains undeclared field module/u,
+  ],
+  [
+    "Interface response and write contracts cannot be conflated",
+    (resource) => {
+      resource.field_contracts.response = structuredClone(
+        resource.field_contracts.create,
+      );
+    },
+    /dcim\.Interface: field_contracts\.response must declare exactly nullable_fields/u,
+  ],
+  [
+    "Interface PATCH contracts cannot require fields",
+    (resource) => {
+      resource.field_contracts.update.required_fields.push("device");
+    },
+    /dcim\.Interface: field_contracts\.update\.required_fields must be empty for PATCH/u,
+  ],
+]) {
+  assertInterfaceProfileRejected(name, mutator, diagnostic);
+}
+
+for (const field of ["device", "enabled", "mgmt_only", "mtu", "speed"]) {
+  assertInterfaceProfileRejected(
+    "Interface blank fields reject non-string " + field,
+    (resource) => {
+      resource.field_contracts.create.blank_fields.push(field);
+    },
+    new RegExp(
+      "dcim\\.Interface: field_contracts\\.create\\.blank_fields contains non-string field " +
+        field,
+      "u",
+    ),
+  );
+}
+
+for (const [name, route, method, schema] of [
+  ["POST", "/api/dcim/interfaces/", "post", "InterfaceCreate"],
+  ["PUT", "/api/dcim/interfaces/{id}/", "put", "InterfaceReplace"],
+  ["PATCH", "/api/dcim/interfaces/{id}/", "patch", "InterfaceUpdate"],
+]) {
+  assertOpenAPIRejected(
+    "OpenAPI validation rejects a stale Interface " +
+      name +
+      " request reference",
+    (spec) => {
+      spec.paths[route][method].requestBody.content["application/json"].schema =
+        {
+          $ref: "#/components/schemas/InterfaceWrite",
+        };
+    },
+    new RegExp(
+      escapeRegExp(
+        name + " " + route + " must reference #/components/schemas/" + schema,
+      ),
+      "u",
+    ),
+  );
+}
+
+for (const [name, mutator, diagnostic] of [
+  [
+    "a stale shared Interface write schema",
+    (spec) => {
+      spec.components.schemas.InterfaceWrite = structuredClone(
+        interfaceOperationSchema(spec, "Create"),
+      );
+    },
+    /Interface must not retain a conflated shared write schema/u,
+  ],
+  [
+    "stale Interface create requiredness",
+    (spec) => {
+      interfaceOperationSchema(spec, "Create").required = ["name", "type"];
+    },
+    /InterfaceCreate required fields must match field_contracts\.create/u,
+  ],
+  [
+    "stale Interface replace requiredness",
+    (spec) => {
+      interfaceOperationSchema(spec, "Replace").required = [
+        "device",
+        "name",
+        "type",
+        "label",
+      ];
+    },
+    /InterfaceReplace required fields must match field_contracts\.replace/u,
+  ],
+  [
+    "stale Interface update requiredness",
+    (spec) => {
+      interfaceOperationSchema(spec, "Update").required = ["name"];
+    },
+    /InterfaceUpdate required fields must match field_contracts\.update/u,
+  ],
+  [
+    "nullable required Interface device requests",
+    (spec) => {
+      interfaceOperationSchema(spec, "Create").properties.device.type = [
+        "integer",
+        "null",
+      ];
+    },
+    /InterfaceCreate\.device nullability must match field_contracts\.create/u,
+  ],
+  [
+    "nullable Interface label requests",
+    (spec) => {
+      interfaceOperationSchema(spec, "Replace").properties.label.type = [
+        "string",
+        "null",
+      ];
+    },
+    /InterfaceReplace\.label nullability must match field_contracts\.replace/u,
+  ],
+  [
+    "non-null Interface MTU requests",
+    (spec) => {
+      interfaceOperationSchema(spec, "Update").properties.mtu.type = "integer";
+    },
+    /InterfaceUpdate\.mtu nullability must match field_contracts\.update/u,
+  ],
+  [
+    "non-null Interface speed requests",
+    (spec) => {
+      interfaceOperationSchema(spec, "Update").properties.speed.type =
+        "integer";
+    },
+    /InterfaceUpdate\.speed nullability must match field_contracts\.update/u,
+  ],
+  [
+    "non-null Interface duplex requests",
+    (spec) => {
+      interfaceOperationSchema(spec, "Update").properties.duplex.type =
+        "string";
+    },
+    /InterfaceUpdate\.duplex nullability must match resource metadata/u,
+  ],
+  [
+    "blank-rejecting Interface label requests",
+    (spec) => {
+      interfaceOperationSchema(spec, "Update").properties.label.minLength = 1;
+    },
+    /InterfaceUpdate\.label blankability must match field_contracts\.update/u,
+  ],
+  [
+    "blank-rejecting Interface duplex requests",
+    (spec) => {
+      interfaceOperationSchema(spec, "Update").properties.duplex.minLength = 1;
+    },
+    /InterfaceUpdate\.duplex blankability must match field_contracts\.update/u,
+  ],
+  [
+    "blank-rejecting Interface description requests",
+    (spec) => {
+      interfaceOperationSchema(
+        spec,
+        "Update",
+      ).properties.description.minLength = 1;
+    },
+    /InterfaceUpdate\.description blankability must match field_contracts\.update/u,
+  ],
+  [
+    "missing Interface name nonblank constraints",
+    (spec) => {
+      delete interfaceOperationSchema(spec, "Replace").properties.name
+        .minLength;
+    },
+    /InterfaceReplace\.name blankability must match field_contracts\.replace/u,
+  ],
+  [
+    "missing Interface type nonblank constraints",
+    (spec) => {
+      delete interfaceOperationSchema(spec, "Create").properties.type.minLength;
+    },
+    /InterfaceCreate\.type blankability must match field_contracts\.create/u,
+  ],
+  [
+    "stale Interface device identifier types",
+    (spec) => {
+      const device = interfaceOperationSchema(spec, "Create").properties.device;
+      device.type = "string";
+      delete device.format;
+    },
+    /InterfaceCreate\.device base type must be integer/u,
+  ],
+  [
+    "stale Interface MTU scalar types",
+    (spec) => {
+      interfaceOperationSchema(spec, "Update").properties.mtu.type = [
+        "string",
+        "null",
+      ];
+    },
+    /InterfaceUpdate\.mtu base type must be integer/u,
+  ],
+  [
+    "stale Interface speed numeric formats",
+    (spec) => {
+      interfaceOperationSchema(spec, "Replace").properties.speed.format =
+        "int32";
+    },
+    /InterfaceReplace\.speed format must be int64/u,
+  ],
+  [
+    "stale Interface enabled scalar types",
+    (spec) => {
+      interfaceOperationSchema(spec, "Update").properties.enabled.type =
+        "string";
+    },
+    /InterfaceUpdate\.enabled base type must be boolean/u,
+  ],
+  [
+    "stale Interface type request envelopes",
+    (spec) => {
+      interfaceOperationSchema(spec, "Replace").properties.type.type = "object";
+    },
+    /InterfaceReplace\.type base type must be string/u,
+  ],
+  [
+    "undeclared Interface request fields",
+    (spec) => {
+      interfaceOperationSchema(spec, "Update").properties.parent = {
+        type: "integer",
+      };
+    },
+    /InterfaceUpdate fields must match writable_fields/u,
+  ],
+  [
+    "nullable Interface device responses",
+    (spec) => {
+      spec.components.schemas.Interface.properties.device.oneOf.push({
+        type: "null",
+      });
+    },
+    /Interface\.device response nullability must match field_contracts\.response/u,
+  ],
+  [
+    "stale Interface device response references",
+    (spec) => {
+      spec.components.schemas.Interface.properties.device.oneOf[0].$ref =
+        "#/components/schemas/Interface";
+    },
+    /Interface\.device must reference #\/components\/schemas\/ObjectReference/u,
+  ],
+  [
+    "stale Interface type response envelopes",
+    (spec) => {
+      spec.components.schemas.Interface.properties.type.required = ["value"];
+    },
+    /Interface\.type choice response must require value and label/u,
+  ],
+  [
+    "stale Interface duplex response envelopes",
+    (spec) => {
+      spec.components.schemas.Interface.properties.duplex.oneOf.find(
+        (candidate) => candidate.type === "object",
+      ).required = ["value"];
+    },
+    /Interface\.duplex choice response must require value and label/u,
+  ],
+  [
+    "non-null Interface duplex responses",
+    (spec) => {
+      const duplex = spec.components.schemas.Interface.properties.duplex;
+      duplex.oneOf = duplex.oneOf.filter(
+        (candidate) => candidate.type !== "null",
+      );
+    },
+    /Interface\.duplex response nullability must match resource metadata/u,
+  ],
+  [
+    "stale Interface response timestamp nullability",
+    (spec) => {
+      spec.components.schemas.Interface.properties.created.type = "string";
+    },
+    /Interface\.created response nullability must match field_contracts\.response/u,
+  ],
+  [
+    "stale Interface response timestamp formats",
+    (spec) => {
+      spec.components.schemas.Interface.properties.last_updated.format = "date";
+    },
+    /Interface\.last_updated format must be date-time/u,
+  ],
+  [
+    "undeclared Interface name response nullability",
+    (spec) => {
+      spec.components.schemas.Interface.properties.name.type = [
+        "string",
+        "null",
+      ];
+    },
+    /Interface\.name response nullability must match field_contracts\.response/u,
+  ],
+  [
+    "nullable Interface enabled responses",
+    (spec) => {
+      spec.components.schemas.Interface.properties.enabled.type = [
+        "boolean",
+        "null",
+      ];
+    },
+    /Interface\.enabled response nullability must match field_contracts\.response/u,
+  ],
+  [
+    "stale Interface MTU response scalar types",
+    (spec) => {
+      spec.components.schemas.Interface.properties.mtu.type = [
+        "number",
+        "null",
+      ];
+    },
+    /Interface\.mtu base type must be integer/u,
+  ],
+  [
+    "stale Interface speed response scalar types",
+    (spec) => {
+      spec.components.schemas.Interface.properties.speed.type = [
+        "string",
+        "null",
+      ];
+    },
+    /Interface\.speed base type must be integer/u,
+  ],
+  [
+    "stale Interface count response scalar types",
+    (spec) => {
+      spec.components.schemas.Interface.properties.count_ipaddresses.type =
+        "string";
+    },
+    /Interface\.count_ipaddresses base type must be integer/u,
+  ],
+  [
+    "undeclared Interface response fields",
+    (spec) => {
+      spec.components.schemas.Interface.properties.parent = { type: "integer" };
+    },
+    /Interface response fields must match resource metadata/u,
+  ],
+]) {
+  assertOpenAPIRejected(
+    "OpenAPI validation rejects " + name,
+    mutator,
+    diagnostic,
+  );
+}

@@ -12,6 +12,8 @@ import type {
   DeviceRoleForm,
   DeviceTypeDTO,
   DeviceTypeForm,
+  InterfaceDTO,
+  InterfaceForm,
   InterfaceTemplateDTO,
   InterfaceTemplateForm,
   IPAddressDTO,
@@ -907,6 +909,176 @@ describe('InterfaceTemplate core profile form contract', () => {
 
     const form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as InterfaceTemplateForm
     expect(adapter.mutationFromForm(form, true)).toEqual({ label: '' })
+  })
+})
+
+describe('Interface core profile form contract', () => {
+  const interfaceDTO: InterfaceDTO = {
+    id: 17,
+    url: '/api/dcim/interfaces/17/',
+    display: 'edge-1 xe-0/0/0',
+    created: null,
+    last_updated: null,
+    device: { id: 9, url: '/api/dcim/devices/9/', display: 'edge-1' },
+    name: 'xe-0/0/0',
+    label: 'Uplink',
+    type: { value: '10gbase-x-sfpp', label: 'SFP+ (10GE)' },
+    enabled: true,
+    mgmt_only: true,
+    mtu: 1500,
+    speed: 10000000,
+    duplex: { value: 'full', label: 'Full' },
+    description: 'Provider uplink',
+    count_ipaddresses: 0,
+  }
+
+  it('pins owned fields, required inputs, immutable ownership, defaults, choices, and numeric bounds', () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'interface')!
+    const fields = new Map(config.fields.map((field) => [field.key, field]))
+    const ownedFields = [
+      'device',
+      'name',
+      'label',
+      'type',
+      'enabled',
+      'mgmt_only',
+      'mtu',
+      'speed',
+      'duplex',
+      'description',
+    ]
+    expect(config.writableFields).toEqual(ownedFields)
+    expect(config.fields.map((field) => field.key)).toEqual(ownedFields)
+    expect(fields.get('device')).toEqual(
+      expect.objectContaining({
+        required: true,
+        immutableOnEdit: true,
+        type: 'api-select',
+        relationResource: 'device',
+      }),
+    )
+    expect(fields.get('name')?.required).toBe(true)
+    expect(fields.get('type')?.required).toBe(true)
+    expect(fields.get('type')?.options).toEqual(INTERFACE_TYPE_CHOICES)
+    expect(fields.get('type')?.options).toHaveLength(206)
+    expect(fields.get('enabled')).toEqual(expect.objectContaining({ default: true }))
+    expect(fields.get('mgmt_only')).toEqual(expect.objectContaining({ default: false }))
+    expect(fields.get('mtu')).toEqual(expect.objectContaining({ min: 1, max: 65536 }))
+    expect(fields.get('speed')).toEqual(expect.objectContaining({ min: 0, max: 2147483647 }))
+    expect(fields.get('duplex')?.options?.map((option) => option.value)).toEqual([
+      'half',
+      'full',
+      'auto',
+    ])
+    for (const optional of ownedFields.filter(
+      (field) => !['device', 'name', 'type'].includes(field),
+    )) {
+      expect(fields.get(optional)?.required, optional).not.toBe(true)
+    }
+    const wrapper = mount(DynamicForm, {
+      props: { fields: [fields.get('speed')!], modelValue: { speed: 0 } },
+    })
+    expect(wrapper.get('input').attributes('min')).toBe('0')
+    expect(wrapper.get('input').attributes('max')).toBe('2147483647')
+  })
+
+  it('types nullable Interface timestamps and separate blank/null duplex form intent', () => {
+    expectTypeOf<InterfaceDTO['created']>().toEqualTypeOf<string | null>()
+    expectTypeOf<InterfaceDTO['last_updated']>().toEqualTypeOf<string | null>()
+    expectTypeOf<InterfaceForm['duplex']>().toEqualTypeOf<
+      '' | 'half' | 'full' | 'auto' | null | undefined
+    >()
+  })
+
+  it('routes field-scoped REST errors only to the matching Interface fields', () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'interface')!
+    const wrapper = mount(DynamicForm, {
+      props: {
+        fields: config.fields.filter((field) => ['mtu', 'speed', 'duplex'].includes(field.key)),
+        modelValue: { mtu: 0, speed: 2147483648, duplex: 'full' },
+        errors: {
+          mtu: ['Ensure this value is greater than or equal to 1.'],
+          speed: ['Ensure this value is less than or equal to 2147483647.'],
+        },
+      },
+    })
+    const fields = new Map(
+      wrapper.findAllComponents(DynamicField).map((field) => [field.props('field').key, field]),
+    )
+    expect(fields.get('mtu')?.props('error')).toBe(
+      'Ensure this value is greater than or equal to 1.',
+    )
+    expect(fields.get('speed')?.props('error')).toBe(
+      'Ensure this value is less than or equal to 2147483647.',
+    )
+    expect(fields.get('duplex')?.props('error')).toBeUndefined()
+  })
+
+  it('preserves the Interface dirty baseline through real zero, false, and text-clear controls', async () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'interface')!
+    const adapter = getCoreResourceAdapter('interface')
+    const wrapper = mount(DynamicForm, {
+      props: {
+        fields: config.fields.filter((field) =>
+          ['device', 'enabled', 'speed', 'label'].includes(field.key),
+        ),
+        modelValue: adapter.formFromDTO(interfaceDTO),
+        editing: true,
+      },
+    })
+    const fields = new Map(
+      wrapper.findAllComponents(DynamicField).map((field) => [field.props('field').key, field]),
+    )
+    expect(fields.get('device')?.props('disabled')).toBe(true)
+    await fields.get('speed')!.get('input').setValue('0')
+    let form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as InterfaceForm
+    expect(adapter.mutationFromForm(form, true)).toEqual({ speed: 0 })
+    await fields.get('enabled')!.get('input').setValue(false)
+    form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as InterfaceForm
+    expect(adapter.mutationFromForm(form, true)).toEqual({ enabled: false, speed: 0 })
+    await fields.get('label')!.get('input').setValue('')
+    form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as InterfaceForm
+    expect(adapter.mutationFromForm(form, true)).toEqual({ label: '', enabled: false, speed: 0 })
+  })
+
+  it('emits null clears from actual Interface number and optional select controls', async () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'interface')!
+    const adapter = getCoreResourceAdapter('interface')
+    const wrapper = mount(DynamicForm, {
+      props: {
+        fields: config.fields.filter((field) => ['mtu', 'speed', 'duplex'].includes(field.key)),
+        modelValue: adapter.formFromDTO(interfaceDTO),
+        editing: true,
+      },
+    })
+    const fields = new Map(
+      wrapper.findAllComponents(DynamicField).map((field) => [field.props('field').key, field]),
+    )
+    await fields.get('mtu')!.get('input').setValue('')
+    await fields.get('speed')!.get('input').setValue('')
+    await fields.get('duplex')!.get('select').setValue('')
+    const form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as InterfaceForm
+    expect(form.mtu).toBeNull()
+    expect(form.speed).toBeNull()
+    expect(form.duplex).toBeNull()
+    expect(adapter.mutationFromForm(form, true)).toEqual({ mtu: null, speed: null, duplex: null })
+  })
+
+  it('preserves explicit blank duplex intent separately from dropdown null clearing', async () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'interface')!
+    const adapter = getCoreResourceAdapter('interface')
+    const wrapper = mount(DynamicForm, {
+      props: {
+        fields: config.fields.filter((field) => field.key === 'duplex'),
+        modelValue: adapter.formFromDTO({ ...interfaceDTO, duplex: null }),
+        editing: true,
+      },
+    })
+    wrapper.getComponent(DynamicField).vm.$emit('update:modelValue', '')
+    await nextTick()
+    const form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as InterfaceForm
+    expect(form.duplex).toBe('')
+    expect(adapter.mutationFromForm(form, true)).toEqual({ duplex: '' })
   })
 })
 

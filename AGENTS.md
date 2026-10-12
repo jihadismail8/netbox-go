@@ -243,14 +243,20 @@ InterfaceTemplate snapshot-order contradiction remains assigned to
 `CW1-V2-04`; uniqueness, placement, template transactions, list/get/delete,
 full CRUD, broader RBAC, every tier/consumer, the parent, profile, deployment,
 rewrite completion, production readiness, and every later child remain open.
-`CW1-V2-02-I11` is the packet-only lane for Interface `device`, `name`,
+`CW1-V2-02-I11` is the in-progress lane for Interface `device`, `name`,
 `label`, `type`, `enabled`, `mgmt_only`, `mtu`, `speed`, `duplex`, and
 `description` common create/PUT/PATCH presence, signed-int64 numeric intent,
 shared typed semantics, operation-specific contracts, PostgreSQL tests, and
-Vue dirty-field handling. Implementation may begin only after independent
-packet review, the pinned local `make check`, and exact packet-claim CI pass.
-No I11 implementation evidence, owner-immutability completion, tier, parent,
-profile, or traceability-consumer claim exists.
+Vue dirty-field handling. Independently reviewed packet
+`840d889346e846b46efc98bb79305f0dcfb01957` passed the pinned local gate and
+exact-SHA repository CI run `38295273529`. The eight fixed tests, focused and
+race suites, real-PostgreSQL durability/rollback, complete L4, generated/Vue,
+and complete repository gates passed locally before this provenance update.
+An unchanged committed candidate replay, candidate CI, and retained
+evidence/receipt/closeout gates remain. No owner-immutability completion,
+tier, parent, profile, or traceability-consumer claim follows. Standing owner
+authorization permits bounded implementation acceptance, not invented human
+artifact inspection or a separate required human sign-off.
 Do not begin or merge another
 Capability Profile while V0 is
 red or before `CW1-V6-03`. Once those gates are

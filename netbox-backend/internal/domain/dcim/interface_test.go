@@ -1,6 +1,7 @@
 package dcim_test
 
 import (
+	"math"
 	"strings"
 	"testing"
 	"time"
@@ -165,6 +166,146 @@ func TestInterfaceEnforcesTextLengths(t *testing.T) {
 	_, err := dcim.NewInterface(values, testTime)
 	require.Error(t, err)
 	assert.Contains(t, violationFields(shared.ViolationsOf(err)), "name")
+}
+
+func TestInterfaceScalarNormalizationContract(t *testing.T) {
+	t.Parallel()
+	values := func(t *testing.T) dcim.InterfaceValues {
+		t.Helper()
+		return dcim.InterfaceValues{
+			Device: interfaceDeviceReference(t, 7, "edge-01", "edge-01"),
+			Name:   "  Ethernet1  ", Label: "  uplink  ", Type: "bridge",
+			Enabled: false, MgmtOnly: false, Description: "  edge uplink  ",
+		}
+	}
+	t.Run("trim_only_text_fields", func(t *testing.T) {
+		networkInterface, err := dcim.NewInterface(values(t), testTime)
+		require.NoError(t, err)
+		assert.Equal(t, "Ethernet1", networkInterface.Name())
+		assert.Equal(t, "uplink", networkInterface.Label())
+		assert.Equal(t, "edge uplink", networkInterface.Description())
+		assert.False(t, networkInterface.Enabled())
+		assert.False(t, networkInterface.MgmtOnly())
+	})
+	t.Run("speed_zero_is_a_concrete_value", func(t *testing.T) {
+		input := values(t)
+		input.Speed = dcim.NonNullDeviceValue(uint64(0))
+		networkInterface, err := dcim.NewInterface(input, testTime)
+		require.NoError(t, err)
+		speed, present := networkInterface.Speed().Get()
+		require.True(t, present)
+		assert.Zero(t, speed)
+		require.NotNil(t, networkInterface.Snapshot().Speed)
+		assert.Zero(t, *networkInterface.Snapshot().Speed)
+	})
+	for _, test := range []struct {
+		name    string
+		change  func(*dcim.InterfaceValues)
+		field   string
+		message string
+	}{
+		{"type_is_not_trimmed", func(input *dcim.InterfaceValues) { input.Type = " bridge " }, "type", "Select a valid choice."},
+		{"duplex_is_not_trimmed", func(input *dcim.InterfaceValues) { input.Duplex = dcim.NonNullDeviceValue(" full ") }, "duplex", "Select a valid choice."},
+		{"blank_type", func(input *dcim.InterfaceValues) { input.Type = "" }, "type", "This field may not be blank."},
+		{"mtu_minimum", func(input *dcim.InterfaceValues) { input.MTU = dcim.NonNullDeviceValue(uint32(0)) }, "mtu", "Ensure this value is greater than or equal to 1."},
+		{"mtu_maximum", func(input *dcim.InterfaceValues) { input.MTU = dcim.NonNullDeviceValue(uint32(65537)) }, "mtu", "Ensure this value is less than or equal to 65536."},
+		{"speed_maximum", func(input *dcim.InterfaceValues) { input.Speed = dcim.NonNullDeviceValue(uint64(2147483648)) }, "speed", "Ensure this value is less than or equal to 2147483647."},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			input := values(t)
+			test.change(&input)
+			_, err := dcim.NewInterface(input, testTime)
+			require.Error(t, err)
+			violations := shared.ViolationsOf(err)
+			require.Len(t, violations, 1)
+			assert.Equal(t, test.field, violations[0].Field)
+			assert.Equal(t, test.message, violations[0].Description)
+		})
+	}
+	t.Run("character_limits", func(t *testing.T) {
+		input := values(t)
+		input.Name = strings.Repeat("界", dcim.InterfaceNameMaxLength)
+		input.Label = strings.Repeat("界", dcim.InterfaceLabelMaxLength)
+		input.Description = strings.Repeat("界", dcim.InterfaceDescriptionMaxLength)
+		_, err := dcim.NewInterface(input, testTime)
+		require.NoError(t, err)
+		input.Name += "界"
+		input.Label += "界"
+		input.Description += "界"
+		_, err = dcim.NewInterface(input, testTime)
+		require.Error(t, err)
+		assert.Equal(t, []string{"name", "label", "description"}, violationFields(shared.ViolationsOf(err)))
+	})
+	t.Run("duplex_blank_and_null_remain_distinct", func(t *testing.T) {
+		input := values(t)
+		input.Duplex = dcim.NonNullDeviceValue("")
+		networkInterface, err := dcim.NewInterface(input, testTime)
+		require.NoError(t, err)
+		require.NotNil(t, networkInterface.Snapshot().Duplex)
+		assert.Empty(t, *networkInterface.Snapshot().Duplex)
+		nullDuplex := dcim.NullDeviceValue[string]()
+		require.NoError(t, networkInterface.ApplyPatch(dcim.InterfacePatch{Duplex: &nullDuplex}, shared.NewTimestamp(testTime.Add(time.Minute))))
+		assert.True(t, networkInterface.Duplex().IsNull())
+		assert.Nil(t, networkInterface.Snapshot().Duplex)
+	})
+	t.Run("signed_numeric_parsers", func(t *testing.T) {
+		for _, test := range []struct {
+			name    string
+			parse   func(int64) (uint64, error)
+			minimum int64
+			maximum int64
+			inputs  []int64
+		}{
+			{"mtu", func(value int64) (uint64, error) {
+				parsed, err := dcim.ParseInterfaceMTU(value)
+				return uint64(parsed), err
+			}, 1, 65536, []int64{math.MinInt64, -1, 0, 1, 65536, 65537, math.MaxInt64}},
+			{"speed", dcim.ParseInterfaceSpeed, 0, 2147483647, []int64{math.MinInt64, -1, 0, 2147483647, 2147483648, math.MaxInt64}},
+		} {
+			for _, value := range test.inputs {
+				parsed, err := test.parse(value)
+				if value >= test.minimum && value <= test.maximum {
+					require.NoError(t, err)
+					assert.Equal(t, uint64(value), parsed)
+					continue
+				}
+				require.Error(t, err)
+				assert.Zero(t, parsed, "invalid signed values must never wrap")
+				violations := shared.ViolationsOf(err)
+				require.Len(t, violations, 1)
+				assert.Equal(t, test.name, violations[0].Field)
+				assert.Equal(t, "out_of_range", violations[0].Reason)
+				if value < test.minimum {
+					assert.Contains(t, violations[0].Description, "greater than or equal")
+				} else {
+					assert.Contains(t, violations[0].Description, "less than or equal")
+				}
+			}
+		}
+	})
+	t.Run("preview_and_restore_preserve_valid_zero_state", func(t *testing.T) {
+		input := values(t)
+		input.Speed = dcim.NonNullDeviceValue(uint64(0))
+		networkInterface, err := dcim.NewInterface(input, testTime)
+		require.NoError(t, err)
+		require.NoError(t, networkInterface.AssignID(42))
+		before := networkInterface.State()
+		beforeSnapshot := networkInterface.Snapshot()
+		restored, err := dcim.RestoreInterface(before)
+		require.NoError(t, err)
+		assert.Equal(t, before, restored.State())
+		assert.Equal(t, beforeSnapshot, restored.Snapshot())
+		label, invalidType := "changed", " bridge "
+		err = networkInterface.ValidatePatch(dcim.InterfacePatch{Label: &label, Type: &invalidType})
+		require.Error(t, err)
+		assert.Equal(t, before, networkInterface.State())
+		assert.Equal(t, beforeSnapshot, networkInterface.Snapshot())
+		require.NoError(t, networkInterface.ValidatePatch(dcim.InterfacePatch{}))
+		require.Error(t, networkInterface.ApplyPatch(dcim.InterfacePatch{}, shared.NewTimestamp(testTime.Add(time.Minute))))
+		assert.Equal(t, before, networkInterface.State())
+		var absent *dcim.Interface
+		assert.True(t, shared.HasReason(absent.ValidatePatch(dcim.InterfacePatch{}), shared.ErrorReasonInternal))
+	})
 }
 
 func interfaceDeviceReference(

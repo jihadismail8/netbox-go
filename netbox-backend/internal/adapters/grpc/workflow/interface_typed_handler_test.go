@@ -7,8 +7,6 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 
@@ -76,9 +74,9 @@ func TestTypedInterfaceRPCPreservesFiltersNullableMaskAndProjection(t *testing.T
 		Id: 41, Interface: &dcimv1.InterfaceInput{},
 		UpdateMask: &fieldmaskpb.FieldMask{Paths: []string{"enabled"}},
 	})
-	require.Error(t, err)
-	assert.Equal(t, codes.InvalidArgument, status.Code(err))
-	assert.Equal(t, 1, spy.updateCalls)
+	require.NoError(t, err, "the spy receives null intent; shared use cases own rejection")
+	assert.Equal(t, applicationdcim.FieldNull, spy.updateCommand.Enabled.State())
+	assert.Equal(t, 2, spy.updateCalls)
 }
 
 type grpcInterfaceServiceSpy struct {

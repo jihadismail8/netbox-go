@@ -11,6 +11,8 @@ import {
   type DeviceRoleForm,
   type DeviceTypeDTO,
   type DeviceTypeForm,
+  type InterfaceDTO,
+  type InterfaceForm,
   type InterfaceTemplateDTO,
   type InterfaceTemplateForm,
   type IPAddressDTO,
@@ -1113,6 +1115,136 @@ describe('typed core resource adapters', () => {
         true,
       ),
     ).toEqual({ description: '' })
+  })
+
+  it('preserves Interface create omissions, defaults, IDs, and scalar intent without response fields', () => {
+    const adapter = getCoreResourceAdapter('interface')
+
+    expect(adapter.mutationFromForm({}, false)).toEqual({})
+    expect(adapter.mutationFromForm(adapter.emptyForm(), false)).toEqual({
+      enabled: true,
+      mgmt_only: false,
+    })
+    expect(
+      adapter.mutationFromForm(
+        {
+          device,
+          name: 'xe-0/0/0',
+          label: '',
+          type: '10gbase-x-sfpp',
+          enabled: false,
+          mgmt_only: false,
+          mtu: null,
+          speed: 0,
+          duplex: '',
+          description: '',
+        },
+        false,
+      ),
+    ).toEqual({
+      device: 9,
+      name: 'xe-0/0/0',
+      label: '',
+      type: '10gbase-x-sfpp',
+      enabled: false,
+      mgmt_only: false,
+      mtu: null,
+      speed: 0,
+      duplex: '',
+      description: '',
+    })
+    expect(
+      adapter.mutationFromForm({ device: 9, name: 'mgmt0', type: '1000base-t' }, false),
+    ).toEqual({ device: 9, name: 'mgmt0', type: '1000base-t' })
+    expect(
+      adapter.mutationFromForm({ mtu: 65536, speed: 2147483647, duplex: null }, false),
+    ).toEqual({ mtu: 65536, speed: 2147483647, duplex: null })
+
+    const formWithResponseFields = {
+      device,
+      name: 'Owned fields only',
+      id: 99,
+      url: '/api/dcim/interfaces/99/',
+      display: 'Must not leak',
+      created: null,
+      last_updated: null,
+      count_ipaddresses: 4,
+    } as InterfaceForm
+    expect(adapter.mutationFromForm(formWithResponseFields, false)).toEqual({
+      device: 9,
+      name: 'Owned fields only',
+    })
+  })
+
+  it('keeps a private Interface baseline and emits only dirty editable PATCH fields', () => {
+    const adapter = getCoreResourceAdapter('interface')
+    const dto: InterfaceDTO = {
+      id: 17,
+      url: '/api/dcim/interfaces/17/',
+      display: 'edge-1 xe-0/0/0',
+      created: null,
+      last_updated: null,
+      device,
+      name: 'xe-0/0/0',
+      label: 'Uplink',
+      type: { value: '10gbase-x-sfpp', label: 'SFP+ (10GE)' },
+      enabled: true,
+      mgmt_only: true,
+      mtu: 1500,
+      speed: 10000000,
+      duplex: { value: 'full', label: 'Full' },
+      description: 'Provider uplink',
+      count_ipaddresses: 0,
+    }
+    const hydrated = adapter.formFromDTO(dto)
+
+    expect(Object.fromEntries(Object.entries(hydrated))).toEqual({
+      device,
+      name: 'xe-0/0/0',
+      label: 'Uplink',
+      type: '10gbase-x-sfpp',
+      enabled: true,
+      mgmt_only: true,
+      mtu: 1500,
+      speed: 10000000,
+      duplex: 'full',
+      description: 'Provider uplink',
+    })
+    expect(adapter.mutationFromForm({ ...hydrated }, true)).toEqual({})
+    for (const owner of [{ ...device }, 12, null]) {
+      expect(
+        adapter.mutationFromForm(withFormField(hydrated, 'device', owner) as InterfaceForm, true),
+      ).toEqual({})
+    }
+    const changes = {
+      name: 'xe-0/0/1',
+      label: '',
+      type: 'virtual',
+      enabled: false,
+      mgmt_only: false,
+      mtu: null,
+      speed: 0,
+      duplex: '',
+      description: '',
+    } satisfies InterfaceForm
+    for (const [field, value] of Object.entries(changes)) {
+      const changed = withFormField(hydrated, field, value) as InterfaceForm
+      expect(adapter.mutationFromForm(changed, true), field).toEqual({ [field]: value })
+    }
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'speed', null) as InterfaceForm, true),
+    ).toEqual({ speed: null })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'duplex', null) as InterfaceForm, true),
+    ).toEqual({ duplex: null })
+    expect(adapter.mutationFromForm({ ...hydrated, duplex: '' }, true)).toEqual({ duplex: '' })
+    expect(adapter.mutationFromForm({ ...hydrated, device: 12, speed: 0 }, true)).toEqual({
+      speed: 0,
+    })
+
+    const nullHydrated = adapter.formFromDTO({ ...dto, mtu: null, speed: null, duplex: null })
+    expect(adapter.mutationFromForm({ ...nullHydrated }, true)).toEqual({})
+    expect(adapter.mutationFromForm({ ...nullHydrated, duplex: '' }, true)).toEqual({ duplex: '' })
   })
 
   it('preserves Device create omissions, defaults, IDs, and concrete scalar states', () => {

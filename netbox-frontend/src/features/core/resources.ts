@@ -184,7 +184,9 @@ export interface DeviceDTO extends Omit<CoreResourceBase, 'created' | 'last_upda
   interface_count: number
 }
 
-export interface InterfaceDTO extends CoreResourceBase {
+export interface InterfaceDTO extends Omit<CoreResourceBase, 'created' | 'last_updated'> {
+  created: string | null
+  last_updated: string | null
   device: CoreReference
   name: string
   label: string
@@ -394,7 +396,7 @@ export interface InterfaceForm {
   mgmt_only?: boolean
   mtu?: number | null
   speed?: number | null
-  duplex?: InterfaceDuplex | null
+  duplex?: InterfaceDuplex | '' | null
   description?: string
 }
 export interface VRFForm {

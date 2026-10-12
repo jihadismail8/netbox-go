@@ -228,6 +228,36 @@ const contractedResourceShapes = {
       rack: "#/components/schemas/ObjectReference",
     },
   },
+  Interface: {
+    request: {
+      device: { type: "integer", format: "int64" },
+      name: { type: "string" },
+      label: { type: "string" },
+      enabled: { type: "boolean" },
+      mgmt_only: { type: "boolean" },
+      mtu: { type: "integer", format: "int64" },
+      speed: { type: "integer", format: "int64" },
+      description: { type: "string" },
+    },
+    response: {
+      name: { type: "string" },
+      label: { type: "string" },
+      enabled: { type: "boolean" },
+      mgmt_only: { type: "boolean" },
+      mtu: { type: "integer", format: "int64" },
+      speed: { type: "integer", format: "int64" },
+      description: { type: "string" },
+      id: { type: "integer", format: "int64" },
+      url: { type: "string", format: "uri" },
+      display: { type: "string" },
+      created: { type: "string", format: "date-time" },
+      last_updated: { type: "string", format: "date-time" },
+      count_ipaddresses: { type: "integer", format: "int64" },
+    },
+    responseReferences: {
+      device: "#/components/schemas/ObjectReference",
+    },
+  },
   InterfaceTemplate: {
     request: {
       device_type: { type: "integer", format: "int64" },

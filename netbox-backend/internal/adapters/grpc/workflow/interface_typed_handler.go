@@ -219,8 +219,8 @@ type typedInterfaceFields struct {
 	interfaceType applicationdcim.Field[string]
 	enabled       applicationdcim.Field[bool]
 	mgmtOnly      applicationdcim.Field[bool]
-	mtu           applicationdcim.Field[uint32]
-	speed         applicationdcim.Field[uint64]
+	mtu           applicationdcim.Field[int64]
+	speed         applicationdcim.Field[int64]
 	duplex        applicationdcim.Field[string]
 	description   applicationdcim.Field[string]
 }
@@ -242,20 +242,20 @@ func typedInterfaceInputFields(input *dcimv1.InterfaceInput) typedInterfaceField
 
 func typedInterfaceProtoMTU(
 	value *wrapperspb.Int32Value,
-) applicationdcim.Field[uint32] {
+) applicationdcim.Field[int64] {
 	if value == nil {
-		return applicationdcim.OmittedField[uint32]()
+		return applicationdcim.OmittedField[int64]()
 	}
-	return applicationdcim.FieldValue(uint32(value.Value))
+	return applicationdcim.FieldValue(int64(value.Value))
 }
 
 func typedInterfaceProtoSpeed(
 	value *wrapperspb.Int64Value,
-) applicationdcim.Field[uint64] {
+) applicationdcim.Field[int64] {
 	if value == nil {
-		return applicationdcim.OmittedField[uint64]()
+		return applicationdcim.OmittedField[int64]()
 	}
-	return applicationdcim.FieldValue(uint64(value.Value))
+	return applicationdcim.FieldValue(value.Value)
 }
 
 func typedInterfaceProtoDuplex(
@@ -302,35 +302,17 @@ func typedInterfaceUpdateCommand(
 	for _, path := range mask.Paths {
 		switch path {
 		case "device":
-			if fields.device.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateInterfaceCommand{}, invalidTypedInterfaceMask()
-			}
-			command.Device = fields.device
+			command.Device = nullableMaskedInterfaceField(fields.device)
 		case "name":
-			if fields.name.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateInterfaceCommand{}, invalidTypedInterfaceMask()
-			}
-			command.Name = fields.name
+			command.Name = nullableMaskedInterfaceField(fields.name)
 		case "label":
-			if fields.label.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateInterfaceCommand{}, invalidTypedInterfaceMask()
-			}
-			command.Label = fields.label
+			command.Label = nullableMaskedInterfaceField(fields.label)
 		case "type":
-			if fields.interfaceType.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateInterfaceCommand{}, invalidTypedInterfaceMask()
-			}
-			command.Type = fields.interfaceType
+			command.Type = nullableMaskedInterfaceField(fields.interfaceType)
 		case "enabled":
-			if fields.enabled.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateInterfaceCommand{}, invalidTypedInterfaceMask()
-			}
-			command.Enabled = fields.enabled
+			command.Enabled = nullableMaskedInterfaceField(fields.enabled)
 		case "mgmt_only":
-			if fields.mgmtOnly.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateInterfaceCommand{}, invalidTypedInterfaceMask()
-			}
-			command.MgmtOnly = fields.mgmtOnly
+			command.MgmtOnly = nullableMaskedInterfaceField(fields.mgmtOnly)
 		case "mtu":
 			command.MTU = nullableMaskedInterfaceField(fields.mtu)
 		case "speed":
@@ -338,10 +320,7 @@ func typedInterfaceUpdateCommand(
 		case "duplex":
 			command.Duplex = nullableMaskedInterfaceField(fields.duplex)
 		case "description":
-			if fields.description.State() != applicationdcim.FieldPresent {
-				return applicationdcim.UpdateInterfaceCommand{}, invalidTypedInterfaceMask()
-			}
-			command.Description = fields.description
+			command.Description = nullableMaskedInterfaceField(fields.description)
 		default:
 			return applicationdcim.UpdateInterfaceCommand{}, invalidTypedInterfaceMask()
 		}

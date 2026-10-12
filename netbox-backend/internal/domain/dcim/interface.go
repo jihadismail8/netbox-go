@@ -17,6 +17,40 @@ const (
 	InterfaceSpeedMax             = uint64(2147483647)
 )
 
+func ParseInterfaceMTU(value int64) (uint32, error) {
+	if value < int64(InterfaceMTUMin) {
+		return 0, shared.NewValidationError(interfaceMinimumViolation("mtu", int64(InterfaceMTUMin)))
+	}
+	if value > int64(InterfaceMTUMax) {
+		return 0, shared.NewValidationError(interfaceMaximumViolation("mtu", int64(InterfaceMTUMax)))
+	}
+	return uint32(value), nil
+}
+
+func ParseInterfaceSpeed(value int64) (uint64, error) {
+	if value < 0 {
+		return 0, shared.NewValidationError(interfaceMinimumViolation("speed", 0))
+	}
+	if value > int64(InterfaceSpeedMax) {
+		return 0, shared.NewValidationError(interfaceMaximumViolation("speed", int64(InterfaceSpeedMax)))
+	}
+	return uint64(value), nil
+}
+
+func interfaceMinimumViolation(field string, minimum int64) shared.FieldViolation {
+	return shared.FieldViolation{
+		Field: field, Reason: "out_of_range",
+		Description: fmt.Sprintf("Ensure this value is greater than or equal to %d.", minimum),
+	}
+}
+
+func interfaceMaximumViolation(field string, maximum int64) shared.FieldViolation {
+	return shared.FieldViolation{
+		Field: field, Reason: "out_of_range",
+		Description: fmt.Sprintf("Ensure this value is less than or equal to %d.", maximum),
+	}
+}
+
 // DeviceReference is the immutable relationship projection held by an
 // Interface. Name is retained independently from Display because it is a
 // declared Interface list filter.
@@ -277,6 +311,23 @@ func (networkInterface *Interface) ApplyPatch(
 			Description: "At least one writable field must be supplied.",
 		})
 	}
+	return networkInterface.Replace(networkInterface.valuesWithPatch(patch), now)
+}
+
+// ValidatePatch previews scalar validation without mutation; empty previews are
+// valid because the command and ApplyPatch retain the public empty-update check.
+func (networkInterface *Interface) ValidatePatch(patch InterfacePatch) error {
+	if networkInterface == nil {
+		return shared.NewError(shared.ErrorReasonInternal, "Cannot validate a patch for a nil Interface.")
+	}
+	_, violations := validateInterfaceValues(networkInterface.valuesWithPatch(patch))
+	if len(violations) > 0 {
+		return shared.NewValidationError(violations...)
+	}
+	return nil
+}
+
+func (networkInterface Interface) valuesWithPatch(patch InterfacePatch) InterfaceValues {
 	values := networkInterface.Values()
 	if patch.Device != nil {
 		values.Device = *patch.Device
@@ -300,7 +351,7 @@ func (networkInterface *Interface) ApplyPatch(
 		values.Duplex = *patch.Duplex
 	}
 	setString(&values.Description, patch.Description)
-	return networkInterface.Replace(values, now)
+	return values
 }
 
 func (networkInterface Interface) ID() shared.ID                 { return networkInterface.id }
@@ -397,29 +448,26 @@ func validateInterfaceValues(
 		description,
 		InterfaceDescriptionMaxLength,
 	)
-	interfaceType, validType := ParseInterfaceType(strings.TrimSpace(values.Type))
-	if !validType {
+	interfaceType, validType := ParseInterfaceType(values.Type)
+	if values.Type == "" {
+		violations = append(violations, shared.FieldViolation{
+			Field: "type", Reason: "blank", Description: "This field may not be blank.",
+		})
+	} else if !validType {
 		violations = append(violations, shared.FieldViolation{
 			Field: "type", Reason: "invalid_choice", Description: "Select a valid choice.",
 		})
 	}
-	if mtu, present := values.MTU.Get(); present &&
-		(mtu < InterfaceMTUMin || mtu > InterfaceMTUMax) {
-		violations = append(violations, shared.FieldViolation{
-			Field: "mtu", Reason: "out_of_range",
-			Description: "Ensure this value is between 1 and 65536.",
-		})
+	if mtu, present := values.MTU.Get(); present {
+		_, err := ParseInterfaceMTU(int64(mtu))
+		violations = append(violations, shared.ViolationsOf(err)...)
 	}
-	if speed, present := values.Speed.Get(); present &&
-		(speed == 0 || speed > InterfaceSpeedMax) {
-		violations = append(violations, shared.FieldViolation{
-			Field: "speed", Reason: "out_of_range",
-			Description: "Ensure this value is between 1 and 2147483647.",
-		})
+	if speed, present := values.Speed.Get(); present && speed > InterfaceSpeedMax {
+		violations = append(violations, interfaceMaximumViolation("speed", int64(InterfaceSpeedMax)))
 	}
 	var duplex DeviceNullable[InterfaceDuplex]
 	if value, present := values.Duplex.Get(); present {
-		parsed, valid := ParseInterfaceDuplex(strings.TrimSpace(value))
+		parsed, valid := ParseInterfaceDuplex(value)
 		if !valid {
 			violations = append(violations, shared.FieldViolation{
 				Field: "duplex", Reason: "invalid_choice", Description: "Select a valid choice.",

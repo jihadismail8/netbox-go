@@ -41,7 +41,7 @@ func TestInterfaceRESTPreservesNullBlankChoicesFiltersAndWritePresence(t *testin
 	assert.Equal(t, applicationdcim.FieldNull, spy.createCommand.MTU.State())
 	speed, present := spy.createCommand.Speed.Get()
 	require.True(t, present)
-	assert.Equal(t, uint64(2147483647), speed)
+	assert.Equal(t, int64(2147483647), speed)
 	duplex, present := spy.createCommand.Duplex.Get()
 	require.True(t, present)
 	assert.Empty(t, duplex)

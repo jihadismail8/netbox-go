@@ -802,7 +802,7 @@ export const CORE_PROFILE_MODELS: ModelConfig[] = [
       booleanField('enabled', 'Enabled', 'Interface', { default: true }),
       booleanField('mgmt_only', 'Management Only', 'Interface', { default: false }),
       numberField('mtu', 'MTU', 'Interface', { min: 1, max: 65536 }),
-      numberField('speed', 'Speed (Kbps)', 'Interface', { min: 0 }),
+      numberField('speed', 'Speed (Kbps)', 'Interface', { min: 0, max: 2147483647 }),
       selectField('duplex', 'Duplex', 'Interface', [
         { value: 'half', label: 'Half' },
         { value: 'full', label: 'Full' },

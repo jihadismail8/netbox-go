@@ -369,6 +369,10 @@ if (profile && baseline && oracle && schema) {
     metadataResources.get("dcim.Device")?.field_contracts !== undefined,
     "dcim.Device: field_contracts must declare operation-specific presence semantics",
   );
+  assert(
+    metadataResources.get("dcim.Interface")?.field_contracts !== undefined,
+    "dcim.Interface: field_contracts must declare operation-specific presence semantics",
+  );
   for (const resource of profile.resources ?? []) {
     const key = `${resource.module}.${resource.name}`;
     const metadata = metadataResources.get(key);

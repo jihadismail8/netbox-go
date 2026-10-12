@@ -160,17 +160,11 @@ func (service *InterfaceService) CreateInterface(
 	}
 	var result *dcimdomain.Interface
 	err := service.unitOfWork.WithinTransaction(ctx, func(transactionContext context.Context) error {
-		commandValues, err := command.values()
-		if err != nil {
-			return err
-		}
-		values, err := service.resolveValues(transactionContext, commandValues)
-		if err != nil {
-			return err
-		}
+		commandValues, commandErr := command.values()
+		values, resolutionErr := service.resolveValues(transactionContext, commandValues)
 		now := service.clock.Now()
-		candidate, err := dcimdomain.NewInterface(values, now)
-		if err != nil {
+		candidate, domainErr := dcimdomain.NewInterface(values, now)
+		if err := mergeInterfaceMutationErrors(commandErr, resolutionErr, domainErr); err != nil {
 			return err
 		}
 		if err := service.repository.Create(transactionContext, candidate); err != nil {
@@ -203,15 +197,13 @@ func (service *InterfaceService) ReplaceInterface(
 			loaded *dcimdomain.Interface,
 			now shared.Timestamp,
 		) error {
-			commandValues, err := command.values()
-			if err != nil {
+			commandPatch, commandErr := command.patch()
+			patch, resolutionErr := service.resolvePatch(transactionContext, commandPatch)
+			domainErr := loaded.ValidatePatch(patch)
+			if err := mergeInterfaceMutationErrors(commandErr, resolutionErr, domainErr); err != nil {
 				return err
 			}
-			values, err := service.resolveValues(transactionContext, commandValues)
-			if err != nil {
-				return err
-			}
-			return loaded.Replace(values, now)
+			return loaded.ApplyPatch(patch, now)
 		},
 		"replace",
 	)
@@ -229,12 +221,10 @@ func (service *InterfaceService) UpdateInterface(
 			loaded *dcimdomain.Interface,
 			now shared.Timestamp,
 		) error {
-			commandPatch, err := command.patch()
-			if err != nil {
-				return err
-			}
-			patch, err := service.resolvePatch(transactionContext, commandPatch)
-			if err != nil {
+			commandPatch, commandErr := command.patch()
+			patch, resolutionErr := service.resolvePatch(transactionContext, commandPatch)
+			domainErr := loaded.ValidatePatch(patch)
+			if err := mergeInterfaceMutationErrors(commandErr, resolutionErr, domainErr); err != nil {
 				return err
 			}
 			return loaded.ApplyPatch(patch, now)
@@ -398,16 +388,20 @@ func (service *InterfaceService) resolveValues(
 	ctx context.Context,
 	values interfaceCommandValues,
 ) (dcimdomain.InterfaceValues, error) {
-	device, err := service.devices.GetDeviceReference(ctx, values.deviceID)
-	if err != nil {
-		return dcimdomain.InterfaceValues{}, err
-	}
-	return dcimdomain.InterfaceValues{
-		Device: device, Name: values.name, Label: values.label,
+	resolved := dcimdomain.InterfaceValues{
+		Name: values.name, Label: values.label,
 		Type: values.interfaceType, Enabled: values.enabled, MgmtOnly: values.mgmtOnly,
-		MTU: values.mtu, Speed: values.speed, Duplex: values.duplex,
+		Duplex:      values.duplex,
 		Description: values.description,
-	}, nil
+	}
+	var deviceErr error
+	if values.deviceID.IsValid() {
+		resolved.Device, deviceErr = service.resolveDevice(ctx, values.deviceID)
+	}
+	mtu, mtuErr := resolveInterfaceMTU(values.mtu)
+	speed, speedErr := resolveInterfaceSpeed(values.speed)
+	resolved.MTU, resolved.Speed = mtu, speed
+	return resolved, mergeInterfaceMutationErrors(deviceErr, mtuErr, speedErr)
 }
 
 func (service *InterfaceService) resolvePatch(
@@ -416,17 +410,66 @@ func (service *InterfaceService) resolvePatch(
 ) (dcimdomain.InterfacePatch, error) {
 	resolved := dcimdomain.InterfacePatch{
 		Name: patch.name, Label: patch.label, Type: patch.interfaceType,
-		Enabled: patch.enabled, MgmtOnly: patch.mgmtOnly, MTU: patch.mtu,
-		Speed: patch.speed, Duplex: patch.duplex, Description: patch.description,
+		Enabled: patch.enabled, MgmtOnly: patch.mgmtOnly,
+		Duplex: patch.duplex, Description: patch.description,
 	}
-	if patch.deviceID != nil {
-		device, err := service.devices.GetDeviceReference(ctx, *patch.deviceID)
-		if err != nil {
-			return dcimdomain.InterfacePatch{}, err
+	var deviceErr, mtuErr, speedErr error
+	if patch.deviceID != nil && patch.deviceID.IsValid() {
+		var device dcimdomain.DeviceReference
+		device, deviceErr = service.resolveDevice(ctx, *patch.deviceID)
+		if deviceErr == nil {
+			resolved.Device = &device
 		}
-		resolved.Device = &device
 	}
-	return resolved, nil
+	if patch.mtu != nil {
+		var mtu dcimdomain.DeviceNullable[uint32]
+		mtu, mtuErr = resolveInterfaceMTU(*patch.mtu)
+		if mtuErr == nil {
+			resolved.MTU = &mtu
+		}
+	}
+	if patch.speed != nil {
+		var speed dcimdomain.DeviceNullable[uint64]
+		speed, speedErr = resolveInterfaceSpeed(*patch.speed)
+		if speedErr == nil {
+			resolved.Speed = &speed
+		}
+	}
+	return resolved, mergeInterfaceMutationErrors(deviceErr, mtuErr, speedErr)
+}
+
+func (service *InterfaceService) resolveDevice(ctx context.Context, id shared.ID) (dcimdomain.DeviceReference, error) {
+	device, err := service.devices.GetDeviceReference(ctx, id)
+	if shared.HasReason(err, shared.ErrorReasonNotFound) {
+		return dcimdomain.DeviceReference{}, shared.NewValidationError(shared.FieldViolation{
+			Field: "device", Reason: "invalid_choice", Description: "Select a valid choice.",
+		})
+	}
+	return device, err
+}
+
+func resolveInterfaceMTU(value dcimdomain.DeviceNullable[int64]) (dcimdomain.DeviceNullable[uint32], error) {
+	number, present := value.Get()
+	if !present {
+		return dcimdomain.NullDeviceValue[uint32](), nil
+	}
+	mtu, err := dcimdomain.ParseInterfaceMTU(number)
+	if err != nil {
+		return dcimdomain.NullDeviceValue[uint32](), err
+	}
+	return dcimdomain.NonNullDeviceValue(mtu), nil
+}
+
+func resolveInterfaceSpeed(value dcimdomain.DeviceNullable[int64]) (dcimdomain.DeviceNullable[uint64], error) {
+	number, present := value.Get()
+	if !present {
+		return dcimdomain.NullDeviceValue[uint64](), nil
+	}
+	speed, err := dcimdomain.ParseInterfaceSpeed(number)
+	if err != nil {
+		return dcimdomain.NullDeviceValue[uint64](), err
+	}
+	return dcimdomain.NonNullDeviceValue(speed), nil
 }
 
 func (service *InterfaceService) recordInterfaceChange(

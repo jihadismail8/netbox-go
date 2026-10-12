@@ -306,8 +306,8 @@ type decodedInterfaceInput struct {
 	interfaceType applicationdcim.Field[string]
 	enabled       applicationdcim.Field[bool]
 	mgmtOnly      applicationdcim.Field[bool]
-	mtu           applicationdcim.Field[uint32]
-	speed         applicationdcim.Field[uint64]
+	mtu           applicationdcim.Field[int64]
+	speed         applicationdcim.Field[int64]
 	duplex        applicationdcim.Field[string]
 	description   applicationdcim.Field[string]
 }
@@ -341,11 +341,11 @@ func decodeInterfaceInput(c *gin.Context) (decodedInterfaceInput, error) {
 	if err != nil {
 		return decodedInterfaceInput{}, err
 	}
-	mtu, err := decodeRackTypeUint32Field("mtu", input.MTU)
+	mtu, err := decodeInterfaceInt64Field("mtu", input.MTU)
 	if err != nil {
 		return decodedInterfaceInput{}, err
 	}
-	speed, err := decodeInterfaceUint64Field("speed", input.Speed)
+	speed, err := decodeInterfaceInt64Field("speed", input.Speed)
 	if err != nil {
 		return decodedInterfaceInput{}, err
 	}
@@ -364,22 +364,22 @@ func decodeInterfaceInput(c *gin.Context) (decodedInterfaceInput, error) {
 	}, nil
 }
 
-func decodeInterfaceUint64Field(
+func decodeInterfaceInt64Field(
 	name string,
 	raw json.RawMessage,
-) (applicationdcim.Field[uint64], error) {
+) (applicationdcim.Field[int64], error) {
 	if len(raw) == 0 {
-		return applicationdcim.OmittedField[uint64](), nil
+		return applicationdcim.OmittedField[int64](), nil
 	}
 	if bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-		return applicationdcim.NullField[uint64](), nil
+		return applicationdcim.NullField[int64](), nil
 	}
 	value, valid := exactJSONInteger(raw)
-	if !valid || value.Sign() < 0 || value.BitLen() > 64 {
-		return applicationdcim.Field[uint64]{},
+	if !valid || !value.IsInt64() {
+		return applicationdcim.Field[int64]{},
 			shared.Invalid(name, "A valid integer is required.")
 	}
-	return applicationdcim.FieldValue(value.Uint64()), nil
+	return applicationdcim.FieldValue(value.Int64()), nil
 }
 
 func (input decodedInterfaceInput) createCommand() applicationdcim.CreateInterfaceCommand {

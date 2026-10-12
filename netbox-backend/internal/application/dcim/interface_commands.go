@@ -1,6 +1,8 @@
 package dcim
 
 import (
+	"sort"
+
 	dcimdomain "netbox-go/internal/domain/dcim"
 	"netbox-go/internal/domain/shared"
 )
@@ -12,8 +14,8 @@ type CreateInterfaceCommand struct {
 	Type        Field[string]
 	Enabled     Field[bool]
 	MgmtOnly    Field[bool]
-	MTU         Field[uint32]
-	Speed       Field[uint64]
+	MTU         Field[int64]
+	Speed       Field[int64]
 	Duplex      Field[string]
 	Description Field[string]
 }
@@ -31,8 +33,8 @@ type UpdateInterfaceCommand struct {
 	Type        Field[string]
 	Enabled     Field[bool]
 	MgmtOnly    Field[bool]
-	MTU         Field[uint32]
-	Speed       Field[uint64]
+	MTU         Field[int64]
+	Speed       Field[int64]
 	Duplex      Field[string]
 	Description Field[string]
 }
@@ -46,8 +48,8 @@ type interfaceCommandValues struct {
 	interfaceType string
 	enabled       bool
 	mgmtOnly      bool
-	mtu           dcimdomain.DeviceNullable[uint32]
-	speed         dcimdomain.DeviceNullable[uint64]
+	mtu           dcimdomain.DeviceNullable[int64]
+	speed         dcimdomain.DeviceNullable[int64]
 	duplex        dcimdomain.DeviceNullable[string]
 	description   string
 }
@@ -61,7 +63,7 @@ func (command CreateInterfaceCommand) values() (interfaceCommandValues, error) {
 		name:  valueForFullMutation(&violations, "name", command.Name, "", true),
 		label: valueForFullMutation(&violations, "label", command.Label, "", false),
 		interfaceType: valueForFullMutation(
-			&violations, "type", command.Type, "", true,
+			&violations, "type", interfaceTypeField(command.Type), "", true,
 		),
 		enabled:  fullFieldValue(&violations, "enabled", command.Enabled, true, false),
 		mgmtOnly: fullFieldValue(&violations, "mgmt_only", command.MgmtOnly, false, false),
@@ -78,13 +80,9 @@ func (command CreateInterfaceCommand) values() (interfaceCommandValues, error) {
 		})
 	}
 	if len(violations) > 0 {
-		return interfaceCommandValues{}, shared.NewValidationError(violations...)
+		return values, newInterfaceValidationError(violations)
 	}
 	return values, nil
-}
-
-func (command ReplaceInterfaceCommand) values() (interfaceCommandValues, error) {
-	return command.CreateInterfaceCommand.values()
 }
 
 type interfaceCommandPatch struct {
@@ -94,8 +92,8 @@ type interfaceCommandPatch struct {
 	interfaceType *string
 	enabled       *bool
 	mgmtOnly      *bool
-	mtu           *dcimdomain.DeviceNullable[uint32]
-	speed         *dcimdomain.DeviceNullable[uint64]
+	mtu           *dcimdomain.DeviceNullable[int64]
+	speed         *dcimdomain.DeviceNullable[int64]
 	duplex        *dcimdomain.DeviceNullable[string]
 	description   *string
 }
@@ -108,18 +106,43 @@ func (patch interfaceCommandPatch) empty() bool {
 }
 
 func (command UpdateInterfaceCommand) patch() (interfaceCommandPatch, error) {
+	return buildInterfacePatch(
+		command.Device, command.Name, command.Label, command.Type,
+		command.Enabled, command.MgmtOnly, command.MTU, command.Speed,
+		command.Duplex, command.Description, false,
+	)
+}
+
+func (command ReplaceInterfaceCommand) patch() (interfaceCommandPatch, error) {
+	return buildInterfacePatch(
+		command.Device, command.Name, command.Label, command.Type,
+		command.Enabled, command.MgmtOnly, command.MTU, command.Speed,
+		command.Duplex, command.Description, true,
+	)
+}
+
+func buildInterfacePatch(
+	device Field[shared.ID], name Field[string], label Field[string], interfaceType Field[string],
+	enabled Field[bool], mgmtOnly Field[bool], mtu Field[int64], speed Field[int64],
+	duplex Field[string], description Field[string], replace bool,
+) (interfaceCommandPatch, error) {
 	var violations []shared.FieldViolation
+	if replace {
+		requireInterfaceField(&violations, "device", device)
+		requireInterfaceField(&violations, "name", name)
+		requireInterfaceField(&violations, "type", interfaceType)
+	}
 	patch := interfaceCommandPatch{
-		deviceID:      patchFieldValue(&violations, "device", command.Device),
-		name:          patchValue(&violations, "name", command.Name),
-		label:         patchValue(&violations, "label", command.Label),
-		interfaceType: patchValue(&violations, "type", command.Type),
-		enabled:       patchFieldValue(&violations, "enabled", command.Enabled),
-		mgmtOnly:      patchFieldValue(&violations, "mgmt_only", command.MgmtOnly),
-		mtu:           nullablePatchValue(command.MTU),
-		speed:         nullablePatchValue(command.Speed),
-		duplex:        nullablePatchValue(command.Duplex),
-		description:   patchValue(&violations, "description", command.Description),
+		deviceID:      patchFieldValue(&violations, "device", device),
+		name:          patchValue(&violations, "name", name),
+		label:         patchValue(&violations, "label", label),
+		interfaceType: patchValue(&violations, "type", interfaceTypeField(interfaceType)),
+		enabled:       patchFieldValue(&violations, "enabled", enabled),
+		mgmtOnly:      patchFieldValue(&violations, "mgmt_only", mgmtOnly),
+		mtu:           nullablePatchValue(mtu),
+		speed:         nullablePatchValue(speed),
+		duplex:        nullablePatchValue(duplex),
+		description:   patchValue(&violations, "description", description),
 	}
 	if patch.deviceID != nil && !patch.deviceID.IsValid() {
 		violations = append(violations, shared.FieldViolation{
@@ -127,7 +150,7 @@ func (command UpdateInterfaceCommand) patch() (interfaceCommandPatch, error) {
 		})
 	}
 	if len(violations) > 0 {
-		return interfaceCommandPatch{}, shared.NewValidationError(violations...)
+		return patch, newInterfaceValidationError(violations)
 	}
 	if patch.empty() {
 		return interfaceCommandPatch{}, shared.NewValidationError(shared.FieldViolation{
@@ -136,6 +159,65 @@ func (command UpdateInterfaceCommand) patch() (interfaceCommandPatch, error) {
 		})
 	}
 	return patch, nil
+}
+
+func interfaceTypeField(field Field[string]) Field[string] {
+	if field.State() == FieldNull {
+		return FieldValue("")
+	}
+	return field
+}
+
+func requireInterfaceField[T any](violations *[]shared.FieldViolation, name string, field Field[T]) {
+	if field.State() == FieldOmitted {
+		*violations = append(*violations, shared.FieldViolation{
+			Field: name, Reason: "required", Description: "This field is required.",
+		})
+	}
+}
+
+func newInterfaceValidationError(violations []shared.FieldViolation) error {
+	order := map[string]int{
+		"device": 0, "name": 1, "label": 2, "type": 3, "enabled": 4,
+		"mgmt_only": 5, "mtu": 6, "speed": 7, "duplex": 8, "description": 9, "update_mask": 10,
+	}
+	ordered := append([]shared.FieldViolation(nil), violations...)
+	sort.SliceStable(ordered, func(left, right int) bool {
+		leftOrder, leftKnown := order[ordered[left].Field]
+		rightOrder, rightKnown := order[ordered[right].Field]
+		if leftKnown != rightKnown {
+			return leftKnown
+		}
+		return leftKnown && leftOrder < rightOrder
+	})
+	return shared.NewValidationError(ordered...)
+}
+
+func mergeInterfaceMutationErrors(errs ...error) error {
+	for _, err := range errs {
+		if err != nil && !shared.HasReason(err, shared.ErrorReasonValidation) {
+			return err
+		}
+	}
+	seen := make(map[string]struct{})
+	var merged []shared.FieldViolation
+	for _, err := range errs {
+		violations := shared.ViolationsOf(err)
+		if err != nil && len(violations) == 0 {
+			return err
+		}
+		for _, violation := range violations {
+			if _, duplicate := seen[violation.Field]; duplicate {
+				continue
+			}
+			seen[violation.Field] = struct{}{}
+			merged = append(merged, violation)
+		}
+	}
+	if len(merged) > 0 {
+		return newInterfaceValidationError(merged)
+	}
+	return nil
 }
 
 func nullableFullValue[T any](field Field[T]) dcimdomain.DeviceNullable[T] {

@@ -1280,7 +1280,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/InterfaceWrite"
+                "$ref": "#/components/schemas/InterfaceCreate"
               }
             }
           }
@@ -1350,7 +1350,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/InterfaceWrite"
+                "$ref": "#/components/schemas/InterfaceReplace"
               }
             }
           }
@@ -1389,7 +1389,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/InterfaceWrite"
+                "$ref": "#/components/schemas/InterfaceUpdate"
               }
             }
           }
@@ -4322,23 +4322,14 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/ObjectReference"
-              },
-              {
-                "type": "null"
               }
             ]
           },
           "name": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "label": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "type": {
             "type": "object",
@@ -4400,10 +4391,7 @@
             ]
           },
           "description": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "id": {
             "type": "integer",
@@ -4414,10 +4402,7 @@
             "format": "uri"
           },
           "display": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "created": {
             "type": [
@@ -4436,6 +4421,61 @@
           "count_ipaddresses": {
             "type": "integer",
             "format": "int64"
+          }
+        }
+      },
+      "InterfaceCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "device",
+          "name",
+          "type"
+        ],
+        "properties": {
+          "device": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "mgmt_only": {
+            "type": "boolean"
+          },
+          "mtu": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "speed": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "duplex": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "description": {
+            "type": "string"
           }
         }
       },
@@ -4470,6 +4510,61 @@
             "items": {
               "$ref": "#/components/schemas/Interface"
             }
+          }
+        }
+      },
+      "InterfaceReplace": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "device",
+          "name",
+          "type"
+        ],
+        "properties": {
+          "device": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "mgmt_only": {
+            "type": "boolean"
+          },
+          "mtu": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "speed": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "duplex": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "description": {
+            "type": "string"
           }
         }
       },
@@ -4676,31 +4771,24 @@
           }
         }
       },
-      "InterfaceWrite": {
+      "InterfaceUpdate": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
           "device": {
-            "type": [
-              "integer",
-              "null"
-            ],
+            "type": "integer",
             "format": "int64"
           },
           "name": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "minLength": 1
           },
           "label": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "type": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "enabled": {
             "type": "boolean"
@@ -4729,10 +4817,7 @@
             ]
           },
           "description": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           }
         }
       },
