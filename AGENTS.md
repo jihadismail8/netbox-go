@@ -243,20 +243,25 @@ InterfaceTemplate snapshot-order contradiction remains assigned to
 `CW1-V2-04`; uniqueness, placement, template transactions, list/get/delete,
 full CRUD, broader RBAC, every tier/consumer, the parent, profile, deployment,
 rewrite completion, production readiness, and every later child remain open.
-`CW1-V2-02-I11` is the in-progress lane for Interface `device`, `name`,
+`CW1-V2-02-I11` claims standing-authorized implementation `done` only for
+Interface `device`, `name`,
 `label`, `type`, `enabled`, `mgmt_only`, `mtu`, `speed`, `duplex`, and
 `description` common create/PUT/PATCH presence, signed-int64 numeric intent,
-shared typed semantics, operation-specific contracts, PostgreSQL tests, and
-Vue dirty-field handling. Independently reviewed packet
-`840d889346e846b46efc98bb79305f0dcfb01957` passed the pinned local gate and
-exact-SHA repository CI run `38295273529`. The eight fixed tests, focused and
-race suites, real-PostgreSQL durability/rollback, complete L4, generated/Vue,
-and complete repository gates passed locally before this provenance update.
-An unchanged committed candidate replay, candidate CI, and retained
-evidence/receipt/closeout gates remain. No owner-immutability completion,
-tier, parent, profile, or traceability-consumer claim follows. Standing owner
-authorization permits bounded implementation acceptance, not invented human
-artifact inspection or a separate required human sign-off.
+shared typed semantics, operation-specific contracts, PostgreSQL durability/
+rollback, Vue dirty-field handling, and eight fixed tests. Tested candidate
+`8f4c6d6d3d8a981519a2bd8800428152b9b92d78` has source digest
+`source-v2:sha256:e9e8520e5d2699f90e2e2d59a722112b12f5a84b2388da5d053ecb57fc4e4711`
+with 3,093 entries. Its focused/race, real-PostgreSQL, complete L4, generated/
+Vue, repository, committed replay, and candidate CI gates passed. Initial
+claim `4874aa52c816660fb8077e0a798181ff2b7d83b4` and excluded receipt
+`d455eb7943f5d169e0a7490ae6e645e124711710` passed independent integrity,
+pinned local, and exact-SHA CI gates. The executor applied existing standing
+owner acceptance to that exact bounded result at `2026-10-12T22:13:41Z`;
+this is not a new human decision or artifact inspection. This eight-path
+closeout and its later two-path receipt still require their own local and
+exact-SHA CI gates before `done` is effective or another increment begins.
+No owner-immutability, tier, consumer, parent, profile, rewrite, or production
+completion follows. T2/T3/T4 and designated human sign-offs remain unearned.
 Do not begin or merge another
 Capability Profile while V0 is
 red or before `CW1-V6-03`. Once those gates are

@@ -210,13 +210,34 @@ and job
 [115009960122](https://github.com/jihadismail8/netbox-go/actions/runs/38309027966/job/115009960122)
 passed with all 12 reported steps successful; the artifact retains exact
 times, raw JSON commitments, and the frozen claim mapping. This separate
-two-path excluded receipt passed independent integrity review and its assembly
+two-path excluded receipt `d455eb7943f5d169e0a7490ae6e645e124711710` passed
+independent integrity review and its assembly
 `make check` (`2026-10-12T21:32:26.974Z`–`21:38:49.608Z`, exit 0, unchanged
 source, log SHA-256
 `ccc79153402d35cc712683cf17ecd5afe2f0a32a8564596f8da45fe74f581164`).
-Its final no-later-edit local replay and own exact-SHA CI remain required,
-followed by the standing-authorized bounded
-closeout gates. Source governance remains conservatively `in-progress`.
+Its final no-later-edit pinned `make check` passed
+`2026-10-12T21:42:38.915Z`–`2026-10-12T21:47:42.696Z`, exit 0, unchanged
+source, log SHA-256
+`f6e4f716fa4a351a82b40946d07a439fca7cfa402382152e3edc549da3529d48`.
+Exact receipt run
+[38313218478](https://github.com/jihadismail8/netbox-go/actions/runs/38313218478)
+and job
+[115023630424](https://github.com/jihadismail8/netbox-go/actions/runs/38313218478/job/115023630424)
+passed, all 12 reported steps successful; the artifact retains exact times,
+raw JSON commitments, and the complete frozen receipt mapping provenance.
+The executor applied existing standing acceptance at `2026-10-12T22:13:41Z`,
+not a new human decision or inspection. This exact eight-path closeout
+claims standing-authorized implementation `done` only for I11, conditional
+on its own independent integrity, pinned local, and exact-SHA CI gates and
+those of its subsequent two-path excluded receipt. It is not yet effective,
+and I12 may not begin before those gates pass. The complete tested manifest
+and six-governance-path source diff are retained in the artifact.
+Two independent closeout integrity reviews passed with no findings; pinned
+assembly `make check` passed `2026-10-12T22:17:46.715Z`–
+`2026-10-12T22:24:06.706Z`, exit 0, unchanged closeout source, log SHA-256
+`3eb5148f705d9f9fbc8d0cfa1424ab6e6d71d219be6927f234f03ba9959de0d7`.
+The closeout's final frozen-file local replay, own exact-SHA CI, and later
+excluded receipt's independent review and complete gates remain required.
 No new human artifact inspection or formal retained-claim authentication,
 tier/consumer/parent/profile promotion, or production completion is claimed.
 The pinned oracle image is unavailable, so T2/T3 remain unearned; Vue checks

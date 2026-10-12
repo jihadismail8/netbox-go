@@ -51,7 +51,7 @@ implementation exists.
 | `CW1-V2-02-I8` | `done`        | Codex GPT-5.6 Sol | [InterfaceTemplate scalar write presence](CW1-V2-02-I8.md) |
 | `CW1-V2-02-I9` | `done`        | Codex GPT-5.6 Sol | [Rack scalar write presence](CW1-V2-02-I9.md)              |
 | `CW1-V2-02-I10`| `done`        | Codex             | [Device scalar write presence](CW1-V2-02-I10.md)           |
-| `CW1-V2-02-I11`| `in-progress` | Codex             | [Interface scalar write presence](CW1-V2-02-I11.md)        |
+| `CW1-V2-02-I11`| `done` claim  | Codex             | [Interface scalar write presence](CW1-V2-02-I11.md); own closeout/receipt gates pending |
 | `CW1-V3-01`    | `done`        | Codex GPT-5.6 Sol | [Dependency-aware readiness](CW1-V3-01.md)                 |
 | `CW1-V3-02`    | `done`        | Codex             | [Bootstrap and schema contract](CW1-V3-02.md)              |
 
@@ -224,18 +224,26 @@ placement, template transactions,
 list/get/delete, full CRUD, all tiers, every consumer, the parent, and profile
 promotion remain open.
 
-`CW1-V2-02-I11` is the in-progress Interface common write-presence lane for
+`CW1-V2-02-I11` claims standing-authorized implementation `done` only for
+Interface common write presence in
 `device`, `name`, `label`, `type`, `enabled`, `mgmt_only`, `mtu`, `speed`,
 `duplex`, and `description`. It implements signed-int64 numeric intent,
 operation-specific contracts, shared typed REST/gRPC semantics,
 PostgreSQL durability/rollback tests, Vue dirty-field handling, and eight
-fixed regressions. Independently reviewed packet
-`840d889346e846b46efc98bb79305f0dcfb01957` passed the pinned local gate and
-exact-SHA CI run `38295273529`. Focused/race, real PostgreSQL including six
-late-error rollbacks, complete L4, generated/Vue, and repository gates passed
-locally. Unchanged committed replay, candidate CI, and retained evidence/
-receipt/closeout gates remain. No artifact-specific human review or owner-
-immutability, tier, parent, profile, or consumer completion is claimed.
+fixed regressions. Tested candidate `8f4c6d6d3d8a981519a2bd8800428152b9b92d78`
+has digest
+`source-v2:sha256:e9e8520e5d2699f90e2e2d59a722112b12f5a84b2388da5d053ecb57fc4e4711`
+with 3,093 entries. Focused/race, real PostgreSQL including six late-error
+rollbacks, complete L4, generated/Vue, repository, committed replay, and
+candidate CI passed. Initial claim `4874aa52c816660fb8077e0a798181ff2b7d83b4`
+and excluded receipt `d455eb7943f5d169e0a7490ae6e645e124711710` passed
+independent integrity, pinned local, and exact-SHA CI gates. Existing standing
+acceptance was applied by the executor at `2026-10-12T22:13:41Z`, not a new
+human decision or inspection. The claim is not yet effective: this eight-path
+closeout and its later two-path receipt require their own local and exact-SHA
+CI gates before durable `done` or another increment. No artifact-specific
+human review or owner-immutability, tier, parent, profile, or consumer
+completion is claimed.
 
 `CW1-V3-01` has exact tested candidate
 `58241d7f87b642e6b7eca279592ad3759a0f5a06` at source digest

@@ -4,12 +4,15 @@
 
 - Goal: `CW1-V2-02`; increment: `CW1-V2-02-I11`; executor: Codex.
 - Capability Profile: `core-workflow-v1`, still T1 and pre-publication.
-- State: tested candidate and initial two-path evidence claim have green
-  independent exact-SHA CI and pinned local gates. This separate two-path,
-  source-v2-excluded receipt retains the initial claim's completed boundaries.
-  Its independent integrity review and assembly pinned local gate passed.
-  Final frozen-file local replay and its own exact-SHA repository CI remain
-  required before the separately gated bounded closeout.
+- State: standing-authorized implementation `done` claim only for the bounded
+  I11 result. Tested candidate, initial claim, and pre-closeout excluded receipt
+  have green independent exact-SHA CI and pinned local gates. Existing standing
+  acceptance was applied by the executor at `2026-10-12T22:13:41Z`, not a new
+  human decision or artifact inspection. This eight-path closeout and its later
+  two-path receipt still require final local and exact-SHA CI gates before
+  `done` is effective or another increment begins. Two independent closeout
+  integrity reviews and the pinned assembly local gate passed; the later
+  receipt still requires its own independent review and complete gates.
 
 This artifact retains only `dcim.Interface` common create/PUT/PATCH presence
 for `device`, `name`, `label`, `type`, `enabled`, `mgmt_only`, `mtu`, `speed`,
@@ -28,9 +31,9 @@ or production readiness.
 
 No `netbox-go-evidence-v2` marker is present: this bounded implementation
 summary establishes no retained verification set, consumer, tier, or aggregate
-claim. Existing standing owner authorization permits the later bounded
-implementation closeout after all its required gates; it is not a new human
-inspection of this artifact. Formal retained-claim authentication and any
+claim. Existing standing owner authorization is applied only to bounded
+implementation acceptance, effective after all closeout gates; it is not a
+new human inspection of this artifact. Formal retained-claim authentication and any
 designated human row/consumer/tier/aggregate/profile sign-offs remain pending.
 
 ## Entry, packet, and tested source
@@ -375,7 +378,7 @@ dependency-audit claim is made; remediation belongs to separately reviewed
 security/dependency work. All capability/parent/profile and production
 limitations in the claim boundary remain open.
 
-## Initial two-path claim and remaining exit gates
+## Initial two-path claim and its historical exit boundary
 
 This initial claim changes only:
 
@@ -385,8 +388,8 @@ This initial claim changes only:
 
 Both are source-v2-excluded. The complete derived diff below is empty;
 candidate and claim retain identical path/kind sets, modes, sizes/hashes, and
-closed symlink targets across all 3,093 entries. Source governance remains
-conservatively `in-progress` until the separately gated bounded closeout.
+closed symlink targets across all 3,093 entries. At that initial boundary,
+source governance remained conservatively `in-progress` pending closeout.
 
 Independent artifact integrity reviews passed with no fixes. The pinned
 assembly `make check` passed `2026-10-12T20:46:40.060Z`–
@@ -395,8 +398,8 @@ credential-free log SHA-256 is
 `ddb2210d9834e96fc04e26cfbc80ac18b8974308300373c1b0578d25822171a3`.
 It includes successful links across 184 Markdown files. That initial claim's
 final no-later-edit local replay and exact-SHA CI subsequently passed, as
-retained below. This separate two-path excluded receipt still requires its
-own gates. After those gates, the existing standing acceptance may be applied
+retained below. At the subsequent two-path receipt assembly boundary, its
+own gates were still required. After those gates, standing acceptance may be applied
 in the packet's separately reviewed exact eight-path closeout (six governance
 paths plus these two evidence paths), followed by its own two-path excluded
 receipt. Each requires its pinned local and exact-SHA CI boundaries.
@@ -411,7 +414,7 @@ toolchain/dependency, coverage policy, or other increment is changed here.
 The next recommended child after durable I11 closeout is a separately
 reviewed `ipam.VRF` common scalar-presence slice; it is not closed here.
 
-## Initial evidence claim CI and excluded receipt
+## Initial evidence claim CI and pre-closeout receipt assembly
 
 Initial claim `4874aa52c816660fb8077e0a798181ff2b7d83b4` has exact parent
 and tested candidate `8f4c6d6d3d8a981519a2bd8800428152b9b92d78`. It changes
@@ -449,11 +452,11 @@ After this CI result, the complete tested source manifest was reverified in
 the CI capture recorded at `2026-10-12T21:30:51.476Z`. A subsequent separate
 freeze audit confirmed both initial claim evidence files unchanged before
 this receipt was edited; that audit has no separately retained exact timestamp.
-This receipt changes only the same two excluded evidence paths. Source-v2
-remains `source-v2:sha256:e9e8520e5d2699f90e2e2d59a722112b12f5a84b2388da5d053ecb57fc4e4711`
+That receipt changed only the same two excluded evidence paths. Source-v2
+remained `source-v2:sha256:e9e8520e5d2699f90e2e2d59a722112b12f5a84b2388da5d053ecb57fc4e4711`
 with 3,093 entries; the complete manifest and empty source diff below remain
-verbatim and retain their original commitments. Source governance is still
-conservatively `in-progress`.
+verbatim and retain their original commitments. Source governance at that
+pre-closeout boundary remained conservatively `in-progress`.
 
 This receipt passed independent integrity review after a narrow timestamp
 clarification distinguishing the source capture from the separately untimed
@@ -463,15 +466,91 @@ source digest unchanged. Credential-free log SHA-256 is
 `ccc79153402d35cc712683cf17ecd5afe2f0a32a8564596f8da45fe74f581164`;
 193 Vue tests and links across 184 Markdown files passed.
 
-After this narrow assembly receipt addition, the final no-later-edit pinned
-local replay, this receipt's own exact-SHA CI, and the subsequent separately
-reviewed eight-path standing-authorized closeout and two-path closeout receipt
-remain pending. Its own final frozen
+At that assembly boundary, the final no-later-edit pinned local replay, its
+own exact-SHA CI, and the subsequent separately reviewed eight-path closeout
+and two-path closeout receipt remained pending. That receipt's final frozen
 hashes, commit identity, and no-later-edit gate are retained in commit/external
-provenance rather than self-referential artifact edits. No standing acceptance
-has yet been applied to I11, no new human artifact inspection is asserted,
+provenance rather than self-referential artifact edits. Standing acceptance
+had not yet been applied to I11; no new human artifact inspection was asserted,
 and all external-tier, consumer, parent, profile, and production exclusions
 above remain unchanged.
+
+## Green pre-closeout receipt and standing-authorized closeout
+
+Receipt `d455eb7943f5d169e0a7490ae6e645e124711710`, parent
+`4874aa52c816660fb8077e0a798181ff2b7d83b4`, changed exactly the two
+source-v2-excluded evidence paths. Its complete frozen old/new mapping is
+retained verbatim in its actual commit message, canonical SHA-256
+`2b21c7fc515fae750f9b6085c96c1b2b7457850034f52fc2fff4659774e3ed5e`.
+The frozen artifact was 781,245 bytes, SHA-256
+`41771635d5be535f1427f08bb19ae7c78dee501ce7ec6c5f40ee461ebd51c6b3`;
+the ledger was 27,935 bytes, SHA-256
+`f944f3acd8e6774b3ae7c5d46f47738941578437eb759274cfbd261277ffb458`.
+Both modes were `100644`; these describe that committed receipt, not this
+later closeout's own bytes. Independent receipt and limited assembly-delta
+reviews passed, followed by final frozen-file pinned `make check`
+`2026-10-12T21:42:38.915Z`–`2026-10-12T21:47:42.696Z`, exit 0, source
+unchanged. Log SHA-256:
+`f6e4f716fa4a351a82b40946d07a439fca7cfa402382152e3edc549da3529d48`.
+The complete frozen mapping and actual local-gate provenance remain in the
+reachable receipt commit; an independent committed-byte audit passed before
+its normal push.
+
+Exact-head repository run
+[38313218478](https://github.com/jihadismail8/netbox-go/actions/runs/38313218478),
+attempt 1, succeeded at `d455eb7943f5d169e0a7490ae6e645e124711710`.
+Run created/started `2026-10-12T21:51:25Z`; terminal updated
+`2026-10-12T22:11:27Z`. Job
+[115023630424](https://github.com/jihadismail8/netbox-go/actions/runs/38313218478/job/115023630424)
+passed `2026-10-12T21:51:27Z`–`2026-10-12T22:11:26Z`, all 12 reported
+steps successful. Retained raw run/job JSON SHA-256 values:
+`4ef6bb7118f1d1e14b4f3f28277e4a9c3a4688585acc4975eb5b43f6e6a40d50`
+and `c9748607dc16af9b47db5fff080074a3bbcab94a7fd1d521d7c6719c339a1de9`.
+Independent direct-API verification confirmed exact head, attempt, times, and
+successful steps without workflow mutation. The root terminal capture at
+`2026-10-12T22:13:11.284Z` reauthenticated the full unchanged tested source
+manifest. A subsequent separate receipt freeze audit verified both frozen
+evidence files before editing; that audit has no separately retained exact
+timestamp.
+
+At `2026-10-12T22:13:41Z`, the executor applied the owner's existing standing
+acceptance to this exact known, gated bounded implementation result. This is
+not a fresh human decision, artifact inspection, retained-claim authentication,
+or designated human sign-off. Only standing-authorized implementation `done`
+is claimed, conditional on this closeout's own gates and those of its later
+two-path excluded receipt. Formal retained-claim authentication and designated
+human row/consumer/tier/aggregate/profile sign-offs remain open.
+
+This closeout changes exactly six source-governance files plus the artifact
+and ledger: `AGENTS.md`, `docs/ROADMAP.md`, `docs/STATUS.md`, `docs/TESTING.md`,
+`docs/increments/CW1-V2-02-I11.md`, `docs/increments/README.md`, and the two
+excluded evidence paths above. No implementation, test, generated contract,
+resource/profile/scenario/traceability metadata, architecture/implementation
+plan, I10, dependency, security, or quality-policy path changes. The complete
+tested manifest below remains verbatim. The complete candidate-to-closeout
+source diff follows the historical empty initial-claim diff; only the six
+authorized governance entries differ, with equal path/kind sets, unchanged
+modes and symlink targets, and 3,093 entries. Exact closeout digest and diff
+commitments are in that generated section.
+
+Two independent closeout integrity reviews passed with no findings. The pinned
+assembly `make check` passed `2026-10-12T22:17:46.715Z`–
+`2026-10-12T22:24:06.706Z`, exit 0, with unchanged closeout source digest.
+Credential-free log SHA-256:
+`3eb5148f705d9f9fbc8d0cfa1424ab6e6d71d219be6927f234f03ba9959de0d7`.
+The 193 Vue tests, 308 capability/OpenAPI tests, 96 traceability tests, links
+across 184 Markdown files, and unchanged backend coverage policy passed.
+This narrow assembly receipt addition changes only excluded evidence bytes;
+the six-governance source diff and complete manifest commitments are unchanged.
+
+The final no-later-edit local replay, this closeout's exact-SHA CI, and the
+subsequently reviewed/gated two-path excluded closeout receipt remain required.
+I12 must not begin before those gates pass. Frozen final bytes, complete
+eight-path mapping, own commit
+identity, and final local replay belong in commit/external provenance, not
+self-referential artifact edits. No T2/T3/T4, owner-immutability, consumer,
+parent/profile/rewrite/production completion, or new human inspection follows.
+The unavailable pinned oracle and unchanged 23 npm advisories remain disclosed.
 
 ## Complete tested source manifest
 
@@ -22157,5 +22236,139 @@ This complete canonical candidate-to-initial-claim comparison has SHA-256
   "mode_changed": [],
   "symlink_retargeted": [],
   "changed": []
+}
+```
+
+## Complete derived closeout source-manifest diff
+
+This canonical comparison derives all 3,093 tested entries against the current
+closeout attestation. Attestation digest: `source-v2:sha256:57687459b6e0286bc43cf791395dfe3b933649c7422e270fa91b00dcbf8b7e98`;
+canonical attestation manifest SHA-256: `19e7f80d7155fd46d179abb465778c8fdc7de13fe3e3fb4d961c2127722c3c1e`.
+Only the six authorized governance paths differ. Complete diff SHA-256:
+`669736cdf2de38ba4f8aee440b27dea614ecccd97faa33b85a620c128c34fddf`. The two evidence files are excluded from source-v2.
+
+```json
+{
+  "schema_version": 1,
+  "tested_digest": "source-v2:sha256:e9e8520e5d2699f90e2e2d59a722112b12f5a84b2388da5d053ecb57fc4e4711",
+  "attestation_digest": "source-v2:sha256:57687459b6e0286bc43cf791395dfe3b933649c7422e270fa91b00dcbf8b7e98",
+  "tested_files": 3093,
+  "attestation_files": 3093,
+  "path_and_kind_sets_equal": true,
+  "added": [],
+  "deleted": [],
+  "type_changed": [],
+  "mode_changed": [],
+  "symlink_retargeted": [],
+  "changed": [
+    {
+      "path": "AGENTS.md",
+      "kind": "file",
+      "tested": {
+        "kind": "file",
+        "mode": "100644",
+        "path": "AGENTS.md",
+        "size": 20893,
+        "sha256": "sha256:b48b6e06e5bcf94837e25ab66a52146664ed91a9e2546645c4d0da701d1cc86e"
+      },
+      "attestation": {
+        "kind": "file",
+        "mode": "100644",
+        "path": "AGENTS.md",
+        "size": 21250,
+        "sha256": "sha256:b6e7034db5b60cd1b48195e2a75338cec775b36712999b6fd5f746b031cc037e"
+      }
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "kind": "file",
+      "tested": {
+        "kind": "file",
+        "mode": "100644",
+        "path": "docs/ROADMAP.md",
+        "size": 103937,
+        "sha256": "sha256:5c7c29b9cb8156609a569e2db8f9cf4a85222501295a8a01d7f14763fe3ee1f5"
+      },
+      "attestation": {
+        "kind": "file",
+        "mode": "100644",
+        "path": "docs/ROADMAP.md",
+        "size": 104610,
+        "sha256": "sha256:7e6282cb9dffc312667da8669ad9e0dd210201b0a4c51c28199f88a66c877988"
+      }
+    },
+    {
+      "path": "docs/STATUS.md",
+      "kind": "file",
+      "tested": {
+        "kind": "file",
+        "mode": "100644",
+        "path": "docs/STATUS.md",
+        "size": 38575,
+        "sha256": "sha256:7952051144e1f51cc501ecefa873aed6a9aeed8c5b7068e63b00dcfe4c804d37"
+      },
+      "attestation": {
+        "kind": "file",
+        "mode": "100644",
+        "path": "docs/STATUS.md",
+        "size": 39060,
+        "sha256": "sha256:76d70b9ed7861160d78f1474b56016865dfa0c6792745a169244980907ecaad9"
+      }
+    },
+    {
+      "path": "docs/TESTING.md",
+      "kind": "file",
+      "tested": {
+        "kind": "file",
+        "mode": "100644",
+        "path": "docs/TESTING.md",
+        "size": 29612,
+        "sha256": "sha256:b61f612ff06bae8581909f28c1eb2eecf9c0599a2775ef172a578afccda6f5f1"
+      },
+      "attestation": {
+        "kind": "file",
+        "mode": "100644",
+        "path": "docs/TESTING.md",
+        "size": 30301,
+        "sha256": "sha256:b3d607eda1d9bad37a3049e79822b3bb7fc8c81f03e16a62b3297ae196d60d15"
+      }
+    },
+    {
+      "path": "docs/increments/CW1-V2-02-I11.md",
+      "kind": "file",
+      "tested": {
+        "kind": "file",
+        "mode": "100644",
+        "path": "docs/increments/CW1-V2-02-I11.md",
+        "size": 30984,
+        "sha256": "sha256:d70b4c218e82c9f22578dda96ef606b2719b89f37587cec6a580a99091ac87cf"
+      },
+      "attestation": {
+        "kind": "file",
+        "mode": "100644",
+        "path": "docs/increments/CW1-V2-02-I11.md",
+        "size": 33355,
+        "sha256": "sha256:8a9b091f5009bf8571296e8f5d3357ea2576a0c8b805020eef1228e89678c37e"
+      }
+    },
+    {
+      "path": "docs/increments/README.md",
+      "kind": "file",
+      "tested": {
+        "kind": "file",
+        "mode": "100644",
+        "path": "docs/increments/README.md",
+        "size": 17636,
+        "sha256": "sha256:068deb47a1418176a130ff59d49c89ea53ed86dd077dc1d65f5291fc933e0b5f"
+      },
+      "attestation": {
+        "kind": "file",
+        "mode": "100644",
+        "path": "docs/increments/README.md",
+        "size": 18148,
+        "sha256": "sha256:d2d49cecc0bd093106da6814b00268b76e23547f6193e7435c741192cc6c4db8"
+      }
+    }
+  ]
 }
 ```

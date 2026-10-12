@@ -266,8 +266,18 @@ including signed-int64 numeric intent. Independently reviewed packet
 exact-SHA CI run `38295273529` before behavior editing. Semantic red proofs
 preceded fixes; the eight named tests, focused/race, real-PostgreSQL raw/reload/
 snapshot and six late-error rollback cases, complete L4, generated/Vue, and
-complete repository gates passed locally. Committed replay and candidate/
-evidence/receipt/closeout gates remain. The pinned oracle image is not cached;
+complete repository gates passed. Tested candidate
+`8f4c6d6d3d8a981519a2bd8800428152b9b92d78`, digest
+`source-v2:sha256:e9e8520e5d2699f90e2e2d59a722112b12f5a84b2388da5d053ecb57fc4e4711`
+(3,093 entries), also passed unchanged committed replay and exact-candidate
+CI. Initial claim `4874aa52c816660fb8077e0a798181ff2b7d83b4` and excluded
+receipt `d455eb7943f5d169e0a7490ae6e645e124711710` passed independent
+integrity, pinned local, and exact-SHA CI gates. Existing standing acceptance
+was applied by the executor at `2026-10-12T22:13:41Z`, without claiming a
+new human decision or inspection. Standing-authorized implementation `done`
+remains conditional on this eight-path closeout and its subsequent two-path
+receipt each passing their own local and exact-SHA CI gates.
+The pinned oracle image is not cached;
 no differential T2 or corresponding T3 is retained and Vue checks earn no T4.
 No owner-immutability, parent, profile, or consumer completion follows.
 
@@ -442,7 +452,7 @@ and exact change-state outcomes remain to be added and retained.
 | ------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage                       | `make check` retained green on each exact relevant source digest                                                          | Entry source-v2 retained; active-source refresh required |
 | V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests                      | Pass I4's exact claim CI, retain its receipt, obtain owner review, then complete the remaining identity matrix            | I4 evidence claim conditional; parent open               |
-| V2 profile behavior      | Shared 13-resource service, broad tests, accepted I1-I10, and locally green Interface I11 | Replay/retain I11; trace every remaining invariant, rollback, and external-tier boundary | I1-I10 done; I11 in-progress; parent open |
+| V2 profile behavior      | Shared 13-resource service, broad tests, done I1-I10, and green I11 candidate/claim/receipt | Gate I11 closeout/receipt; trace remaining invariant, rollback, and external-tier boundaries | I1-I10 done; I11 conditional implementation done claim; parent open |
 | V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness, and owner-accepted bounded V3-01/V3-02 evidence with green closeout receipts | Complete V3-03 through V3-05 and retain deployment loss-recovery artifacts | V3-01/V3-02 done; V3 parent open |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites                            | Complete T2 scenario report, then equivalent T3 report                                                                    | T1; implementation gap                                   |
 | V5 Vue workflow          | Typed adapters and real-browser harness                                                    | Both workflows and every required negative/state case retained green                                                      | T1; implementation gap                                   |
