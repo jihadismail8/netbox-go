@@ -182,9 +182,16 @@ CI boundaries on exact revision
 source-v2-excluded claim revision
 `33b595a5d5c7a1cac5444213cc7531a5382b7415` passed its pinned local gates and
 exact-SHA repository CI, making only bounded I10 `evidence`. This
-source-v2-excluded receipt requires exact-SHA repository CI; artifact-specific
-project-owner evidence review remains. No retained pinned differential
-accompanies this bounded result, so no T2/T3 claim is made.
+source-v2-excluded receipt `dde91785d34c4d76cbae40b99a191ad76437e9fd`
+also passed exact-SHA repository CI. The project owner accepted only this
+bounded result at that exact receipt, recorded at `2026-10-12T14:07:30Z`.
+The independently reviewed one-file closeout-scope amendment
+`707c698c4dfc2952f0891935f3e6ba2e12f05e3c` passed its pinned local gates
+and exact-SHA repository CI. The owner-accepted eight-path closeout now
+records conditional `done` only for bounded I10: the closeout claim must pass
+its own exact-SHA CI before that state is effective, and its later two-path
+excluded receipt requires separate exact-SHA CI. No retained pinned
+differential accompanies this bounded result, so no T2/T3 claim is made.
 The
 [bounded dependency-aware readiness result](2026-08-27-core-workflow-v3-dependency-readiness-v0.md)
 passed its exact-name, affected, race, complete L4 PostgreSQL-regression,
@@ -222,7 +229,7 @@ deployment, rewrite, production migration, or production-readiness boundary.
 The project owner reviewed and retained the entry V0, CORS, bounded token I1,
 bounded token I2, bounded browser-session I3, bounded IPAddress I1, and bounded
 Site I2, Manufacturer I3, RackRole I4, RackType I5, DeviceRole I6, DeviceType
-I7, InterfaceTemplate I8, and Rack I9 results.
+I7, InterfaceTemplate I8, Rack I9, and Device I10 results.
 The
 [2026-08-03 post-cleanup V0](2026-08-03-post-cleanup-v0.md) used the superseded
 mode-blind v1 source digest and is now historical. The 2026-08-01
@@ -230,7 +237,7 @@ repository V0 and recovery-scoped PostgreSQL replay also remain historical in
 the
 [Core Workflow recovery artifact](2026-08-01-core-workflow-v1-v0.md). The
 Profile remains T1 and pre-publication; V1-V6 remain open. `CW1-G00` passed for
-the exact I9 tested source; `CW1-V1-01`, `CW1-V1-02-I1`, `CW1-V1-02-I2`, and
+the exact I10 tested source; `CW1-V1-01`, `CW1-V1-02-I1`, `CW1-V1-02-I2`, and
 `CW1-V1-02-I3` are done. The parent credential/session matrix remains open.
 `CW1-V2-02-I1` has an effective owner-accepted `done` closeout only for
 IPAddress scalar
@@ -286,12 +293,17 @@ create/PUT/PATCH presence. This excluded receipt preserves that exact result
 without changing source and must pass its own exact-SHA CI. I9 promotes no
 compatibility tier, profile state, parent, later child, or traceability
 consumer.
-`CW1-V2-02-I10` is effective `evidence` at exact claim revision
-`33b595a5d5c7a1cac5444213cc7531a5382b7415` only for Device common scalar and
-relationship create/PUT/PATCH presence. Its source-v2-excluded receipt
-exact-SHA CI and artifact-specific project-owner evidence review remain. I10
-promotes no compatibility tier, profile state, parent, later child, or
-traceability consumer.
+`CW1-V2-02-I10` records owner-accepted conditional `done` only for Device
+common scalar and relationship create/PUT/PATCH presence. Its exact evidence
+claim `33b595a5d5c7a1cac5444213cc7531a5382b7415`, excluded receipt
+`dde91785d34c4d76cbae40b99a191ad76437e9fd`, and reviewed one-file scope
+amendment `707c698c4dfc2952f0891935f3e6ba2e12f05e3c` passed exact-SHA
+CI. Owner acceptance is bound to that receipt at `2026-10-12T14:07:30Z`.
+The eight-path closeout passed independent validation and its assembly local
+gate; its final no-later-edit local and exact-SHA CI gates remain. `Done` is
+effective only after its claim CI, and the later excluded receipt must pass
+its own exact-SHA CI. I10 promotes no compatibility tier, profile state,
+parent, later child, or traceability consumer.
 `CW1-V3-01` has an effective owner-accepted `done` closeout at exact revision
 `711d9e0e5ce34529fffeed840dc4812824c09f64`, only for its bounded
 operational-probe slice. This excluded receipt preserves that exact result
@@ -307,7 +319,7 @@ deployment, migration, rewrite, or production boundary.
 
 | Evidence                 | Required command or boundary                                  | Current state                                                    |
 | ------------------------ | ------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Repository quality       | Revised `make check` including non-mutating backend coverage  | V1-I4 and V2-I1/I2/I3/I4 retained; V2-I5/I6/I7/I8/I9, V3-01, and bounded V3-02 done; bounded V2-I10 evidence effective, receipt CI pending |
+| Repository quality       | Revised `make check` including non-mutating backend coverage  | V1-I4 and V2-I1/I2/I3/I4 retained; V2-I5/I6/I7/I8/I9, V3-01, and bounded V3-02 done; bounded V2-I10 owner-accepted conditional done, closeout gates pending |
 | Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                          |
 | gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                            |
 | Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, V1-I4, V2-I1/I2/I3/I4/I5/I6, bounded V2-I7/I8/I9/I10, V3-01, and V3-02 passed; V3-03 through V3-05 open |

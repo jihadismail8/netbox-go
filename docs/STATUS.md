@@ -210,20 +210,30 @@ RackType-update propagation, Device site propagation, deletion, list/query
 behavior, full CRUD, every tier/consumer, the parent, profile promotion, and
 every later child remain open.
 
-`CW1-V2-02-I10` has green exact nine-path packet claim
-`efc042b18194e4c33f4272e9c1fd08b32b5d53dc` at source digest
-`source-v2:sha256:75a7c025adaa7130d9710c2b0d1ecb1a7c0796317274c34d5d58209716d53e7d`
-with 3,080 entries and source-manifest SHA-256
-`0d3fa839e0f59515cc308b78d4fe6a1c82b24b4b41a298716b3dcd9f789c57b4`.
-Its bounded implementation candidate covers only the 13 Device common
+`CW1-V2-02-I10` has exact tested candidate
+`c74821a0473a52873ea2bf26e781bf0fa5e33ebb` at source digest
+`source-v2:sha256:9937f5371b3a50525f7fad0e0bfc41231857af1b043e764aa2abdd419b3e3640`
+with 3,086 entries and source-manifest SHA-256
+`21bbaa7ee54be41815b3bb9d921d264057d137721dfa6771366096201e95ede4`.
+Its bounded retained implementation covers only the 13 Device common
 writable fields across create/PUT/PATCH presence, create-only
 DeviceType-airflow inheritance, operation-specific contracts, shared typed
 REST/gRPC intent, PostgreSQL durability, Vue dirty-field handling, and eight
 fixed regressions. Local contract/profile/OpenAPI, exact-name, affected,
 race, focused real-PostgreSQL, complete L4, Vue, backend, frontend, and
-repository gates are green; the disposable PostgreSQL role/database were
-removed and verified absent. Exact committed replay, candidate push and CI,
-and evidence retention remain. No differential was retained, so T2/T3 remain
+repository, exact committed replay, candidate-CI, evidence-claim, and
+pre-closeout receipt gates are green; the disposable PostgreSQL role/database
+were removed and verified absent. The project owner accepted only this
+bounded evidence at receipt `dde91785d34c4d76cbae40b99a191ad76437e9fd`,
+recorded at `2026-10-12T14:07:30Z`. The independently reviewed owner-closeout
+scope amendment `707c698c4dfc2952f0891935f3e6ba2e12f05e3c` passed exact-SHA
+repository CI. I10 is conditional `done`; that state becomes effective only
+after the exact eight-path owner-accepted closeout claim passes repository CI.
+Its two-path source-v2-excluded receipt must then retain that result and pass
+its own exact-SHA CI before durable closeout or another increment.
+The [retained I10 artifact](evidence/2026-10-12-core-workflow-v2-device-scalar-presence-i10-v0.md)
+binds the candidate, command results, acceptance, and closeout provenance.
+No differential was retained, so T2/T3 remain
 unearned and the Vue unit/type boundary earns no T4. Device create's
 InterfaceTemplate snapshot-order contradiction remains assigned to
 `CW1-V2-04`; uniqueness, placement, template transactions, list/get/delete,
@@ -506,7 +516,7 @@ replacement completes ADR 0004's governing gate and CP-13.
 | ------------------------ | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
 | V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                                 | Refresh for the active source and every later relevant merged digest                                                             | Continuous; entry source retained          |
 | V1 identity/RBAC         | Persisted identity, retained CORS, accepted I1/I2/I3, and retained I4 evidence                          | Obtain I4 owner review; complete password-policy/throttle/proxy/streaming plus RBAC/admin/secret work                            | I4 evidence; parent open                   |
-| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, accepted I1-I9, and the active Device I10 lane | Retain I10's exact candidate/evidence, then complete remaining invariant, rollback, side-effect, concurrency, and tier cases | I1-I9 done; I10 in progress; parent open |
+| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, accepted I1-I9, and owner-accepted bounded Device I10 evidence | Retain I10 closeout claim/receipt CI, then complete remaining invariant, rollback, side-effect, concurrency, and tier cases | I1-I9 done; I10 done claim conditional; parent open |
 | V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, Compose harness, and owner-accepted bounded V3-01/V3-02 evidence with green closeout receipts | Complete V3-03 through V3-05 | V3-01/V3-02 done; V3 parent open |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                             | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report                       | T1; implementation/evidence pending        |
 | V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                         | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes                  | T1; implementation/evidence pending        |

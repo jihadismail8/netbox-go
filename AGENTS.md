@@ -217,15 +217,32 @@ ordering, missing-table-only bootstrap/non-repair proof, the 22-table private
 schema catalog, content-type natural-key uniqueness, and their test fixtures.
 It closes no tier, consumer, V3 parent, profile, deployment, rewrite,
 production migration, or production-readiness boundary. `CW1-V2-02-I10` has
-green exact nine-path packet claim `efc042b18194e4c33f4272e9c1fd08b32b5d53dc`
-at source digest
-`source-v2:sha256:75a7c025adaa7130d9710c2b0d1ecb1a7c0796317274c34d5d58209716d53e7d`
-with 3,080 entries. Its bounded Device scalar-presence implementation
-candidate has green local contract, focused, race, real-PostgreSQL, complete
-L4, Vue, backend, frontend, and repository gates. Exact committed replay,
-candidate CI, and evidence retention remain; no tier, parent, profile, or
-traceability-consumer claim exists. Device create's InterfaceTemplate
-snapshot-order contradiction remains assigned to `CW1-V2-04`. Do
+exact tested candidate `c74821a0473a52873ea2bf26e781bf0fa5e33ebb` at source
+digest
+`source-v2:sha256:9937f5371b3a50525f7fad0e0bfc41231857af1b043e764aa2abdd419b3e3640`
+with 3,086 entries. Its contract, focused, race, real-PostgreSQL, complete L4,
+Vue, backend, frontend, repository, exact committed replay, candidate-CI,
+evidence-claim, and pre-closeout receipt boundaries are green. The project
+owner accepted only this bounded evidence at receipt
+`dde91785d34c4d76cbae40b99a191ad76437e9fd`, recorded at
+`2026-10-12T14:07:30Z`. The independently reviewed owner-closeout scope
+amendment `707c698c4dfc2952f0891935f3e6ba2e12f05e3c` passed exact-SHA CI.
+I10 is conditional `done`; that state becomes effective only after the exact
+eight-path owner-accepted closeout claim passes repository CI. Its two-path
+source-v2-excluded receipt must then retain that result and pass its own
+exact-SHA CI before durable closeout or another increment. I10 owns only
+Device
+`device_type`, `role`, `name`, `site`, `rack`, `position`, `face`, `status`,
+`serial`, `asset_tag`, `airflow`, `description`, and `comments` common
+create/PUT/PATCH presence, create-only DeviceType-airflow inheritance,
+operation-specific contracts, matching representable REST/gRPC intent,
+PostgreSQL durability and repository/recorder rollback, Vue dirty-field
+handling, and eight fixed tests. No differential was retained, so T2/T3
+remain unearned and the Vue unit/type boundary earns no T4. Device create's
+InterfaceTemplate snapshot-order contradiction remains assigned to
+`CW1-V2-04`; uniqueness, placement, template transactions, list/get/delete,
+full CRUD, broader RBAC, every tier/consumer, the parent, profile, deployment,
+rewrite completion, production readiness, and every later child remain open. Do
 not begin or merge another
 Capability Profile while V0 is
 red or before `CW1-V6-03`. Once those gates are

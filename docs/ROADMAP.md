@@ -121,7 +121,7 @@ production release through PROD-1 and PROD-2.
 | 0    | Stable language and decisions       | CONTEXT plus ADR 0001–0005              | `done`                                                                   |
 | 1    | Repository/shared-core baseline     | `CW1-G00`                               | `continuous`                                                             |
 | 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01/I1/I2/I3 `done`; I4 `evidence`; parent open                        |
-| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01/I1–I9 done; parent/T2/T3 open                                     |
+| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01/I1–I9 done; Device I10 done claim conditional; parent/T2/T3 open    |
 | 4    | First Core Workflow Profile         | `CW1-V1-*` through `CW1-V6-*`           | T1; active program                                                       |
 | 5    | In-scope feature expansion          | `CP-P01`–`CP-P19`, then `MC-01`–`MC-10` | `blocked`                                                                |
 | 6    | Extension Service contracts         | `EXT-01`                                | `blocked` on a named inventory                                           |
@@ -319,6 +319,29 @@ RackType-update propagation, Device site propagation, deletion, list/query,
 full CRUD, every tier/consumer, this parent, the profile, and every later child
 remain open.
 
+[`CW1-V2-02-I10`](increments/CW1-V2-02-I10.md) has exact tested candidate
+`c74821a0473a52873ea2bf26e781bf0fa5e33ebb` at source digest
+`source-v2:sha256:9937f5371b3a50525f7fad0e0bfc41231857af1b043e764aa2abdd419b3e3640`
+with 3,086 entries. It owns only the 13 declared Device writable fields across
+common create/PUT/PATCH presence, create-only DeviceType-airflow inheritance,
+operation-specific contracts, shared typed semantics, matching representable
+REST/gRPC intent, PostgreSQL durability and repository/recorder rollback,
+Vue dirty-field handling, and eight fixed tests. Its exact candidate,
+evidence-claim, and pre-closeout receipt CI boundaries are green. The project
+owner accepted only the bounded evidence at receipt
+`dde91785d34c4d76cbae40b99a191ad76437e9fd`, recorded at
+`2026-10-12T14:07:30Z`; owner-closeout scope amendment
+`707c698c4dfc2952f0891935f3e6ba2e12f05e3c` also passed exact-SHA CI.
+Conditional `done` becomes effective only after the exact eight-path
+owner-accepted closeout claim passes repository CI at its exact SHA. Its
+two-path source-v2-excluded receipt must then retain that result and pass its
+own exact-SHA CI before durable closeout or another increment. No differential
+was retained, so T2/T3 remain unearned; the Vue unit/type boundary earns no T4. Device
+create/template order remains assigned to `CW1-V2-04`; uniqueness,
+placement, template transactions, list/get/delete/full CRUD, broader RBAC,
+every tier/consumer, this parent, the profile, deployment, rewrite completion,
+production readiness, and every later child remain open.
+
 ## Current execution board
 
 | Goal                | State         | Immediate outcome                                   | Hard dependency                        |
@@ -339,7 +362,7 @@ remain open.
 | `CW1-V2-02-I7`      | `done`        | Accepted bounded DeviceType scalar write presence   | Done I6 and current `CW1-G00`          |
 | `CW1-V2-02-I8`      | `done`        | Accepted InterfaceTemplate scalar write presence    | Done I7 and current `CW1-G00`          |
 | `CW1-V2-02-I9`      | `done`        | Accepted Rack scalar write presence                 | Done I8 and current `CW1-G00`          |
-| `CW1-V2-02-I10`     | `in-progress` | Verify Device scalar write-presence candidate        | Done I9 and current `CW1-G00`          |
+| `CW1-V2-02-I10`     | `done`*       | Retain accepted Device scalar presence closeout      | Done I9 and current `CW1-G00`          |
 | `CW1-V2-03`–`V2-08` | `blocked`     | Close later typed business behavior                 | V2-02 and named lane dependencies      |
 | `CW1-V3-01`         | `done`        | Accepted bounded dependency-aware readiness         | `CW1-G00`                              |
 | `CW1-V3-02`         | `done`        | Accepted bounded bootstrap/schema contract          | Current `CW1-G00` and done `CW1-V2-01` |
@@ -352,6 +375,12 @@ remain open.
 | `CW1-V5-05`         | `blocked`     | Retain T4 for exercised workflows                   | Corresponding T2/T3 and V5 authoring   |
 | `CW1-V6-*`          | `blocked`     | Converge evidence and sign off the first profile    | V1–V5                                  |
 | `CP-P01`–`CP-P19`   | `blocked`     | Expand accepted feature breadth                     | `CW1-V6-03`                            |
+
+The I10 asterisk records conditional `done`: that state becomes effective only
+after the exact eight-path owner-accepted closeout claim passes repository
+CI. Its two-path source-v2-excluded receipt must then retain that result and
+pass its own exact-SHA CI before durable closeout or another increment. The
+parent and every later child remain open.
 
 Bounded V3-01 and V3-02 are effectively `done` after their exact
 owner-accepted closeout claims and excluded receipts passed repository CI.
@@ -640,16 +669,26 @@ Bounded children:
   owner-accepted closeout claim and excluded two-path receipt passed exact-SHA
   CI, so bounded I9 is effectively `done`. I9 closes no later child.
 
-- [`CW1-V2-02-I10`](increments/CW1-V2-02-I10.md) is the active bounded lane for
+- [`CW1-V2-02-I10`](increments/CW1-V2-02-I10.md) owns only
   Device `device_type`, `role`, `name`, `site`, `rack`, `position`, `face`,
   `status`, `serial`, `asset_tag`, `airflow`, `description`, and `comments`
   common create/PUT/PATCH presence, operation-specific generated contracts,
   matching representable REST/gRPC intent, create-only DeviceType-airflow
   inheritance, PostgreSQL durability, Vue dirty-field handling, and eight
-  fixed regressions. Its exact packet claim and packet CI are green, and the
-  implementation candidate has passed the local contract, focused, race,
-  real-PostgreSQL, complete-L4, Vue, backend, frontend, and repository gates.
-  Exact committed replay, candidate CI, and evidence retention remain.
+  fixed regressions. Exact candidate `c74821a0473a52873ea2bf26e781bf0fa5e33ebb`
+  passed the contract, focused, race, real-PostgreSQL, complete-L4, Vue,
+  backend, frontend, repository, committed replay, candidate-CI,
+  evidence-claim, and pre-closeout receipt gates. The project owner accepted
+  only this bounded evidence at receipt
+  `dde91785d34c4d76cbae40b99a191ad76437e9fd`, recorded at
+  `2026-10-12T14:07:30Z`; the independently reviewed scope amendment
+  `707c698c4dfc2952f0891935f3e6ba2e12f05e3c` passed exact-SHA CI.
+  Conditional `done` becomes effective only after the exact eight-path
+  owner-accepted closeout claim passes repository CI. Its two-path
+  source-v2-excluded receipt must then retain that result and pass its own
+  exact-SHA CI before durable closeout or another increment. No differential
+  was retained, so T2/T3 remain unearned and the Vue unit/type boundary earns
+  no T4.
   Fixtures contain no InterfaceTemplates and use known-valid unpositioned
   state. Device uniqueness, placement, template snapshot/instantiation
   transactions, deletion, list/query behavior, full CRUD, tiers, this parent,

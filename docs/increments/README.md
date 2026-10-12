@@ -50,7 +50,7 @@ implementation exists.
 | `CW1-V2-02-I7` | `done`        | Codex GPT-5.6 Sol | [DeviceType scalar write presence](CW1-V2-02-I7.md)     |
 | `CW1-V2-02-I8` | `done`        | Codex GPT-5.6 Sol | [InterfaceTemplate scalar write presence](CW1-V2-02-I8.md) |
 | `CW1-V2-02-I9` | `done`        | Codex GPT-5.6 Sol | [Rack scalar write presence](CW1-V2-02-I9.md)              |
-| `CW1-V2-02-I10`| `in-progress` | Codex             | [Device scalar write presence](CW1-V2-02-I10.md)           |
+| `CW1-V2-02-I10`| `done`*       | Codex             | [Device scalar write presence](CW1-V2-02-I10.md)           |
 | `CW1-V3-01`    | `done`        | Codex GPT-5.6 Sol | [Dependency-aware readiness](CW1-V3-01.md)                 |
 | `CW1-V3-02`    | `done`        | Codex             | [Bootstrap and schema contract](CW1-V3-02.md)              |
 
@@ -198,18 +198,32 @@ RackType-update propagation, Device site propagation, deletion, list/query
 behavior, full CRUD, all tiers, every consumer, the parent, profile promotion,
 and every later child remain open.
 
-`CW1-V2-02-I10` has green exact packet claim
-`efc042b18194e4c33f4272e9c1fd08b32b5d53dc` and an implementation candidate
-with green local contract, focused, race, real-PostgreSQL, complete-L4, Vue,
-backend, frontend, and repository gates. It owns only the 13 declared Device
-writable fields across create/PUT/PATCH operation metadata, create-only
+`CW1-V2-02-I10` has exact tested candidate
+`c74821a0473a52873ea2bf26e781bf0fa5e33ebb` at source digest
+`source-v2:sha256:9937f5371b3a50525f7fad0e0bfc41231857af1b043e764aa2abdd419b3e3640`
+with 3,086 entries and green contract, focused, race, real-PostgreSQL,
+complete-L4, Vue, backend, frontend, repository, exact committed replay,
+candidate-CI, evidence-claim, and pre-closeout receipt gates. The project
+owner accepted only the bounded evidence at receipt
+`dde91785d34c4d76cbae40b99a191ad76437e9fd`, recorded at
+`2026-10-12T14:07:30Z`; the independently reviewed owner-closeout scope
+amendment `707c698c4dfc2952f0891935f3e6ba2e12f05e3c` passed exact-SHA CI.
+It owns only the 13 declared Device writable fields across create/PUT/PATCH
+operation metadata, create-only
 DeviceType-airflow inheritance, typed shared behavior, representable
 REST/gRPC intent, PostgreSQL durability, Vue dirty-field handling, and eight
-fixed tests. Exact committed replay, candidate CI, and evidence retention
-remain. Device create's InterfaceTemplate snapshot-order contradiction
-remains assigned to `CW1-V2-04`; uniqueness, placement, template transactions,
+fixed tests. No differential was retained, so T2/T3 remain unearned and the
+Vue unit/type boundary earns no T4. Device create's InterfaceTemplate
+snapshot-order contradiction remains assigned to `CW1-V2-04`; uniqueness,
+placement, template transactions,
 list/get/delete, full CRUD, all tiers, every consumer, the parent, and profile
 promotion remain open.
+
+The I10 asterisk records conditional `done`: that state becomes effective only
+after the exact eight-path owner-accepted closeout claim passes repository CI.
+Its two-path source-v2-excluded receipt must then retain that result and pass
+its own exact-SHA CI before durable closeout or another increment. It closes
+no parent, tier, consumer, profile, or later child.
 
 `CW1-V3-01` has exact tested candidate
 `58241d7f87b642e6b7eca279592ad3759a0f5a06` at source digest

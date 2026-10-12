@@ -229,17 +229,29 @@ rules, RackType-update propagation, Device site propagation, deletion,
 list/query, full CRUD, the parent, profile promotion, every tier, and every
 later child remain open.
 
-`CW1-V2-02-I10` has green exact packet claim
-`efc042b18194e4c33f4272e9c1fd08b32b5d53dc`. Its eight fixed Device tests
+`CW1-V2-02-I10` has exact tested candidate
+`c74821a0473a52873ea2bf26e781bf0fa5e33ebb` at source digest
+`source-v2:sha256:9937f5371b3a50525f7fad0e0bfc41231857af1b043e764aa2abdd419b3e3640`
+with 3,086 entries. Its eight fixed Device tests
 exist exactly once and pass across scalar normalization, command presence,
 pinned PUT omission defaults, failed-validation non-effects, REST, gRPC,
 real-PostgreSQL durability, and REST/gRPC parity. The local candidate also
 passes 254 capability/OpenAPI adversarial tests, 96 traceability tests, the
 293-row profile check, 33-path/86-operation OpenAPI validation, affected and
 race suites, complete L4, 65 focused Vue tests and both typechecks, backend
-coverage, the 185-test frontend gate, and the repository gate. The disposable
-PostgreSQL role/database were removed and verified absent; no credential is
-retained. Exact committed replay and candidate CI remain. No differential was
+coverage, the 185-test frontend gate, and the repository gate. Exact committed
+replay, candidate-CI, evidence-claim, and pre-closeout receipt CI are green.
+The disposable PostgreSQL role/database were removed and verified absent; no credential is
+retained. The project owner accepted only this bounded evidence at receipt
+`dde91785d34c4d76cbae40b99a191ad76437e9fd`, recorded at
+`2026-10-12T14:07:30Z`; the independently reviewed owner-closeout scope
+amendment `707c698c4dfc2952f0891935f3e6ba2e12f05e3c` passed exact-SHA
+repository CI. I10 is conditional `done`: that state becomes effective only
+after the exact eight-path owner-accepted closeout claim passes repository CI.
+Its two-path source-v2-excluded receipt must then retain that result and pass
+its own exact-SHA CI before durable closeout or another increment. The
+[retained I10 artifact](evidence/2026-10-12-core-workflow-v2-device-scalar-presence-i10-v0.md)
+records the bounded tests and their command results. No differential was
 run, so T2/T3/T4 remain unearned. Device create's template-snapshot
 contradiction, placement, uniqueness, list/get/delete, every tier, and the
 parent remain open.
@@ -415,7 +427,7 @@ and exact change-state outcomes remain to be added and retained.
 | ------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage                       | `make check` retained green on each exact relevant source digest                                                          | Entry source-v2 retained; active-source refresh required |
 | V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests                      | Pass I4's exact claim CI, retain its receipt, obtain owner review, then complete the remaining identity matrix            | I4 evidence claim conditional; parent open               |
-| V2 profile behavior      | Shared 13-resource service, broad tests, accepted I1-I9, and the active Device I10 lane | Retain I10's exact candidate/evidence; trace every remaining invariant, rollback, and external-tier boundary | I1-I9 done; I10 in progress; parent open |
+| V2 profile behavior      | Shared 13-resource service, broad tests, accepted I1-I9, and owner-accepted bounded Device I10 evidence | Retain I10 closeout claim/receipt CI; trace every remaining invariant, rollback, and external-tier boundary | I1-I9 done; I10 done claim conditional; parent open |
 | V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness, and owner-accepted bounded V3-01/V3-02 evidence with green closeout receipts | Complete V3-03 through V3-05 and retain deployment loss-recovery artifacts | V3-01/V3-02 done; V3 parent open |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites                            | Complete T2 scenario report, then equivalent T3 report                                                                    | T1; implementation gap                                   |
 | V5 Vue workflow          | Typed adapters and real-browser harness                                                    | Both workflows and every required negative/state case retained green                                                      | T1; implementation gap                                   |
