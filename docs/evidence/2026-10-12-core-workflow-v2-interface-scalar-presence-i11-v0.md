@@ -6,13 +6,15 @@
 - Capability Profile: `core-workflow-v1`, still T1 and pre-publication.
 - State: standing-authorized implementation `done` claim only for the bounded
   I11 result. Tested candidate, initial claim, and pre-closeout excluded receipt
-  have green independent exact-SHA CI and pinned local gates. Existing standing
+  have green independent exact-SHA CI and pinned local gates. The eight-path
+  closeout also passed its independent reviews, final frozen-file local replay,
+  and exact-SHA CI. This separate two-path, source-v2-excluded final receipt
+  preserves that bounded claim. Two independent receipt reviews and its pinned
+  assembly local gate passed. Its final frozen-file local replay and own
+  exact-SHA CI remain pending: I11 is not yet effectively or durably `done`,
+  and I12 must not begin before those gates pass. Existing standing
   acceptance was applied by the executor at `2026-10-12T22:13:41Z`, not a new
-  human decision or artifact inspection. This eight-path closeout and its later
-  two-path receipt still require final local and exact-SHA CI gates before
-  `done` is effective or another increment begins. Two independent closeout
-  integrity reviews and the pinned assembly local gate passed; the later
-  receipt still requires its own independent review and complete gates.
+  human decision, artifact inspection, or designated human sign-off.
 
 This artifact retains only `dcim.Interface` common create/PUT/PATCH presence
 for `device`, `name`, `label`, `type`, `enabled`, `mgmt_only`, `mtu`, `speed`,
@@ -475,7 +477,7 @@ had not yet been applied to I11; no new human artifact inspection was asserted,
 and all external-tier, consumer, parent, profile, and production exclusions
 above remain unchanged.
 
-## Green pre-closeout receipt and standing-authorized closeout
+## Green pre-closeout receipt and standing-authorized closeout assembly
 
 Receipt `d455eb7943f5d169e0a7490ae6e645e124711710`, parent
 `4874aa52c816660fb8077e0a798181ff2b7d83b4`, changed exactly the two
@@ -521,7 +523,7 @@ is claimed, conditional on this closeout's own gates and those of its later
 two-path excluded receipt. Formal retained-claim authentication and designated
 human row/consumer/tier/aggregate/profile sign-offs remain open.
 
-This closeout changes exactly six source-governance files plus the artifact
+That closeout changed exactly six source-governance files plus the artifact
 and ledger: `AGENTS.md`, `docs/ROADMAP.md`, `docs/STATUS.md`, `docs/TESTING.md`,
 `docs/increments/CW1-V2-02-I11.md`, `docs/increments/README.md`, and the two
 excluded evidence paths above. No implementation, test, generated contract,
@@ -543,14 +545,97 @@ across 184 Markdown files, and unchanged backend coverage policy passed.
 This narrow assembly receipt addition changes only excluded evidence bytes;
 the six-governance source diff and complete manifest commitments are unchanged.
 
-The final no-later-edit local replay, this closeout's exact-SHA CI, and the
-subsequently reviewed/gated two-path excluded closeout receipt remain required.
+At that closeout assembly boundary, its final no-later-edit local replay and
+own exact-SHA CI remained required, followed by a separately reviewed/gated
+two-path excluded receipt. The closeout's final replay and CI subsequently
+passed, as retained below; the final receipt's own gates are still required.
 I12 must not begin before those gates pass. Frozen final bytes, complete
-eight-path mapping, own commit
-identity, and final local replay belong in commit/external provenance, not
-self-referential artifact edits. No T2/T3/T4, owner-immutability, consumer,
+path mappings, own commit identities, and final local replays belong in
+commit/external provenance, not self-referential artifact edits.
+No T2/T3/T4, owner-immutability, consumer,
 parent/profile/rewrite/production completion, or new human inspection follows.
 The unavailable pinned oracle and unchanged 23 npm advisories remain disclosed.
+
+## Green eight-path closeout and final excluded receipt
+
+Standing-authorized closeout `3c05346ffde251bf51de76a3187bc2367463704e`
+has exact parent `d455eb7943f5d169e0a7490ae6e645e124711710`. It changed
+exactly the eight authorized paths above, 394 insertions and 83 deletions,
+with no behavior, schema, contract, scenario, fixture, comparator, normalizer,
+security, dependency, or quality-policy change. Its complete frozen old/new
+eight-path mapping and both actual local-gate receipt objects are retained
+verbatim in its actual reachable commit message. Mapping SHA-256:
+`2a2dc5bbb309c9d172ad69c6b5c1da5b082ae5a98d1664bdd10e8ca7d7b688cb`.
+The frozen artifact was 790,498 bytes, SHA-256
+`296462aa3723aa6cdf16db6f6ade5b36f194e85c933398c26e5760a76e726d4d`;
+the ledger was 29,301 bytes, SHA-256
+`1fb5c3bb3c84829ace3172aa5c4424e81697c6967a5687d902f24163c96b462a`.
+Both modes were `100644`. These commitments describe that committed closeout,
+not this subsequent receipt's own bytes.
+
+The two full independent closeout reviews and limited assembly-result review
+passed with no findings. Its final pinned no-later-edit `make check` passed
+`2026-10-12T22:27:52.390Z`–`2026-10-12T22:33:09.773Z`, exit 0, unchanged
+attestation source. Log SHA-256:
+`6c6368921e29c31ab32eb95158e414c685cb013da182c687912cbb0165d1f0bf`.
+It started after the recorded freeze `2026-10-12T22:27:19.765Z`, with no
+repository edits thereafter before commit at `2026-10-12T22:33:25.283Z`.
+An independent committed-byte audit verified the exact parent/branch/scope,
+all frozen modes/sizes/hashes, complete commit-message mapping and both real
+local-gate objects, unchanged complete manifest, and quiet credential scans.
+The normal push and remote verification matched the exact closeout SHA;
+`main` and the user-owned stash remained untouched.
+
+Exact-head repository run
+[38317550055](https://github.com/jihadismail8/netbox-go/actions/runs/38317550055),
+attempt 1, completed success at
+`3c05346ffde251bf51de76a3187bc2367463704e`. Run created/started
+`2026-10-12T22:35:42Z`; terminal updated `2026-10-12T22:55:12Z`. Job
+[115037685537](https://github.com/jihadismail8/netbox-go/actions/runs/38317550055/job/115037685537)
+passed `2026-10-12T22:35:45Z`–`2026-10-12T22:55:12Z`, all 12 reported
+steps successful. Retained raw run/job JSON SHA-256 values:
+`eaf85bd30611be533cd2212307229248cbd8da40a28bab64649c9f6a39fc57b7`
+and `b3471bcbae559a0985eb7ba3ca0198ba5c64fee2df2f7ac2557db8cc26ebee81`.
+Independent direct-API verification confirmed the exact head, attempt,
+times, and successful steps. A local observation timeout did not stop or
+fail CI; subsequent direct reads verified the same job remained live and then
+succeeded. No workflow rerun, restart, or cancellation occurred.
+
+The root terminal capture at `2026-10-12T22:56:29.424Z` reauthenticated
+the complete unchanged attestation source manifest. A subsequent separate
+eight-path freeze audit verified all committed closeout files before this
+receipt was edited; that audit has no separately retained exact timestamp.
+This final receipt changes only the artifact and evidence ledger, both
+source-v2-excluded. Source remains
+`source-v2:sha256:57687459b6e0286bc43cf791395dfe3b933649c7422e270fa91b00dcbf8b7e98`,
+3,093 entries, full canonical manifest SHA-256
+`19e7f80d7155fd46d179abb465778c8fdc7de13fe3e3fb4d961c2127722c3c1e`.
+The complete tested manifest, historical empty initial-claim diff, and complete
+six-governance-path closeout diff below remain verbatim with unchanged
+commitments; no new owned-source entry or content changes.
+
+The standing-authorized closeout has passed its local and exact-SHA CI
+boundaries. This excluded receipt preserves only that bounded implementation
+`done` claim. Two independent receipt integrity reviews passed with no findings.
+Its pinned assembly `make check` passed `2026-10-12T22:58:47.764Z`–
+`2026-10-12T23:03:50.545Z`, exit 0, with the complete source manifest unchanged.
+Credential-free log SHA-256:
+`cb53920aac81f4db36b815fb89641f5a16dfbced913a4c2472750cd945db8d44`.
+The 193 Vue tests, 308 capability/OpenAPI tests, 96 traceability tests, links
+across 184 Markdown files, and unchanged backend coverage policy passed.
+This narrow assembly-result addition changes only excluded evidence bytes;
+all three generated proof blocks and source commitments remain unchanged.
+
+Its final no-later-edit local replay and own exact-SHA CI remain pending;
+I11 is not yet
+effectively or durably `done`, and I12 must not begin before they pass.
+Its final own hashes, two-path mapping, commit identity, and final replay
+belong in commit/external provenance rather than self-referential edits.
+Standing acceptance remains the already-recorded executor application at
+`2026-10-12T22:13:41Z`, not a fresh human decision or inspection. Formal human
+authentication/sign-offs, T2/T3/T4, consumers, parent/profile, deployment,
+rewrite and production completion remain open. The unavailable pinned oracle
+and unchanged 23 npm advisories remain disclosed.
 
 ## Complete tested source manifest
 
