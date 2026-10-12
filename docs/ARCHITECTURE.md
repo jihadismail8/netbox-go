@@ -255,7 +255,7 @@ remains T1.
 | Identity and RBAC | Go-owned users, groups, group memberships, direct/group model grants, object-scoped grants, sessions, tokens, bearer authentication, CLI bootstrap/reset/non-superuser creation/global permission grant, and shared authorization are persisted.                                                                                                                                                        | The common principal/RBAC path is implemented. Current full security and cross-transport execution evidence is still pending.                               |
 | Diagnostics       | The canonical router keeps `/health` process-only and evaluates `/ready` through a one-second request-time PostgreSQL checker. Standard empty-service gRPC Health Check uses the same injected checker; named services fail NotFound and Watch is explicitly unsupported. Both listeners receive one checker from startup composition. No dedicated `GET /ping` is registered; frozen ADR 0004 legacy wiring retains only its runtime-disabled historical route. | The bounded dependency-aware implementation and deterministic focused/race regressions have retained owner-accepted evidence. `CW1-V3-01` is effectively `done` after its owner-accepted closeout claim and excluded receipt passed exact-SHA CI. V3-04 real deployment loss/recovery remains required, and no production-operability claim is made. |
 | Vue runtime       | The profile registry publishes only 13 resources. [`adapters.ts`](../netbox-frontend/src/features/core/adapters.ts) supplies typed DTO/form/filter adapters consumed by the profile pages; authentication uses session/CSRF and stores no credential in `localStorage`.                                                                                                                                 | Typed transport boundaries and a real-Chrome harness exist. T4 remains unearned until a successful current browser artifact is retained.                    |
-| Schema            | Startup registers 198 tables: 176 deferred legacy rows, 8 Go-owned identity rows, 13 typed profile rows, and 1 typed object-change row. Exact candidate `0cc4fe2365b7402929f65288eb776a425159d85b` proves ordered fresh/idempotent bootstrap, missing-table creation, correct and malformed existing-table non-repair, the explicit 22-table private catalog, and content-type uniqueness on real PostgreSQL. | This remains a disposable-development bootstrap, not a production upgrade system. V3-02 durable evidence/acceptance and V3-04 deployment loss/recovery remain required; no production-operability claim is made. |
+| Schema            | Startup registers 198 tables: 176 deferred legacy rows, 8 Go-owned identity rows, 13 typed profile rows, and 1 typed object-change row. Exact candidate `0cc4fe2365b7402929f65288eb776a425159d85b` proves ordered fresh/idempotent bootstrap, missing-table creation, correct and malformed existing-table non-repair, the explicit 22-table private catalog, and content-type uniqueness on real PostgreSQL. | This remains a disposable-development bootstrap, not a production upgrade system. Bounded `CW1-V3-02` evidence is owner-accepted and conditional `done` until this exact closeout claim passes repository CI; its excluded closeout receipt then remains. V3-04 deployment loss/recovery remains required, and no production-operability claim is made. |
 
 The production runtime behavior path is now typed and shared:
 
@@ -270,13 +270,14 @@ fixtures, transport mapping, application/domain contracts, and PostgreSQL row
 ownership now have precise typed owners. V0 is retained for the current
 post-wrapper-cleanup source. Bounded `CW1-V3-01` readiness evidence is
 owner-accepted and effectively `done` after its closeout claim and excluded
-receipt passed exact-SHA CI. V1-V5 still require
-implementation/evidence work—remaining identity policy, V3-02 evidence and
-acceptance plus V3-03 through V3-05
-including real deployment loss/recovery, rule traceability, missing
-oracle/parity cases, and missing browser outcomes—before their remaining
-external evidence can be retained and V6 reviewed. This structural recovery
-does not promote a compatibility tier.
+receipt passed exact-SHA CI. Bounded `CW1-V3-02` bootstrap/schema evidence is
+owner-accepted; conditional `done` becomes effective only after this exact
+closeout claim passes repository CI, and its excluded closeout receipt then
+remains. V1-V5 still require implementation/evidence work—remaining identity
+policy, V3-03 through V3-05 including real deployment loss/recovery, rule
+traceability, missing oracle/parity cases, and missing browser outcomes—before
+their remaining external evidence can be retained and V6 reviewed. This
+structural recovery does not promote a compatibility tier.
 
 ## Migration direction
 

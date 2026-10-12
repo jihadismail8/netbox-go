@@ -229,11 +229,14 @@ tier, V3 parent, rewrite state, or production-readiness boundary.
 with 3,079 entries. Its exact 198-entry registry order, fresh/idempotent
 bootstrap, correct/malformed existing-table non-repair, missing-table creation,
 22-table private schema catalog, content-type uniqueness, focused/race,
-complete L4, backend, repository, and candidate-CI boundaries are green. It
-changes no production source. Evidence, the excluded receipt, project-owner
-acceptance, and a separately reviewed closeout remain, so V3-02 stays
-`in-progress` and closes no tier, consumer, V3 parent, profile, deployment,
-rewrite, production migration, or production-readiness boundary.
+complete L4, backend, repository, candidate-CI, evidence-claim, and
+pre-closeout receipt boundaries are green. The project owner accepted only
+this bounded result at `2026-10-12T04:01:48Z`. V3-02 is conditional `done`;
+that state becomes effective only after this exact owner-accepted closeout
+claim passes repository CI, and its excluded closeout receipt must then pass
+exact-SHA CI. It changes no production source and closes no tier, consumer, V3
+parent, profile, deployment, rewrite, production migration, or
+production-readiness boundary.
 
 > **Operational boundary:** this is a development build for disposable data.
 > Production TLS, schema upgrades, backup/restore, operational hardening, and
@@ -320,9 +323,8 @@ the generic raw-map workflow boundary is retired. This is strong structure for
 the first slice, not whole-system completion.
 
 Cross-cutting first-profile work still includes review and retained evidence
-for the implemented explicit CORS allowlist, V3-02 evidence/acceptance and
-V3-03 through V3-05
-PostgreSQL/deployment work beyond bounded V3-01 readiness,
+for the implemented explicit CORS allowlist, the V3-02 excluded closeout
+receipt, V3-03 through V3-05 PostgreSQL/deployment work,
 rule/test/evidence traceability, missing PostgreSQL concurrency cases, durable
 external-gate retention, and protobuf publication controls.
 Outside the first slice, 102 direct-GORM REST
@@ -486,7 +488,7 @@ replacement completes ADR 0004's governing gate and CP-13.
 | V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                                 | Refresh for the active source and every later relevant merged digest                                                             | Continuous; entry source retained          |
 | V1 identity/RBAC         | Persisted identity, retained CORS, accepted I1/I2/I3, and retained I4 evidence                          | Obtain I4 owner review; complete password-policy/throttle/proxy/streaming plus RBAC/admin/secret work                            | I4 evidence; parent open                   |
 | V2 domain behavior       | Typed shared services, reviewed 293-row traceability, and accepted IPAddress I1/Site I2/Manufacturer I3/RackRole I4/RackType I5/DeviceRole I6/DeviceType I7/InterfaceTemplate I8/Rack I9 | Complete remaining invariant, rollback, side-effect, concurrency, and tier cases | I1-I9 done; parent open |
-| V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, Compose harness, owner-accepted bounded V3-01, and exact green V3-02 candidate `0cc4fe2…` | Retain V3-02 evidence/receipt, obtain owner acceptance, then complete V3-03 through V3-05 | V3-01 done; V3-02 candidate in progress; V3 parent open |
+| V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, Compose harness, owner-accepted bounded V3-01, and owner-accepted bounded V3-02 bootstrap/schema evidence | Pass the exact V3-02 closeout-claim and excluded-receipt gates, then complete V3-03 through V3-05 | V3-01 done; V3-02 `done`* pending closeout CI; V3 parent open |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                             | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report                       | T1; implementation/evidence pending        |
 | V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                         | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes                  | T1; implementation/evidence pending        |
 | V6 sign-off              | First-profile legacy stacks physically retired                                                          | V0-V5 retained green together, per-capability review, protobuf freeze/breaking baseline, joint sign-off                          | Not earned                                 |
@@ -503,11 +505,11 @@ See [Evidence](evidence/README.md) for the artifact policy and commands.
    every profile scenario and plan rule;
    implement every uncovered domain, presence, rollback, object-change, and
    PostgreSQL case.
-4. Retain and obtain owner acceptance for exact `CW1-V3-02` candidate
-   `0cc4fe2…`, then complete `CW1-V3-03` through `CW1-V3-05`: close
-   bootstrap/schema evidence and
-   locking/rollback/reconnect/restart, and real deployment loss/recovery, then
-   retain the real-PostgreSQL and deployment V3 bundle.
+4. After the `CW1-V3-02` closeout-claim and excluded-receipt gates, complete
+   `CW1-V3-03` through `CW1-V3-05`: close
+   locking/rollback/reconnect/restart and real deployment loss/recovery, then
+   retain the real-PostgreSQL and deployment V3 bundle. V3-03 remains blocked
+   until its separate V1-03 and V2-03 through V2-07 entry dependencies close.
 5. Complete `CW1-V4-01` through `CW1-V4-06`: expand the strict REST oracle from
    broad CRUD/filter coverage to every
    declared positive and negative rule; earn per-capability T2, then prove the

@@ -51,7 +51,7 @@ implementation exists.
 | `CW1-V2-02-I8` | `done`        | Codex GPT-5.6 Sol | [InterfaceTemplate scalar write presence](CW1-V2-02-I8.md) |
 | `CW1-V2-02-I9` | `done`        | Codex GPT-5.6 Sol | [Rack scalar write presence](CW1-V2-02-I9.md)              |
 | `CW1-V3-01`    | `done`        | Codex GPT-5.6 Sol | [Dependency-aware readiness](CW1-V3-01.md)                 |
-| `CW1-V3-02`    | `in-progress` | Codex             | [Bootstrap and schema contract](CW1-V3-02.md)              |
+| `CW1-V3-02`    | `done`*       | Codex             | [Bootstrap and schema contract](CW1-V3-02.md)              |
 
 `in-progress` means the packet owns only its explicitly active bounded
 increment; no implementation evidence or parent-goal completion is implied.
@@ -207,18 +207,27 @@ so bounded V3-01 is effectively `done`. It owns only process-only HTTP
 liveness, request-time PostgreSQL-aware HTTP/gRPC readiness, empty-service
 gRPC Health Check, fail-closed named-service/Watch behavior, shared
 constructor injection, seven fixed named tests, and auxiliary constructor
-coverage. V3-02 through V3-05, real deployment loss/recovery, streaming
-monitoring, schema/bootstrap, locking/rollback/reconnect/restart, every tier
-and consumer, the V3 parent, profile, rewrite completion, and production
-readiness remain open.
+coverage. V3-03 through V3-05, real deployment loss/recovery, streaming
+monitoring, locking/rollback/reconnect/restart, every tier and consumer, the V3
+parent, profile, rewrite completion, and production readiness remain open.
 
 The independently reviewed V3-02 packet owns only bootstrap/schema proof.
 Exact candidate `0cc4fe2365b7402929f65288eb776a425159d85b` at
 `source-v2:sha256:ecc65583666214d2a470ff02806fc684b642c14cb5abc0df33ccad6c8b5188d6`
 with 3,079 entries passed its registry-order regression plus six
 PostgreSQL-backed scenarios, race, complete L4, backend, repository, and
-candidate-CI boundaries without changing
-production source. Evidence, the excluded receipt, owner acceptance, and a
-separately reviewed closeout remain; the row therefore stays `in-progress`.
-The result closes no V3 parent, compatibility tier, consumer, profile,
-deployment, rewrite, production migration, or production-readiness boundary.
+candidate-CI, evidence-claim, and pre-closeout receipt boundaries without
+changing production source. The project owner accepted only this bounded
+result at `2026-10-12T04:01:48Z`. Its `done` state is conditional on this exact
+owner-accepted closeout claim passing repository CI; the excluded closeout
+receipt then remains. It owns only deterministic startup ordering,
+missing-table-only bootstrap/non-repair proof, the private schema catalog,
+content-type natural-key uniqueness, and their test fixtures. It closes no V3
+parent, compatibility tier, consumer, profile, deployment, rewrite, production
+migration, or production-readiness boundary.
+
+The V3-02 asterisk records that owner-accepted `done` becomes effective only
+after this exact closeout claim passes repository CI; its excluded receipt
+must then pass exact-SHA CI. It does not close V3 or make V3-03 ready because
+V1-03 and the corresponding V2-03 through V2-07 dependencies remain
+incomplete.
