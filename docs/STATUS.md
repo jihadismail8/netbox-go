@@ -271,12 +271,20 @@ contracts, representable REST/gRPC intent, PostgreSQL durability/rollback,
 and Vue dirty-field/server-error presentation tests. Independently reviewed
 packet `009ab93e86114d36b85550d75e5c18d0cd09b8c9` passed pinned local and
 exact packet CI gates before behavior editing. Compiling semantic red proof
-preceded fixes. The corrected 21-path implementation passed focused/race,
-real PostgreSQL/complete L4, contracts/Vue, backend/frontend, and repository
-checks locally; its [candidate preparation](increments/CW1-V2-02-I12.md#implementation-candidate-preparation)
-records the exact prior boundaries. Source-changing candidate assembly,
-unchanged committed replay, candidate CI, retained evidence/receipt, and
-closeout gates remain pending. No effective I12 evidence or `done` exists.
+preceded fixes. Exact tested candidate
+`1cdfbbf6f39cbe494a367285fb2f2c5240523a0b` has digest
+`source-v2:sha256:fe70ecdbe799c99c93c3c8f9702905996c624205d7a72fa9559a6f8bef1d6c11`,
+3,098 entries, and complete manifest SHA-256
+`ebd789e2a9883286f543f640cdb748e776dd70c3282298d0435a0c7befb9c323`.
+Its assembly gate, unchanged committed focused/race, real PostgreSQL/complete
+L4 and repository replay, and exact candidate CI passed. The disposable
+role/database was removed and verified absent. The
+[bounded I12 artifact](evidence/2026-10-12-core-workflow-v2-vrf-scalar-presence-i12-v0.md)
+retains the actual results, complete tested manifest and governance-only diff.
+The eight-path evidence claim and later excluded receipt require their own
+independent, pinned local and exact-SHA gates. Standing implementation
+acceptance/closeout have not been applied; no effective I12 evidence or `done`
+exists. I12 stays `in-progress`.
 The oracle image is unavailable; T2/T3/T4 and designated human sign-offs stay
 unearned. The 23 existing npm advisories remain. Uniqueness, downstream policy,
 deletion/list/query, every tier/consumer, the parent and profile remain open.
@@ -558,7 +566,7 @@ replacement completes ADR 0004's governing gate and CP-13.
 | ------------------------ | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
 | V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                                 | Refresh for the active source and every later relevant merged digest                                                             | Continuous; entry source retained          |
 | V1 identity/RBAC         | Persisted identity, retained CORS, accepted I1/I2/I3, and retained I4 evidence                          | Obtain I4 owner review; complete password-policy/throttle/proxy/streaming plus RBAC/admin/secret work                            | I4 evidence; parent open                   |
-| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, bounded I1-I11 done; corrected I12 VRF implementation locally green | Gate/replay exact I12 candidate, retain evidence/receipt/closeout; remaining invariant, side-effect, concurrency and tier cases | I1-I11 bounded done; I12 in progress; parent open |
+| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, bounded I1-I11 done; exact I12 candidate replay/CI green | Gate I12 evidence claim/receipt and separate acceptance/closeout; remaining invariant, side-effect, concurrency and tier cases | I1-I11 bounded done; I12 in progress, claim gates pending; parent open |
 | V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, Compose harness, and owner-accepted bounded V3-01/V3-02 evidence with green closeout receipts | Complete V3-03 through V3-05 | V3-01/V3-02 done; V3 parent open |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                             | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report                       | T1; implementation/evidence pending        |
 | V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                         | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes                  | T1; implementation/evidence pending        |

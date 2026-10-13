@@ -251,14 +251,51 @@ and 3,093 entries. Two independent receipt integrity reviews passed; pinned
 assembly `make check` passed `2026-10-12T22:58:47.764Z`–
 `2026-10-12T23:03:50.545Z`, exit 0, source unchanged, log SHA-256
 `cb53920aac81f4db36b815fb89641f5a16dfbced913a4c2472750cd945db8d44`.
-Its final frozen-file local replay and own exact-SHA CI remain pending:
-I11 is not yet effectively or durably `done`,
-and I12 must not begin before those gates pass.
+At that final-receipt assembly boundary, its final frozen-file local replay
+and own exact-SHA CI were pending, so I11 was not yet effectively done and
+I12 could not begin. Those gates subsequently passed at exact leaf receipt
+`cb5d3f52a78b2baaab3503255181206ecbaeac81`: run
+[38321116994](https://github.com/jihadismail8/netbox-go/actions/runs/38321116994)
+and job
+[115049181063](https://github.com/jihadismail8/netbox-go/actions/runs/38321116994/job/115049181063),
+attempt 1, all 12 reported steps successful. The
+[verified I12 entry](../increments/CW1-V2-02-I12.md#verified-i11-exit-not-a-new-human-acceptance)
+retains the exact final local/CI/frozen-byte provenance without another I11
+receipt chain. Only bounded standing-authorized I11 implementation `done`
+became effective; its executor application time remains `2026-10-12T22:13:41Z`.
 No new human artifact inspection or formal retained-claim authentication,
 tier/consumer/parent/profile promotion, or production completion is claimed.
 The pinned oracle image is unavailable, so T2/T3 remain unearned; Vue checks
 earn no T4. The unchanged pinned dependency replay still reports 23 npm
 advisories (seven moderate, fourteen high, two critical).
+The
+[bounded VRF scalar write-presence result](2026-10-12-core-workflow-v2-vrf-scalar-presence-i12-v0.md)
+records exact tested candidate `1cdfbbf6f39cbe494a367285fb2f2c5240523a0b`,
+source digest
+`source-v2:sha256:fe70ecdbe799c99c93c3c8f9702905996c624205d7a72fa9559a6f8bef1d6c11`,
+3,098 entries, full manifest SHA-256
+`ebd789e2a9883286f543f640cdb748e776dd70c3282298d0435a0c7befb9c323`.
+It binds the reviewed packet, genuine red proofs and correction history,
+candidate assembly and unchanged committed focused/race, real-PostgreSQL
+durability/complete-L4 and repository replay. Exact candidate run
+[38333544757](https://github.com/jihadismail8/netbox-go/actions/runs/38333544757)
+and job
+[115088455846](https://github.com/jihadismail8/netbox-go/actions/runs/38333544757/job/115088455846)
+completed success at the exact SHA, attempt 1, all 12 reported steps successful;
+actual raw capture was `2026-10-13T02:00:12.149Z`. Raw/source/frozen-byte
+verification and post-CI source CLI checks passed before this claim preparation.
+Disposable cleanup ended `2026-10-13T01:40:49.180Z`, with `0|0` role/database
+counts and the ephemeral credential removed. Actual I12 tool versions and the
+complete tested manifest/governance-only source diff are retained by the artifact.
+This claim changes exactly six authorized source-governance files plus that
+new source-v2-excluded artifact and this ledger. Its own independent review,
+pinned local and exact-SHA CI gates, and those of the later two-path excluded
+receipt, remain pending. I12 remains `in-progress`, not effective evidence or
+`done`; standing implementation acceptance and closeout have not been applied.
+No formal marker, fresh human inspection, designated retained-claim sign-off,
+tier/consumer/parent/profile promotion or I13 start is claimed. The unavailable
+pinned oracle leaves T2/T3 unearned; Vue checks earn no T4. Existing npm
+advisories remain 23 (7 moderate, 14 high, 2 critical).
 The
 [bounded dependency-aware readiness result](2026-08-27-core-workflow-v3-dependency-readiness-v0.md)
 passed its exact-name, affected, race, complete L4 PostgreSQL-regression,
@@ -388,10 +425,10 @@ deployment, migration, rewrite, or production boundary.
 
 | Evidence                 | Required command or boundary                                  | Current state                                                    |
 | ------------------------ | ------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Repository quality       | Revised `make check` including non-mutating backend coverage  | V1-I4 and V2-I1/I2/I3/I4 retained; V2-I5/I6/I7/I8/I9/I10, V3-01, and bounded V3-02 done; I10 excluded-receipt gates pending |
+| Repository quality       | Revised `make check` including non-mutating backend coverage  | Prior bounded results retained; I11 standing-authorized implementation done; I12 exact candidate replay/CI green, current claim/receipt gates pending |
 | Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                          |
 | gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                            |
-| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | I1, I3, V1-I4, V2-I1/I2/I3/I4/I5/I6, bounded V2-I7/I8/I9/I10, V3-01, and V3-02 passed; V3-03 through V3-05 open |
+| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | Prior bounded suites and I11/I12 committed durability/complete-L4 passed; I12 claim/receipt gates pending; V3-03 through V3-05 open |
 | Standalone deployment    | `make deployment-smoke`                                       | CORS-scoped exact-commit result retained; V3-04 remains open     |
 | Browser workflow         | `make browser-e2e`                                            | Harness present; current result pending                          |
 

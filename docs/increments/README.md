@@ -52,7 +52,7 @@ implementation exists.
 | `CW1-V2-02-I9` | `done`        | Codex GPT-5.6 Sol | [Rack scalar write presence](CW1-V2-02-I9.md)              |
 | `CW1-V2-02-I10`| `done`        | Codex             | [Device scalar write presence](CW1-V2-02-I10.md)           |
 | `CW1-V2-02-I11`| `done`        | Codex             | [Standing-authorized Interface scalar presence](CW1-V2-02-I11.md) |
-| `CW1-V2-02-I12`| `in-progress` | Codex             | [VRF scalar write presence](CW1-V2-02-I12.md); corrected local implementation green, assembly/replay/CI/evidence pending |
+| `CW1-V2-02-I12`| `in-progress` | Codex             | [VRF scalar write presence](CW1-V2-02-I12.md); exact candidate replay/CI green, evidence claim/receipt gates pending |
 | `CW1-V3-01`    | `done`        | Codex GPT-5.6 Sol | [Dependency-aware readiness](CW1-V3-01.md)                 |
 | `CW1-V3-02`    | `done`        | Codex             | [Bootstrap and schema contract](CW1-V3-02.md)              |
 
@@ -257,10 +257,16 @@ implementation covers only VRF-owned scalar validation,
 operation contracts, shared representable API intent, PostgreSQL durability/
 rollback, and Vue dirty-field/server-error presentation tests. Its local
 focused/race, real PostgreSQL/complete L4, contracts/Vue, backend/frontend,
-and repository checks passed. [Candidate preparation](CW1-V2-02-I12.md#implementation-candidate-preparation)
-records the exact prior packet and local snapshot; source-changing assembly,
-unchanged committed replay, candidate CI, retained evidence/receipt and
-closeout remain pending. No effective evidence or `done` follows.
+and repository checks passed. Exact candidate
+`1cdfbbf6f39cbe494a367285fb2f2c5240523a0b` subsequently passed assembly,
+unchanged committed focused/race, real PostgreSQL/complete L4 and repository
+replay, and exact candidate CI. The
+[bounded artifact](../evidence/2026-10-12-core-workflow-v2-vrf-scalar-presence-i12-v0.md)
+and [evidence preparation](CW1-V2-02-I12.md#bounded-evidence-claim-preparation)
+record those actual boundaries and verified disposable-database cleanup.
+The current evidence claim and later excluded receipt still need their own
+independent/local/exact-SHA gates. Standing acceptance/closeout are not applied;
+I12 remains `in-progress`, not effective evidence or `done`.
 Shared Prefix/accepted IPAddress helpers and RD
 list/query parsing remain untouched. No uniqueness/downstream policy,
 deletion/list/query, tier, consumer, parent/profile, or rewrite completion

@@ -300,11 +300,20 @@ corrected without weakening vet; earlier snapshot passes are not the final
 implementation boundary. The corrected 21-path snapshot passed exact-name,
 focused/race, real-PostgreSQL durability and complete L4, 404 capability/OpenAPI
 and 96 traceability tests, 84 focused Vue tests, both typechecks, backend,
-204-test frontend, and pinned repository checks. These are local results;
-the source-changing candidate assembly gate, unchanged committed replay,
-candidate CI, retained evidence/receipt and closeout remain pending. The
-[candidate preparation](increments/CW1-V2-02-I12.md#implementation-candidate-preparation)
-binds the prior packet, red proof and exact local snapshot. The read-only
+204-test frontend, and pinned repository checks. Those are historical
+pre-governance local results. Exact candidate
+`1cdfbbf6f39cbe494a367285fb2f2c5240523a0b` subsequently passed assembly,
+unchanged committed focused/race, real-PostgreSQL durability/complete L4 and
+repository replay, and exact candidate CI. Its repository replay includes
+the 204-test frontend suite, both typechecks, 404 capability/OpenAPI and 96
+traceability tests, and the unchanged strict quality policies. The
+[bounded artifact](evidence/2026-10-12-core-workflow-v2-vrf-scalar-presence-i12-v0.md)
+and [evidence preparation](increments/CW1-V2-02-I12.md#bounded-evidence-claim-preparation)
+bind the prior packet, red proofs, actual candidate receipts and full manifest.
+The current eight-path claim and later excluded receipt still need their own
+independent/local/exact-SHA gates; standing acceptance and closeout are not
+applied, so I12 stays `in-progress`. Actual I12 toolchain inventory and strict
+gate results are retained, not borrowed from I11. The read-only
 oracle preflight found the NetBox image unavailable; no differential ran,
 same-core parity earns no corresponding T3, and Vue checks earn no T4. The
 23 existing npm advisories (7 moderate, 14 high, 2 critical) remain unchanged.
@@ -481,7 +490,7 @@ and exact change-state outcomes remain to be added and retained.
 | ------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage                       | `make check` retained green on each exact relevant source digest                                                          | Entry source-v2 retained; active-source refresh required |
 | V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests                      | Pass I4's exact claim CI, retain its receipt, obtain owner review, then complete the remaining identity matrix            | I4 evidence claim conditional; parent open               |
-| V2 profile behavior      | Shared 13-resource service, broad tests, bounded I1-I11 done; corrected I12 VRF implementation locally green | Gate/replay exact I12 candidate, retain evidence/receipt/closeout; trace remaining invariant, rollback and external-tier boundaries | I1-I11 bounded done; I12 in progress; parent open |
+| V2 profile behavior      | Shared 13-resource service, broad tests, bounded I1-I11 done; exact I12 candidate replay/CI green | Gate I12 evidence claim/receipt and separate acceptance/closeout; trace remaining invariant, rollback and external-tier boundaries | I1-I11 bounded done; I12 in progress, claim gates pending; parent open |
 | V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness, and owner-accepted bounded V3-01/V3-02 evidence with green closeout receipts | Complete V3-03 through V3-05 and retain deployment loss-recovery artifacts | V3-01/V3-02 done; V3 parent open |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites                            | Complete T2 scenario report, then equivalent T3 report                                                                    | T1; implementation gap                                   |
 | V5 Vue workflow          | Typed adapters and real-browser harness                                                    | Both workflows and every required negative/state case retained green                                                      | T1; implementation gap                                   |

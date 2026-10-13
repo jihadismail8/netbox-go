@@ -272,14 +272,19 @@ VRF-owned normalization/validation, operation contracts, PostgreSQL rollback,
 and Vue dirty-field/error presentation tests. Independently reviewed packet
 `009ab93e86114d36b85550d75e5c18d0cd09b8c9` passed its pinned local gate and
 exact packet CI before behavior editing. Compiling semantic red proof preceded
-fixes; the corrected 21-path implementation passed focused/race, real
-PostgreSQL/complete L4, contracts/Vue, backend/frontend, and pinned repository
-checks locally. The source-changing candidate governance assembly still
-requires its own exact gate, unchanged committed replay, candidate CI, retained
-evidence/receipt, and closeout gates. No effective evidence or `done` follows.
+fixes. Exact tested candidate `1cdfbbf6f39cbe494a367285fb2f2c5240523a0b` has
+digest `source-v2:sha256:fe70ecdbe799c99c93c3c8f9702905996c624205d7a72fa9559a6f8bef1d6c11`
+with 3,098 entries. Its assembly gate, unchanged committed focused/race,
+real-PostgreSQL/complete-L4 and repository replay, and exact candidate CI passed.
+The owned disposable role/database was removed and verified absent. The
+[bounded I12 artifact](docs/evidence/2026-10-12-core-workflow-v2-vrf-scalar-presence-i12-v0.md)
+records these results; the eight-path evidence claim and later excluded
+receipt still require their own independent, pinned local and exact-SHA gates.
+Standing implementation acceptance and closeout have not been applied; I12
+stays `in-progress`, not effective evidence or `done`.
 Shared Prefix/accepted IPAddress helpers and RD list/query parsing remain
-unchanged. The [I12 candidate preparation](docs/increments/CW1-V2-02-I12.md#implementation-candidate-preparation)
-records the exact prior packet and local proof boundaries. T2/T3/T4, designated
+unchanged. The [I12 evidence preparation](docs/increments/CW1-V2-02-I12.md#bounded-evidence-claim-preparation)
+records the historical packet/prototype and completed candidate boundaries. T2/T3/T4, designated
 human sign-offs, every consumer, the parent, and profile completion stay open.
 Do not begin or merge another
 Capability Profile while V0 is
