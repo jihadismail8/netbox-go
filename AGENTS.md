@@ -300,7 +300,8 @@ the [verified final leaf](docs/increments/CW1-V2-02-I12.md#verified-final-leaf-a
 records the completed closeout while preserving the original standing
 application. T2/T3/T4, designated
 human sign-offs, every consumer, the parent, and profile completion stay open.
-`CW1-V2-02-I13` remains `in-progress` for Prefix `prefix`, `vrf`, `status`,
+`CW1-V2-02-I13` is effectively standing-authorized bounded implementation
+`done` only for Prefix `prefix`, `vrf`, `status`,
 `is_pool`, `mark_utilized`, `description`, and `comments` common scalar presence.
 The [bounded packet](docs/increments/CW1-V2-02-I13.md) passed its independent,
 pinned local and exact packet CI gates before compiling semantic red proof and
@@ -322,14 +323,33 @@ CI. The receipt preserves source
 passed all 12 steps; actual capture was `2026-10-13T12:57:20.760Z`, with
 separate root review `13:00:08Z` and independent review `13:01:22.591Z`.
 The executor applied existing standing acceptance at `2026-10-13T13:02:43Z`,
-not fresh human inspection. Bounded implementation `done` remains conditional,
-not effective: the separate eight-path closeout and final two-path receipt
-still require independent integrity, two frozen pinned local gates and exact-SHA
-CI at each boundary. No formal authentication or sign-off is claimed.
+not fresh human inspection. Eight-path closeout
+`85e1f3ee863bb16f320c58f3c2e88b991647a227` and final two-path receipt
+`0ae8183c24598330a877b41a5efbd21587748613` subsequently passed independent
+integrity, two frozen pinned local gates and exact-SHA CI at each boundary.
+Final run `38419093289` / job `115371320161`, attempt 1, passed all 12 steps;
+capture `2026-10-13T15:29:28.808Z`, root review `15:32:56Z` and independent
+review `15:35:33.085Z` preceded bounded completion confirmation at
+`2026-10-13T15:38:34Z`. The final leaf preserves source
+`source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260`,
+3,103 entries. The original standing application is unchanged; no formal
+authentication or sign-off is claimed.
 Failed compilation/lint/typecheck attempts remain historical failures;
 the disposable role/database is absent, the oracle is unavailable, 23 npm
 advisories remain, and T2/T3/T4 stay unearned. Network, uniqueness, containment,
 every consumer, the parent and profile remain open.
+[`CW1-V2-05-I1`](docs/increments/CW1-V2-05-I1.md) is the next bounded packet,
+owned by `ipam-core-workflow` / Codex with the two Vue test boundaries owned by
+`frontend-core-workflow`. It is in packet authoring/review only, not accepted or
+implemented. Its planned proof-only scope is nine Prefix network literals
+across existing backend create/PUT/PATCH and actual frontend POST/PATCH paths,
+using exactly six existing test files, four fixed Go groups and two Vue
+describe groups. There is no frontend PUT flow, replace export or client CIDR
+parser to add. The [planned entry/packet artifact](docs/evidence/2026-10-13-core-workflow-v2-prefix-network-values-i1-v0.md)
+will retain the known I13 entry, not I1 implementation or test results. Exact
+packet review, pinned local gate, own packet CI and recorded bounded packet
+permission remain before test edits. Whole `CW1-V2-05`, other parents,
+consumers, tiers and profile completion remain open.
 Do not begin or merge another
 Capability Profile while V0 is
 red or before `CW1-V6-03`. Once those gates are

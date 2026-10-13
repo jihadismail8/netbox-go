@@ -302,7 +302,7 @@ The oracle image is unavailable; T2/T3/T4 and designated human sign-offs stay
 unearned. The 23 existing npm advisories remain. Uniqueness, downstream policy,
 deletion/list/query, every tier/consumer, the parent and profile remain open.
 
-[`CW1-V2-02-I13`](increments/CW1-V2-02-I13.md) remains `in-progress`, owned
+[`CW1-V2-02-I13`](increments/CW1-V2-02-I13.md) is effectively bounded `done`, owned
 by `ipam-core-workflow` / Codex, only for Prefix `prefix`, `vrf`, `status`,
 `is_pool`, `mark_utilized`, `description`, and `comments` scalar presence.
 Reviewed packet `44a1f2018e7cda1c85273b714b96667f02577555` passed pinned
@@ -330,15 +330,39 @@ Receipt run `38398462515` / job `115299600865`, attempt 1, passed all 12
 steps; actual capture was `2026-10-13T12:57:20.760Z`, separate root review
 `13:00:08Z` and independent review `13:01:22.591Z`. The executor applied
 existing standing acceptance at `2026-10-13T13:02:43Z`, not fresh human
-inspection or a designated sign-off. Bounded implementation `done` is
-conditional, not effective, until the separate eight-path closeout and final
-two-path excluded receipt pass their own independent integrity, two frozen
-pinned local and exact-SHA CI gates. No formal authentication is claimed.
+inspection or a designated sign-off. Eight-path closeout
+`85e1f3ee863bb16f320c58f3c2e88b991647a227` and final two-path excluded
+receipt `0ae8183c24598330a877b41a5efbd21587748613` subsequently passed
+their own independent integrity, two frozen pinned local and exact-SHA CI
+gates. Final run `38419093289` / job `115371320161`, attempt 1, passed all
+12 steps; actual capture was `2026-10-13T15:29:28.808Z`, root review
+`15:32:56Z` and independent review `15:35:33.085Z`. Bounded completion was
+confirmed at `2026-10-13T15:38:34Z`, not a new acceptance application.
+The final leaf preserves source
+`source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260`,
+3,103 entries, full manifest SHA-256
+`d5415b01eb9068a813c1f12922551753afc9d239fac9d597820ac1d480d2d2d2`.
+No formal authentication is claimed.
 Historical v1
 compilation, v2 lint and two v3 dependency-install/typecheck failures remain
 failures; fresh same-source after-install typechecks passed. The disposable
 role/database is absent, the oracle unavailable and 23 npm advisories remain.
 T2/T3/T4, network, containment, uniqueness, every consumer, parent/profile,
+rewrite and production boundaries remain open.
+
+[`CW1-V2-05-I1`](increments/CW1-V2-05-I1.md) is owned by
+`ipam-core-workflow` / Codex, with `frontend-core-workflow` for its two Vue
+test boundaries, in packet authoring/review only. The draft is not accepted;
+packet review, pinned local gate, own exact packet CI and recorded bounded
+packet permission remain before any test edit. The planned test-only proof
+selects nine Prefix network literals for canonicalization, host-bit suggestions
+and canonical `/0` rejection, through backend create/PUT/PATCH and actual
+frontend POST/PATCH forwarding, fetched DTO hydration and server errors.
+Exactly six existing test files, four Go groups and two Vue describes are
+proposed; no frontend PUT flow/export/parser or production behavior is added.
+The [planned entry/packet artifact](evidence/2026-10-13-core-workflow-v2-prefix-network-values-i1-v0.md)
+links the known I13 entry above, not I1 implementation or executed tests.
+Whole `CW1-V2-05`, the common CRUD parent, all consumers, tiers, profile,
 rewrite and production boundaries remain open.
 
 `CW1-V3-01` has exact tested candidate
@@ -618,7 +642,7 @@ replacement completes ADR 0004's governing gate and CP-13.
 | ------------------------ | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
 | V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                                 | Refresh for the active source and every later relevant merged digest                                                             | Continuous; entry source retained          |
 | V1 identity/RBAC         | Persisted identity, retained CORS, accepted I1/I2/I3, and retained I4 evidence                          | Obtain I4 owner review; complete password-policy/throttle/proxy/streaming plus RBAC/admin/secret work                            | I4 evidence; parent open                   |
-| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, bounded I1-I12 done; I13 tested candidate green | Gate I13 eight-path closeout/final two-path receipt through independent integrity, two pinned local and exact-SHA CI gates; remaining invariant, side-effect, concurrency and tier cases | I1-I12 bounded done; I13 known claim/receipt green, executor standing applied `2026-10-13T13:02:43Z`; in-progress, bounded done conditional/not effective; parent/profile open |
+| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, bounded I1-I13 done | Review/gate the V2-05-I1 packet before test edits; prove remaining invariant, side-effect, concurrency and tier cases | I1-I13 bounded done; V2-05-I1 packet only, implementation permission pending; parents/consumers/tiers/profile open |
 | V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, Compose harness, and owner-accepted bounded V3-01/V3-02 evidence with green closeout receipts | Complete V3-03 through V3-05 | V3-01/V3-02 done; V3 parent open |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                             | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report                       | T1; implementation/evidence pending        |
 | V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                         | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes                  | T1; implementation/evidence pending        |

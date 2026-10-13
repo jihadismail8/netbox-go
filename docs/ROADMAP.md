@@ -121,7 +121,7 @@ production release through PROD-1 and PROD-2.
 | 0    | Stable language and decisions       | CONTEXT plus ADR 0001–0005              | `done`                                                                   |
 | 1    | Repository/shared-core baseline     | `CW1-G00`                               | `continuous`                                                             |
 | 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01/I1/I2/I3 `done`; I4 `evidence`; parent open                        |
-| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01 and bounded I1–I12 done; I13 known claim/receipt green, executor standing applied `2026-10-13T13:02:43Z`; in-progress with closeout/final receipt integrity, two pinned local and exact-SHA CI gates pending, done not effective; parent/T2/T3/profile open |
+| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01 and bounded I1–I13 done; V2-05-I1 packet authoring/review only, not accepted or implemented; parents/consumers/T2/T3/profile open |
 | 4    | First Core Workflow Profile         | `CW1-V1-*` through `CW1-V6-*`           | T1; active program                                                       |
 | 5    | In-scope feature expansion          | `CP-P01`–`CP-P19`, then `MC-01`–`MC-10` | `blocked`                                                                |
 | 6    | Extension Service contracts         | `EXT-01`                                | `blocked` on a named inventory                                           |
@@ -395,7 +395,7 @@ capture `2026-10-13T06:27:51.125Z` and separate independent audit
 policy, deletion/list/query, all tiers/consumers, this parent, and the profile
 remain open.
 
-[`CW1-V2-02-I13`](increments/CW1-V2-02-I13.md) remains `in-progress` for
+[`CW1-V2-02-I13`](increments/CW1-V2-02-I13.md) is effectively bounded `done` for
 Prefix `prefix`, `vrf`, `status`, `is_pool`, `mark_utilized`, `description`,
 and `comments`. Reviewed packet `44a1f2018e7cda1c85273b714b96667f02577555`
 passed its pinned local and exact CI gates before compiling semantic red proof.
@@ -415,13 +415,17 @@ source `source-v2:sha256:74f1cb1101a64ed15f4b8ea5f544c015d8bee4b78a6dcd8acb0e0fa
 capture `2026-10-13T12:57:20.760Z`, root review `13:00:08Z` and independent
 review `13:01:22.591Z` are distinct actual events. The executor applied existing
 standing acceptance at `2026-10-13T13:02:43Z`, not fresh human inspection.
-Bounded implementation `done` is conditional, not effective, until separate
-eight-path closeout and final two-path receipt pass their own independent
-integrity, two frozen pinned local and exact-SHA CI gates. No formal sign-off is
-claimed. Network, containment, uniqueness, all tiers/consumers
-and this parent remain open. After effective I13, review a bounded Prefix
-network-value packet under existing `CW1-V2-05`; do not invent I14 or infer
-parent completion.
+Eight-path closeout `85e1f3ee863bb16f320c58f3c2e88b991647a227` and final
+two-path receipt `0ae8183c24598330a877b41a5efbd21587748613` subsequently
+passed their independent integrity, two frozen pinned local and exact-SHA CI
+gates. Final run `38419093289` / job `115371320161`, attempt 1, passed all
+12 steps; capture `2026-10-13T15:29:28.808Z`, root review `15:32:56Z` and
+independent review `15:35:33.085Z` preceded bounded completion confirmation
+`2026-10-13T15:38:34Z`. The original standing application remains unchanged.
+Network, containment, uniqueness, all tiers/consumers and this parent remain
+open; no formal sign-off follows. The next bounded
+[`CW1-V2-05-I1` packet](increments/CW1-V2-05-I1.md) is in authoring/review
+only, not accepted or implemented; it neither invents I14 nor closes a parent.
 
 ## Current execution board
 
@@ -446,7 +450,8 @@ parent completion.
 | `CW1-V2-02-I10`     | `done`        | Accepted Device scalar presence                    | Done I9 and current `CW1-G00`          |
 | `CW1-V2-02-I11`     | `done`        | Standing-authorized Interface scalar presence       | Exact closeout and final receipt gates green |
 | `CW1-V2-02-I12`     | `done`        | Standing-authorized bounded VRF scalar presence     | Exact closeout/final receipt and integrity green |
-| `CW1-V2-02-I13`     | `in-progress` | Gate standing-authorized Prefix closeout/final receipt | Green known claim/receipt and current `CW1-G00` |
+| `CW1-V2-02-I13`     | `done`        | Standing-authorized bounded Prefix scalar presence | Exact closeout/final receipt and integrity green |
+| `CW1-V2-05-I1`      | `packet`      | Author/review bounded Prefix network-value proof    | Known I13 final entry; packet review/local/exact-CI/permission pending |
 | `CW1-V2-03`–`V2-08` | `blocked`     | Close later typed business behavior                 | V2-02 and named lane dependencies      |
 | `CW1-V3-01`         | `done`        | Accepted bounded dependency-aware readiness         | `CW1-G00`                              |
 | `CW1-V3-02`         | `done`        | Accepted bounded bootstrap/schema contract          | Current `CW1-G00` and done `CW1-V2-01` |
@@ -475,10 +480,12 @@ and 14 unchanged committed candidate gates, exact candidate CI and independent
 captured integrity passed. Its initial evidence claim and excluded receipt
 passed independent integrity, two frozen pinned local and exact-SHA CI gates.
 The executor applied existing standing acceptance to known receipt `77197e854725bba6e625e5fcfb05468aa43caf27`
-at `2026-10-13T13:02:43Z`. Only bounded implementation `done` is conditional;
-it is not effective until separate eight-path closeout and final two-path
-receipt gates and integrity pass. No fresh human inspection is inferred. The
-parent and every later behavior goal remain open. Standing owner
+at `2026-10-13T13:02:43Z`. Its separate eight-path closeout and final two-path
+receipt passed their own required gates and integrity, so only bounded I13
+implementation `done` is effective, confirmed at `2026-10-13T15:38:34Z`.
+No fresh human inspection is inferred. `CW1-V2-05-I1` now owns packet
+authoring/review only; implementation permission has not been applied. The
+parents and every unproved behavior goal remain open. Standing owner
 authorization replaces no required artifact-specific human inspection or
 separate row/consumer/tier/aggregate/profile sign-off.
 
@@ -842,9 +849,11 @@ Bounded children:
   `77197e854725bba6e625e5fcfb05468aa43caf27` subsequently passed independent
   integrity, two frozen pinned local and exact-SHA CI gates. Existing standing acceptance
   was applied at `2026-10-13T13:02:43Z`, not fresh human inspection.
-  I13 remains `in-progress`: bounded implementation `done` is conditional on
-  separate eight-path closeout and final two-path receipt integrity/local/CI
-  gates, not yet effective. No formal authentication, network/containment, uniqueness,
+  Its eight-path closeout and final two-path receipt
+  `0ae8183c24598330a877b41a5efbd21587748613` subsequently passed their own
+  integrity/local/exact-CI gates; bounded implementation `done` became
+  effective, confirmed `2026-10-13T15:38:34Z`, without reapplying acceptance.
+  No formal authentication, network/containment, uniqueness,
   tier, consumer, parent or profile closure is claimed.
 
 - [ ] Represent all 13 resources × list/get/create/PUT/PATCH/delete.
@@ -892,6 +901,22 @@ rollback evidence.
 ### `CW1-V2-05` — IPAM values, containment, and uniqueness
 
 Entry: traceability and common presence semantics are stable.
+
+Bounded [`CW1-V2-05-I1`](increments/CW1-V2-05-I1.md), owned by
+`ipam-core-workflow` / Codex with `frontend-core-workflow` for its Vue tests,
+is in packet authoring/review only. It selects existing canonical-network,
+host-bit suggestion and canonical `/0` rejection rules, not this whole goal.
+Its known entry is I13 final receipt
+`0ae8183c24598330a877b41a5efbd21587748613`, source
+`source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260`,
+3,103 entries. The [planned entry/packet artifact](evidence/2026-10-13-core-workflow-v2-prefix-network-values-i1-v0.md)
+retains that preceding boundary only. I1 has no implementation results or
+permission yet: exact packet review, pinned local gate, packet CI and bounded
+packet permission are pending. Its closed six-test scope proposes four Go
+groups for backend create/PUT/PATCH and two Vue describes for actual
+POST/PATCH literal forwarding, fetched DTO hydration and server errors;
+no frontend PUT/export/parser or production changes are authorized.
+Containment, uniqueness, consumers, this parent and all tiers remain open.
 
 - [ ] Prove Prefix canonicalization, containment, and `/0` rejection.
 - [ ] Prove host-bit input rejection and canonical suggestion.

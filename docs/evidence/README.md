@@ -706,3 +706,48 @@ formal human sign-offs unearned, disposable database/credential absent and
 The preceding I13 closeout pending statements describe its historical assembly boundary. Its actual known green eight-file standing closeout, complete mapped committed bytes, both local gates, normal publication, terminal exact-SHA CI and distinct integrity reviews are retained in the [bounded Prefix scalar artifact](2026-10-13-core-workflow-v2-prefix-scalar-presence-i13-v0.md#actual-standing-closeout-boundary-and-final-excluded-receipt-preparation).
 
 This final two-file source-v2-excluded receipt preserves the entire preceding artifact and native source. Its own independent review, two frozen pinned local gates and exact-SHA CI remain pending. Bounded I13 implementation done is not yet effective; the existing executor standing application is unchanged and is not reapplied. No successor/profile work, fresh human inspection, formal sign-off, tier/consumer/parent/profile or production promotion is claimed. No own future receipt SHA/hash/CI is predicted.
+
+## Verified I13 final leaf and V2-05-I1 packet entry
+
+The preceding I13 pending statements and table cells retain their historical
+assembly boundaries. Eight-file standing closeout
+`85e1f3ee863bb16f320c58f3c2e88b991647a227` and final two-file excluded
+receipt `0ae8183c24598330a877b41a5efbd21587748613` subsequently passed
+their own independent integrity, two frozen pinned local and exact-SHA CI
+gates. Final run
+[38419093289](https://github.com/jihadismail8/netbox-go/actions/runs/38419093289)
+and job
+[115371320161](https://github.com/jihadismail8/netbox-go/actions/runs/38419093289/job/115371320161),
+attempt 1, completed success with all 12 reported steps successful. Actual raw
+capture occurred at `2026-10-13T15:29:28.808Z`; root review completed at
+`2026-10-13T15:32:56Z` and independent review at
+`2026-10-13T15:35:33.085Z`. Bounded completion was confirmed at
+`2026-10-13T15:38:34Z`. The existing executor standing application remains
+`2026-10-13T13:02:43Z`, not a new acceptance, human inspection or formal
+sign-off. Only bounded I13 scalar-presence implementation `done` is effective.
+The [I13 artifact](2026-10-13-core-workflow-v2-prefix-scalar-presence-i13-v0.md)
+retains the earlier implementation/claim/receipt/closeout history unchanged.
+
+That exact final leaf preserves source
+`source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260`,
+3,103 entries, complete manifest SHA-256
+`d5415b01eb9068a813c1f12922551753afc9d239fac9d597820ac1d480d2d2d2`.
+These are preceding known entry facts, not the new packet's future source or
+CI. The historical tested I13 candidate remains
+`1dc5a472032abda9c9b41a855ca7df8f8d4e2bb7` at its original tested source;
+no earlier failure is relabelled as a pass. T2/T3/T4, all consumers, common
+CRUD, network/containment/uniqueness, parents/profile, rewrite, deployment and
+production readiness remain open; existing 23 npm advisories remain.
+
+The [CW1-V2-05-I1 draft packet](../increments/CW1-V2-05-I1.md) registers
+only authoring/review for a proof-only Prefix network-value subset. The
+[planned network-value entry/packet artifact](2026-10-13-core-workflow-v2-prefix-network-values-i1-v0.md)
+will retain the exact known I13 entry records. It is not I1 implementation
+evidence: no I1 test edit/execution, green baseline, candidate, own packet CI,
+implementation permission or implementation acceptance is claimed. Exact
+independent packet review, pinned local gate, own packet CI and recorded bounded
+packet permission remain before test edits. The closed six-existing-test-file
+scope proposes four Go groups for backend POST/PUT/PATCH and two Vue describes
+for actual POST/PATCH literal forwarding, fetched DTO hydration and server
+errors; no frontend PUT/export/parser or production changes are authorized.
+Whole `CW1-V2-05`, other parents, consumers, tiers and profile remain open.

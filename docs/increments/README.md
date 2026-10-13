@@ -53,7 +53,8 @@ implementation exists.
 | `CW1-V2-02-I10`| `done`        | Codex             | [Device scalar write presence](CW1-V2-02-I10.md)           |
 | `CW1-V2-02-I11`| `done`        | Codex             | [Standing-authorized Interface scalar presence](CW1-V2-02-I11.md) |
 | `CW1-V2-02-I12`| `done`        | Codex             | [Standing-authorized bounded VRF scalar presence](CW1-V2-02-I12.md); exact closeout/final receipt and integrity green |
-| `CW1-V2-02-I13`| `in-progress` | Codex             | [Standing-authorized bounded Prefix scalar presence](CW1-V2-02-I13.md); known claim/receipt green, closeout/final receipt gates pending |
+| `CW1-V2-02-I13`| `done`        | Codex             | [Standing-authorized bounded Prefix scalar presence](CW1-V2-02-I13.md); exact closeout/final receipt and integrity green |
+| `CW1-V2-05-I1` | `packet`      | Codex             | [Prefix network-value proof](CW1-V2-05-I1.md); authoring/review only, not accepted or implemented |
 | `CW1-V3-01`    | `done`        | Codex GPT-5.6 Sol | [Dependency-aware readiness](CW1-V3-01.md)                 |
 | `CW1-V3-02`    | `done`        | Codex             | [Bootstrap and schema contract](CW1-V3-02.md)              |
 
@@ -283,7 +284,7 @@ list/query parsing remain untouched. No uniqueness/downstream policy,
 deletion/list/query, tier, consumer, parent/profile, or rewrite completion
 follows.
 
-`CW1-V2-02-I13` remains `in-progress`, owned by `ipam-core-workflow` / Codex,
+`CW1-V2-02-I13` is effectively bounded `done`, owned by `ipam-core-workflow` / Codex,
 only for Prefix `prefix`, `vrf`, `status`, `is_pool`, `mark_utilized`,
 `description`, and `comments`. Reviewed packet
 `44a1f2018e7cda1c85273b714b96667f02577555` passed its pinned local and exact
@@ -302,13 +303,33 @@ The receipt preserves source
 capture `2026-10-13T12:57:20.760Z`, root review `13:00:08Z` and independent
 review `13:01:22.591Z` preceded the executor's actual standing application at
 `2026-10-13T13:02:43Z`. This is not fresh human inspection or formal sign-off.
-Bounded implementation `done` is conditional, not effective: separate eight-path
-closeout and final two-path receipt integrity/local/exact-CI gates remain.
+Eight-path closeout `85e1f3ee863bb16f320c58f3c2e88b991647a227` and final
+two-path receipt `0ae8183c24598330a877b41a5efbd21587748613` subsequently
+passed their own integrity, two frozen pinned local and exact-SHA CI gates.
+Final run `38419093289` / job `115371320161`, attempt 1, passed all 12
+steps; actual capture `2026-10-13T15:29:28.808Z`, root review `15:32:56Z`
+and independent review `15:35:33.085Z` preceded bounded completion
+confirmation `2026-10-13T15:38:34Z`. The original standing application is
+unchanged, not a new acceptance or human inspection.
 Failed earlier attempts remain historical; the
 disposable database is absent, oracle unavailable, 23 advisories unchanged and
-T2/T3/T4 unearned. After effective I13, review a bounded Prefix network-value
-packet under existing `CW1-V2-05`; do not invent I14 or close the
-common-mutation parent, any tier, consumer or profile.
+T2/T3/T4 unearned. The common-mutation parent, every tier/consumer and profile
+remain open.
+
+`CW1-V2-05-I1` is owned by `ipam-core-workflow` / Codex, with
+`frontend-core-workflow` for its two Vue test boundaries, in packet
+authoring/review only. Its known entry is I13 final receipt
+`0ae8183c24598330a877b41a5efbd21587748613`, source
+`source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260`,
+3,103 entries. The [planned entry/packet artifact](../evidence/2026-10-13-core-workflow-v2-prefix-network-values-i1-v0.md)
+links that preceding proof only. The draft is not accepted or implemented;
+exact packet review, pinned local gate, own packet CI and bounded packet
+permission remain before test edits. Four fixed Go groups and two Vue
+describes are planned within exactly six existing test files. Backend proof
+uses create/PUT/PATCH; real frontend proof uses only POST/PATCH literal
+forwarding, fetched DTO hydration and server-error presentation, with no PUT
+flow/export/client parser. This is a proof-only subset of existing `CW1-V2-05`,
+not I14 or a parent/consumer/tier/profile promotion.
 
 `CW1-V3-01` has exact tested candidate
 `58241d7f87b642e6b7eca279592ad3759a0f5a06` at source digest
