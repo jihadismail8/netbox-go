@@ -213,10 +213,10 @@ func typedVRFUpdateCommand(
 	for _, path := range mask.Paths {
 		switch path {
 		case "name":
-			if fields.name.State() != applicationipam.FieldPresent {
-				return applicationipam.UpdateVRFCommand{}, invalidVRFUpdateMask()
-			}
 			command.Name = fields.name
+			if fields.name.State() != applicationipam.FieldPresent {
+				command.Name = applicationipam.NullField[string]()
+			}
 		case "rd":
 			// A nil wrapper plus an explicit rd mask is protobuf's representation
 			// of clearing this nullable field.
@@ -226,20 +226,20 @@ func typedVRFUpdateCommand(
 				command.RD = fields.rd
 			}
 		case "enforce_unique":
-			if fields.enforceUnique.State() != applicationipam.FieldPresent {
-				return applicationipam.UpdateVRFCommand{}, invalidVRFUpdateMask()
-			}
 			command.EnforceUnique = fields.enforceUnique
+			if fields.enforceUnique.State() != applicationipam.FieldPresent {
+				command.EnforceUnique = applicationipam.NullField[bool]()
+			}
 		case "description":
-			if fields.description.State() != applicationipam.FieldPresent {
-				return applicationipam.UpdateVRFCommand{}, invalidVRFUpdateMask()
-			}
 			command.Description = fields.description
-		case "comments":
-			if fields.comments.State() != applicationipam.FieldPresent {
-				return applicationipam.UpdateVRFCommand{}, invalidVRFUpdateMask()
+			if fields.description.State() != applicationipam.FieldPresent {
+				command.Description = applicationipam.NullField[string]()
 			}
+		case "comments":
 			command.Comments = fields.comments
+			if fields.comments.State() != applicationipam.FieldPresent {
+				command.Comments = applicationipam.NullField[string]()
+			}
 		default:
 			return applicationipam.UpdateVRFCommand{}, invalidVRFUpdateMask()
 		}

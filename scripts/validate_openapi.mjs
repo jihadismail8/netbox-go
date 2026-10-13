@@ -27,6 +27,29 @@ const identity = JSON.parse(
 const failures = [];
 
 const contractedResourceShapes = {
+  VRF: {
+    request: {
+      name: { type: "string" },
+      rd: { type: "string" },
+      enforce_unique: { type: "boolean" },
+      description: { type: "string" },
+      comments: { type: "string" },
+    },
+    response: {
+      name: { type: "string" },
+      rd: { type: "string" },
+      enforce_unique: { type: "boolean" },
+      description: { type: "string" },
+      comments: { type: "string" },
+      id: { type: "integer", format: "int64" },
+      url: { type: "string", format: "uri" },
+      display: { type: "string" },
+      created: { type: "string", format: "date-time" },
+      last_updated: { type: "string", format: "date-time" },
+      ipaddress_count: { type: "integer", format: "int64" },
+      prefix_count: { type: "integer", format: "int64" },
+    },
+  },
   Manufacturer: {
     request: {
       name: { type: "string" },

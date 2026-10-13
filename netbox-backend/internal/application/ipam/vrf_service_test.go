@@ -153,21 +153,211 @@ func TestUpdateCanClearRDAndRollsBackWhenChangeRecordingFails(t *testing.T) {
 	assert.True(t, after.RD.IsNull())
 }
 
-func TestReplaceVRFResetsOmittedOptionalFieldsToDefaults(t *testing.T) {
+func TestReplaceVRFPreservesOmittedOptionalState(t *testing.T) {
 	t.Parallel()
 
-	service, backend, _, _ := newTestService(t, &trackingAuthorizer{})
+	service, backend, repository, _ := newTestService(t, &trackingAuthorizer{})
 	seedVRF(t, backend, 1, "Original", "65000:10")
+	seed := backend.state.vrfs[1]
+	seed.EnforceUnique = false
+	backend.state.vrfs[1] = seed
+	before, err := domainipam.RestoreVRF(seed)
+	require.NoError(t, err)
 	vrf, err := service.ReplaceVRF(t.Context(), testPrincipal(), applicationipam.ReplaceVRFCommand{
 		ID:   1,
 		Name: applicationipam.FieldValue("Replacement"),
 	})
 	require.NoError(t, err)
 	assert.Equal(t, "Replacement", vrf.Name())
-	assert.True(t, vrf.RD().IsNull())
-	assert.True(t, vrf.EnforceUnique())
-	assert.Empty(t, vrf.Description())
-	assert.Empty(t, vrf.Comments())
+	assert.Equal(t, seed.RD, vrf.RD())
+	assert.False(t, vrf.EnforceUnique())
+	assert.Equal(t, seed.Description, vrf.Description())
+	assert.Equal(t, seed.Comments, vrf.Comments())
+	assert.Equal(t, seed.Created, vrf.Created())
+	assert.Equal(t, applicationUpdatedAt, vrf.LastUpdated())
+	assert.Equal(t, vrf.State(), backend.state.vrfs[1])
+	assert.Equal(t, 1, repository.updateCalls)
+	require.Len(t, backend.state.changes, 1)
+	change := backend.state.changes[0]
+	assert.Equal(t, testPrincipal().ID, change.ActorID)
+	assert.Equal(t, changelog.ActionUpdate, change.Action)
+	assert.Equal(t, before.Snapshot(), change.Before)
+	assert.Equal(t, vrf.Snapshot(), change.After)
+}
+
+func TestVRFScalarValidationLeavesStateUnchanged(t *testing.T) {
+	t.Parallel()
+	invoke := func(service *applicationipam.VRFService, operation string, id shared.ID, command applicationipam.CreateVRFCommand) (*domainipam.VRF, error) {
+		switch operation {
+		case "create":
+			return service.CreateVRF(t.Context(), testPrincipal(), command)
+		case "replace":
+			return service.ReplaceVRF(t.Context(), testPrincipal(), applicationipam.ReplaceVRFCommand{
+				ID: id, Name: command.Name, RD: command.RD, EnforceUnique: command.EnforceUnique,
+				Description: command.Description, Comments: command.Comments,
+			})
+		default:
+			return service.UpdateVRF(t.Context(), testPrincipal(), applicationipam.UpdateVRFCommand{
+				ID: id, Name: command.Name, RD: command.RD, EnforceUnique: command.EnforceUnique,
+				Description: command.Description, Comments: command.Comments,
+			})
+		}
+	}
+
+	for _, operation := range []string{"create", "replace", "update"} {
+		for _, field := range []string{"name", "enforce_unique", "description", "comments"} {
+			t.Run(operation+" null "+field, func(t *testing.T) {
+				service, backend, repository, _ := newTestService(t, &trackingAuthorizer{})
+				seedVRF(t, backend, 1, "Original", "65000:10")
+				before := backend.state.clone()
+				command := applicationipam.CreateVRFCommand{Name: applicationipam.FieldValue("valid")}
+				switch field {
+				case "name":
+					command.Name = applicationipam.NullField[string]()
+				case "enforce_unique":
+					command.EnforceUnique = applicationipam.NullField[bool]()
+				case "description":
+					command.Description = applicationipam.NullField[string]()
+				case "comments":
+					command.Comments = applicationipam.NullField[string]()
+				}
+				result, err := invoke(service, operation, 1, command)
+				require.Error(t, err)
+				assert.Nil(t, result)
+				assert.Equal(t, []shared.FieldViolation{{Field: field, Reason: "null", Description: "This field may not be null."}}, shared.ViolationsOf(err))
+				assert.Equal(t, before, backend.state)
+				assert.Zero(t, repository.createCalls)
+				assert.Zero(t, repository.updateCalls)
+			})
+		}
+		for _, barrier := range []string{"model denial", "object denial", "missing target", "zero clock"} {
+			if operation == "create" && (barrier == "object denial" || barrier == "missing target") {
+				continue
+			}
+			t.Run(operation+" "+barrier, func(t *testing.T) {
+				authorizer := &trackingAuthorizer{}
+				if barrier == "model denial" {
+					authorizer.denyAction = authz.Change
+					if operation == "create" {
+						authorizer.denyAction = authz.Add
+					}
+				}
+				if barrier == "object denial" {
+					authorizer.deniedObjectIDs = map[int64]struct{}{1: {}}
+				}
+				service, backend, repository, recorder := newTestService(t, authorizer)
+				seedVRF(t, backend, 1, "Original", "65000:10")
+				before := backend.state.clone()
+				command := applicationipam.CreateVRFCommand{Name: applicationipam.FieldValue("invalid\x00")}
+				id := shared.ID(1)
+				want := shared.ErrorReasonForbidden
+				if barrier == "missing target" {
+					id, want = 2, shared.ErrorReasonNotFound
+				}
+				if barrier == "zero clock" {
+					command.Name = applicationipam.FieldValue("valid")
+					var err error
+					service, err = applicationipam.NewVRFService(repository, backend, recorder, authorizer, fixedClock{})
+					require.NoError(t, err)
+					want = shared.ErrorReasonInternal
+				}
+				result, err := invoke(service, operation, id, command)
+				require.Error(t, err)
+				assert.Nil(t, result)
+				assert.True(t, shared.HasReason(err, want), err)
+				assert.Empty(t, shared.ViolationsOf(err), "security/lookup/clock barriers must not become field errors")
+				assert.Equal(t, before, backend.state)
+				assert.Zero(t, repository.createCalls)
+				assert.Zero(t, repository.updateCalls)
+				if barrier == "model denial" {
+					assert.Zero(t, backend.transactionCalls)
+				} else {
+					assert.Equal(t, 1, backend.transactionCalls)
+				}
+			})
+		}
+	}
+
+	for _, operation := range []string{"create", "replace", "update"} {
+		for _, name := range []struct {
+			label   string
+			field   applicationipam.Field[string]
+			reason  string
+			message string
+		}{
+			{label: "null", field: applicationipam.NullField[string](), reason: "null", message: "This field may not be null."},
+			{label: "omitted", reason: "required", message: "This field is required."},
+			{label: "blank", field: applicationipam.FieldValue("  "), reason: "blank", message: "This field may not be blank."},
+			{label: "length NUL", field: applicationipam.FieldValue(strings.Repeat("界", 100) + "\x00"), reason: "max_length", message: "Ensure this field has no more than 100 characters."},
+		} {
+			t.Run(operation+" mixed "+name.label, func(t *testing.T) {
+				service, backend, repository, _ := newTestService(t, &trackingAuthorizer{})
+				seedVRF(t, backend, 1, "Original", "65000:10")
+				before := backend.state.clone()
+				rd := applicationipam.FieldValue(strings.Repeat("界", 21) + "\x00")
+				unique := applicationipam.NullField[bool]()
+				description := applicationipam.FieldValue(strings.Repeat("界", 200) + "\x00")
+				comments := applicationipam.FieldValue("c\x00")
+				var result *domainipam.VRF
+				var err error
+				switch operation {
+				case "create":
+					result, err = service.CreateVRF(t.Context(), testPrincipal(), applicationipam.CreateVRFCommand{
+						Name: name.field, RD: rd, EnforceUnique: unique, Description: description, Comments: comments,
+					})
+				case "replace":
+					result, err = service.ReplaceVRF(t.Context(), testPrincipal(), applicationipam.ReplaceVRFCommand{
+						ID: 1, Name: name.field, RD: rd, EnforceUnique: unique, Description: description, Comments: comments,
+					})
+				case "update":
+					result, err = service.UpdateVRF(t.Context(), testPrincipal(), applicationipam.UpdateVRFCommand{
+						ID: 1, Name: name.field, RD: rd, EnforceUnique: unique, Description: description, Comments: comments,
+					})
+				}
+				require.Error(t, err)
+				assert.Nil(t, result)
+				var want []shared.FieldViolation
+				if operation != "update" || name.label != "omitted" {
+					want = append(want, shared.FieldViolation{Field: "name", Reason: name.reason, Description: name.message})
+				}
+				if name.label == "length NUL" {
+					want = append(want, shared.FieldViolation{Field: "name", Reason: "null_characters_not_allowed", Description: "Null characters are not allowed."})
+				}
+				want = append(want,
+					shared.FieldViolation{Field: "rd", Reason: "max_length", Description: "Ensure this field has no more than 21 characters."},
+					shared.FieldViolation{Field: "rd", Reason: "null_characters_not_allowed", Description: "Null characters are not allowed."},
+					shared.FieldViolation{Field: "enforce_unique", Reason: "null", Description: "This field may not be null."},
+					shared.FieldViolation{Field: "description", Reason: "max_length", Description: "Ensure this field has no more than 200 characters."},
+					shared.FieldViolation{Field: "description", Reason: "null_characters_not_allowed", Description: "Null characters are not allowed."},
+					shared.FieldViolation{Field: "comments", Reason: "null_characters_not_allowed", Description: "Null characters are not allowed."},
+				)
+				assert.Equal(t, want, shared.ViolationsOf(err))
+				assert.Equal(t, before, backend.state)
+				assert.Zero(t, repository.createCalls)
+				assert.Zero(t, repository.updateCalls)
+			})
+		}
+	}
+
+	for _, test := range []struct {
+		field   string
+		command applicationipam.UpdateVRFCommand
+	}{
+		{field: "name", command: applicationipam.UpdateVRFCommand{ID: 1, Name: applicationipam.NullField[string]()}},
+		{field: "enforce_unique", command: applicationipam.UpdateVRFCommand{ID: 1, EnforceUnique: applicationipam.NullField[bool]()}},
+	} {
+		t.Run("only null "+test.field, func(t *testing.T) {
+			service, backend, repository, _ := newTestService(t, &trackingAuthorizer{})
+			seedVRF(t, backend, 1, "Original", "65000:10")
+			before := backend.state.clone()
+			result, err := service.UpdateVRF(t.Context(), testPrincipal(), test.command)
+			require.Error(t, err)
+			assert.Nil(t, result)
+			assert.Equal(t, []shared.FieldViolation{{Field: test.field, Reason: "null", Description: "This field may not be null."}}, shared.ViolationsOf(err))
+			assert.Equal(t, before, backend.state)
+			assert.Zero(t, repository.updateCalls)
+		})
+	}
 }
 
 func TestEmptyUpdateAndInvalidIDDoNotWrite(t *testing.T) {

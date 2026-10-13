@@ -266,13 +266,21 @@ source digest `source-v2:sha256:57687459b6e0286bc43cf791395dfe3b933649c7422e270f
 with 3,093 entries. Frozen receipt bytes and complete manifest were verified.
 No owner-immutability, tier, consumer, parent, profile, rewrite, or production
 completion follows. T2/T3/T4 and designated human sign-offs remain unearned.
-`CW1-V2-02-I12` is the next packet-only lane for VRF `name`, `rd`,
+`CW1-V2-02-I12` is in progress for VRF `name`, `rd`,
 `enforce_unique`, `description`, and `comments` common scalar presence,
 VRF-owned normalization/validation, operation contracts, PostgreSQL rollback,
-and Vue dirty-field/error presentation tests. Independent packet review,
-pinned local gate, and exact packet CI must precede behavior editing.
+and Vue dirty-field/error presentation tests. Independently reviewed packet
+`009ab93e86114d36b85550d75e5c18d0cd09b8c9` passed its pinned local gate and
+exact packet CI before behavior editing. Compiling semantic red proof preceded
+fixes; the corrected 21-path implementation passed focused/race, real
+PostgreSQL/complete L4, contracts/Vue, backend/frontend, and pinned repository
+checks locally. The source-changing candidate governance assembly still
+requires its own exact gate, unchanged committed replay, candidate CI, retained
+evidence/receipt, and closeout gates. No effective evidence or `done` follows.
 Shared Prefix/accepted IPAddress helpers and RD list/query parsing remain
-unchanged. I12 supplies no implementation evidence or broader completion.
+unchanged. The [I12 candidate preparation](docs/increments/CW1-V2-02-I12.md#implementation-candidate-preparation)
+records the exact prior packet and local proof boundaries. T2/T3/T4, designated
+human sign-offs, every consumer, the parent, and profile completion stay open.
 Do not begin or merge another
 Capability Profile while V0 is
 red or before `CW1-V6-03`. Once those gates are

@@ -162,13 +162,10 @@ func (service *VRFService) CreateVRF(
 	var vrf *ipamdomain.VRF
 	err := service.unitOfWork.WithinTransaction(ctx, func(transactionContext context.Context) error {
 		values, valuesErr := command.values()
-		if valuesErr != nil {
-			return valuesErr
-		}
 		now := service.clock.Now()
 		candidate, domainErr := ipamdomain.NewVRF(values, now)
-		if domainErr != nil {
-			return domainErr
+		if validationErr := mergeVRFMutationErrors(valuesErr, domainErr); validationErr != nil {
+			return validationErr
 		}
 		if authorizeErr := service.authorize(transactionContext, principal, authz.Add, candidate); authorizeErr != nil {
 			return authorizeErr
@@ -224,11 +221,11 @@ func (service *VRFService) ReplaceVRF(
 		}
 		before := loaded.Snapshot()
 		now := service.clock.Now()
-		values, valuesErr := command.values()
-		if valuesErr != nil {
-			return valuesErr
+		patch, patchErr := command.patch()
+		if validationErr := mergeVRFMutationErrors(patchErr, loaded.ValidatePatch(patch)); validationErr != nil {
+			return validationErr
 		}
-		if replaceErr := loaded.Replace(values, now); replaceErr != nil {
+		if replaceErr := loaded.ApplyPatch(patch, now); replaceErr != nil {
 			return replaceErr
 		}
 		if updateErr := service.repository.Update(transactionContext, loaded); updateErr != nil {
@@ -270,8 +267,8 @@ func (service *VRFService) UpdateVRF(
 		before := loaded.Snapshot()
 		now := service.clock.Now()
 		patch, patchErr := command.patch()
-		if patchErr != nil {
-			return patchErr
+		if validationErr := mergeVRFMutationErrors(patchErr, loaded.ValidatePatch(patch)); validationErr != nil {
+			return validationErr
 		}
 		if domainErr := loaded.ApplyPatch(patch, now); domainErr != nil {
 			return domainErr

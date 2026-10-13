@@ -14,6 +14,92 @@ import (
 
 var vrfTestTime = shared.NewTimestamp(time.Date(2026, time.July, 18, 12, 0, 0, 0, time.UTC))
 
+func TestVRFScalarNormalizationContract(t *testing.T) {
+	t.Parallel()
+
+	for _, test := range []struct {
+		name   string
+		values ipam.VRFValues
+		want   []shared.FieldViolation
+	}{
+		{name: "blank name", values: ipam.VRFValues{Name: "  "}, want: []shared.FieldViolation{
+			{Field: "name", Reason: "blank", Description: "This field may not be blank."},
+		}},
+		{name: "name NUL", values: ipam.VRFValues{Name: "n\x00"}, want: []shared.FieldViolation{
+			{Field: "name", Reason: "null_characters_not_allowed", Description: "Null characters are not allowed."},
+		}},
+		{name: "rd NUL", values: ipam.VRFValues{Name: "valid", RD: nullableRD(t, "r\x00")}, want: []shared.FieldViolation{
+			{Field: "rd", Reason: "null_characters_not_allowed", Description: "Null characters are not allowed."},
+		}},
+		{name: "description NUL", values: ipam.VRFValues{Name: "valid", Description: "d\x00"}, want: []shared.FieldViolation{
+			{Field: "description", Reason: "null_characters_not_allowed", Description: "Null characters are not allowed."},
+		}},
+		{name: "comments NUL", values: ipam.VRFValues{Name: "valid", Comments: "c\x00"}, want: []shared.FieldViolation{
+			{Field: "comments", Reason: "null_characters_not_allowed", Description: "Null characters are not allowed."},
+		}},
+		{name: "name length and NUL", values: ipam.VRFValues{Name: strings.Repeat("界", 100) + "\x00"}, want: []shared.FieldViolation{
+			{Field: "name", Reason: "max_length", Description: "Ensure this field has no more than 100 characters."},
+			{Field: "name", Reason: "null_characters_not_allowed", Description: "Null characters are not allowed."},
+		}},
+		{name: "description length and NUL", values: ipam.VRFValues{Name: "valid", Description: strings.Repeat("界", 200) + "\x00"}, want: []shared.FieldViolation{
+			{Field: "description", Reason: "max_length", Description: "Ensure this field has no more than 200 characters."},
+			{Field: "description", Reason: "null_characters_not_allowed", Description: "Null characters are not allowed."},
+		}},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			candidate, err := ipam.NewVRF(test.values, vrfTestTime)
+			require.Error(t, err)
+			assert.Nil(t, candidate)
+			assert.Equal(t, test.want, shared.ViolationsOf(err))
+
+			loaded := newDomainVRF(t)
+			before := loaded.State()
+			err = loaded.ValidatePatch(ipam.VRFPatch{
+				Name: &test.values.Name, RD: &test.values.RD,
+				EnforceUnique: &test.values.EnforceUnique,
+				Description:   &test.values.Description, Comments: &test.values.Comments,
+			})
+			require.Error(t, err)
+			assert.Equal(t, test.want, shared.ViolationsOf(err))
+			assert.Equal(t, before, loaded.State(), "preview must not mutate the aggregate")
+			err = loaded.Replace(test.values, shared.NewTimestamp(vrfTestTime.Add(time.Hour)))
+			require.Error(t, err)
+			assert.Equal(t, test.want, shared.ViolationsOf(err))
+			assert.Equal(t, before, loaded.State())
+			err = loaded.ApplyPatch(ipam.VRFPatch{
+				Name: &test.values.Name, RD: &test.values.RD,
+				EnforceUnique: &test.values.EnforceUnique,
+				Description:   &test.values.Description, Comments: &test.values.Comments,
+			}, shared.NewTimestamp(vrfTestTime.Add(time.Hour)))
+			require.Error(t, err)
+			assert.Equal(t, test.want, shared.ViolationsOf(err))
+			assert.Equal(t, before, loaded.State())
+		})
+	}
+
+	for _, rd := range []ipam.NullableRouteDistinguisher{
+		ipam.NullRouteDistinguisher(), nullableRD(t, ""), nullableRD(t, "  arbitrary text  "),
+		nullableRD(t, strings.Repeat("界", 21)),
+	} {
+		values := ipam.VRFValues{
+			Name: "  " + strings.Repeat("界", 100) + "  ", RD: rd, EnforceUnique: false,
+			Description: "  " + strings.Repeat("界", 200) + "  ",
+			Comments:    "  " + strings.Repeat("界", 1000) + "  ",
+		}
+		vrf, err := ipam.NewVRF(values, vrfTestTime)
+		require.NoError(t, err)
+		assert.Equal(t, strings.Repeat("界", 100), vrf.Name())
+		assert.Equal(t, rd, vrf.RD())
+		assert.False(t, vrf.EnforceUnique())
+		assert.Equal(t, strings.Repeat("界", 200), vrf.Description())
+		assert.Equal(t, strings.Repeat("界", 1000), vrf.Comments())
+	}
+	loaded := newDomainVRF(t)
+	before := loaded.State()
+	require.NoError(t, loaded.ValidatePatch(ipam.VRFPatch{}))
+	assert.Equal(t, before, loaded.State())
+}
+
 func TestRouteDistinguisherPreservesNullPresentBlankAndText(t *testing.T) {
 	t.Parallel()
 
@@ -104,7 +190,7 @@ func TestNewVRFReturnsAllLocalFieldViolations(t *testing.T) {
 
 	_, err = ipam.NewVRF(ipam.VRFValues{Name: "  "}, vrfTestTime)
 	require.Error(t, err)
-	assert.Equal(t, "required", shared.ViolationsOf(err)[0].Reason)
+	assert.Equal(t, "blank", shared.ViolationsOf(err)[0].Reason)
 }
 
 func TestVRFPatchPreservesPresenceAndCanClearRDToNull(t *testing.T) {

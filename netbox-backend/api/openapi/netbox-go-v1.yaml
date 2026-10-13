@@ -3241,7 +3241,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/VRFWrite"
+                "$ref": "#/components/schemas/VRFCreate"
               }
             }
           }
@@ -3311,7 +3311,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/VRFWrite"
+                "$ref": "#/components/schemas/VRFReplace"
               }
             }
           }
@@ -3350,7 +3350,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/VRFWrite"
+                "$ref": "#/components/schemas/VRFUpdate"
               }
             }
           }
@@ -6556,10 +6556,7 @@
         "additionalProperties": false,
         "properties": {
           "name": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "rd": {
             "type": [
@@ -6571,16 +6568,10 @@
             "type": "boolean"
           },
           "description": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "comments": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "id": {
             "type": "integer",
@@ -6591,10 +6582,7 @@
             "format": "uri"
           },
           "display": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "created": {
             "type": [
@@ -6617,6 +6605,34 @@
           "prefix_count": {
             "type": "integer",
             "format": "int64"
+          }
+        }
+      },
+      "VRFCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rd": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "enforce_unique": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string"
+          },
+          "comments": {
+            "type": "string"
           }
         }
       },
@@ -6654,15 +6670,16 @@
           }
         }
       },
-      "VRFWrite": {
+      "VRFReplace": {
         "type": "object",
         "additionalProperties": false,
+        "required": [
+          "name"
+        ],
         "properties": {
           "name": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "minLength": 1
           },
           "rd": {
             "type": [
@@ -6674,16 +6691,35 @@
             "type": "boolean"
           },
           "description": {
+            "type": "string"
+          },
+          "comments": {
+            "type": "string"
+          }
+        }
+      },
+      "VRFUpdate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rd": {
             "type": [
               "string",
               "null"
             ]
           },
+          "enforce_unique": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string"
+          },
           "comments": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           }
         }
       }

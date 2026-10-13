@@ -380,6 +380,27 @@ const INTERFACE_FIELD_CONTRACTS = {
   },
 };
 
+const VRF_FIELD_CONTRACTS = {
+  response: {
+    nullable_fields: ["rd", "created", "last_updated"],
+  },
+  create: {
+    required_fields: ["name"],
+    nullable_fields: ["rd"],
+    blank_fields: ["rd", "description", "comments"],
+  },
+  replace: {
+    required_fields: ["name"],
+    nullable_fields: ["rd"],
+    blank_fields: ["rd", "description", "comments"],
+  },
+  update: {
+    required_fields: [],
+    nullable_fields: ["rd"],
+    blank_fields: ["rd", "description", "comments"],
+  },
+};
+
 function runNode(script, argument) {
   return spawnSync(process.execPath, [path.join(ROOT, script), argument], {
     cwd: ROOT,
@@ -815,6 +836,13 @@ test("current capability metadata validates", () => {
     IP_ADDRESS_FIELD_CONTRACTS,
     "current IPAddress presence metadata must match the independently pinned contract",
   );
+  const vrf = metadata.resources.find((resource) => resource.name === "VRF");
+  assert.ok(vrf, "current metadata must contain VRF");
+  assert.deepStrictEqual(
+    vrf.field_contracts,
+    VRF_FIELD_CONTRACTS,
+    "current VRF presence metadata must match the independently pinned contract",
+  );
   const dcimMetadata = JSON.parse(
     fs.readFileSync(path.join(CONTRACT_ROOT, DCIM_RELATIVE_PATH), "utf8"),
   );
@@ -934,7 +962,7 @@ test("DeviceRole scalar-presence traceability delta remains bounded", () => {
       rows: traceability.rows.length,
     },
     {
-      assessment_sets: 14,
+      assessment_sets: 15,
       reference_sets: 19,
       proof_sets: 15,
       applicability_sets: 15,
@@ -943,7 +971,7 @@ test("DeviceRole scalar-presence traceability delta remains bounded", () => {
       row_applicability: 293,
       rows: 293,
     },
-    "I6 through I11 must add only their bounded assessments without changing reviewed row authority counts",
+    "I6 through I12 must add only their bounded assessments without changing reviewed row authority counts",
   );
 
   const expectedRows = [
@@ -3797,3 +3825,355 @@ for (const [name, mutator, diagnostic] of [
     diagnostic,
   );
 }
+
+test("VRF scalar-presence traceability delta remains bounded", () => {
+  const traceability = JSON.parse(fs.readFileSync(TRACEABILITY_PATH, "utf8"));
+  const ownedRows = [
+    "operation.ipam.vrf.create",
+    "operation.ipam.vrf.replace",
+    "operation.ipam.vrf.update",
+  ];
+  const assessmentID = "unresolved-vrf-scalar-presence";
+  assert.deepStrictEqual(
+    traceability.rows
+      .filter((row) => row.assessment_set === assessmentID)
+      .map((row) => row.id)
+      .sort(),
+    ownedRows,
+  );
+  const assessment = traceability.assessment_sets.find(
+    (candidate) => candidate.id === assessmentID,
+  );
+  assert.equal(assessment?.status, "unresolved");
+  assert.equal(assessment?.resolution_goal, "CW1-V2-02");
+  assert.equal(traceability.assessment_sets.length, 15);
+  assert.equal(traceability.rows.length, 293);
+  const digest = (value) =>
+    crypto.createHash("sha256").update(JSON.stringify(value)).digest("hex");
+  const vrfRows = traceability.rows.filter(
+    (row) => row.capability === "ipam.VRF",
+  );
+  assert.equal(vrfRows.length, 11);
+  assert.equal(
+    digest(vrfRows.filter((row) => !ownedRows.includes(row.id))),
+    "9ce8ab36359c113c613ae37e99b851f4a3f1fb83d661d9a95975227d805822a2",
+    "I12 must preserve all eight other VRF-owned rows",
+  );
+  assert.equal(
+    digest(traceability.rows.filter((row) => !ownedRows.includes(row.id))),
+    "ebee93e119f700e70454f6a291cae1c4ae41ad210bfb43eeadf5ca1a02baf6eb",
+    "I12 must preserve every member of the other 290 rows",
+  );
+  for (const row of traceability.rows.filter((row) =>
+    ownedRows.includes(row.id),
+  )) {
+    assert.deepStrictEqual(row, {
+      id: row.id,
+      kind: "resource_operation",
+      source_id: `ipam.VRF.${row.operation}`,
+      capability: "ipam.VRF",
+      operation: row.id.split(".").at(-1),
+      reference_set: "ipam.VRF",
+      assessment_set: assessmentID,
+      verification_set: "baseline-t1-pending",
+    });
+  }
+  assert.equal(
+    digest(
+      traceability.assessment_sets.filter((item) => item.id !== assessmentID),
+    ),
+    "9de1a783ff0b112f9bd2b5a8b1ec092f5426822702a58f0a31723b338d7db587",
+    "I12 must preserve all existing assessments",
+  );
+  assert.equal(
+    digest(
+      Object.fromEntries(
+        Object.entries(traceability).filter(
+          ([key]) => !["rows", "assessment_sets"].includes(key),
+        ),
+      ),
+    ),
+    "a843f2064323a9d0db5e23dd50fdfc758a5cff9936ed880ed506df75d2c0ebbf",
+    "I12 must preserve references, applicability, proof/consumer assignments, and verification",
+  );
+});
+
+for (const [name, mutator, diagnostic] of [
+  [
+    "VRF field contracts are mandatory",
+    (resource) => {
+      delete resource.field_contracts;
+    },
+    /ipam\.VRF: field_contracts must declare operation-specific presence semantics/u,
+  ],
+  [
+    "VRF field contracts require every operation",
+    (resource) => {
+      delete resource.field_contracts.replace;
+    },
+    /ipam\.VRF: field_contracts must declare exactly response, create, replace, and update/u,
+  ],
+  [
+    "VRF field contracts reject extra operations",
+    (resource) => {
+      resource.field_contracts.delete = {};
+    },
+    /ipam\.VRF: field_contracts must declare exactly response, create, replace, and update/u,
+  ],
+  [
+    "VRF field lists must be arrays",
+    (resource) => {
+      resource.field_contracts.create.required_fields = "name";
+    },
+    /ipam\.VRF: field_contracts\.create\.required_fields must be an array/u,
+  ],
+  [
+    "VRF required fields reject undeclared fields",
+    (resource) => {
+      resource.field_contracts.create.required_fields.push("tenant");
+    },
+    /ipam\.VRF: field_contracts\.create\.required_fields contains undeclared field tenant/u,
+  ],
+  [
+    "VRF response fields reject undeclared names",
+    (resource) => {
+      resource.field_contracts.response.nullable_fields.push("tenant");
+    },
+    /ipam\.VRF: field_contracts\.response\.nullable_fields contains undeclared field tenant/u,
+  ],
+  [
+    "VRF nullable fields remain a writable-field subset",
+    (resource) => {
+      resource.field_contracts.replace.nullable_fields.push("display");
+    },
+    /ipam\.VRF: field_contracts\.replace\.nullable_fields contains undeclared field display/u,
+  ],
+  [
+    "VRF blank fields remain a writable-field subset",
+    (resource) => {
+      resource.field_contracts.update.blank_fields.push("prefix_count");
+    },
+    /ipam\.VRF: field_contracts\.update\.blank_fields contains undeclared field prefix_count/u,
+  ],
+  [
+    "VRF required fields reject duplicates",
+    (resource) => {
+      resource.field_contracts.create.required_fields.push("name");
+    },
+    /ipam\.VRF: field_contracts\.create\.required_fields contains duplicate field name/u,
+  ],
+  [
+    "VRF nullable fields reject duplicates",
+    (resource) => {
+      resource.field_contracts.replace.nullable_fields.push("rd");
+    },
+    /ipam\.VRF: field_contracts\.replace\.nullable_fields contains duplicate field rd/u,
+  ],
+  [
+    "VRF blank fields reject duplicates",
+    (resource) => {
+      resource.field_contracts.update.blank_fields.push("comments");
+    },
+    /ipam\.VRF: field_contracts\.update\.blank_fields contains duplicate field comments/u,
+  ],
+  [
+    "VRF blank fields reject boolean values",
+    (resource) => {
+      resource.field_contracts.create.blank_fields.push("enforce_unique");
+    },
+    /ipam\.VRF: field_contracts\.create\.blank_fields contains non-string field enforce_unique/u,
+  ],
+  [
+    "VRF response and write contracts cannot be conflated",
+    (resource) => {
+      resource.field_contracts.response = structuredClone(
+        resource.field_contracts.create,
+      );
+    },
+    /ipam\.VRF: field_contracts\.response must declare exactly nullable_fields/u,
+  ],
+  [
+    "VRF PATCH contracts cannot require fields",
+    (resource) => {
+      resource.field_contracts.update.required_fields.push("name");
+    },
+    /ipam\.VRF: field_contracts\.update\.required_fields must be empty for PATCH/u,
+  ],
+]) {
+  test(name, () => {
+    withResourceContractFixture(
+      IPAM_RELATIVE_PATH,
+      "VRF",
+      VRF_FIELD_CONTRACTS,
+      mutator,
+      (profilePath) => {
+        const result = runNode(
+          "scripts/validate_capability_profile.mjs",
+          profilePath,
+        );
+        assert.notEqual(result.status, 0, diagnostics(result));
+        assert.match(diagnostics(result), diagnostic);
+      },
+    );
+  });
+}
+
+function vrfOperationSchema(spec, suffix) {
+  const name = `VRF${suffix}`;
+  const schema =
+    spec.components.schemas[name] ??
+    structuredClone(spec.components.schemas.VRFWrite);
+  spec.components.schemas[name] = schema;
+  return schema;
+}
+
+for (const [verb, route, method, suffix] of [
+  ["POST", "/api/ipam/vrfs/", "post", "Create"],
+  ["PUT", "/api/ipam/vrfs/{id}/", "put", "Replace"],
+  ["PATCH", "/api/ipam/vrfs/{id}/", "patch", "Update"],
+]) {
+  assertOpenAPIRejected(
+    `OpenAPI validation rejects a stale VRF ${verb} request reference`,
+    (spec) => {
+      spec.paths[route][method].requestBody.content["application/json"].schema =
+        { $ref: "#/components/schemas/VRFWrite" };
+    },
+    new RegExp(
+      escapeRegExp(
+        `${verb} ${route} must reference #/components/schemas/VRF${suffix}`,
+      ),
+      "u",
+    ),
+  );
+  assertOpenAPIRejected(
+    `OpenAPI validation rejects stale VRF ${suffix} requiredness`,
+    (spec) => {
+      vrfOperationSchema(spec, suffix).required =
+        suffix === "Update" ? ["name"] : [];
+    },
+    new RegExp(
+      `VRF${suffix} required fields must match field_contracts\\.${suffix.toLowerCase()}`,
+      "u",
+    ),
+  );
+  for (const field of [
+    "name",
+    "rd",
+    "enforce_unique",
+    "description",
+    "comments",
+  ]) {
+    assertOpenAPIRejected(
+      `OpenAPI validation rejects stale VRF ${suffix} ${field} nullability`,
+      (spec) => {
+        vrfOperationSchema(spec, suffix).properties[field].type =
+          field === "rd"
+            ? "string"
+            : [field === "enforce_unique" ? "boolean" : "string", "null"];
+      },
+      new RegExp(
+        `VRF${suffix}\\.${field} nullability must match field_contracts\\.${suffix.toLowerCase()}`,
+        "u",
+      ),
+    );
+    assertOpenAPIRejected(
+      `OpenAPI validation rejects stale VRF ${suffix} ${field} scalar type`,
+      (spec) => {
+        vrfOperationSchema(spec, suffix).properties[field].type = "integer";
+      },
+      new RegExp(
+        `VRF${suffix}\\.${field} base type must be ${field === "enforce_unique" ? "boolean" : "string"}`,
+        "u",
+      ),
+    );
+  }
+  for (const field of ["name", "rd", "description", "comments"]) {
+    assertOpenAPIRejected(
+      `OpenAPI validation rejects stale VRF ${suffix} ${field} blankability`,
+      (spec) => {
+        const schema = vrfOperationSchema(spec, suffix).properties[field];
+        if (field === "name") delete schema.minLength;
+        else schema.minLength = 1;
+      },
+      new RegExp(
+        `VRF${suffix}\\.${field} blankability must match field_contracts\\.${suffix.toLowerCase()}`,
+        "u",
+      ),
+    );
+  }
+}
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects a stale shared VRF write schema",
+  (spec) => {
+    spec.components.schemas.VRFWrite = structuredClone(
+      vrfOperationSchema(spec, "Create"),
+    );
+  },
+  /VRF must not retain a conflated shared write schema/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects undeclared VRF request fields",
+  (spec) => {
+    vrfOperationSchema(spec, "Update").properties.tenant = { type: "integer" };
+  },
+  /VRFUpdate fields must match writable_fields/u,
+);
+
+for (const [field, type, format] of [
+  ["name", "string"],
+  ["rd", "string"],
+  ["description", "string"],
+  ["comments", "string"],
+  ["enforce_unique", "boolean"],
+  ["id", "integer", "int64"],
+  ["url", "string", "uri"],
+  ["display", "string"],
+  ["created", "string", "date-time"],
+  ["last_updated", "string", "date-time"],
+  ["ipaddress_count", "integer", "int64"],
+  ["prefix_count", "integer", "int64"],
+]) {
+  assertOpenAPIRejected(
+    `OpenAPI validation rejects stale VRF response ${field} scalar type`,
+    (spec) => {
+      spec.components.schemas.VRF.properties[field].type =
+        type === "string" ? "integer" : "string";
+    },
+    new RegExp(`VRF\\.${field} base type must be ${type}`, "u"),
+  );
+  assertOpenAPIRejected(
+    `OpenAPI validation rejects stale VRF response ${field} nullability`,
+    (spec) => {
+      spec.components.schemas.VRF.properties[field].type = [
+        "rd",
+        "created",
+        "last_updated",
+      ].includes(field)
+        ? type
+        : [type, "null"];
+    },
+    new RegExp(
+      `VRF\\.${field} response nullability must match field_contracts\\.response`,
+      "u",
+    ),
+  );
+  if (format !== undefined) {
+    assertOpenAPIRejected(
+      `OpenAPI validation rejects stale VRF response ${field} format`,
+      (spec) => {
+        delete spec.components.schemas.VRF.properties[field].format;
+      },
+      new RegExp(`VRF\\.${field} format must be ${format}`, "u"),
+    );
+  }
+}
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects undeclared VRF response fields",
+  (spec) => {
+    spec.components.schemas.VRF.properties.tenant = { type: "integer" };
+  },
+  /VRF response fields must match resource metadata/u,
+);

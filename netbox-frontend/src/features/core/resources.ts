@@ -200,7 +200,9 @@ export interface InterfaceDTO extends Omit<CoreResourceBase, 'created' | 'last_u
   count_ipaddresses: number
 }
 
-export interface VRFDTO extends CoreResourceBase {
+export interface VRFDTO extends Omit<CoreResourceBase, 'created' | 'last_updated'> {
+  created: string | null
+  last_updated: string | null
   name: string
   rd: string | null
   enforce_unique: boolean

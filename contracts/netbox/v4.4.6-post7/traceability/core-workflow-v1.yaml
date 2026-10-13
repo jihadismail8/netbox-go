@@ -3237,6 +3237,12 @@
       "status": "unresolved",
       "reason": "Operation-specific Interface metadata and the bounded scalar-presence lane own device, name, label, type, enabled, management-only, MTU, speed, duplex, and description create/PUT/PATCH presence, defaults, signed numeric validation, choice diagnostics, PostgreSQL durability, generated OpenAPI, and Vue dirty-field handling. The pinned differential oracle, formal retained-claim human review, remaining owner immutability, uniqueness, independent editing, template non-retroactivity, deletion and assigned-IP cascades, list/get/query/full CRUD, 13-resource parent, and higher tiers remain pending.",
       "resolution_goal": "CW1-V2-02"
+    },
+    {
+      "id": "unresolved-vrf-scalar-presence",
+      "status": "unresolved",
+      "reason": "Operation-specific VRF metadata and the bounded scalar-presence lane own name, route distinguisher, enforce-unique, description, and comments create/PUT/PATCH presence, defaults, VRF-local normalization and validation, shared representable REST/gRPC intent, PostgreSQL durability and rollback, generated OpenAPI, and Vue dirty-field handling. The pinned differential oracle, formal retained-claim human review, remaining uniqueness, downstream Prefix/IPAddress policy, deletion, list/get/query/full CRUD, every tier and consumer, 13-resource parent, and profile completion remain pending.",
+      "resolution_goal": "CW1-V2-02"
     }
   ],
   "verification_sets": [
@@ -5691,7 +5697,7 @@
       "capability": "ipam.VRF",
       "operation": "create",
       "reference_set": "ipam.VRF",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-vrf-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {
@@ -5731,7 +5737,7 @@
       "capability": "ipam.VRF",
       "operation": "replace",
       "reference_set": "ipam.VRF",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-vrf-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {
@@ -5741,7 +5747,7 @@
       "capability": "ipam.VRF",
       "operation": "update",
       "reference_set": "ipam.VRF",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-vrf-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {

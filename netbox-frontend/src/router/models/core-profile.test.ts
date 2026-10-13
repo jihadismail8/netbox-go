@@ -3,6 +3,8 @@ import { nextTick } from 'vue'
 import { describe, expect, expectTypeOf, it } from 'vitest'
 import DynamicField from '@/components/form/DynamicField.vue'
 import DynamicForm from '@/components/form/DynamicForm.vue'
+import { getErrorRecord } from '@/api/errors'
+import type { ApiFailure } from '@/api/http'
 import { getCoreResourceAdapter } from '@/features/core/adapters'
 import { INTERFACE_TYPE_CHOICES } from '@/features/dcim/interface-types'
 import type {
@@ -28,6 +30,8 @@ import type {
   RackTypeForm,
   SiteDTO,
   SiteForm,
+  VRFDTO,
+  VRFForm,
 } from '@/features/core/resources'
 import { CORE_PROFILE_MODELS } from './core-profile'
 
@@ -1256,6 +1260,197 @@ describe('Device core profile form contract', () => {
     expect(form.position).toBe(10.5)
     expect(form.face).toBe('front')
     expect(adapter.mutationFromForm(form, true)).toEqual({ rack: null })
+  })
+})
+
+describe('VRF core profile form contract', () => {
+  const vrfDTO: VRFDTO = {
+    id: 10,
+    url: '/api/ipam/vrfs/10/',
+    display: 'Production',
+    created: null,
+    last_updated: null,
+    name: 'Production',
+    rd: null,
+    enforce_unique: true,
+    description: 'Production space',
+    comments: 'Operator note',
+    ipaddress_count: 4,
+    prefix_count: 2,
+  }
+
+  it('pins only five owned fields, required Name, and the optional boolean default', () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'vrf')!
+    const ownedFields = ['name', 'rd', 'enforce_unique', 'description', 'comments']
+    const fields = new Map(config.fields.map((field) => [field.key, field]))
+
+    expect(config.writableFields).toEqual(ownedFields)
+    expect(config.fields.map((field) => field.key)).toEqual(ownedFields)
+    expect(fields.get('name')).toEqual(expect.objectContaining({ type: 'text', required: true }))
+    expect(fields.get('rd')).toEqual(expect.objectContaining({ type: 'text' }))
+    expect(fields.get('enforce_unique')).toEqual(
+      expect.objectContaining({ type: 'boolean', default: true }),
+    )
+    expect(fields.get('comments')).toEqual(expect.objectContaining({ type: 'markdown' }))
+    for (const optional of ownedFields.filter((field) => field !== 'name')) {
+      expect(fields.get(optional)?.required, optional).not.toBe(true)
+    }
+  })
+
+  it('types nullable VRF timestamps and separate null or string RD intent', () => {
+    expectTypeOf<VRFDTO['created']>().toEqualTypeOf<string | null>()
+    expectTypeOf<VRFDTO['last_updated']>().toEqualTypeOf<string | null>()
+    expectTypeOf<VRFDTO['rd']>().toEqualTypeOf<string | null>()
+    expectTypeOf<VRFForm['rd']>().toEqualTypeOf<string | null | undefined>()
+  })
+
+  it('routes normalized REST validation only to matching VRF fields', () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'vrf')!
+    const failure: ApiFailure = {
+      kind: 'api-failure',
+      status: 400,
+      detail: 'The request failed with status 400.',
+      fields: {
+        name: ['This field may not be blank.'],
+        rd: ['Ensure this field has no more than 21 characters.'],
+        description: ['Null characters are not allowed.'],
+      },
+      retryable: false,
+    }
+    const wrapper = mount(DynamicForm, {
+      props: {
+        fields: config.fields,
+        modelValue: { name: '', rd: 'overlong route distinguisher', enforce_unique: false },
+        errors: getErrorRecord(failure),
+      },
+    })
+    const fields = new Map(
+      wrapper.findAllComponents(DynamicField).map((field) => [field.props('field').key, field]),
+    )
+    for (const [field, messages] of Object.entries(failure.fields)) {
+      expect(fields.get(field)?.props('error'), field).toBe((messages as string[]).join(' '))
+      expect(fields.get(field)?.text(), field).toContain((messages as string[])[0])
+    }
+    expect(fields.get('enforce_unique')?.props('error')).toBeUndefined()
+    expect(fields.get('comments')?.props('error')).toBeUndefined()
+    expect(wrapper.find('[role="alert"]').exists()).toBe(false)
+  })
+
+  it('keeps optional create fields absent while the real checkbox starts checked', async () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'vrf')!
+    const adapter = getCoreResourceAdapter('vrf')
+    const wrapper = mount(DynamicForm, {
+      props: { fields: config.fields, modelValue: adapter.emptyForm() },
+    })
+    const fields = new Map(
+      wrapper.findAllComponents(DynamicField).map((field) => [field.props('field').key, field]),
+    )
+    expect((fields.get('enforce_unique')!.get('input').element as HTMLInputElement).checked).toBe(
+      true,
+    )
+    expect((fields.get('rd')!.get('input').element as HTMLInputElement).value).toBe('')
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    await fields.get('name')!.get('input').setValue('New VRF')
+
+    const form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as VRFForm
+    expect(adapter.mutationFromForm(form, false)).toEqual({ name: 'New VRF', enforce_unique: true })
+    for (const omitted of ['rd', 'description', 'comments']) {
+      expect(form).not.toHaveProperty(omitted)
+    }
+  })
+
+  it('preserves untouched null RD and the dirty baseline after async edit hydration', async () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'vrf')!
+    const adapter = getCoreResourceAdapter('vrf')
+    const wrapper = mount(DynamicForm, {
+      props: { fields: config.fields, modelValue: adapter.emptyForm(), editing: true },
+    })
+    await wrapper.setProps({
+      modelValue: adapter.formFromDTO({ ...vrfDTO, enforce_unique: false }),
+    })
+    const fields = new Map(
+      wrapper.findAllComponents(DynamicField).map((field) => [field.props('field').key, field]),
+    )
+    expect((fields.get('name')!.get('input').element as HTMLInputElement).value).toBe('Production')
+    expect((fields.get('rd')!.get('input').element as HTMLInputElement).value).toBe('')
+    expect(fields.get('rd')!.props('modelValue')).toBeNull()
+    expect((fields.get('enforce_unique')!.get('input').element as HTMLInputElement).checked).toBe(
+      false,
+    )
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    await fields.get('name')!.get('input').setValue('Renamed VRF')
+
+    const form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as VRFForm
+    expect(form.rd).toBeNull()
+    expect(form.enforce_unique).toBe(false)
+    expect(adapter.mutationFromForm(form, true)).toEqual({ name: 'Renamed VRF' })
+  })
+
+  it.each([null, 'arbitrary RD text'])(
+    'preserves literal blank from a real RD textbox clear with baseline %s',
+    async (rd) => {
+      const config = CORE_PROFILE_MODELS.find((model) => model.model === 'vrf')!
+      const adapter = getCoreResourceAdapter('vrf')
+      const wrapper = mount(DynamicForm, {
+        props: {
+          fields: config.fields,
+          modelValue: adapter.formFromDTO({ ...vrfDTO, rd }),
+          editing: true,
+        },
+      })
+      const rdField = wrapper
+        .findAllComponents(DynamicField)
+        .find((field) => field.props('field').key === 'rd')!
+      await rdField.get('input').setValue('')
+
+      const form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as VRFForm
+      expect(form.rd).toBe('')
+      expect(adapter.mutationFromForm(form, true)).toEqual({ rd: '' })
+    },
+  )
+
+  it('preserves false and blank text from real VRF checkbox, textbox, and textarea edits', async () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'vrf')!
+    const adapter = getCoreResourceAdapter('vrf')
+    const wrapper = mount(DynamicForm, {
+      props: { fields: config.fields, modelValue: adapter.formFromDTO(vrfDTO), editing: true },
+    })
+    const fields = new Map(
+      wrapper.findAllComponents(DynamicField).map((field) => [field.props('field').key, field]),
+    )
+    await fields.get('enforce_unique')!.get('input').setValue(false)
+    let form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as VRFForm
+    expect(adapter.mutationFromForm(form, true)).toEqual({ enforce_unique: false })
+    await fields.get('description')!.get('input').setValue('')
+    await fields.get('comments')!.get('textarea').setValue('')
+    form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as VRFForm
+    expect(form.rd).toBeNull()
+    expect(adapter.mutationFromForm(form, true)).toEqual({
+      enforce_unique: false,
+      description: '',
+      comments: '',
+    })
+  })
+
+  it('preserves synthetic child-event null RD intent separately from real textbox clearing', async () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'vrf')!
+    const adapter = getCoreResourceAdapter('vrf')
+    const wrapper = mount(DynamicForm, {
+      props: {
+        fields: config.fields,
+        modelValue: adapter.formFromDTO({ ...vrfDTO, rd: '' }),
+        editing: true,
+      },
+    })
+    const rd = wrapper
+      .findAllComponents(DynamicField)
+      .find((field) => field.props('field').key === 'rd')!
+    rd.vm.$emit('update:modelValue', null)
+    await nextTick()
+
+    const form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as VRFForm
+    expect(form.rd).toBeNull()
+    expect(adapter.mutationFromForm(form, true)).toEqual({ rd: null })
   })
 })
 

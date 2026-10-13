@@ -186,6 +186,23 @@ func (vrf *VRF) ApplyPatch(patch VRFPatch, now shared.Timestamp) error {
 		})
 	}
 
+	return vrf.Replace(vrf.valuesWithPatch(patch), now)
+}
+
+// ValidatePatch checks a copy of the scalar state without changing the loaded
+// aggregate. Empty previews are valid; ApplyPatch retains the public mask check.
+func (vrf *VRF) ValidatePatch(patch VRFPatch) error {
+	if vrf == nil {
+		return shared.NewError(shared.ErrorReasonInternal, "Cannot validate a patch for a nil VRF.")
+	}
+	_, violations := validateVRFValues(vrf.valuesWithPatch(patch))
+	if len(violations) > 0 {
+		return shared.NewValidationError(violations...)
+	}
+	return nil
+}
+
+func (vrf VRF) valuesWithPatch(patch VRFPatch) VRFValues {
 	values := vrf.Values()
 	if patch.Name != nil {
 		values.Name = *patch.Name
@@ -202,7 +219,19 @@ func (vrf *VRF) ApplyPatch(patch VRFPatch, now shared.Timestamp) error {
 	if patch.Comments != nil {
 		values.Comments = *patch.Comments
 	}
-	return vrf.Replace(values, now)
+	return values
+}
+
+// ValidateVRFRouteDistinguisher owns mutation-only text validation. The shared
+// parser also serves queries, so its behavior remains unchanged.
+func ValidateVRFRouteDistinguisher(value string) (RouteDistinguisher, error) {
+	rd, err := ParseRouteDistinguisher(value)
+	violations := shared.ViolationsOf(err)
+	appendVRFNullCharacterViolation(&violations, "rd", value)
+	if len(violations) > 0 {
+		return RouteDistinguisher{}, shared.NewValidationError(violations...)
+	}
+	return rd, nil
 }
 
 func (vrf VRF) ID() shared.ID                  { return vrf.id }
@@ -270,16 +299,31 @@ func validateVRFValues(values VRFValues) (VRFValues, []shared.FieldViolation) {
 	if values.Name == "" {
 		violations = append(violations, shared.FieldViolation{
 			Field:       "name",
-			Reason:      "required",
+			Reason:      "blank",
 			Description: "This field may not be blank.",
 		})
 	} else if utf8.RuneCountInString(values.Name) > VRFNameMaxLength {
 		violations = append(violations, maxLengthViolation("name", VRFNameMaxLength))
 	}
+	appendVRFNullCharacterViolation(&violations, "name", values.Name)
+	if rd, present := values.RD.Get(); present {
+		appendVRFNullCharacterViolation(&violations, "rd", rd.String())
+	}
 	if utf8.RuneCountInString(values.Description) > VRFDescriptionMaxLength {
 		violations = append(violations, maxLengthViolation("description", VRFDescriptionMaxLength))
 	}
+	appendVRFNullCharacterViolation(&violations, "description", values.Description)
+	appendVRFNullCharacterViolation(&violations, "comments", values.Comments)
 	return values, violations
+}
+
+func appendVRFNullCharacterViolation(violations *[]shared.FieldViolation, field, value string) {
+	if strings.ContainsRune(value, '\x00') {
+		*violations = append(*violations, shared.FieldViolation{
+			Field: field, Reason: "null_characters_not_allowed",
+			Description: "Null characters are not allowed.",
+		})
+	}
 }
 
 func maxLengthViolation(field string, maximum int) shared.FieldViolation {

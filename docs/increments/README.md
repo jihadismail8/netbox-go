@@ -52,7 +52,7 @@ implementation exists.
 | `CW1-V2-02-I9` | `done`        | Codex GPT-5.6 Sol | [Rack scalar write presence](CW1-V2-02-I9.md)              |
 | `CW1-V2-02-I10`| `done`        | Codex             | [Device scalar write presence](CW1-V2-02-I10.md)           |
 | `CW1-V2-02-I11`| `done`        | Codex             | [Standing-authorized Interface scalar presence](CW1-V2-02-I11.md) |
-| `CW1-V2-02-I12`| `packet`      | Codex             | [VRF scalar write presence](CW1-V2-02-I12.md); reviewed, local/exact packet CI pending |
+| `CW1-V2-02-I12`| `in-progress` | Codex             | [VRF scalar write presence](CW1-V2-02-I12.md); corrected local implementation green, assembly/replay/CI/evidence pending |
 | `CW1-V3-01`    | `done`        | Codex GPT-5.6 Sol | [Dependency-aware readiness](CW1-V3-01.md)                 |
 | `CW1-V3-02`    | `done`        | Codex             | [Bootstrap and schema contract](CW1-V3-02.md)              |
 
@@ -249,12 +249,19 @@ passed. No artifact-specific
 human review or owner-immutability, tier, parent, profile, or consumer
 completion is claimed.
 
-`CW1-V2-02-I12` is the next packet-only VRF lane for its five declared
-writable fields. Independent review, pinned local gate, and exact packet CI
-must pass before behavior editing. It plans VRF-owned scalar validation,
+`CW1-V2-02-I12` is the in-progress VRF lane for its five declared
+writable fields. Reviewed packet `009ab93e86114d36b85550d75e5c18d0cd09b8c9`
+passed pinned local and exact packet CI gates before behavior editing.
+Compiling semantic red proof preceded fixes. The corrected 21-path local
+implementation covers only VRF-owned scalar validation,
 operation contracts, shared representable API intent, PostgreSQL durability/
-rollback, and Vue dirty-field/server-error presentation tests, not retained
-implementation evidence. Shared Prefix/accepted IPAddress helpers and RD
+rollback, and Vue dirty-field/server-error presentation tests. Its local
+focused/race, real PostgreSQL/complete L4, contracts/Vue, backend/frontend,
+and repository checks passed. [Candidate preparation](CW1-V2-02-I12.md#implementation-candidate-preparation)
+records the exact prior packet and local snapshot; source-changing assembly,
+unchanged committed replay, candidate CI, retained evidence/receipt and
+closeout remain pending. No effective evidence or `done` follows.
+Shared Prefix/accepted IPAddress helpers and RD
 list/query parsing remain untouched. No uniqueness/downstream policy,
 deletion/list/query, tier, consumer, parent/profile, or rewrite completion
 follows. Prefix I13 remains only a recommended future scalar packet.

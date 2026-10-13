@@ -284,7 +284,7 @@ The pinned oracle image is not cached;
 no differential T2 or corresponding T3 is retained and Vue checks earn no T4.
 No owner-immutability, parent, profile, or consumer completion follows.
 
-The [`CW1-V2-02-I12` packet](increments/CW1-V2-02-I12.md) plans eight fixed
+The [`CW1-V2-02-I12` increment](increments/CW1-V2-02-I12.md) has eight fixed
 VRF regressions across domain normalization, command/application presence,
 validation non-effects, REST, gRPC, real-PostgreSQL durability and six
 delegate-then-error rollbacks, and representable parity. Operation-specific
@@ -292,9 +292,23 @@ contract and Vue dirty-field/error presentation tests accompany them.
 Optional PUT tests seed false and concrete optional state; NUL plus length
 errors must aggregate without hiding RD failures. Shared Prefix/accepted
 IPAddress helper bodies and RD list/query parsing remain unchanged.
-Independent review, pinned local and exact packet CI gates precede any
-behavior edit. These tests are planned, not retained implementation evidence;
-no tier, consumer, parent/profile, or browser outcome is earned.
+Independently reviewed packet `009ab93e86114d36b85550d75e5c18d0cd09b8c9`
+passed pinned local and exact packet CI gates before behavior editing. Four
+compiling core regressions failed behaviorally on unchanged production before
+fixes. A protobuf mutex-copy vet failure in the initial parity fixture was
+corrected without weakening vet; earlier snapshot passes are not the final
+implementation boundary. The corrected 21-path snapshot passed exact-name,
+focused/race, real-PostgreSQL durability and complete L4, 404 capability/OpenAPI
+and 96 traceability tests, 84 focused Vue tests, both typechecks, backend,
+204-test frontend, and pinned repository checks. These are local results;
+the source-changing candidate assembly gate, unchanged committed replay,
+candidate CI, retained evidence/receipt and closeout remain pending. The
+[candidate preparation](increments/CW1-V2-02-I12.md#implementation-candidate-preparation)
+binds the prior packet, red proof and exact local snapshot. The read-only
+oracle preflight found the NetBox image unavailable; no differential ran,
+same-core parity earns no corresponding T3, and Vue checks earn no T4. The
+23 existing npm advisories (7 moderate, 14 high, 2 critical) remain unchanged.
+No tier, consumer, parent/profile, or browser outcome is earned.
 
 `CW1-V3-01` has exact tested candidate
 `58241d7f87b642e6b7eca279592ad3759a0f5a06` at source digest
@@ -467,7 +481,7 @@ and exact change-state outcomes remain to be added and retained.
 | ------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage                       | `make check` retained green on each exact relevant source digest                                                          | Entry source-v2 retained; active-source refresh required |
 | V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests                      | Pass I4's exact claim CI, retain its receipt, obtain owner review, then complete the remaining identity matrix            | I4 evidence claim conditional; parent open               |
-| V2 profile behavior      | Shared 13-resource service, broad tests, bounded I1-I11 done; I12 VRF packet only | Review/gate I12 packet, then prove scalar presence; trace remaining invariant, rollback, and external-tier boundaries | I1-I11 bounded done; I12 packet only; parent open |
+| V2 profile behavior      | Shared 13-resource service, broad tests, bounded I1-I11 done; corrected I12 VRF implementation locally green | Gate/replay exact I12 candidate, retain evidence/receipt/closeout; trace remaining invariant, rollback and external-tier boundaries | I1-I11 bounded done; I12 in progress; parent open |
 | V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness, and owner-accepted bounded V3-01/V3-02 evidence with green closeout receipts | Complete V3-03 through V3-05 and retain deployment loss-recovery artifacts | V3-01/V3-02 done; V3 parent open |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites                            | Complete T2 scenario report, then equivalent T3 report                                                                    | T1; implementation gap                                   |
 | V5 Vue workflow          | Typed adapters and real-browser harness                                                    | Both workflows and every required negative/state case retained green                                                      | T1; implementation gap                                   |

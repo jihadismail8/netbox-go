@@ -45,6 +45,7 @@ import {
   type SiteMutation,
   type VRFDTO,
   type VRFForm,
+  type VRFMutation,
 } from './resources'
 
 export interface CoreResourceAdapter<N extends CoreProfileResourceName> {
@@ -824,17 +825,57 @@ const interfaceAdapter: CoreResourceAdapter<'interface'> = {
   }),
 }
 
+const vrfOriginalMutation = Symbol('vrf-original-mutation')
+
+const vrfScalarMutationFields = [
+  'name',
+  'rd',
+  'enforce_unique',
+  'description',
+  'comments',
+] as const satisfies readonly (keyof VRFMutation)[]
+
+type TrackedVRFForm = VRFForm & {
+  [vrfOriginalMutation]?: VRFMutation
+}
+
+function vrfMutation(form: VRFForm): VRFMutation {
+  const mutation: VRFMutation = {}
+  if (hasFormField(form, 'name')) mutation.name = form.name
+  if (hasFormField(form, 'rd')) mutation.rd = form.rd
+  if (hasFormField(form, 'enforce_unique')) mutation.enforce_unique = form.enforce_unique
+  if (hasFormField(form, 'description')) mutation.description = form.description
+  if (hasFormField(form, 'comments')) mutation.comments = form.comments
+  return mutation
+}
+
+function vrfMutationDelta(current: VRFMutation, original: VRFMutation): VRFMutation {
+  const delta = { ...current }
+  for (const field of vrfScalarMutationFields) {
+    if (Object.is(current[field], original[field])) Reflect.deleteProperty(delta, field)
+  }
+  return delta
+}
+
 const vrfAdapter: CoreResourceAdapter<'vrf'> = {
   resource: 'vrf',
   emptyForm: () => ({ enforce_unique: true }),
-  formFromDTO: (dto: VRFDTO): VRFForm => ({
-    name: dto.name,
-    rd: dto.rd,
-    enforce_unique: dto.enforce_unique,
-    description: dto.description,
-    comments: dto.comments,
-  }),
-  mutationFromForm: (form) => ({ ...form }),
+  formFromDTO: (dto: VRFDTO): VRFForm => {
+    const form: TrackedVRFForm = {
+      name: dto.name,
+      rd: dto.rd,
+      enforce_unique: dto.enforce_unique,
+      description: dto.description,
+      comments: dto.comments,
+    }
+    form[vrfOriginalMutation] = vrfMutation(form)
+    return form
+  },
+  mutationFromForm: (form, editing) => {
+    const mutation = vrfMutation(form)
+    const original = (form as TrackedVRFForm)[vrfOriginalMutation]
+    return editing && original ? vrfMutationDelta(mutation, original) : mutation
+  },
   filtersFromState: (state) => ({
     name: state.name,
     rd: state.rd,

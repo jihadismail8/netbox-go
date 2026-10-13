@@ -27,6 +27,8 @@ import {
   type RackTypeForm,
   type SiteDTO,
   type SiteForm,
+  type VRFDTO,
+  type VRFForm,
 } from './resources'
 
 const manufacturer: CoreReference = {
@@ -1481,6 +1483,99 @@ describe('typed core resource adapters', () => {
       ...unchangedRelationships,
       dns_name: 'new.example',
     })
+  })
+
+  it('preserves VRF create omissions, defaults, null, blank, false, and only owned fields', () => {
+    const adapter = getCoreResourceAdapter('vrf')
+
+    expect(adapter.mutationFromForm({}, false)).toEqual({})
+    expect(adapter.emptyForm()).toEqual({ enforce_unique: true })
+    expect(adapter.mutationFromForm(adapter.emptyForm(), false)).toEqual({ enforce_unique: true })
+    expect(adapter.mutationFromForm({ name: 'Production' }, false)).toEqual({ name: 'Production' })
+    expect(adapter.mutationFromForm({ name: undefined, rd: undefined }, false)).toEqual({})
+    for (const rd of [null, '', 'arbitrary RD text']) {
+      expect(
+        adapter.mutationFromForm(
+          { name: 'Production', rd, enforce_unique: false, description: '', comments: '' },
+          false,
+        ),
+      ).toEqual({ name: 'Production', rd, enforce_unique: false, description: '', comments: '' })
+    }
+
+    const formWithResponseFields = {
+      name: 'Owned fields only',
+      rd: null,
+      enforce_unique: false,
+      id: 99,
+      url: '/api/ipam/vrfs/99/',
+      display: 'Must not leak',
+      created: null,
+      last_updated: null,
+      ipaddress_count: 4,
+      prefix_count: 2,
+      [Symbol('response-only')]: 'Must not leak',
+    } as VRFForm
+    for (const editing of [false, true]) {
+      const mutation = adapter.mutationFromForm(formWithResponseFields, editing)
+      expect(mutation).toEqual({ name: 'Owned fields only', rd: null, enforce_unique: false })
+      expect(Object.getOwnPropertySymbols(mutation)).toEqual([])
+    }
+  })
+
+  it('keeps a private VRF baseline and distinct null and blank dirty RD intent', () => {
+    const adapter = getCoreResourceAdapter('vrf')
+    const dto: VRFDTO = {
+      id: 10,
+      url: '/api/ipam/vrfs/10/',
+      display: 'Production',
+      created: null,
+      last_updated: null,
+      name: 'Production',
+      rd: null,
+      enforce_unique: true,
+      description: 'Production space',
+      comments: 'Operator note',
+      ipaddress_count: 4,
+      prefix_count: 2,
+    }
+
+    for (const rd of [null, '', 'arbitrary RD text']) {
+      const hydrated = adapter.formFromDTO({ ...dto, rd })
+      const expectedForm = {
+        name: 'Production',
+        rd,
+        enforce_unique: true,
+        description: 'Production space',
+        comments: 'Operator note',
+      }
+      expect(Object.fromEntries(Object.entries(hydrated))).toEqual(expectedForm)
+      expect(JSON.parse(JSON.stringify(hydrated))).toEqual(expectedForm)
+      expect(adapter.mutationFromForm({ ...hydrated }, true)).toEqual({})
+      const changes = {
+        name: '',
+        rd: rd === null ? '' : null,
+        enforce_unique: false,
+        description: '',
+        comments: '',
+      } satisfies VRFForm
+      for (const [field, value] of Object.entries(changes)) {
+        const mutation = adapter.mutationFromForm(
+          withFormField(hydrated, field, value) as VRFForm,
+          true,
+        )
+        expect(mutation, field).toEqual({ [field]: value })
+        expect(Object.getOwnPropertySymbols(mutation)).toEqual([])
+        expect(hydrated.rd).toBe(rd)
+      }
+      expect(adapter.mutationFromForm(hydrated, false)).toEqual(expectedForm)
+    }
+
+    const falseHydrated = adapter.formFromDTO({ ...dto, enforce_unique: false })
+    expect(adapter.mutationFromForm({ ...falseHydrated }, true)).toEqual({})
+    expect(adapter.mutationFromForm({ ...falseHydrated, comments: '' }, true)).toEqual({
+      comments: '',
+    })
+    expect(falseHydrated.enforce_unique).toBe(false)
   })
 
   it('narrows panel state to the declared resource filter contract', () => {

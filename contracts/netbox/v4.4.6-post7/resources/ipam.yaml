@@ -15,6 +15,26 @@
       "filters": ["name", "rd", "enforce_unique"],
       "ordering": ["id", "name", "rd", "created", "last_updated"],
       "relationships": [],
+      "field_contracts": {
+        "response": {
+          "nullable_fields": ["rd", "created", "last_updated"]
+        },
+        "create": {
+          "required_fields": ["name"],
+          "nullable_fields": ["rd"],
+          "blank_fields": ["rd", "description", "comments"]
+        },
+        "replace": {
+          "required_fields": ["name"],
+          "nullable_fields": ["rd"],
+          "blank_fields": ["rd", "description", "comments"]
+        },
+        "update": {
+          "required_fields": [],
+          "nullable_fields": ["rd"],
+          "blank_fields": ["rd", "description", "comments"]
+        }
+      },
       "delete_behavior": "protect_when_prefix_or_ipaddress_references"
     },
     {

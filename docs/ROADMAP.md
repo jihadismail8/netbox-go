@@ -121,7 +121,7 @@ production release through PROD-1 and PROD-2.
 | 0    | Stable language and decisions       | CONTEXT plus ADR 0001–0005              | `done`                                                                   |
 | 1    | Repository/shared-core baseline     | `CW1-G00`                               | `continuous`                                                             |
 | 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01/I1/I2/I3 `done`; I4 `evidence`; parent open                        |
-| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01 and bounded I1–I11 done; I12 packet only; parent/T2/T3 open |
+| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01 and bounded I1–I11 done; I12 implementation in progress; replay/CI/evidence and parent/T2/T3 open |
 | 4    | First Core Workflow Profile         | `CW1-V1-*` through `CW1-V6-*`           | T1; active program                                                       |
 | 5    | In-scope feature expansion          | `CP-P01`–`CP-P19`, then `MC-01`–`MC-10` | `blocked`                                                                |
 | 6    | Extension Service contracts         | `EXT-01`                                | `blocked` on a named inventory                                           |
@@ -367,13 +367,19 @@ no artifact-specific human review or owner-immutability,
 template, uniqueness, deletion, list/query, tier, parent, profile, or consumer
 completion.
 
-[`CW1-V2-02-I12`](increments/CW1-V2-02-I12.md) is the next packet-only VRF
+[`CW1-V2-02-I12`](increments/CW1-V2-02-I12.md) is the in-progress VRF
 scalar lane for `name`, `rd`, `enforce_unique`, `description`, and `comments`.
 It owns only common write presence, VRF-local normalization/validation,
 operation-specific contracts, representable shared REST/gRPC semantics,
 PostgreSQL durability/rollback tests, and Vue dirty-field/error presentation.
-Independent review, pinned local and exact packet CI gates precede behavior
-editing. It supplies no implementation evidence; uniqueness, downstream
+Reviewed packet `009ab93e86114d36b85550d75e5c18d0cd09b8c9` passed pinned local
+and exact packet CI gates before behavior editing. Semantic red proof and
+read-only implementation reviews accompany the corrected 21-path local
+implementation; focused/race, real PostgreSQL/complete L4, contracts/Vue,
+backend/frontend, and repository checks passed. The source-changing candidate
+assembly gate, unchanged committed replay, candidate CI, retained evidence/
+receipt, and closeout remain pending. It supplies no effective evidence or
+`done`; uniqueness, downstream
 policy, deletion/list/query, all tiers/consumers, this parent, and the profile
 remain open. Prefix I13 is only the next recommended scalar child.
 
@@ -399,7 +405,7 @@ remain open. Prefix I13 is only the next recommended scalar child.
 | `CW1-V2-02-I9`      | `done`        | Accepted Rack scalar write presence                 | Done I8 and current `CW1-G00`          |
 | `CW1-V2-02-I10`     | `done`        | Accepted Device scalar presence                    | Done I9 and current `CW1-G00`          |
 | `CW1-V2-02-I11`     | `done`        | Standing-authorized Interface scalar presence       | Exact closeout and final receipt gates green |
-| `CW1-V2-02-I12`     | `packet`      | Gate reviewed bounded VRF scalar presence packet    | Done I11 and current `CW1-G00` |
+| `CW1-V2-02-I12`     | `in-progress` | Gate/replay exact bounded VRF implementation, then retain evidence | Green reviewed packet, done I11 and current `CW1-G00` |
 | `CW1-V2-03`–`V2-08` | `blocked`     | Close later typed business behavior                 | V2-02 and named lane dependencies      |
 | `CW1-V3-01`         | `done`        | Accepted bounded dependency-aware readiness         | `CW1-G00`                              |
 | `CW1-V3-02`         | `done`        | Accepted bounded bootstrap/schema contract          | Current `CW1-G00` and done `CW1-V2-01` |
@@ -415,8 +421,10 @@ remain open. Prefix I13 is only the next recommended scalar child.
 
 I10 and I11 are effectively `done` only for their bounded results. I11's
 standing-authorized implementation closeout and final excluded receipt gates
-are green. I12 claims only a packet; its independent review, pinned local
-gate, and exact packet CI must pass before behavior editing. The parent and
+are green. I12's independent packet review, pinned local gate, and exact
+packet CI passed before behavior editing. Its corrected bounded implementation
+passed the local ladder; candidate assembly/replay/CI and retained evidence/
+receipt/closeout gates remain pending. I12 is not effectively done. The parent and
 every later child remain open. Standing owner
 authorization replaces no required artifact-specific human inspection or
 separate row/consumer/tier/aggregate/profile sign-off.
@@ -749,12 +757,17 @@ Bounded children:
   uniqueness, template transactions, deletion, list/query, all tiers and
   consumers, this parent, and profile completion remain open.
 
-- [`CW1-V2-02-I12`](increments/CW1-V2-02-I12.md) defines only the next VRF
-  five-field scalar presence packet. Independent review, pinned local and
-  exact packet CI precede behavior editing. Optional PUT preservation,
+- [`CW1-V2-02-I12`](increments/CW1-V2-02-I12.md) implements only the VRF
+  five-field scalar presence lane. Independent review, pinned local and
+  exact packet CI passed before behavior editing. Optional PUT preservation,
   null/blank RD, false, normalization/validation, operation contracts,
   durable rollback, representable API parity, and Vue dirty-field/server
-  error presentation tests are planned, not implementation evidence.
+  error presentation tests passed locally on the corrected 21-path snapshot.
+  [Candidate preparation](increments/CW1-V2-02-I12.md#implementation-candidate-preparation)
+  binds the prior packet, red proof, correction, and local results. The
+  source-changing assembly gate, unchanged committed replay, candidate CI,
+  retained evidence/receipt and closeout remain pending; no effective evidence
+  or implementation `done` is claimed.
   Uniqueness, downstream policy, deletion/list/query, every tier/consumer,
   this parent, and the profile remain open.
 
