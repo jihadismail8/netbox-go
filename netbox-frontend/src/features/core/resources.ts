@@ -212,7 +212,9 @@ export interface VRFDTO extends Omit<CoreResourceBase, 'created' | 'last_updated
   prefix_count: number
 }
 
-export interface PrefixDTO extends CoreResourceBase {
+export interface PrefixDTO extends Omit<CoreResourceBase, 'created' | 'last_updated'> {
+  created: string | null
+  last_updated: string | null
   prefix: string
   vrf: CoreReference | null
   status: ChoiceDTO<PrefixStatus>
@@ -411,7 +413,7 @@ export interface VRFForm {
 export interface PrefixForm {
   prefix?: string
   vrf?: CoreRelationSelection
-  status?: PrefixStatus
+  status?: PrefixStatus | '' | null
   is_pool?: boolean
   mark_utilized?: boolean
   description?: string

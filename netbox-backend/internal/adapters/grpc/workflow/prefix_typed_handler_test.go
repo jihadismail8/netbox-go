@@ -57,7 +57,132 @@ func TestTypedPrefixListQueryPreservesPresenceSignedIDsAndNetworkFilters(t *test
 
 func prefixStringPointer(value string) *string { return &value }
 
-func TestTypedPrefixUpdateMaskCanClearNullableVRFAndRequiresExplicitValues(t *testing.T) {
+// This matrix checks transport intent/projection; shared business semantics are
+// exercised separately by the actual-core REST/gRPC parity test.
+func TestPrefixGRPCScalarPresenceMatrix(t *testing.T) {
+	input := &ipamv1.PrefixInput{
+		Prefix: prefixStringPointer("192.0.2.0/24"), Vrf: wrapperspb.Int64(0),
+		Status: prefixStringPointer(" active "), IsPool: prefixPresenceBoolPointer(false),
+		MarkUtilized: prefixPresenceBoolPointer(true), Description: prefixStringPointer(" raw\x00text "),
+		Comments: prefixStringPointer(""),
+	}
+	want := applicationipam.CreatePrefixCommand{
+		Prefix: applicationipam.FieldValue("192.0.2.0/24"), VRF: applicationipam.FieldValue(int64(0)),
+		Status: applicationipam.FieldValue(" active "), IsPool: applicationipam.FieldValue(false),
+		MarkUtilized: applicationipam.FieldValue(true), Description: applicationipam.FieldValue(" raw\x00text "),
+		Comments: applicationipam.FieldValue(""),
+	}
+	t.Run("POST and PUT preserve representable raw intent", func(t *testing.T) {
+		require.Equal(t, want, typedPrefixCreateCommand(input))
+		require.Equal(t, applicationipam.ReplacePrefixCommand{ID: 17, CreatePrefixCommand: want}, typedPrefixReplaceCommand(17, input))
+		for _, absent := range []*ipamv1.PrefixInput{nil, {}} {
+			require.Equal(t, applicationipam.CreatePrefixCommand{}, typedPrefixCreateCommand(absent))
+			require.Equal(t, applicationipam.ReplacePrefixCommand{ID: 17}, typedPrefixReplaceCommand(17, absent))
+		}
+	})
+	for _, mask := range []*fieldmaskpb.FieldMask{nil, {}} {
+		t.Run("PATCH inferred present fields", func(t *testing.T) {
+			command, err := typedPrefixUpdateCommand(17, input, mask)
+			require.NoError(t, err)
+			require.Equal(t, want, prefixPresenceCreateFields(command))
+			require.Equal(t, shared.ID(17), command.ID)
+		})
+	}
+	fields := []string{"prefix", "vrf", "status", "is_pool", "mark_utilized", "description", "comments"}
+	for _, selected := range fields {
+		t.Run("known mask missing value is explicit null/"+selected, func(t *testing.T) {
+			for _, absent := range []*ipamv1.PrefixInput{nil, {}} {
+				command, err := typedPrefixUpdateCommand(17, absent, &fieldmaskpb.FieldMask{Paths: []string{selected}})
+				require.NoError(t, err, "known mask intent must reach shared field validation")
+				states := prefixPresenceStates(prefixPresenceCreateFields(command))
+				for _, field := range fields {
+					state := applicationipam.FieldOmitted
+					if field == selected {
+						state = applicationipam.FieldNull
+					}
+					require.Equal(t, state, states[field], field)
+				}
+			}
+		})
+		t.Run("known mask keeps only selected concrete field/"+selected, func(t *testing.T) {
+			command, err := typedPrefixUpdateCommand(17, input, &fieldmaskpb.FieldMask{Paths: []string{selected}})
+			require.NoError(t, err)
+			states := prefixPresenceStates(prefixPresenceCreateFields(command))
+			for _, field := range fields {
+				state := applicationipam.FieldOmitted
+				if field == selected {
+					state = applicationipam.FieldPresent
+				}
+				require.Equal(t, state, states[field], field)
+			}
+		})
+	}
+	t.Run("unknown mask fails before typed service", func(t *testing.T) {
+		for _, path := range []string{"unsupported", "family", "status.value", "vrf.id"} {
+			spy := &grpcPrefixServiceSpy{}
+			handler := NewPrefixRPCHandler(spy)
+			ctx := identity.WithPrincipal(t.Context(), identity.Principal{ID: 1, Username: "prefix-mask"})
+			result, err := handler.UpdatePrefix(ctx, &ipamv1.UpdatePrefixRequest{
+				Id: 17, Prefix: input, UpdateMask: &fieldmaskpb.FieldMask{Paths: []string{"prefix", path}},
+			})
+			require.Error(t, err)
+			require.Equal(t, codes.InvalidArgument, status.Code(err))
+			require.Nil(t, result)
+			require.Zero(t, spy.updateCalls)
+		}
+	})
+	t.Run("response projection keeps null false blank and nonzero times", func(t *testing.T) {
+		for _, network := range []string{"192.0.2.0/24", "2001:db8::/48"} {
+			for _, related := range []domainipam.NullableVRFReference{
+				domainipam.NullVRFReference(),
+				domainipam.NonNullVRFReference(grpcPrefixVRFReference(t, 7, "Blue", "65000:7", true)),
+			} {
+				state := grpcPrefixFixture(t, 17, network, related, 2, 3).State()
+				state.IsPool, state.MarkUtilized, state.Description, state.Comments = false, false, "", ""
+				state.LastUpdated = shared.NewTimestamp(state.Created.Add(time.Minute))
+				item, err := domainipam.RestorePrefix(state)
+				require.NoError(t, err)
+				projected := typedPrefixProto(item)
+				require.Equal(t, state.Prefix, projected.Prefix)
+				require.Equal(t, item.Family(), projected.Family)
+				require.Equal(t, "reserved", projected.Status)
+				require.False(t, projected.IsPool)
+				require.False(t, projected.MarkUtilized)
+				require.Empty(t, projected.Description)
+				require.Empty(t, projected.Comments)
+				require.Equal(t, uint64(2), projected.Children)
+				require.Equal(t, uint32(3), projected.Depth)
+				require.True(t, projected.Created.AsTime().Equal(state.Created.Time))
+				require.True(t, projected.LastUpdated.AsTime().Equal(state.LastUpdated.Time))
+				if related.IsNull() {
+					require.Nil(t, projected.VrfId)
+				} else {
+					require.Equal(t, int64(7), projected.VrfId.GetValue())
+				}
+			}
+		}
+	})
+}
+
+func prefixPresenceBoolPointer(value bool) *bool { return &value }
+
+func prefixPresenceCreateFields(command applicationipam.UpdatePrefixCommand) applicationipam.CreatePrefixCommand {
+	return applicationipam.CreatePrefixCommand{
+		Prefix: command.Prefix, VRF: command.VRF, Status: command.Status,
+		IsPool: command.IsPool, MarkUtilized: command.MarkUtilized,
+		Description: command.Description, Comments: command.Comments,
+	}
+}
+
+func prefixPresenceStates(command applicationipam.CreatePrefixCommand) map[string]applicationipam.FieldState {
+	return map[string]applicationipam.FieldState{
+		"prefix": command.Prefix.State(), "vrf": command.VRF.State(), "status": command.Status.State(),
+		"is_pool": command.IsPool.State(), "mark_utilized": command.MarkUtilized.State(),
+		"description": command.Description.State(), "comments": command.Comments.State(),
+	}
+}
+
+func TestTypedPrefixUpdateMaskCanClearNullableVRFAndPreservesExplicitNull(t *testing.T) {
 	command, err := typedPrefixUpdateCommand(
 		17,
 		&ipamv1.PrefixInput{},
@@ -67,12 +192,13 @@ func TestTypedPrefixUpdateMaskCanClearNullableVRFAndRequiresExplicitValues(t *te
 	assert.Equal(t, applicationipam.FieldNull, command.VRF.State())
 	assert.Equal(t, applicationipam.FieldOmitted, command.Prefix.State())
 
-	_, err = typedPrefixUpdateCommand(
+	command, err = typedPrefixUpdateCommand(
 		17,
 		&ipamv1.PrefixInput{},
 		&fieldmaskpb.FieldMask{Paths: []string{"prefix"}},
 	)
-	require.Error(t, err)
+	require.NoError(t, err)
+	assert.Equal(t, applicationipam.FieldNull, command.Prefix.State())
 
 	_, err = typedPrefixUpdateCommand(
 		17,

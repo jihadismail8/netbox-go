@@ -337,6 +337,10 @@ if (profile && baseline && oracle && schema) {
     "ipam.VRF: field_contracts must declare operation-specific presence semantics",
   );
   assert(
+    metadataResources.get("ipam.Prefix")?.field_contracts !== undefined,
+    "ipam.Prefix: field_contracts must declare operation-specific presence semantics",
+  );
+  assert(
     metadataResources.get("dcim.Site")?.field_contracts !== undefined,
     "dcim.Site: field_contracts must declare operation-specific presence semantics",
   );

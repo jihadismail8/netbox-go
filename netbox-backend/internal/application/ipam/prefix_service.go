@@ -152,12 +152,9 @@ func (service *PrefixService) CreatePrefix(
 	}
 	var result *domainipam.Prefix
 	err := service.unitOfWork.WithinTransaction(ctx, func(transactionContext context.Context) error {
-		commandValues, err := command.values()
-		if err != nil {
-			return err
-		}
-		values, err := service.resolveValues(transactionContext, commandValues)
-		if err != nil {
+		commandValues, commandErr := command.values()
+		values, relationErr := service.resolveValues(transactionContext, commandValues)
+		if err := mergePrefixMutationErrors(commandErr, relationErr, domainipam.ValidatePrefixValues(values)); err != nil {
 			return err
 		}
 		now := service.clock.Now()
@@ -213,12 +210,9 @@ func (service *PrefixService) ReplacePrefix(
 		if err := service.authorize(transactionContext, principal, authz.Change, loaded); err != nil {
 			return err
 		}
-		commandValues, err := command.values()
-		if err != nil {
-			return err
-		}
-		values, err := service.resolveValues(transactionContext, commandValues)
-		if err != nil {
+		commandValues, commandErr := command.values()
+		values, relationErr := service.resolveReplaceValues(transactionContext, loaded, command, commandValues)
+		if err := mergePrefixMutationErrors(commandErr, relationErr, domainipam.ValidatePrefixValues(values)); err != nil {
 			return err
 		}
 		before := loaded.Snapshot()
@@ -264,12 +258,9 @@ func (service *PrefixService) UpdatePrefix(
 		if err := service.authorize(transactionContext, principal, authz.Change, loaded); err != nil {
 			return err
 		}
-		commandPatch, err := command.patch()
-		if err != nil {
-			return err
-		}
-		patch, err := service.resolvePatch(transactionContext, commandPatch)
-		if err != nil {
+		commandPatch, commandErr := command.patch()
+		patch, relationErr := service.resolvePatch(transactionContext, commandPatch)
+		if err := mergePrefixMutationErrors(commandErr, relationErr, loaded.ValidatePatch(patch)); err != nil {
 			return err
 		}
 		before := loaded.Snapshot()
@@ -336,14 +327,42 @@ func (service *PrefixService) resolveValues(
 	values prefixCommandValues,
 ) (domainipam.PrefixValues, error) {
 	vrf, err := service.resolveVRF(ctx, values.vrfID)
-	if err != nil {
-		return domainipam.PrefixValues{}, err
-	}
 	return domainipam.PrefixValues{
 		Prefix: values.prefix, VRF: vrf, Status: values.status,
 		IsPool: values.isPool, MarkUtilized: values.markUtilized,
 		Description: values.description, Comments: values.comments,
-	}, nil
+	}, err
+}
+
+func (service *PrefixService) resolveReplaceValues(
+	ctx context.Context,
+	loaded *domainipam.Prefix,
+	command ReplacePrefixCommand,
+	partial prefixCommandValues,
+) (domainipam.PrefixValues, error) {
+	values := loaded.Values()
+	values.Prefix = partial.prefix
+	if command.Status.State() != FieldOmitted {
+		values.Status = partial.status
+	}
+	if command.IsPool.State() != FieldOmitted {
+		values.IsPool = partial.isPool
+	}
+	if command.MarkUtilized.State() != FieldOmitted {
+		values.MarkUtilized = partial.markUtilized
+	}
+	if command.Description.State() != FieldOmitted {
+		values.Description = partial.description
+	}
+	if command.Comments.State() != FieldOmitted {
+		values.Comments = partial.comments
+	}
+	if command.VRF.State() != FieldOmitted {
+		vrf, err := service.resolveVRF(ctx, partial.vrfID)
+		values.VRF = vrf
+		return values, err
+	}
+	return values, nil
 }
 
 func (service *PrefixService) resolvePatch(
@@ -357,7 +376,7 @@ func (service *PrefixService) resolvePatch(
 	if patch.vrfSet {
 		vrf, err := service.resolveVRF(ctx, patch.vrfID)
 		if err != nil {
-			return domainipam.PrefixPatch{}, err
+			return domainPatch, err
 		}
 		domainPatch.VRF = &vrf
 	}

@@ -47,6 +47,26 @@
       "filters": ["vrf_id", "vrf_rd", "prefix", "family", "status", "within", "within_include", "contains"],
       "ordering": ["id", "vrf", "prefix", "status", "created", "last_updated"],
       "relationships": ["vrf"],
+      "field_contracts": {
+        "response": {
+          "nullable_fields": ["vrf", "created", "last_updated"]
+        },
+        "create": {
+          "required_fields": ["prefix"],
+          "nullable_fields": ["vrf"],
+          "blank_fields": ["description", "comments"]
+        },
+        "replace": {
+          "required_fields": ["prefix"],
+          "nullable_fields": ["vrf"],
+          "blank_fields": ["description", "comments"]
+        },
+        "update": {
+          "required_fields": [],
+          "nullable_fields": ["vrf"],
+          "blank_fields": ["description", "comments"]
+        }
+      },
       "delete_behavior": "delete",
       "network_semantics": "reject_host_bits_and_store_canonical_network"
     },

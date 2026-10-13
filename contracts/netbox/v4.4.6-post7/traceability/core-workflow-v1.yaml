@@ -3243,6 +3243,12 @@
       "status": "unresolved",
       "reason": "Operation-specific VRF metadata and the bounded scalar-presence lane own name, route distinguisher, enforce-unique, description, and comments create/PUT/PATCH presence, defaults, VRF-local normalization and validation, shared representable REST/gRPC intent, PostgreSQL durability and rollback, generated OpenAPI, and Vue dirty-field handling. The pinned differential oracle, formal retained-claim human review, remaining uniqueness, downstream Prefix/IPAddress policy, deletion, list/get/query/full CRUD, every tier and consumer, 13-resource parent, and profile completion remain pending.",
       "resolution_goal": "CW1-V2-02"
+    },
+    {
+      "id": "unresolved-prefix-scalar-presence",
+      "status": "unresolved",
+      "reason": "Operation-specific Prefix metadata and the bounded scalar-presence lane own prefix, numeric-ID VRF, status, pool and mark-utilized flags, description, and comments create/PUT/PATCH presence, defaults, Prefix-local scalar validation, shared representable REST/gRPC intent, PostgreSQL durability and rollback, generated OpenAPI, and Vue dirty-field handling. The pinned differential oracle, formal retained-claim human review, remaining network-value, uniqueness, hierarchy, containment, utilization, downstream IPAddress policy, allocation, deletion, list/get/query/full CRUD, every tier and consumer, 13-resource parent, and profile completion remain pending.",
+      "resolution_goal": "CW1-V2-02"
     }
   ],
   "verification_sets": [
@@ -5637,7 +5643,7 @@
       "capability": "ipam.Prefix",
       "operation": "create",
       "reference_set": "ipam.Prefix",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-prefix-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {
@@ -5677,7 +5683,7 @@
       "capability": "ipam.Prefix",
       "operation": "replace",
       "reference_set": "ipam.Prefix",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-prefix-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {
@@ -5687,7 +5693,7 @@
       "capability": "ipam.Prefix",
       "operation": "update",
       "reference_set": "ipam.Prefix",
-      "assessment_set": "unresolved-v2",
+      "assessment_set": "unresolved-prefix-scalar-presence",
       "verification_set": "baseline-t1-pending"
     },
     {

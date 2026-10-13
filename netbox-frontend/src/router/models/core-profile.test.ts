@@ -22,6 +22,8 @@ import type {
   IPAddressForm,
   ManufacturerDTO,
   ManufacturerForm,
+  PrefixDTO,
+  PrefixForm,
   RackDTO,
   RackForm,
   RackRoleDTO,
@@ -117,6 +119,251 @@ describe('Site core profile form contract', () => {
 
     const form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as SiteForm
     expect(adapter.mutationFromForm(form, true)).toEqual({ facility: '' })
+  })
+})
+
+describe('Prefix core profile scalar-presence form contract', () => {
+  const dto: PrefixDTO = {
+    id: 20,
+    url: '/api/ipam/prefixes/20/',
+    display: '192.0.2.0/24',
+    created: '2026-10-13T07:55:00Z',
+    last_updated: '2026-10-13T07:55:00Z',
+    prefix: '192.0.2.0/24',
+    vrf: null,
+    status: { value: 'reserved', label: 'Reserved' },
+    is_pool: true,
+    mark_utilized: true,
+    description: 'Existing description',
+    comments: 'Operator note',
+    family: { value: 4, label: 'IPv4' },
+    children: 0,
+    _depth: 0,
+  }
+
+  it('preserves the Prefix dirty baseline after async hydration and a real textbox edit', async () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'prefix')!
+    const adapter = getCoreResourceAdapter('prefix')
+    const wrapper = mount(DynamicForm, {
+      props: { fields: config.fields, modelValue: adapter.emptyForm(), editing: true },
+    })
+    await wrapper.setProps({ modelValue: adapter.formFromDTO(dto) })
+    const fields = new Map(
+      wrapper.findAllComponents(DynamicField).map((field) => [field.props('field').key, field]),
+    )
+    expect(fields.get('vrf')!.props('modelValue')).toBeNull()
+    for (const field of ['is_pool', 'mark_utilized']) {
+      expect((fields.get(field)!.get('input').element as HTMLInputElement).checked).toBe(true)
+    }
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    await fields.get('description')!.get('input').setValue('Changed description')
+
+    const form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as PrefixForm
+    expect(form.vrf).toBeNull()
+    expect(form.is_pool).toBe(true)
+    expect(form.mark_utilized).toBe(true)
+    const mutation = adapter.mutationFromForm(form, true)
+    expect(mutation).toEqual({ description: 'Changed description' })
+    expect(Object.getOwnPropertySymbols(mutation)).toEqual([])
+  })
+
+  it('pins exactly seven Prefix fields and keeps client validation limited to existing form metadata', () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'prefix')!
+    const owned = ['prefix', 'vrf', 'status', 'is_pool', 'mark_utilized', 'description', 'comments']
+    const fields = new Map(config.fields.map((field) => [field.key, field]))
+    expect(config.writableFields).toEqual(owned)
+    expect(config.fields.map((field) => field.key)).toEqual(owned)
+    expect(fields.get('prefix')).toEqual(expect.objectContaining({ type: 'text', required: true }))
+    expect(fields.get('vrf')).toEqual(
+      expect.objectContaining({ type: 'api-select', relationResource: 'vrf' }),
+    )
+    expect(fields.get('status')).toEqual(
+      expect.objectContaining({ required: true, default: 'active' }),
+    )
+    expect(fields.get('status')?.options?.map((option) => option.value)).toEqual([
+      'container',
+      'active',
+      'reserved',
+      'deprecated',
+    ])
+    for (const flag of ['is_pool', 'mark_utilized']) {
+      expect(fields.get(flag)).toEqual(expect.objectContaining({ type: 'boolean', default: false }))
+    }
+    for (const optional of owned.filter((field) => !['prefix', 'status'].includes(field))) {
+      expect(fields.get(optional)?.required, optional).not.toBe(true)
+    }
+    const wrapper = mount(DynamicForm, {
+      props: { fields: config.fields, modelValue: getCoreResourceAdapter('prefix').emptyForm() },
+    })
+    const components = new Map(
+      wrapper.findAllComponents(DynamicField).map((field) => [field.props('field').key, field]),
+    )
+    expect(components.get('description')!.get('input').attributes('maxlength')).toBeUndefined()
+    expect(components.get('status')!.get('option[value=""]').attributes('disabled')).toBeDefined()
+    wrapper.unmount()
+  })
+
+  it('types nullable Prefix timestamp envelopes without claiming runtime null restoration', () => {
+    expectTypeOf<PrefixDTO['created']>().toEqualTypeOf<string | null>()
+    expectTypeOf<PrefixDTO['last_updated']>().toEqualTypeOf<string | null>()
+    expectTypeOf<PrefixForm['status']>().toEqualTypeOf<
+      'container' | 'active' | 'reserved' | 'deprecated' | '' | null | undefined
+    >()
+  })
+
+  it('keeps optional Prefix creation fields absent through real textbox input', async () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'prefix')!
+    const adapter = getCoreResourceAdapter('prefix')
+    const wrapper = mount(DynamicForm, {
+      props: { fields: config.fields, modelValue: adapter.emptyForm() },
+    })
+    const fields = new Map(
+      wrapper.findAllComponents(DynamicField).map((field) => [field.props('field').key, field]),
+    )
+    for (const flag of ['is_pool', 'mark_utilized']) {
+      expect((fields.get(flag)!.get('input').element as HTMLInputElement).checked).toBe(false)
+    }
+    expect(fields.get('status')!.get('select').element.value).toBe('active')
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    await fields.get('prefix')!.get('input').setValue('198.51.100.0/24')
+    const form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as PrefixForm
+    expect(adapter.mutationFromForm(form, false)).toEqual({
+      prefix: '198.51.100.0/24',
+      status: 'active',
+      is_pool: false,
+      mark_utilized: false,
+    })
+    for (const omitted of ['vrf', 'description', 'comments'])
+      expect(form).not.toHaveProperty(omitted)
+    wrapper.unmount()
+  })
+
+  it('preserves false and blank Prefix text from real checkbox, textbox and textarea edits', async () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'prefix')!
+    const adapter = getCoreResourceAdapter('prefix')
+    const wrapper = mount(DynamicForm, {
+      props: {
+        fields: config.fields,
+        modelValue: adapter.formFromDTO(dto),
+        editing: true,
+      },
+    })
+    const fields = new Map(
+      wrapper.findAllComponents(DynamicField).map((field) => [field.props('field').key, field]),
+    )
+    await fields.get('is_pool')!.get('input').setValue(false)
+    await fields.get('mark_utilized')!.get('input').setValue(false)
+    await fields.get('description')!.get('input').setValue('')
+    await fields.get('comments')!.get('textarea').setValue('')
+    const form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as PrefixForm
+    expect(form.vrf).toBeNull()
+    expect(adapter.mutationFromForm(form, true)).toEqual({
+      is_pool: false,
+      mark_utilized: false,
+      description: '',
+      comments: '',
+    })
+    wrapper.unmount()
+  })
+
+  it('preserves real status selection and nullable VRF clearing without unrelated dirty fields', async () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'prefix')!
+    const adapter = getCoreResourceAdapter('prefix')
+    const relation = { id: 10, url: '/api/ipam/vrfs/10/', display: 'Production' }
+    const wrapper = mount(DynamicForm, {
+      props: {
+        fields: config.fields,
+        modelValue: adapter.formFromDTO({ ...dto, vrf: relation }),
+        editing: true,
+      },
+    })
+    const fields = new Map(
+      wrapper.findAllComponents(DynamicField).map((field) => [field.props('field').key, field]),
+    )
+    await fields.get('status')!.get('select').setValue('deprecated')
+    let form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as PrefixForm
+    expect(adapter.mutationFromForm(form, true)).toEqual({ status: 'deprecated' })
+    await fields.get('vrf')!.get('[aria-label="Clear selection"]').trigger('mousedown')
+    form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as PrefixForm
+    expect(form.vrf).toBeNull()
+    expect(adapter.mutationFromForm(form, true)).toEqual({ vrf: null, status: 'deprecated' })
+    wrapper.unmount()
+  })
+
+  it.each([null, '', ' active '])(
+    'preserves labelled synthetic status child-event intent %s',
+    async (status) => {
+      const config = CORE_PROFILE_MODELS.find((model) => model.model === 'prefix')!
+      const adapter = getCoreResourceAdapter('prefix')
+      const wrapper = mount(DynamicForm, {
+        props: {
+          fields: config.fields,
+          modelValue: adapter.formFromDTO(dto),
+          editing: true,
+        },
+      })
+      const field = wrapper
+        .findAllComponents(DynamicField)
+        .find((candidate) => candidate.props('field').key === 'status')!
+      field.vm.$emit('update:modelValue', status)
+      await nextTick()
+      const form = wrapper.emitted('update:modelValue')?.at(-1)?.[0] as PrefixForm
+      expect(form.status).toBe(status)
+      expect(adapter.mutationFromForm(form, true)).toEqual({ status })
+      wrapper.unmount()
+    },
+  )
+
+  it('routes normalized Prefix REST errors only to matching fields and keeps non-field errors separate', () => {
+    const config = CORE_PROFILE_MODELS.find((model) => model.model === 'prefix')!
+    const failure: ApiFailure = {
+      kind: 'api-failure',
+      status: 400,
+      detail: 'The request failed with status 400.',
+      retryable: false,
+      fields: {
+        prefix: ['This field may not be blank.'],
+        vrf: ['Related object not found using the provided numeric ID: 0'],
+        status: ['This field may not be blank.'],
+        description: [
+          'Ensure this field has no more than 200 characters.',
+          'Null characters are not allowed.',
+        ],
+      },
+    }
+    const wrapper = mount(DynamicForm, {
+      props: {
+        fields: config.fields,
+        modelValue: getCoreResourceAdapter('prefix').formFromDTO(dto),
+        errors: getErrorRecord(failure),
+      },
+    })
+    const fields = new Map(
+      wrapper.findAllComponents(DynamicField).map((field) => [field.props('field').key, field]),
+    )
+    for (const [field, messages] of Object.entries(failure.fields)) {
+      expect(fields.get(field)?.props('error'), field).toBe((messages as string[]).join(' '))
+      for (const message of messages as string[])
+        expect(fields.get(field)?.text()).toContain(message)
+    }
+    for (const field of ['is_pool', 'mark_utilized', 'comments'])
+      expect(fields.get(field)?.props('error')).toBeUndefined()
+    expect(wrapper.find('[role="alert"]').exists()).toBe(false)
+    wrapper.unmount()
+    const nonField = mount(DynamicForm, {
+      props: {
+        fields: config.fields,
+        modelValue: {},
+        errors: getErrorRecord({
+          ...failure,
+          fields: { non_field_errors: ['Independent request failure.'] },
+        }),
+      },
+    })
+    expect(nonField.get('[role="alert"]').text()).toContain('Independent request failure.')
+    for (const field of nonField.findAllComponents(DynamicField))
+      expect(field.props('error')).toBeUndefined()
+    nonField.unmount()
   })
 })
 

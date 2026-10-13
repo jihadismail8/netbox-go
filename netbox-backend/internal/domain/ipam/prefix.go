@@ -243,6 +243,28 @@ func (prefix *Prefix) ApplyPatch(patch PrefixPatch, now shared.Timestamp) error 
 			Description: "At least one writable field must be supplied.",
 		})
 	}
+	return prefix.Replace(prefix.valuesWithPatch(patch), now)
+}
+
+// ValidatePrefixValues checks scalar values without identity, time or mutation.
+func ValidatePrefixValues(values PrefixValues) error {
+	_, violations := validatePrefixValues(values)
+	if len(violations) > 0 {
+		return shared.NewValidationError(violations...)
+	}
+	return nil
+}
+
+// ValidatePatch previews values only. Empty intent remains the command and
+// ApplyPatch boundary, so invalid supplied fields cannot fabricate mask errors.
+func (prefix *Prefix) ValidatePatch(patch PrefixPatch) error {
+	if prefix == nil {
+		return shared.NewError(shared.ErrorReasonInternal, "Cannot patch a nil Prefix.")
+	}
+	return ValidatePrefixValues(prefix.valuesWithPatch(patch))
+}
+
+func (prefix *Prefix) valuesWithPatch(patch PrefixPatch) PrefixValues {
 	values := prefix.Values()
 	if patch.Prefix != nil {
 		values.Prefix = *patch.Prefix
@@ -265,7 +287,7 @@ func (prefix *Prefix) ApplyPatch(patch PrefixPatch, now shared.Timestamp) error 
 	if patch.Comments != nil {
 		values.Comments = *patch.Comments
 	}
-	return prefix.Replace(values, now)
+	return values
 }
 
 func (prefix Prefix) ID() shared.ID                 { return prefix.id }
@@ -321,19 +343,33 @@ type normalizedPrefixValues struct {
 
 func validatePrefixValues(values PrefixValues) (normalizedPrefixValues, []shared.FieldViolation) {
 	var violations []shared.FieldViolation
-	network, err := ParsePrefixNetwork(values.Prefix)
-	if err != nil {
-		violations = append(violations, shared.ViolationsOf(err)...)
+	var network PrefixNetwork
+	if strings.TrimSpace(values.Prefix) == "" {
+		violations = append(violations, shared.FieldViolation{
+			Field: "prefix", Reason: "blank", Description: "This field may not be blank.",
+		})
+	} else {
+		parsed, err := ParsePrefixNetwork(values.Prefix)
+		if err != nil {
+			violations = append(violations, shared.ViolationsOf(err)...)
+		}
+		network = parsed
 	}
 	if reference, present := values.VRF.Get(); present && !reference.Valid() {
 		violations = append(violations, shared.FieldViolation{
 			Field: "vrf", Reason: "invalid", Description: "Invalid VRF reference.",
 		})
 	}
-	status, valid := ParsePrefixStatus(values.Status)
-	if !valid {
+	status := PrefixStatus(values.Status)
+	switch status {
+	case PrefixStatusContainer, PrefixStatusActive, PrefixStatusReserved, PrefixStatusDeprecated:
+	default:
+		description := fmt.Sprintf("%s is not a valid choice.", values.Status)
+		if values.Status == "" {
+			description = "This field may not be blank."
+		}
 		violations = append(violations, shared.FieldViolation{
-			Field: "status", Reason: "invalid_choice", Description: "Select a valid choice.",
+			Field: "status", Reason: "invalid", Description: description,
 		})
 	}
 	description := strings.TrimSpace(values.Description)
@@ -342,6 +378,16 @@ func validatePrefixValues(values PrefixValues) (normalizedPrefixValues, []shared
 		violations = append(violations, shared.FieldViolation{
 			Field: "description", Reason: "max_length",
 			Description: fmt.Sprintf("Ensure this field has no more than %d characters.", PrefixDescriptionMaxLength),
+		})
+	}
+	if strings.ContainsRune(description, '\x00') {
+		violations = append(violations, shared.FieldViolation{
+			Field: "description", Reason: "null_characters_not_allowed", Description: "Null characters are not allowed.",
+		})
+	}
+	if strings.ContainsRune(comments, '\x00') {
+		violations = append(violations, shared.FieldViolation{
+			Field: "comments", Reason: "null_characters_not_allowed", Description: "Null characters are not allowed.",
 		})
 	}
 	return normalizedPrefixValues{

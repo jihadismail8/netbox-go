@@ -3009,7 +3009,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PrefixWrite"
+                "$ref": "#/components/schemas/PrefixCreate"
               }
             }
           }
@@ -3079,7 +3079,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PrefixWrite"
+                "$ref": "#/components/schemas/PrefixReplace"
               }
             }
           }
@@ -3118,7 +3118,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PrefixWrite"
+                "$ref": "#/components/schemas/PrefixUpdate"
               }
             }
           }
@@ -5307,10 +5307,7 @@
         "additionalProperties": false,
         "properties": {
           "prefix": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "vrf": {
             "oneOf": [
@@ -5345,16 +5342,10 @@
             "type": "boolean"
           },
           "description": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "comments": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "id": {
             "type": "integer",
@@ -5365,10 +5356,7 @@
             "format": "uri"
           },
           "display": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "created": {
             "type": [
@@ -5411,6 +5399,42 @@
           }
         }
       },
+      "PrefixCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "prefix"
+        ],
+        "properties": {
+          "prefix": {
+            "type": "string",
+            "minLength": 1
+          },
+          "vrf": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1
+          },
+          "is_pool": {
+            "type": "boolean"
+          },
+          "mark_utilized": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string"
+          },
+          "comments": {
+            "type": "string"
+          }
+        }
+      },
       "PrefixList": {
         "type": "object",
         "additionalProperties": false,
@@ -5445,15 +5469,16 @@
           }
         }
       },
-      "PrefixWrite": {
+      "PrefixReplace": {
         "type": "object",
         "additionalProperties": false,
+        "required": [
+          "prefix"
+        ],
         "properties": {
           "prefix": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "minLength": 1
           },
           "vrf": {
             "type": [
@@ -5463,7 +5488,8 @@
             "format": "int64"
           },
           "status": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "is_pool": {
             "type": "boolean"
@@ -5472,16 +5498,43 @@
             "type": "boolean"
           },
           "description": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "comments": {
+            "type": "string"
+          }
+        }
+      },
+      "PrefixUpdate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "prefix": {
+            "type": "string",
+            "minLength": 1
+          },
+          "vrf": {
             "type": [
-              "string",
+              "integer",
               "null"
-            ]
+            ],
+            "format": "int64"
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1
+          },
+          "is_pool": {
+            "type": "boolean"
+          },
+          "mark_utilized": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string"
+          },
+          "comments": {
+            "type": "string"
           }
         }
       },

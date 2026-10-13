@@ -19,6 +19,8 @@ import {
   type IPAddressForm,
   type ManufacturerDTO,
   type ManufacturerForm,
+  type PrefixDTO,
+  type PrefixForm,
   type RackDTO,
   type RackForm,
   type RackRoleDTO,
@@ -1616,5 +1618,188 @@ describe('typed core resource adapters', () => {
       comments: '',
     })
     expect(resourceField(dto, 'status')).toBe('active')
+  })
+})
+
+describe('Prefix scalar presence adapters', () => {
+  const dto: PrefixDTO = {
+    id: 20,
+    url: '/api/ipam/prefixes/20/',
+    display: '192.0.2.0/24',
+    created: '2026-10-13T07:55:00Z',
+    last_updated: '2026-10-13T07:55:00Z',
+    prefix: '192.0.2.0/24',
+    vrf,
+    status: { value: 'reserved', label: 'Reserved' },
+    is_pool: true,
+    mark_utilized: true,
+    description: 'Existing description',
+    comments: 'Operator note',
+    family: { value: 4, label: 'IPv4' },
+    children: 0,
+    _depth: 0,
+  }
+
+  it('preserves sparse Prefix creation, defaults, null, zero, false, blank and raw status', () => {
+    const adapter = getCoreResourceAdapter('prefix')
+    expect(adapter.mutationFromForm({}, false)).toEqual({})
+    expect(adapter.emptyForm()).toEqual({ status: 'active', is_pool: false, mark_utilized: false })
+    expect(adapter.mutationFromForm(adapter.emptyForm(), false)).toEqual({
+      status: 'active',
+      is_pool: false,
+      mark_utilized: false,
+    })
+    expect(adapter.mutationFromForm({ prefix: '192.0.2.0/24' }, false)).toEqual({
+      prefix: '192.0.2.0/24',
+    })
+    expect(adapter.mutationFromForm({ vrf: undefined, status: undefined }, false)).toEqual({})
+    for (const selection of [null, 0, -9, vrf]) {
+      expect(
+        adapter.mutationFromForm(
+          {
+            prefix: '192.0.2.0/24',
+            vrf: selection,
+            is_pool: false,
+            mark_utilized: false,
+            description: '',
+            comments: '',
+          },
+          false,
+        ),
+      ).toEqual({
+        prefix: '192.0.2.0/24',
+        vrf: selection === vrf ? vrf.id : selection,
+        is_pool: false,
+        mark_utilized: false,
+        description: '',
+        comments: '',
+      })
+    }
+    for (const status of [null, '', ' active ', 'ACTIVE', 'not-a-status']) {
+      const form = withFormField({ prefix: '192.0.2.0/24' }, 'status', status) as PrefixForm
+      expect(adapter.mutationFromForm(form, false)).toEqual({ prefix: '192.0.2.0/24', status })
+    }
+    const description = ' ' + '界'.repeat(201) + '\u0000 '
+    expect(adapter.mutationFromForm({ description, comments: ' untrimmed ' }, false)).toEqual({
+      description,
+      comments: ' untrimmed ',
+    })
+  })
+
+  it('omits unchanged Prefix fields against a private normalized baseline', () => {
+    const adapter = getCoreResourceAdapter('prefix')
+    const hydrated = adapter.formFromDTO(dto)
+
+    expect(adapter.mutationFromForm({ ...hydrated }, true)).toEqual({})
+    expect(Object.getOwnPropertySymbols(hydrated)).toHaveLength(1)
+    expect(JSON.parse(JSON.stringify(hydrated))).toEqual({
+      prefix: dto.prefix,
+      vrf,
+      status: 'reserved',
+      is_pool: true,
+      mark_utilized: true,
+      description: dto.description,
+      comments: dto.comments,
+    })
+    expect(
+      adapter.mutationFromForm(withFormField(hydrated, 'description', '') as PrefixForm, true),
+    ).toEqual({ description: '' })
+  })
+
+  it('compares Prefix VRF selections by ID rather than envelope identity', () => {
+    const adapter = getCoreResourceAdapter('prefix')
+    const hydrated = adapter.formFromDTO(dto)
+
+    for (const selection of [{ ...vrf, display: 'Same ID, another label' }, vrf.id]) {
+      expect(
+        adapter.mutationFromForm(withFormField(hydrated, 'vrf', selection) as PrefixForm, true),
+      ).toEqual({})
+    }
+    for (const selection of [null, 0, 12]) {
+      expect(
+        adapter.mutationFromForm(withFormField(hydrated, 'vrf', selection) as PrefixForm, true),
+      ).toEqual({ vrf: selection })
+    }
+  })
+
+  it('whitelists Prefix mutations without leaking response fields or Symbols', () => {
+    const adapter = getCoreResourceAdapter('prefix')
+    const form = {
+      prefix: '198.51.100.0/24',
+      vrf: 0,
+      status: 'reserved',
+      is_pool: false,
+      mark_utilized: false,
+      description: '',
+      comments: '',
+      id: 99,
+      url: '/api/ipam/prefixes/99/',
+      display: 'Must not leak',
+      created: '2026-10-13T07:55:00Z',
+      last_updated: '2026-10-13T07:55:00Z',
+      family: { value: 4, label: 'IPv4' },
+      children: 4,
+      _depth: 2,
+      tenant: 7,
+      [Symbol('response-only')]: 'Must not leak',
+    } as PrefixForm
+
+    for (const editing of [false, true]) {
+      const mutation = adapter.mutationFromForm(form, editing)
+      expect(mutation).toEqual({
+        prefix: '198.51.100.0/24',
+        vrf: 0,
+        status: 'reserved',
+        is_pool: false,
+        mark_utilized: false,
+        description: '',
+        comments: '',
+      })
+      expect(Object.getOwnPropertySymbols(mutation)).toEqual([])
+    }
+  })
+
+  it('emits only each dirty Prefix field and preserves invalid status input for the server', () => {
+    const adapter = getCoreResourceAdapter('prefix')
+    const hydrated = adapter.formFromDTO(dto)
+    const changes = {
+      prefix: '2001:db8::/64',
+      vrf: null,
+      status: 'deprecated',
+      is_pool: false,
+      mark_utilized: false,
+      description: '',
+      comments: '',
+    } satisfies PrefixForm
+    for (const [field, value] of Object.entries(changes)) {
+      const form = withFormField(hydrated, field, value) as PrefixForm
+      const mutation = adapter.mutationFromForm(form, true)
+      expect(mutation, field).toEqual({ [field]: value })
+      expect(Object.getOwnPropertySymbols(mutation)).toEqual([])
+    }
+    for (const status of [null, '', ' active ', 'ACTIVE', 'not-a-status']) {
+      expect(
+        adapter.mutationFromForm(withFormField(hydrated, 'status', status) as PrefixForm, true),
+      ).toEqual({ status })
+    }
+    const nullHydrated = adapter.formFromDTO({
+      ...dto,
+      vrf: null,
+      is_pool: false,
+      mark_utilized: false,
+    })
+    expect(adapter.mutationFromForm({ ...nullHydrated }, true)).toEqual({})
+    expect(
+      adapter.mutationFromForm(withFormField(nullHydrated, 'comments', '') as PrefixForm, true),
+    ).toEqual({ comments: '' })
+    expect(adapter.mutationFromForm(hydrated, false)).toEqual({
+      prefix: dto.prefix,
+      vrf: vrf.id,
+      status: 'reserved',
+      is_pool: true,
+      mark_utilized: true,
+      description: dto.description,
+      comments: dto.comments,
+    })
   })
 })

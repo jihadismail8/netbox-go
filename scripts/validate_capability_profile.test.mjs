@@ -401,6 +401,27 @@ const VRF_FIELD_CONTRACTS = {
   },
 };
 
+const PREFIX_FIELD_CONTRACTS = {
+  response: {
+    nullable_fields: ["vrf", "created", "last_updated"],
+  },
+  create: {
+    required_fields: ["prefix"],
+    nullable_fields: ["vrf"],
+    blank_fields: ["description", "comments"],
+  },
+  replace: {
+    required_fields: ["prefix"],
+    nullable_fields: ["vrf"],
+    blank_fields: ["description", "comments"],
+  },
+  update: {
+    required_fields: [],
+    nullable_fields: ["vrf"],
+    blank_fields: ["description", "comments"],
+  },
+};
+
 function runNode(script, argument) {
   return spawnSync(process.execPath, [path.join(ROOT, script), argument], {
     cwd: ROOT,
@@ -843,6 +864,15 @@ test("current capability metadata validates", () => {
     VRF_FIELD_CONTRACTS,
     "current VRF presence metadata must match the independently pinned contract",
   );
+  const prefix = metadata.resources.find(
+    (resource) => resource.name === "Prefix",
+  );
+  assert.ok(prefix, "current metadata must contain Prefix");
+  assert.deepStrictEqual(
+    prefix.field_contracts,
+    PREFIX_FIELD_CONTRACTS,
+    "current Prefix presence metadata must match the independently pinned contract",
+  );
   const dcimMetadata = JSON.parse(
     fs.readFileSync(path.join(CONTRACT_ROOT, DCIM_RELATIVE_PATH), "utf8"),
   );
@@ -962,7 +992,7 @@ test("DeviceRole scalar-presence traceability delta remains bounded", () => {
       rows: traceability.rows.length,
     },
     {
-      assessment_sets: 15,
+      assessment_sets: 16,
       reference_sets: 19,
       proof_sets: 15,
       applicability_sets: 15,
@@ -971,7 +1001,7 @@ test("DeviceRole scalar-presence traceability delta remains bounded", () => {
       row_applicability: 293,
       rows: 293,
     },
-    "I6 through I12 must add only their bounded assessments without changing reviewed row authority counts",
+    "I6 through I13 must add only their bounded assessments without changing reviewed row authority counts",
   );
 
   const expectedRows = [
@@ -3846,10 +3876,27 @@ test("VRF scalar-presence traceability delta remains bounded", () => {
   );
   assert.equal(assessment?.status, "unresolved");
   assert.equal(assessment?.resolution_goal, "CW1-V2-02");
-  assert.equal(traceability.assessment_sets.length, 15);
+  assert.equal(traceability.assessment_sets.length, 16);
   assert.equal(traceability.rows.length, 293);
   const digest = (value) =>
     crypto.createHash("sha256").update(JSON.stringify(value)).digest("hex");
+  // Reverse only I13's prescribed delta when authenticating retained I12 seals.
+  const priorPrefixRows = new Set([
+    "operation.ipam.prefix.create",
+    "operation.ipam.prefix.replace",
+    "operation.ipam.prefix.update",
+  ]);
+  const beforeI13 = {
+    rows: traceability.rows.map((row) =>
+      priorPrefixRows.has(row.id) &&
+      row.assessment_set === "unresolved-prefix-scalar-presence"
+        ? { ...row, assessment_set: "unresolved-v2" }
+        : row,
+    ),
+    assessment_sets: traceability.assessment_sets.filter(
+      (item) => item.id !== "unresolved-prefix-scalar-presence",
+    ),
+  };
   const vrfRows = traceability.rows.filter(
     (row) => row.capability === "ipam.VRF",
   );
@@ -3860,9 +3907,9 @@ test("VRF scalar-presence traceability delta remains bounded", () => {
     "I12 must preserve all eight other VRF-owned rows",
   );
   assert.equal(
-    digest(traceability.rows.filter((row) => !ownedRows.includes(row.id))),
+    digest(beforeI13.rows.filter((row) => !ownedRows.includes(row.id))),
     "ebee93e119f700e70454f6a291cae1c4ae41ad210bfb43eeadf5ca1a02baf6eb",
-    "I12 must preserve every member of the other 290 rows",
+    "the retained I12 seal must preserve every member of its other 290 rows before I13",
   );
   for (const row of traceability.rows.filter((row) =>
     ownedRows.includes(row.id),
@@ -3880,10 +3927,10 @@ test("VRF scalar-presence traceability delta remains bounded", () => {
   }
   assert.equal(
     digest(
-      traceability.assessment_sets.filter((item) => item.id !== assessmentID),
+      beforeI13.assessment_sets.filter((item) => item.id !== assessmentID),
     ),
     "9de1a783ff0b112f9bd2b5a8b1ec092f5426822702a58f0a31723b338d7db587",
-    "I12 must preserve all existing assessments",
+    "the retained I12 seal must preserve all assessments existing before I13",
   );
   assert.equal(
     digest(
@@ -4176,4 +4223,538 @@ assertOpenAPIRejected(
     spec.components.schemas.VRF.properties.tenant = { type: "integer" };
   },
   /VRF response fields must match resource metadata/u,
+);
+
+test("Prefix field contracts are mandatory", () => {
+  withResourceContractFixture(
+    IPAM_RELATIVE_PATH,
+    "Prefix",
+    PREFIX_FIELD_CONTRACTS,
+    (resource) => {
+      delete resource.field_contracts;
+    },
+    (profilePath) => {
+      const result = runNode(
+        "scripts/validate_capability_profile.mjs",
+        profilePath,
+      );
+      assert.notEqual(result.status, 0, diagnostics(result));
+      assert.match(
+        diagnostics(result),
+        /ipam\.Prefix: field_contracts must declare operation-specific presence semantics/u,
+      );
+    },
+  );
+});
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Prefix response boolean types",
+  (spec) => {
+    spec.components.schemas.Prefix.properties.is_pool.type = "string";
+  },
+  /Prefix\.is_pool base type must be boolean/u,
+);
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects undeclared Prefix response fields",
+  (spec) => {
+    spec.components.schemas.Prefix.properties.tenant = { type: "integer" };
+  },
+  /Prefix response fields must match resource metadata/u,
+);
+
+test("Prefix scalar-presence metadata and traceability delta remains bounded", () => {
+  const digest = (value) =>
+    crypto.createHash("sha256").update(JSON.stringify(value)).digest("hex");
+  const metadata = JSON.parse(
+    fs.readFileSync(path.join(CONTRACT_ROOT, IPAM_RELATIVE_PATH), "utf8"),
+  );
+  const prefix = metadata.resources.find(
+    (resource) => resource.name === "Prefix",
+  );
+  assert.deepStrictEqual(prefix.field_contracts, PREFIX_FIELD_CONTRACTS);
+  delete prefix.field_contracts;
+  assert.equal(
+    digest(metadata),
+    "9501e27937553f30f134c8cfc27e6196eb88ebcf9c5915124d68f1eba9fcd5d7",
+    "I13 must preserve all other IPAM metadata members",
+  );
+
+  const traceability = JSON.parse(fs.readFileSync(TRACEABILITY_PATH, "utf8"));
+  const ownedRows = [
+    "operation.ipam.prefix.create",
+    "operation.ipam.prefix.replace",
+    "operation.ipam.prefix.update",
+  ];
+  const assessmentID = "unresolved-prefix-scalar-presence";
+  assert.equal(traceability.assessment_sets.length, 16);
+  assert.equal(traceability.rows.length, 293);
+  assert.deepStrictEqual(
+    traceability.rows
+      .filter((row) => row.assessment_set === assessmentID)
+      .map((row) => row.id)
+      .sort(),
+    ownedRows,
+  );
+  const assessments = traceability.assessment_sets.filter(
+    (item) => item.id === assessmentID,
+  );
+  assert.equal(assessments.length, 1);
+  assert.deepStrictEqual(Object.keys(assessments[0]).sort(), [
+    "id",
+    "reason",
+    "resolution_goal",
+    "status",
+  ]);
+  assert.equal(assessments[0].status, "unresolved");
+  assert.equal(assessments[0].resolution_goal, "CW1-V2-02");
+  assert.match(assessments[0].reason, /every tier and consumer/u);
+  assert.match(assessments[0].reason, /profile completion remain pending/u);
+  for (const row of traceability.rows.filter((row) =>
+    ownedRows.includes(row.id),
+  )) {
+    assert.deepStrictEqual(row, {
+      id: row.id,
+      kind: "resource_operation",
+      source_id: `ipam.Prefix.${row.operation}`,
+      capability: "ipam.Prefix",
+      operation: row.id.split(".").at(-1),
+      reference_set: "ipam.Prefix",
+      assessment_set: assessmentID,
+      verification_set: "baseline-t1-pending",
+    });
+  }
+  const prefixRows = traceability.rows.filter(
+    (row) => row.capability === "ipam.Prefix",
+  );
+  assert.equal(prefixRows.length, 15);
+  assert.equal(
+    digest(prefixRows.filter((row) => !ownedRows.includes(row.id))),
+    "f52b3102813a5c5f79cfe875dd04599246dba6c94d5ddca319c19523aaad2195",
+    "I13 must preserve the twelve other Prefix-owned rows",
+  );
+  assert.equal(
+    digest(traceability.rows.filter((row) => !ownedRows.includes(row.id))),
+    "a28543feb5fa3bcb119f8dd1630d2ffce1da5b8b3b983e2e5a82418041389703",
+    "I13 must preserve all 290 unchanged rows: twelve Prefix and 278 non-Prefix",
+  );
+  assert.equal(
+    digest(
+      traceability.assessment_sets.filter((item) => item.id !== assessmentID),
+    ),
+    "687bdb5b60b3f601874fa34067f22d4732145d7cfba3f66b1e32088f6e1f1df2",
+    "I13 must preserve all fifteen prior assessments",
+  );
+  assert.equal(
+    digest(
+      Object.fromEntries(
+        Object.entries(traceability).filter(
+          ([key]) => !["rows", "assessment_sets"].includes(key),
+        ),
+      ),
+    ),
+    "a843f2064323a9d0db5e23dd50fdfc758a5cff9936ed880ed506df75d2c0ebbf",
+    "I13 must preserve references, applicability, proof/consumer assignments and verification",
+  );
+});
+
+for (const [name, mutator, diagnostic] of [
+  [
+    "require every operation",
+    (resource) => {
+      delete resource.field_contracts.replace;
+    },
+    /field_contracts must declare exactly response, create, replace, and update/u,
+  ],
+  [
+    "reject extra operations",
+    (resource) => {
+      resource.field_contracts.delete = {};
+    },
+    /field_contracts must declare exactly response, create, replace, and update/u,
+  ],
+  [
+    "reject non-object contracts",
+    (resource) => {
+      resource.field_contracts = [];
+    },
+    /field_contracts must declare exactly response, create, replace, and update/u,
+  ],
+  [
+    "require array lists",
+    (resource) => {
+      resource.field_contracts.create.required_fields = "prefix";
+    },
+    /field_contracts\.create\.required_fields must be an array/u,
+  ],
+  [
+    "reject extra list keys",
+    (resource) => {
+      resource.field_contracts.update.default_fields = [];
+    },
+    /field_contracts\.update must declare exactly required_fields, nullable_fields, and blank_fields/u,
+  ],
+  [
+    "reject undeclared required fields",
+    (resource) => {
+      resource.field_contracts.create.required_fields.push("tenant");
+    },
+    /field_contracts\.create\.required_fields contains undeclared field tenant/u,
+  ],
+  [
+    "reject response-only nullable writes",
+    (resource) => {
+      resource.field_contracts.replace.nullable_fields.push("family");
+    },
+    /field_contracts\.replace\.nullable_fields contains undeclared field family/u,
+  ],
+  [
+    "reject response-only blank writes",
+    (resource) => {
+      resource.field_contracts.update.blank_fields.push("children");
+    },
+    /field_contracts\.update\.blank_fields contains undeclared field children/u,
+  ],
+  [
+    "reject undeclared nullable responses",
+    (resource) => {
+      resource.field_contracts.response.nullable_fields.push("tenant");
+    },
+    /field_contracts\.response\.nullable_fields contains undeclared field tenant/u,
+  ],
+  [
+    "reject duplicate required fields",
+    (resource) => {
+      resource.field_contracts.create.required_fields.push("prefix");
+    },
+    /field_contracts\.create\.required_fields contains duplicate field prefix/u,
+  ],
+  [
+    "reject duplicate nullable fields",
+    (resource) => {
+      resource.field_contracts.replace.nullable_fields.push("vrf");
+    },
+    /field_contracts\.replace\.nullable_fields contains duplicate field vrf/u,
+  ],
+  [
+    "reject duplicate blank fields",
+    (resource) => {
+      resource.field_contracts.update.blank_fields.push("comments");
+    },
+    /field_contracts\.update\.blank_fields contains duplicate field comments/u,
+  ],
+  [
+    "keep response and write contracts separate",
+    (resource) => {
+      resource.field_contracts.response = structuredClone(
+        resource.field_contracts.create,
+      );
+    },
+    /field_contracts\.response must declare exactly nullable_fields/u,
+  ],
+  [
+    "reject required PATCH fields",
+    (resource) => {
+      resource.field_contracts.update.required_fields.push("prefix");
+    },
+    /field_contracts\.update\.required_fields must be empty for PATCH/u,
+  ],
+  ...["vrf", "is_pool", "mark_utilized"].map((field) => [
+    `reject non-string blank ${field}`,
+    (resource) => {
+      resource.field_contracts.create.blank_fields.push(field);
+    },
+    new RegExp(
+      `field_contracts\\.create\\.blank_fields contains non-string field ${field}`,
+      "u",
+    ),
+  ]),
+]) {
+  test(`Prefix field contracts ${name}`, () => {
+    withResourceContractFixture(
+      IPAM_RELATIVE_PATH,
+      "Prefix",
+      PREFIX_FIELD_CONTRACTS,
+      mutator,
+      (profilePath) => {
+        const result = runNode(
+          "scripts/validate_capability_profile.mjs",
+          profilePath,
+        );
+        assert.notEqual(result.status, 0, diagnostics(result));
+        assert.match(diagnostics(result), diagnostic);
+      },
+    );
+  });
+}
+
+test("Prefix generated contract delta preserves every other schema and path member", () => {
+  const spec = JSON.parse(fs.readFileSync(OPENAPI_PATH, "utf8"));
+  for (const [route, method, suffix] of [
+    ["/api/ipam/prefixes/", "post", "Create"],
+    ["/api/ipam/prefixes/{id}/", "put", "Replace"],
+    ["/api/ipam/prefixes/{id}/", "patch", "Update"],
+  ]) {
+    const schema =
+      spec.paths[route][method].requestBody.content["application/json"].schema;
+    assert.deepStrictEqual(schema, {
+      $ref: `#/components/schemas/Prefix${suffix}`,
+    });
+    schema.$ref = "#/components/schemas/PrefixWrite";
+  }
+  assert.equal(spec.components.schemas.PrefixWrite, undefined);
+  for (const name of [
+    "Prefix",
+    "PrefixCreate",
+    "PrefixReplace",
+    "PrefixUpdate",
+  ]) {
+    assert.ok(spec.components.schemas[name]);
+    delete spec.components.schemas[name];
+  }
+  assert.equal(
+    crypto.createHash("sha256").update(JSON.stringify(spec)).digest("hex"),
+    "21246baf76eb0e829751104efad0e2b21e340d7845eca3ad31d46e37cd922c1d",
+    "only Prefix schemas and the three mutation request references may change",
+  );
+});
+
+for (const [verb, route, method, suffix] of [
+  ["POST", "/api/ipam/prefixes/", "post", "Create"],
+  ["PUT", "/api/ipam/prefixes/{id}/", "put", "Replace"],
+  ["PATCH", "/api/ipam/prefixes/{id}/", "patch", "Update"],
+]) {
+  const operation = suffix.toLowerCase();
+  const schemaName = `Prefix${suffix}`;
+  assertOpenAPIRejected(
+    `OpenAPI validation rejects stale Prefix ${verb} request references`,
+    (spec) => {
+      spec.paths[route][method].requestBody.content["application/json"].schema =
+        { $ref: "#/components/schemas/PrefixWrite" };
+    },
+    new RegExp(
+      escapeRegExp(
+        `${verb} ${route} must reference #/components/schemas/${schemaName}`,
+      ),
+      "u",
+    ),
+  );
+  assertOpenAPIRejected(
+    `OpenAPI validation rejects stale Prefix ${suffix} requiredness`,
+    (spec) => {
+      spec.components.schemas[schemaName].required =
+        suffix === "Update" ? ["prefix"] : [];
+    },
+    new RegExp(
+      `${schemaName} required fields must match field_contracts\\.${operation}`,
+      "u",
+    ),
+  );
+  assertOpenAPIRejected(
+    `OpenAPI validation rejects undeclared Prefix ${suffix} input`,
+    (spec) => {
+      spec.components.schemas[schemaName].properties.tenant = {
+        type: "integer",
+      };
+    },
+    new RegExp(`${schemaName} fields must match writable_fields`, "u"),
+  );
+  assertOpenAPIRejected(
+    `OpenAPI validation rejects open Prefix ${suffix} input`,
+    (spec) => {
+      spec.components.schemas[schemaName].additionalProperties = true;
+    },
+    new RegExp(`${schemaName} must reject undeclared members`, "u"),
+  );
+  for (const [field, type] of [
+    ["prefix", "string"],
+    ["vrf", "integer"],
+    ["status", "string"],
+    ["is_pool", "boolean"],
+    ["mark_utilized", "boolean"],
+    ["description", "string"],
+    ["comments", "string"],
+  ]) {
+    assertOpenAPIRejected(
+      `OpenAPI validation rejects stale Prefix ${suffix} ${field} scalar types`,
+      (spec) => {
+        spec.components.schemas[schemaName].properties[field].type =
+          type === "string" ? "integer" : "string";
+      },
+      new RegExp(`${schemaName}\\.${field} base type must be ${type}`, "u"),
+    );
+    assertOpenAPIRejected(
+      `OpenAPI validation rejects stale Prefix ${suffix} ${field} nullability`,
+      (spec) => {
+        spec.components.schemas[schemaName].properties[field].type =
+          field === "vrf" ? type : [type, "null"];
+      },
+      new RegExp(
+        `${schemaName}\\.${field} nullability must match ${field === "status" ? "resource metadata" : `field_contracts\\.${operation}`}`,
+        "u",
+      ),
+    );
+  }
+  for (const field of ["prefix", "status", "description", "comments"]) {
+    assertOpenAPIRejected(
+      `OpenAPI validation rejects stale Prefix ${suffix} ${field} blankability`,
+      (spec) => {
+        const fieldSchema =
+          spec.components.schemas[schemaName].properties[field];
+        if (["prefix", "status"].includes(field)) delete fieldSchema.minLength;
+        else fieldSchema.minLength = 1;
+      },
+      new RegExp(
+        `${schemaName}\\.${field} blankability must match field_contracts\\.${operation}`,
+        "u",
+      ),
+    );
+  }
+  assertOpenAPIRejected(
+    `OpenAPI validation rejects stale Prefix ${suffix} VRF int64 format`,
+    (spec) => {
+      spec.components.schemas[schemaName].properties.vrf.format = "int32";
+    },
+    new RegExp(`${schemaName}\\.vrf format must be int64`, "u"),
+  );
+}
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects a stale shared Prefix write schema",
+  (spec) => {
+    spec.components.schemas.PrefixWrite = structuredClone(
+      spec.components.schemas.PrefixCreate,
+    );
+  },
+  /Prefix must not retain a conflated shared write schema/u,
+);
+
+for (const [field, type, format] of [
+  ["prefix", "string"],
+  ["is_pool", "boolean"],
+  ["mark_utilized", "boolean"],
+  ["description", "string"],
+  ["comments", "string"],
+  ["id", "integer", "int64"],
+  ["url", "string", "uri"],
+  ["display", "string"],
+  ["created", "string", "date-time"],
+  ["last_updated", "string", "date-time"],
+  ["children", "integer", "int64"],
+  ["_depth", "integer", "int64"],
+]) {
+  if (field !== "is_pool") {
+    assertOpenAPIRejected(
+      `OpenAPI validation rejects stale Prefix response ${field} scalar types`,
+      (spec) => {
+        spec.components.schemas.Prefix.properties[field].type =
+          type === "string" ? "integer" : "string";
+      },
+      new RegExp(`Prefix\\.${field} base type must be ${type}`, "u"),
+    );
+  }
+  assertOpenAPIRejected(
+    `OpenAPI validation rejects stale Prefix response ${field} nullability`,
+    (spec) => {
+      spec.components.schemas.Prefix.properties[field].type = [
+        "created",
+        "last_updated",
+      ].includes(field)
+        ? type
+        : [type, "null"];
+    },
+    new RegExp(
+      `Prefix\\.${field} response nullability must match field_contracts\\.response`,
+      "u",
+    ),
+  );
+  if (format !== undefined) {
+    assertOpenAPIRejected(
+      `OpenAPI validation rejects stale Prefix response ${field} formats`,
+      (spec) => {
+        delete spec.components.schemas.Prefix.properties[field].format;
+      },
+      new RegExp(`Prefix\\.${field} format must be ${format}`, "u"),
+    );
+  }
+}
+
+for (const [field, type] of [
+  ["family", "integer"],
+  ["status", "string"],
+]) {
+  assertOpenAPIRejected(
+    `OpenAPI validation rejects stale Prefix ${field} choice requiredness`,
+    (spec) => {
+      spec.components.schemas.Prefix.properties[field].required = ["value"];
+    },
+    new RegExp(
+      `Prefix\\.${field} choice response must require value and label`,
+      "u",
+    ),
+  );
+  assertOpenAPIRejected(
+    `OpenAPI validation rejects undeclared Prefix ${field} choice members`,
+    (spec) => {
+      spec.components.schemas.Prefix.properties[field].properties.tenant = {
+        type: "integer",
+      };
+    },
+    new RegExp(
+      `Prefix\\.${field} choice response fields must be value and label`,
+      "u",
+    ),
+  );
+  assertOpenAPIRejected(
+    `OpenAPI validation rejects stale Prefix ${field} choice value types`,
+    (spec) => {
+      spec.components.schemas.Prefix.properties[field].properties.value.type =
+        type === "string" ? "integer" : "string";
+    },
+    new RegExp(`Prefix\\.${field}\\.value base type must be ${type}`, "u"),
+  );
+  for (const member of ["value", "label"]) {
+    assertOpenAPIRejected(
+      `OpenAPI validation rejects nullable Prefix ${field} choice ${member}`,
+      (spec) => {
+        spec.components.schemas.Prefix.properties[field].properties[
+          member
+        ].type = [member === "value" ? type : "string", "null"];
+      },
+      new RegExp(`Prefix\\.${field}\\.${member} must not be nullable`, "u"),
+    );
+  }
+}
+
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Prefix family choice int64 format",
+  (spec) => {
+    delete spec.components.schemas.Prefix.properties.family.properties.value
+      .format;
+  },
+  /Prefix\.family\.value format must be int64/u,
+);
+assertOpenAPIRejected(
+  "OpenAPI validation rejects non-null Prefix VRF responses",
+  (spec) => {
+    spec.components.schemas.Prefix.properties.vrf.oneOf = [
+      { $ref: "#/components/schemas/ObjectReference" },
+    ];
+  },
+  /Prefix\.vrf response nullability must match field_contracts\.response/u,
+);
+assertOpenAPIRejected(
+  "OpenAPI validation rejects stale Prefix VRF response references",
+  (spec) => {
+    spec.components.schemas.Prefix.properties.vrf.oneOf[0].$ref =
+      "#/components/schemas/VRF";
+  },
+  /Prefix\.vrf must reference #\/components\/schemas\/ObjectReference/u,
+);
+assertOpenAPIRejected(
+  "OpenAPI validation rejects open Prefix response objects",
+  (spec) => {
+    spec.components.schemas.Prefix.additionalProperties = true;
+  },
+  /Prefix response must reject undeclared members/u,
 );

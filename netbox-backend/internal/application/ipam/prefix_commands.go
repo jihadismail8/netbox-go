@@ -1,6 +1,7 @@
 package ipam
 
 import (
+	"sort"
 	"strconv"
 
 	domainipam "netbox-go/internal/domain/ipam"
@@ -69,16 +70,29 @@ func fullPrefixValues(
 	values := prefixCommandValues{
 		prefix:       fullString(&violations, "prefix", prefix, "", true),
 		vrfID:        fullPrefixVRFID(&violations, vrf),
-		status:       fullString(&violations, "status", status, domainipam.PrefixStatusActive.String(), false),
+		status:       fullPrefixStatus(&violations, status),
 		isPool:       fullBool(&violations, "is_pool", isPool, false),
 		markUtilized: fullBool(&violations, "mark_utilized", markUtilized, false),
 		description:  fullString(&violations, "description", description, "", false),
 		comments:     fullString(&violations, "comments", comments, "", false),
 	}
 	if len(violations) > 0 {
-		return prefixCommandValues{}, shared.NewValidationError(violations...)
+		return values, shared.NewValidationError(violations...)
 	}
 	return values, nil
+}
+
+func fullPrefixStatus(violations *[]shared.FieldViolation, field Field[string]) string {
+	switch field.State() {
+	case FieldPresent:
+		value, _ := field.Get()
+		return value
+	case FieldNull:
+		*violations = append(*violations, prefixBlankStatusViolation())
+		return ""
+	default:
+		return domainipam.PrefixStatusActive.String()
+	}
 }
 
 func fullPrefixVRFID(violations *[]shared.FieldViolation, field Field[int64]) *shared.ID {
@@ -112,7 +126,7 @@ func (command UpdatePrefixCommand) patch() (prefixCommandPatch, error) {
 	var violations []shared.FieldViolation
 	patch := prefixCommandPatch{
 		prefix:       patchString(&violations, "prefix", command.Prefix),
-		status:       patchString(&violations, "status", command.Status),
+		status:       patchPrefixStatus(&violations, command.Status),
 		isPool:       patchBool(&violations, "is_pool", command.IsPool),
 		markUtilized: patchBool(&violations, "mark_utilized", command.MarkUtilized),
 		description:  patchString(&violations, "description", command.Description),
@@ -128,7 +142,7 @@ func (command UpdatePrefixCommand) patch() (prefixCommandPatch, error) {
 		patch.vrfID = &id
 	}
 	if len(violations) > 0 {
-		return prefixCommandPatch{}, shared.NewValidationError(violations...)
+		return patch, shared.NewValidationError(violations...)
 	}
 	if patch.empty() {
 		return prefixCommandPatch{}, shared.NewValidationError(shared.FieldViolation{
@@ -139,6 +153,21 @@ func (command UpdatePrefixCommand) patch() (prefixCommandPatch, error) {
 	return patch, nil
 }
 
+func patchPrefixStatus(violations *[]shared.FieldViolation, field Field[string]) *string {
+	if field.State() == FieldNull {
+		*violations = append(*violations, prefixBlankStatusViolation())
+		value := ""
+		return &value
+	}
+	return patchString(violations, "status", field)
+}
+
+func prefixBlankStatusViolation() shared.FieldViolation {
+	return shared.FieldViolation{
+		Field: "status", Reason: "invalid", Description: "This field may not be blank.",
+	}
+}
+
 func (patch prefixCommandPatch) empty() bool {
 	return patch.prefix == nil && !patch.vrfSet && patch.status == nil &&
 		patch.isPool == nil && patch.markUtilized == nil && patch.description == nil &&
@@ -147,7 +176,48 @@ func (patch prefixCommandPatch) empty() bool {
 
 func invalidVRFChoice(id shared.ID) error {
 	return shared.NewValidationError(shared.FieldViolation{
-		Field: "vrf", Reason: "invalid_choice",
-		Description: "Invalid pk \"" + strconv.FormatInt(id.Int64(), 10) + "\" - object does not exist.",
+		Field: "vrf", Reason: "invalid",
+		Description: "Related object not found using the provided numeric ID: " + strconv.FormatInt(id.Int64(), 10),
 	})
+}
+
+// Keep independent scalar failures while suppressing only required/null
+// Prefix fallback blanks. Infrastructure failures retain their own boundary.
+func mergePrefixMutationErrors(errs ...error) error {
+	prefixPresenceFailure := false
+	for _, err := range errs {
+		if err != nil && (!shared.HasReason(err, shared.ErrorReasonValidation) || len(shared.ViolationsOf(err)) == 0) {
+			return err
+		}
+		for _, violation := range shared.ViolationsOf(err) {
+			if violation.Field == "prefix" && (violation.Reason == "required" || violation.Reason == "null") {
+				prefixPresenceFailure = true
+			}
+		}
+	}
+	seen := make(map[[2]string]bool)
+	var violations []shared.FieldViolation
+	for _, err := range errs {
+		for _, violation := range shared.ViolationsOf(err) {
+			key := [2]string{violation.Field, violation.Reason}
+			if seen[key] || (prefixPresenceFailure && violation.Field == "prefix" && violation.Reason == "blank") {
+				continue
+			}
+			seen[key] = true
+			violations = append(violations, violation)
+		}
+	}
+	if len(violations) == 0 {
+		return nil
+	}
+	order := map[string]int{"prefix": 0, "vrf": 1, "status": 2, "is_pool": 3, "mark_utilized": 4, "description": 5, "comments": 6}
+	sort.SliceStable(violations, func(left, right int) bool {
+		leftOrder, leftKnown := order[violations[left].Field]
+		rightOrder, rightKnown := order[violations[right].Field]
+		if leftKnown != rightKnown {
+			return leftKnown
+		}
+		return leftKnown && leftOrder < rightOrder
+	})
+	return shared.NewValidationError(violations...)
 }

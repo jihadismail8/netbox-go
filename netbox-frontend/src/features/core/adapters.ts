@@ -31,6 +31,7 @@ import {
   type ManufacturerMutation,
   type PrefixDTO,
   type PrefixForm,
+  type PrefixMutation,
   type RackDTO,
   type RackForm,
   type RackMutation,
@@ -883,19 +884,63 @@ const vrfAdapter: CoreResourceAdapter<'vrf'> = {
   }),
 }
 
+const prefixOriginalMutation = Symbol('prefix-original-mutation')
+
+const prefixScalarMutationFields = [
+  'prefix',
+  'vrf',
+  'status',
+  'is_pool',
+  'mark_utilized',
+  'description',
+  'comments',
+] as const satisfies readonly (keyof PrefixMutation)[]
+
+type TrackedPrefixForm = PrefixForm & {
+  [prefixOriginalMutation]?: PrefixMutation
+}
+
+function prefixMutation(form: PrefixForm): PrefixMutation {
+  const mutation: PrefixMutation = {}
+  if (hasFormField(form, 'prefix')) mutation.prefix = form.prefix
+  if (hasFormField(form, 'vrf')) mutation.vrf = relationID(form.vrf)
+  if (hasFormField(form, 'status')) mutation.status = form.status
+  if (hasFormField(form, 'is_pool')) mutation.is_pool = form.is_pool
+  if (hasFormField(form, 'mark_utilized')) mutation.mark_utilized = form.mark_utilized
+  if (hasFormField(form, 'description')) mutation.description = form.description
+  if (hasFormField(form, 'comments')) mutation.comments = form.comments
+  return mutation
+}
+
+function prefixMutationDelta(current: PrefixMutation, original: PrefixMutation): PrefixMutation {
+  const delta = { ...current }
+  for (const field of prefixScalarMutationFields) {
+    if (Object.is(current[field], original[field])) Reflect.deleteProperty(delta, field)
+  }
+  return delta
+}
+
 const prefixAdapter: CoreResourceAdapter<'prefix'> = {
   resource: 'prefix',
   emptyForm: () => ({ status: 'active', is_pool: false, mark_utilized: false }),
-  formFromDTO: (dto: PrefixDTO): PrefixForm => ({
-    prefix: dto.prefix,
-    vrf: dto.vrf,
-    status: choiceValue(dto.status),
-    is_pool: dto.is_pool,
-    mark_utilized: dto.mark_utilized,
-    description: dto.description,
-    comments: dto.comments,
-  }),
-  mutationFromForm: (form) => ({ ...form, vrf: relationID(form.vrf) }),
+  formFromDTO: (dto: PrefixDTO): PrefixForm => {
+    const form: TrackedPrefixForm = {
+      prefix: dto.prefix,
+      vrf: dto.vrf,
+      status: choiceValue(dto.status),
+      is_pool: dto.is_pool,
+      mark_utilized: dto.mark_utilized,
+      description: dto.description,
+      comments: dto.comments,
+    }
+    form[prefixOriginalMutation] = prefixMutation(form)
+    return form
+  },
+  mutationFromForm: (form, editing) => {
+    const mutation = prefixMutation(form)
+    const original = (form as TrackedPrefixForm)[prefixOriginalMutation]
+    return editing && original ? prefixMutationDelta(mutation, original) : mutation
+  },
   filtersFromState: (state) => ({
     vrf_id: state.vrf_id,
     vrf_rd: state.vrf_rd,

@@ -100,6 +100,104 @@ func TestPrefixNetworkContainmentAndOrdering(t *testing.T) {
 	assert.Equal(t, "10.1.0.0/16", filtered.String())
 }
 
+func TestPrefixScalarNormalizationContract(t *testing.T) {
+	t.Parallel()
+
+	for _, network := range []string{"192.0.2.0/24", "2001:db8::/64"} {
+		for _, status := range []string{"container", "active", "reserved", "deprecated"} {
+			values := validPrefixValues(network)
+			values.Status = status
+			values.IsPool, values.MarkUtilized = true, true
+			values.Description = " \t" + strings.Repeat("界", 200) + "\n"
+			values.Comments = " \t" + strings.Repeat("界", 1000) + "\n"
+			prefix, err := domainipam.NewPrefix(values, prefixDomainTime)
+			require.NoError(t, err)
+			assert.Equal(t, network, prefix.Network().String())
+			assert.Equal(t, status, prefix.Status().String())
+			assert.True(t, prefix.IsPool())
+			assert.True(t, prefix.MarkUtilized())
+			assert.Equal(t, strings.Repeat("界", 200), prefix.Description())
+			assert.Equal(t, strings.Repeat("界", 1000), prefix.Comments())
+		}
+	}
+
+	cases := []struct {
+		name   string
+		change func(*domainipam.PrefixValues)
+		want   []shared.FieldViolation
+	}{
+		{"empty Prefix", func(v *domainipam.PrefixValues) { v.Prefix = "" },
+			[]shared.FieldViolation{{Field: "prefix", Reason: "blank", Description: "This field may not be blank."}}},
+		{"whitespace Prefix", func(v *domainipam.PrefixValues) { v.Prefix = " \t\n" },
+			[]shared.FieldViolation{{Field: "prefix", Reason: "blank", Description: "This field may not be blank."}}},
+		{"empty status", func(v *domainipam.PrefixValues) { v.Status = "" },
+			[]shared.FieldViolation{{Field: "status", Reason: "invalid", Description: "This field may not be blank."}}},
+		{"padded status", func(v *domainipam.PrefixValues) { v.Status = " active " },
+			[]shared.FieldViolation{{Field: "status", Reason: "invalid", Description: " active  is not a valid choice."}}},
+		{"uppercase status", func(v *domainipam.PrefixValues) { v.Status = "ACTIVE" },
+			[]shared.FieldViolation{{Field: "status", Reason: "invalid", Description: "ACTIVE is not a valid choice."}}},
+		{"whitespace status", func(v *domainipam.PrefixValues) { v.Status = " " },
+			[]shared.FieldViolation{{Field: "status", Reason: "invalid", Description: "  is not a valid choice."}}},
+		{"unknown status", func(v *domainipam.PrefixValues) { v.Status = "unknown" },
+			[]shared.FieldViolation{{Field: "status", Reason: "invalid", Description: "unknown is not a valid choice."}}},
+		{"Unicode description length", func(v *domainipam.PrefixValues) { v.Description = strings.Repeat("界", 201) },
+			[]shared.FieldViolation{{Field: "description", Reason: "max_length", Description: "Ensure this field has no more than 200 characters."}}},
+		{"description NUL", func(v *domainipam.PrefixValues) { v.Description = "note\x00" },
+			[]shared.FieldViolation{{Field: "description", Reason: "null_characters_not_allowed", Description: "Null characters are not allowed."}}},
+		{"description length and NUL", func(v *domainipam.PrefixValues) { v.Description = strings.Repeat("界", 200) + "\x00" },
+			[]shared.FieldViolation{
+				{Field: "description", Reason: "max_length", Description: "Ensure this field has no more than 200 characters."},
+				{Field: "description", Reason: "null_characters_not_allowed", Description: "Null characters are not allowed."},
+			}},
+		{"comments NUL", func(v *domainipam.PrefixValues) { v.Comments = "note\x00" },
+			[]shared.FieldViolation{{Field: "comments", Reason: "null_characters_not_allowed", Description: "Null characters are not allowed."}}},
+	}
+	for _, test := range cases {
+		t.Run(test.name, func(t *testing.T) {
+			values := validPrefixValues("198.51.100.0/24")
+			test.change(&values)
+			prefix, err := domainipam.NewPrefix(values, prefixDomainTime)
+			assert.Nil(t, prefix)
+			assert.Equal(t, test.want, shared.ViolationsOf(err))
+
+			loaded, err := domainipam.NewPrefix(validPrefixValues("192.0.2.0/24"), prefixDomainTime)
+			require.NoError(t, err)
+			require.NoError(t, loaded.AssignID(3))
+			before := loaded.State()
+			err = loaded.Replace(values, shared.NewTimestamp(prefixDomainTime.Add(time.Hour)))
+			assert.Equal(t, test.want, shared.ViolationsOf(err))
+			assert.Equal(t, before, loaded.State(), "rejected scalar replacement must not mutate the aggregate")
+		})
+	}
+
+	loaded, err := domainipam.NewPrefix(validPrefixValues("192.0.2.0/24"), prefixDomainTime)
+	require.NoError(t, err)
+	before := loaded.State()
+	invalid := "note\x00"
+	err = loaded.ApplyPatch(domainipam.PrefixPatch{Comments: &invalid}, prefixDomainTime)
+	assert.Equal(t, []shared.FieldViolation{{
+		Field: "comments", Reason: "null_characters_not_allowed", Description: "Null characters are not allowed.",
+	}}, shared.ViolationsOf(err))
+	assert.Equal(t, before, loaded.State())
+	blank := " \t\n"
+	require.NoError(t, loaded.ApplyPatch(domainipam.PrefixPatch{Description: &blank, Comments: &blank}, prefixDomainTime))
+	assert.Empty(t, loaded.Description())
+	assert.Empty(t, loaded.Comments())
+	before = loaded.State()
+	paddedStatus := " active "
+	err = loaded.ValidatePatch(domainipam.PrefixPatch{Status: &paddedStatus})
+	assert.Equal(t, []shared.FieldViolation{{
+		Field: "status", Reason: "invalid", Description: " active  is not a valid choice.",
+	}}, shared.ViolationsOf(err))
+	assert.Equal(t, before, loaded.State())
+	require.NoError(t, loaded.ValidatePatch(domainipam.PrefixPatch{}))
+	err = loaded.ApplyPatch(domainipam.PrefixPatch{}, prefixDomainTime)
+	assert.Equal(t, []shared.FieldViolation{{
+		Field: "update_mask", Reason: "required", Description: "At least one writable field must be supplied.",
+	}}, shared.ViolationsOf(err))
+	assert.Equal(t, before, loaded.State(), "pure value preview must not change the existing empty-write policy")
+}
+
 func validPrefixValues(value string) domainipam.PrefixValues {
 	return domainipam.PrefixValues{
 		Prefix: value, VRF: domainipam.NullVRFReference(), Status: domainipam.PrefixStatusActive.String(),

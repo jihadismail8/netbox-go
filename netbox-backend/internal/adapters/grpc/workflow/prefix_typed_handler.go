@@ -238,46 +238,31 @@ func typedPrefixUpdateCommand(
 	for _, path := range mask.Paths {
 		switch path {
 		case "prefix":
-			if fields.prefix.State() != applicationipam.FieldPresent {
-				return applicationipam.UpdatePrefixCommand{}, invalidPrefixUpdateMask()
-			}
-			command.Prefix = fields.prefix
+			command.Prefix = typedPrefixMaskedField(fields.prefix)
 		case "vrf":
-			if input == nil || input.Vrf == nil {
-				command.VRF = applicationipam.NullField[int64]()
-			} else {
-				command.VRF = fields.vrf
-			}
+			command.VRF = typedPrefixMaskedField(fields.vrf)
 		case "status":
-			if fields.status.State() != applicationipam.FieldPresent {
-				return applicationipam.UpdatePrefixCommand{}, invalidPrefixUpdateMask()
-			}
-			command.Status = fields.status
+			command.Status = typedPrefixMaskedField(fields.status)
 		case "is_pool":
-			if fields.isPool.State() != applicationipam.FieldPresent {
-				return applicationipam.UpdatePrefixCommand{}, invalidPrefixUpdateMask()
-			}
-			command.IsPool = fields.isPool
+			command.IsPool = typedPrefixMaskedField(fields.isPool)
 		case "mark_utilized":
-			if fields.markUtilized.State() != applicationipam.FieldPresent {
-				return applicationipam.UpdatePrefixCommand{}, invalidPrefixUpdateMask()
-			}
-			command.MarkUtilized = fields.markUtilized
+			command.MarkUtilized = typedPrefixMaskedField(fields.markUtilized)
 		case "description":
-			if fields.description.State() != applicationipam.FieldPresent {
-				return applicationipam.UpdatePrefixCommand{}, invalidPrefixUpdateMask()
-			}
-			command.Description = fields.description
+			command.Description = typedPrefixMaskedField(fields.description)
 		case "comments":
-			if fields.comments.State() != applicationipam.FieldPresent {
-				return applicationipam.UpdatePrefixCommand{}, invalidPrefixUpdateMask()
-			}
-			command.Comments = fields.comments
+			command.Comments = typedPrefixMaskedField(fields.comments)
 		default:
 			return applicationipam.UpdatePrefixCommand{}, invalidPrefixUpdateMask()
 		}
 	}
 	return command, nil
+}
+
+func typedPrefixMaskedField[T any](field applicationipam.Field[T]) applicationipam.Field[T] {
+	if field.State() == applicationipam.FieldOmitted {
+		return applicationipam.NullField[T]()
+	}
+	return field
 }
 
 func invalidPrefixUpdateMask() error {

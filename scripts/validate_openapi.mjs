@@ -50,6 +50,33 @@ const contractedResourceShapes = {
       prefix_count: { type: "integer", format: "int64" },
     },
   },
+  Prefix: {
+    request: {
+      prefix: { type: "string" },
+      vrf: { type: "integer", format: "int64" },
+      is_pool: { type: "boolean" },
+      mark_utilized: { type: "boolean" },
+      description: { type: "string" },
+      comments: { type: "string" },
+    },
+    response: {
+      prefix: { type: "string" },
+      is_pool: { type: "boolean" },
+      mark_utilized: { type: "boolean" },
+      description: { type: "string" },
+      comments: { type: "string" },
+      id: { type: "integer", format: "int64" },
+      url: { type: "string", format: "uri" },
+      display: { type: "string" },
+      created: { type: "string", format: "date-time" },
+      last_updated: { type: "string", format: "date-time" },
+      children: { type: "integer", format: "int64" },
+      _depth: { type: "integer", format: "int64" },
+    },
+    responseReferences: {
+      vrf: "#/components/schemas/ObjectReference",
+    },
+  },
   Manufacturer: {
     request: {
       name: { type: "string" },
@@ -539,6 +566,21 @@ for (const [resource, fields] of Object.entries(choiceFields)) {
         JSON.stringify(["label", "value"]),
       `${resource}.${field} choice response must require value and label`,
     );
+    if (resource === "Prefix") {
+      assert(
+        exactMembers(Object.keys(responseChoice?.properties ?? {}), [
+          "value",
+          "label",
+        ]),
+        `${resource}.${field} choice response fields must be value and label`,
+      );
+      for (const member of ["value", "label"]) {
+        assert(
+          !schemaNullable(responseChoice?.properties?.[member]),
+          `${resource}.${field}.${member} must not be nullable`,
+        );
+      }
+    }
     const expectedChoiceShape =
       metadata.value_type === "integer"
         ? { type: "integer", format: "int64" }
