@@ -42,12 +42,18 @@ module and evidence ledger.
 
 Bounded Device scalar presence `CW1-V2-02-I10` is effectively `done` after its
 owner-accepted closeout claim and excluded receipt passed exact-SHA CI.
-[`CW1-V2-02-I11`](increments/CW1-V2-02-I11.md) is the packet-only Interface
-common write-presence lane for the ten already-declared fields. Independent
-packet review, a pinned local `make check`, and exact packet-claim CI precede
-behavior editing. It provides no implementation evidence and closes no
-owner-immutability, template transaction, tier, parent, profile, or consumer
-boundary. The Phase 7 design and exits below remain required.
+Bounded Interface scalar presence
+[`CW1-V2-02-I11`](increments/CW1-V2-02-I11.md) is effectively
+standing-authorized implementation `done` after its exact closeout and final
+receipt gates passed. It closes no owner-immutability, template transaction,
+tier, parent, profile, or consumer boundary. The Phase 7 exits remain required.
+[`CW1-V2-02-I12`](increments/CW1-V2-02-I12.md) is the packet-only VRF common
+scalar-presence lane for its five already-declared writable fields. Independent
+review, pinned local `make check`, and exact packet CI precede behavior editing.
+Its normalization, operation contracts, durable rollback, representable API
+parity, and Vue intent/error presentation tests supply no implementation
+evidence yet. Phase 8 uniqueness, downstream policy, deletion, and complete
+workflow exits remain required.
 
 ## Intended outcome
 

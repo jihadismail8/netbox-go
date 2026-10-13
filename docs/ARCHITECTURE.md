@@ -280,12 +280,18 @@ structural recovery does not promote a compatibility tier.
 
 Bounded Device scalar presence `CW1-V2-02-I10` is effectively `done` after its
 owner-accepted closeout claim and excluded receipt passed exact-SHA CI.
-[`CW1-V2-02-I11`](increments/CW1-V2-02-I11.md) now defines only the Interface
-common write-presence packet. Its shared typed application, contract,
-PostgreSQL, and Vue work requires independent packet review, a pinned local
-`make check`, and exact packet-claim CI before implementation. It supplies no
-implementation evidence or owner-immutability, tier, parent, profile, or
-traceability-consumer completion.
+Bounded Interface scalar presence
+[`CW1-V2-02-I11`](increments/CW1-V2-02-I11.md) is effectively
+standing-authorized implementation `done` after its independently reviewed
+closeout and final receipt passed exact-SHA CI. No fresh human inspection,
+owner-immutability, tier, parent, profile, or consumer closure follows.
+[`CW1-V2-02-I12`](increments/CW1-V2-02-I12.md) defines only the next VRF
+five-field scalar presence packet. Its shared typed application, operation
+contracts, PostgreSQL durability/rollback, and Vue intent/error presentation
+work requires independent review, pinned local `make check`, and exact packet
+CI before behavior editing. It changes no architecture, shared helper policy,
+RD list/query parsing, profile, or compatibility tier, and supplies no
+implementation evidence.
 
 ## Migration direction
 

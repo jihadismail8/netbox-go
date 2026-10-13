@@ -239,8 +239,8 @@ InterfaceTemplate snapshot-order contradiction remains assigned to
 `CW1-V2-04`; uniqueness, placement, template transactions, list/get/delete,
 full CRUD, every tier/consumer, the parent, and profile promotion remain open.
 
-[`CW1-V2-02-I11`](increments/CW1-V2-02-I11.md) claims standing-authorized
-implementation `done` only for Interface
+[`CW1-V2-02-I11`](increments/CW1-V2-02-I11.md) is effectively
+standing-authorized implementation `done` only for Interface
 common write-presence lane for `device`, `name`, `label`, `type`, `enabled`,
 `mgmt_only`, `mtu`, `speed`, `duplex`, and `description`. It implements
 signed-int64 numeric intent, operation-specific contracts, shared typed
@@ -254,11 +254,24 @@ candidate CI passed. Initial claim `4874aa52c816660fb8077e0a798181ff2b7d83b4`
 and excluded receipt `d455eb7943f5d169e0a7490ae6e645e124711710` passed
 independent integrity, pinned local, and exact-SHA CI gates. The executor
 applied existing standing acceptance at `2026-10-12T22:13:41Z`; this is not
-a new human decision or artifact inspection. This eight-path closeout and
-subsequent excluded receipt still require their own local and exact-SHA CI
-gates before `done` is effective or another increment begins. T2/T3/T4 and
+a new human decision or artifact inspection. Eight-path closeout
+`3c05346ffde251bf51de76a3187bc2367463704e` and final excluded receipt
+`cb5d3f52a78b2baaab3503255181206ecbaeac81` passed independent, pinned local,
+and exact-SHA CI gates. Final receipt run `38321116994`, job `115049181063`,
+passed all 12 steps on unchanged closeout source digest
+`source-v2:sha256:57687459b6e0286bc43cf791395dfe3b933649c7422e270fa91b00dcbf8b7e98`
+with 3,093 entries; frozen bytes and complete manifest were verified. T2/T3/T4 and
 designated human sign-offs remain unearned. No owner-immutability, consumer,
 parent, profile, rewrite, or production completion follows.
+
+[`CW1-V2-02-I12`](increments/CW1-V2-02-I12.md) is the next packet-only
+VRF lane for `name`, `rd`, `enforce_unique`, `description`, and `comments`
+common scalar presence, VRF-local normalization/validation, operation
+contracts, representable REST/gRPC intent, PostgreSQL durability/rollback,
+and Vue dirty-field/server-error presentation tests. Independent review,
+pinned local `make check`, and exact packet CI must precede behavior editing.
+No I12 implementation evidence exists. Uniqueness, downstream policy,
+deletion/list/query, every tier/consumer, the parent and profile remain open.
 
 `CW1-V3-01` has exact tested candidate
 `58241d7f87b642e6b7eca279592ad3759a0f5a06` at source digest
@@ -537,7 +550,7 @@ replacement completes ADR 0004's governing gate and CP-13.
 | ------------------------ | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
 | V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                                 | Refresh for the active source and every later relevant merged digest                                                             | Continuous; entry source retained          |
 | V1 identity/RBAC         | Persisted identity, retained CORS, accepted I1/I2/I3, and retained I4 evidence                          | Obtain I4 owner review; complete password-policy/throttle/proxy/streaming plus RBAC/admin/secret work                            | I4 evidence; parent open                   |
-| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, done I1-I10, and green I11 candidate/claim/receipt | Gate I11 closeout/receipt, then remaining invariant, rollback, side-effect, concurrency, and tier cases | I1-I10 done; I11 conditional implementation done claim; parent open |
+| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, bounded I1-I11 done; I12 VRF packet only | Review/gate I12 packet, then remaining invariant, rollback, side-effect, concurrency, and tier cases | I1-I11 bounded done; I12 packet only; parent open |
 | V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, Compose harness, and owner-accepted bounded V3-01/V3-02 evidence with green closeout receipts | Complete V3-03 through V3-05 | V3-01/V3-02 done; V3 parent open |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                             | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report                       | T1; implementation/evidence pending        |
 | V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                         | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes                  | T1; implementation/evidence pending        |

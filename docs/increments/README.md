@@ -51,7 +51,8 @@ implementation exists.
 | `CW1-V2-02-I8` | `done`        | Codex GPT-5.6 Sol | [InterfaceTemplate scalar write presence](CW1-V2-02-I8.md) |
 | `CW1-V2-02-I9` | `done`        | Codex GPT-5.6 Sol | [Rack scalar write presence](CW1-V2-02-I9.md)              |
 | `CW1-V2-02-I10`| `done`        | Codex             | [Device scalar write presence](CW1-V2-02-I10.md)           |
-| `CW1-V2-02-I11`| `done` claim  | Codex             | [Interface scalar write presence](CW1-V2-02-I11.md); own closeout/receipt gates pending |
+| `CW1-V2-02-I11`| `done`        | Codex             | [Standing-authorized Interface scalar presence](CW1-V2-02-I11.md) |
+| `CW1-V2-02-I12`| `packet`      | Codex             | [VRF scalar write presence](CW1-V2-02-I12.md); reviewed, local/exact packet CI pending |
 | `CW1-V3-01`    | `done`        | Codex GPT-5.6 Sol | [Dependency-aware readiness](CW1-V3-01.md)                 |
 | `CW1-V3-02`    | `done`        | Codex             | [Bootstrap and schema contract](CW1-V3-02.md)              |
 
@@ -224,7 +225,7 @@ placement, template transactions,
 list/get/delete, full CRUD, all tiers, every consumer, the parent, and profile
 promotion remain open.
 
-`CW1-V2-02-I11` claims standing-authorized implementation `done` only for
+`CW1-V2-02-I11` is effectively standing-authorized implementation `done` only for
 Interface common write presence in
 `device`, `name`, `label`, `type`, `enabled`, `mgmt_only`, `mtu`, `speed`,
 `duplex`, and `description`. It implements signed-int64 numeric intent,
@@ -239,11 +240,24 @@ candidate CI passed. Initial claim `4874aa52c816660fb8077e0a798181ff2b7d83b4`
 and excluded receipt `d455eb7943f5d169e0a7490ae6e645e124711710` passed
 independent integrity, pinned local, and exact-SHA CI gates. Existing standing
 acceptance was applied by the executor at `2026-10-12T22:13:41Z`, not a new
-human decision or inspection. The claim is not yet effective: this eight-path
-closeout and its later two-path receipt require their own local and exact-SHA
-CI gates before durable `done` or another increment. No artifact-specific
+human decision or inspection. Eight-path closeout
+`3c05346ffde251bf51de76a3187bc2367463704e` and final two-path receipt
+`cb5d3f52a78b2baaab3503255181206ecbaeac81` passed independent, pinned local,
+and exact-SHA CI gates. Final receipt run `38321116994`, job `115049181063`,
+passed all 12 steps on unchanged source; frozen-byte/full-manifest checks
+passed. No artifact-specific
 human review or owner-immutability, tier, parent, profile, or consumer
 completion is claimed.
+
+`CW1-V2-02-I12` is the next packet-only VRF lane for its five declared
+writable fields. Independent review, pinned local gate, and exact packet CI
+must pass before behavior editing. It plans VRF-owned scalar validation,
+operation contracts, shared representable API intent, PostgreSQL durability/
+rollback, and Vue dirty-field/server-error presentation tests, not retained
+implementation evidence. Shared Prefix/accepted IPAddress helpers and RD
+list/query parsing remain untouched. No uniqueness/downstream policy,
+deletion/list/query, tier, consumer, parent/profile, or rewrite completion
+follows. Prefix I13 remains only a recommended future scalar packet.
 
 `CW1-V3-01` has exact tested candidate
 `58241d7f87b642e6b7eca279592ad3759a0f5a06` at source digest

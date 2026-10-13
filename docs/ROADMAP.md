@@ -121,7 +121,7 @@ production release through PROD-1 and PROD-2.
 | 0    | Stable language and decisions       | CONTEXT plus ADR 0001–0005              | `done`                                                                   |
 | 1    | Repository/shared-core baseline     | `CW1-G00`                               | `continuous`                                                             |
 | 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01/I1/I2/I3 `done`; I4 `evidence`; parent open                        |
-| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01/I1–I10 done; I11 conditional implementation closeout; parent/T2/T3 open |
+| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01 and bounded I1–I11 done; I12 packet only; parent/T2/T3 open |
 | 4    | First Core Workflow Profile         | `CW1-V1-*` through `CW1-V6-*`           | T1; active program                                                       |
 | 5    | In-scope feature expansion          | `CP-P01`–`CP-P19`, then `MC-01`–`MC-10` | `blocked`                                                                |
 | 6    | Extension Service contracts         | `EXT-01`                                | `blocked` on a named inventory                                           |
@@ -342,8 +342,8 @@ placement, template transactions, list/get/delete/full CRUD, broader RBAC,
 every tier/consumer, this parent, the profile, deployment, rewrite completion,
 production readiness, and every later child remain open.
 
-[`CW1-V2-02-I11`](increments/CW1-V2-02-I11.md) claims standing-authorized
-implementation `done` only for the Interface
+[`CW1-V2-02-I11`](increments/CW1-V2-02-I11.md) is effectively
+standing-authorized implementation `done` only for the Interface
 lane for `device`, `name`, `label`, `type`, `enabled`, `mgmt_only`, `mtu`,
 `speed`, `duplex`, and `description` common create/PUT/PATCH presence,
 signed-int64 numeric intent, operation-specific contracts, shared typed
@@ -357,11 +357,25 @@ repository, committed replay, and candidate CI gates passed. Initial claim
 `d455eb7943f5d169e0a7490ae6e645e124711710` passed independent integrity,
 pinned local, and exact-SHA CI gates. Existing standing owner acceptance was
 applied by the executor at `2026-10-12T22:13:41Z`, not a new human decision.
-This eight-path closeout and its later two-path receipt require their own
-local and exact-SHA CI gates before `done` is effective or another increment
-begins. There is no artifact-specific human review or owner-immutability,
+Eight-path closeout `3c05346ffde251bf51de76a3187bc2367463704e` and final
+two-path receipt `cb5d3f52a78b2baaab3503255181206ecbaeac81` passed independent,
+pinned local, and exact-SHA CI gates. Final receipt run `38321116994`, job
+`115049181063`, passed all 12 steps on unchanged closeout source digest
+`source-v2:sha256:57687459b6e0286bc43cf791395dfe3b933649c7422e270fa91b00dcbf8b7e98`
+with 3,093 entries; frozen-byte/full-manifest verification passed. There is
+no artifact-specific human review or owner-immutability,
 template, uniqueness, deletion, list/query, tier, parent, profile, or consumer
 completion.
+
+[`CW1-V2-02-I12`](increments/CW1-V2-02-I12.md) is the next packet-only VRF
+scalar lane for `name`, `rd`, `enforce_unique`, `description`, and `comments`.
+It owns only common write presence, VRF-local normalization/validation,
+operation-specific contracts, representable shared REST/gRPC semantics,
+PostgreSQL durability/rollback tests, and Vue dirty-field/error presentation.
+Independent review, pinned local and exact packet CI gates precede behavior
+editing. It supplies no implementation evidence; uniqueness, downstream
+policy, deletion/list/query, all tiers/consumers, this parent, and the profile
+remain open. Prefix I13 is only the next recommended scalar child.
 
 ## Current execution board
 
@@ -384,7 +398,8 @@ completion.
 | `CW1-V2-02-I8`      | `done`        | Accepted InterfaceTemplate scalar write presence    | Done I7 and current `CW1-G00`          |
 | `CW1-V2-02-I9`      | `done`        | Accepted Rack scalar write presence                 | Done I8 and current `CW1-G00`          |
 | `CW1-V2-02-I10`     | `done`        | Accepted Device scalar presence                    | Done I9 and current `CW1-G00`          |
-| `CW1-V2-02-I11`     | `done` claim  | Gate standing-authorized Interface closeout/receipt | Green candidate/claim/receipt; own closeout gates pending |
+| `CW1-V2-02-I11`     | `done`        | Standing-authorized Interface scalar presence       | Exact closeout and final receipt gates green |
+| `CW1-V2-02-I12`     | `packet`      | Gate reviewed bounded VRF scalar presence packet    | Done I11 and current `CW1-G00` |
 | `CW1-V2-03`–`V2-08` | `blocked`     | Close later typed business behavior                 | V2-02 and named lane dependencies      |
 | `CW1-V3-01`         | `done`        | Accepted bounded dependency-aware readiness         | `CW1-G00`                              |
 | `CW1-V3-02`         | `done`        | Accepted bounded bootstrap/schema contract          | Current `CW1-G00` and done `CW1-V2-01` |
@@ -398,11 +413,11 @@ completion.
 | `CW1-V6-*`          | `blocked`     | Converge evidence and sign off the first profile    | V1–V5                                  |
 | `CP-P01`–`CP-P19`   | `blocked`     | Expand accepted feature breadth                     | `CW1-V6-03`                            |
 
-I10 is effectively `done` only for its accepted bounded result. I11's
-standing-authorized implementation `done` claim is conditional: its exact
-eight-path closeout and subsequent excluded receipt must each pass their
-own local and exact-SHA CI gates before it is effective or I12 begins.
-The parent and every later child remain open. Standing owner
+I10 and I11 are effectively `done` only for their bounded results. I11's
+standing-authorized implementation closeout and final excluded receipt gates
+are green. I12 claims only a packet; its independent review, pinned local
+gate, and exact packet CI must pass before behavior editing. The parent and
+every later child remain open. Standing owner
 authorization replaces no required artifact-specific human inspection or
 separate row/consumer/tier/aggregate/profile sign-off.
 
@@ -728,10 +743,20 @@ Bounded children:
   real PostgreSQL/complete L4, generated/Vue, repository, committed replay,
   candidate CI, and initial evidence/receipt gates passed. Existing standing
   acceptance was applied at `2026-10-12T22:13:41Z`; implementation `done`
-  remains conditional on this eight-path closeout and its subsequent
-  two-path receipt's own local and exact-SHA CI gates. Owner immutability,
+  is effective after eight-path closeout `3c05346ffde251bf51de76a3187bc2367463704e`
+  and final receipt `cb5d3f52a78b2baaab3503255181206ecbaeac81` passed their
+  independent, pinned local, and exact-SHA CI gates. Owner immutability,
   uniqueness, template transactions, deletion, list/query, all tiers and
   consumers, this parent, and profile completion remain open.
+
+- [`CW1-V2-02-I12`](increments/CW1-V2-02-I12.md) defines only the next VRF
+  five-field scalar presence packet. Independent review, pinned local and
+  exact packet CI precede behavior editing. Optional PUT preservation,
+  null/blank RD, false, normalization/validation, operation contracts,
+  durable rollback, representable API parity, and Vue dirty-field/server
+  error presentation tests are planned, not implementation evidence.
+  Uniqueness, downstream policy, deletion/list/query, every tier/consumer,
+  this parent, and the profile remain open.
 
 - [ ] Represent all 13 resources × list/get/create/PUT/PATCH/delete.
 - [ ] Cover defaults, read-only fields, and nullability.
