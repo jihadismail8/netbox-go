@@ -337,13 +337,41 @@ the complete actual receipt proof and fixed raw commitments.
 At `2026-10-13T04:27:07Z` the executor applied the owner's existing standing
 instruction to that exact known gated bounded implementation result, not a
 fresh human decision or artifact inspection. The artifact retains the immutable
-standing-application record and its scope/exclusions. I12 remains `in-progress`:
-the current eight-path implementation closeout and final two-path excluded
-receipt must pass their own integrity, frozen-file pinned local and exact-SHA
-CI gates before implementation `done` becomes effective. The complete tested
-manifest, initial claim diff and all preceding raw proof payloads stay verbatim;
-only the six authorized governance and two excluded evidence paths belong to
-this conditional closeout.
+standing-application record and its scope/exclusions. At that eight-path
+closeout assembly, its own gates and the final excluded receipt's gates were
+pending. The preceding standing-authorized closeout subsequently passed at
+`bf3c4755c3e32beccf5053ca59b66c53b389d865`, single parent
+`ed8af4b653ef9f78110f7c4f2b80d590d57c99b2`, full eight-path mapping SHA-256
+`368c4326644d1b9e9149d10dc4a90e80d556a21931d282b0955b085bb25255c4`.
+Both unchanged frozen-file pinned `make check` gates passed, exit 0: assembly
+`2026-10-13T04:48:58.311Z`–`04:55:25.808Z` and final
+`2026-10-13T04:55:55.824Z`–`05:02:25.561Z`. The actual reachable closeout
+commit retains the complete mapping and both actual gate objects. Normal
+exact-SHA push passed `2026-10-13T05:07:31.209Z`–`05:07:34.425Z`, with the
+recorded remote head matching that closeout. Exact closeout run
+[38349814434](https://github.com/jihadismail8/netbox-go/actions/runs/38349814434)
+and job
+[115139396635](https://github.com/jihadismail8/netbox-go/actions/runs/38349814434/job/115139396635)
+completed success at that exact SHA, attempt 1, all 12 reported steps successful.
+Run start–terminal update was `2026-10-13T05:07:36Z`–`05:27:11Z`; job
+start–completion was `05:07:38Z`–`05:27:10Z`; repository step
+`05:08:36Z`–`05:27:06Z`. Actual raw capture was `2026-10-13T05:28:49.645Z`,
+distinct from the separate committed/source/frozen-byte audit time. The artifact
+retains the complete actual closeout commit/freeze, both local-gate objects,
+normal push and terminal CI receipt with fixed raw commitments.
+This current final receipt changes only the artifact and this ledger,
+preserving source
+`source-v2:sha256:d8beb4bc21f52a991ab4e5b3eaa3deaa1bc5051686347a1991fe566116d89ea1`,
+3,098 entries, complete manifest SHA-256
+`88fdd755bd3b9eb47ce1fc53a3937630d138445ee9a88ffcbdf2111225ea007e`,
+all preceding proof payloads, full tested manifest and original/closeout source
+diffs verbatim. Its own independent integrity review, two frozen-file pinned
+local gates and exact-SHA CI remain pending. I12 stays `in-progress`:
+implementation `done` becomes effective only after this final leaf's actual
+gates and captured integrity pass. The existing executor application remains
+`2026-10-13T04:27:07Z`; no fresh acceptance application or source-governance
+done promotion is made. No own final-receipt SHA/hash/CI or extra self-referential
+receipt chain is predeclared.
 No formal marker, fresh human inspection, designated retained-claim sign-off,
 tier/consumer/parent/profile promotion or I13 start is claimed. The unavailable
 pinned oracle leaves T2/T3 unearned; Vue checks earn no T4. Existing npm
@@ -477,10 +505,10 @@ deployment, migration, rewrite, or production boundary.
 
 | Evidence                 | Required command or boundary                                  | Current state                                                    |
 | ------------------------ | ------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Repository quality       | Revised `make check` including non-mutating backend coverage  | Prior bounded results retained; I11 standing-authorized implementation done; I12 candidate/evidence/pre-acceptance receipt green, current closeout/final receipt conditional |
+| Repository quality       | Revised `make check` including non-mutating backend coverage  | Prior bounded results retained; I11 standing-authorized implementation done; I12 preceding closeout green, current final receipt gates pending |
 | Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                          |
 | gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                            |
-| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | Prior bounded suites and I11/I12 committed durability/complete-L4 passed; I12 closeout/final receipt conditional; V3-03 through V3-05 open |
+| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | Prior bounded suites and I11/I12 committed durability/complete-L4 passed; I12 final receipt gates pending; V3-03 through V3-05 open |
 | Standalone deployment    | `make deployment-smoke`                                       | CORS-scoped exact-commit result retained; V3-04 remains open     |
 | Browser workflow         | `make browser-e2e`                                            | Harness present; current result pending                          |
 
