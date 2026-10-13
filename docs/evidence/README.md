@@ -287,11 +287,37 @@ verification and post-CI source CLI checks passed before this claim preparation.
 Disposable cleanup ended `2026-10-13T01:40:49.180Z`, with `0|0` role/database
 counts and the ephemeral credential removed. Actual I12 tool versions and the
 complete tested manifest/governance-only source diff are retained by the artifact.
-This claim changes exactly six authorized source-governance files plus that
-new source-v2-excluded artifact and this ledger. Its own independent review,
-pinned local and exact-SHA CI gates, and those of the later two-path excluded
-receipt, remain pending. I12 remains `in-progress`, not effective evidence or
-`done`; standing implementation acceptance and closeout have not been applied.
+The preceding eight-path claim changed exactly six authorized source-governance
+files plus that new source-v2-excluded artifact and this ledger. At its assembly
+boundary, its independent review, pinned local and exact-SHA CI gates, and the
+later receipt's gates, were pending. Those claim gates subsequently passed at
+`14e9267e931debd38eb921357a39dda6b11cccd9`, single parent
+`1cdfbbf6f39cbe494a367285fb2f2c5240523a0b`, final mapping SHA-256
+`48cb35b9facdb761b9874b997cd5d54bc1136c9cb1fd675df800041ae3430bdf`.
+Both corrected frozen-file pinned `make check` gates passed, exit 0, unchanged
+claim source: assembly `2026-10-13T02:41:29.179Z`–`02:47:54.956Z` and final
+`2026-10-13T02:48:34.742Z`–`02:55:00.772Z`. The artifact preserves the initial
+failed gate and corrected-runner diagnostic as historical, not complete passes.
+Exact claim run
+[38339600527](https://github.com/jihadismail8/netbox-go/actions/runs/38339600527)
+and job
+[115107381745](https://github.com/jihadismail8/netbox-go/actions/runs/38339600527/job/115107381745)
+completed success at that exact SHA, attempt 1, all 12 reported steps successful.
+Run chronology was `2026-10-13T03:00:17Z`–`03:19:59Z`, job
+`03:00:20Z`–`03:19:58Z`, repository step `03:01:22Z`–`03:19:55Z`.
+Actual raw capture was `2026-10-13T03:22:00.711Z`, distinct from the separate
+source/frozen-byte audit time. The artifact retains the complete final claim
+mapping/freeze, both actual local-gate objects, normal exact-SHA push and
+terminal CI receipt with raw commitments.
+This current pre-acceptance receipt changes only the two excluded evidence
+paths, preserving source
+`source-v2:sha256:7f5042b01b55ad87e4b2b34419599fe10dc12f63ff85995629d7bc910b12b531`,
+3,098 entries, full manifest SHA-256
+`b92c249789a68a9e6cec23bcc198a9fa2d6930dc07b0bc0a5dc3af3ef5aa6bae`,
+and the complete tested manifest/six-governance diff verbatim. Its own
+independent review, two frozen-file pinned local gates and exact-SHA CI remain
+pending. I12 remains `in-progress`, not effective evidence or `done`; standing
+implementation acceptance and closeout have not been applied.
 No formal marker, fresh human inspection, designated retained-claim sign-off,
 tier/consumer/parent/profile promotion or I13 start is claimed. The unavailable
 pinned oracle leaves T2/T3 unearned; Vue checks earn no T4. Existing npm
@@ -425,10 +451,10 @@ deployment, migration, rewrite, or production boundary.
 
 | Evidence                 | Required command or boundary                                  | Current state                                                    |
 | ------------------------ | ------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Repository quality       | Revised `make check` including non-mutating backend coverage  | Prior bounded results retained; I11 standing-authorized implementation done; I12 exact candidate replay/CI green, current claim/receipt gates pending |
+| Repository quality       | Revised `make check` including non-mutating backend coverage  | Prior bounded results retained; I11 standing-authorized implementation done; I12 exact candidate replay/CI and claim gates green, current receipt gates pending |
 | Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                          |
 | gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                            |
-| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | Prior bounded suites and I11/I12 committed durability/complete-L4 passed; I12 claim/receipt gates pending; V3-03 through V3-05 open |
+| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | Prior bounded suites and I11/I12 committed durability/complete-L4 passed; I12 claim gates green, current receipt gates pending; V3-03 through V3-05 open |
 | Standalone deployment    | `make deployment-smoke`                                       | CORS-scoped exact-commit result retained; V3-04 remains open     |
 | Browser workflow         | `make browser-e2e`                                            | Harness present; current result pending                          |
 

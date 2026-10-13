@@ -13,10 +13,15 @@ This artifact retains only `CW1-V2-02-I12`, within the T1, pre-publication
 `ebd789e2a9883286f543f640cdb748e776dd70c3282298d0435a0c7befb9c323`.
 
 The candidate assembly, five unchanged committed replays, and exact candidate
-CI passed. This evidence-claim assembly still requires its own independent
-integrity review, frozen-file pinned local gates, exact-SHA CI, and subsequent
-excluded receipt gates. I12 remains in progress. No implementation acceptance
-or effective `done` is asserted here. The owner's existing standing instruction
+CI passed. At the initial evidence-claim assembly boundary, its independent
+integrity review, frozen-file pinned local gates, exact-SHA CI and subsequent
+excluded receipt gates were pending. The preceding claim's gates subsequently
+passed at `14e9267e931debd38eb921357a39dda6b11cccd9`, as retained in the
+[actual claim boundary](#actual-eight-path-evidence-claim-boundary-and-pre-acceptance-receipt)
+below. This current two-file excluded pre-acceptance receipt still requires its
+own independent integrity review, two frozen-file pinned local gates and
+exact-SHA CI. I12 remains in progress. No implementation acceptance or effective
+`done` is asserted here. The owner's existing standing instruction
 permits routine bounded execution; its acceptance application belongs only
 after this known result passes the required claim and receipt boundaries.
 No fresh human decision, inspection, formal retained-claim authentication,
@@ -233,8 +238,11 @@ targets; exactly the six governance file contents differ. The complete tested
 manifest and derived diff are retained as data, not links to temporary files.
 This bounded record is not a generic consumer/tier attestation marker.
 
-Own claim and excluded receipt gates remain pending at this assembly boundary.
-Only after those pass may the executor honestly apply existing standing bounded
+At the initial claim assembly boundary, its own gates and the later excluded
+receipt gates were pending. The preceding claim's gates have since passed;
+this current excluded receipt's independent review, two frozen-file pinned
+local gates and exact-SHA CI remain pending. Only after this receipt's gates
+pass may the executor honestly apply existing standing bounded
 acceptance, independently review the separate authorized eight-path closeout,
 and run its local/exact-SHA gates plus the final two-file excluded receipt gates.
 I13 Prefix implementation must not begin before effective I12 leaf completion.
@@ -23403,9 +23411,12 @@ nor implementation changed.
 Two independent safety reviews verified that correction. The actual unchanged
 oracle self-test then passed through the same corrected runner on unchanged
 claim source, as recorded below. This focused regression is not the required
-complete `make check`. The failed label/log remains immutable. A new reviewed
-freeze and two successful full pinned local gates, followed by exact claim CI
-and the later receipt gates, are still required. This diagnostic addition is
+complete `make check`. The failed label/log remains immutable. At that diagnostic
+boundary, a new reviewed freeze and two successful full pinned local gates,
+followed by exact claim CI and the later receipt gates, were still required.
+The ensuing claim gates subsequently passed, as retained below; this current
+receipt's own review, two pinned local gates and exact-SHA CI remain pending.
+This diagnostic addition is
 source-v2 excluded; the full tested manifest and six-governance diff above remain
 verbatim. No implementation acceptance, own commit/hash, or future pass is
 predeclared.
@@ -23448,6 +23459,278 @@ predeclared.
     "files": 3098,
     "unchanged": true,
     "helper_sha256": "c026dd144b4dcc26854d6f3edc42c5e62d5206aab837c87bf944000a64ad4361"
+  }
+}
+```
+
+## Actual eight-path evidence-claim boundary and pre-acceptance receipt
+
+The preceding eight-path claim is now a known committed result at `14e9267e931debd38eb921357a39dda6b11cccd9`,
+single parent `1cdfbbf6f39cbe494a367285fb2f2c5240523a0b`. Its final frozen mapping is
+`48cb35b9facdb761b9874b997cd5d54bc1136c9cb1fd675df800041ae3430bdf`, not the earlier failed-run mapping. Both corrected full
+pinned claim-local gates passed on unchanged claim source: assembly
+`2026-10-13T02:41:29.179Z`–`2026-10-13T02:47:54.956Z` and final
+`2026-10-13T02:48:34.742Z`–`2026-10-13T02:55:00.772Z`, exit 0. The actual reachable
+claim commit message retains the complete eight-path mapping and both actual
+gate objects. Actual committed parent, scope, blobs, source and raw gate logs
+were authenticated before this receipt preparation. The failed initial gate
+and corrected-runner diagnostic above remain historical, not successful gates.
+
+The normal exact-SHA push passed `2026-10-13T03:00:12.259Z`–`2026-10-13T03:00:15.786Z`;
+its recorded remote head is this exact claim. Run [38339600527](https://github.com/jihadismail8/netbox-go/actions/runs/38339600527) and
+job [115107381745](https://github.com/jihadismail8/netbox-go/actions/runs/38339600527/job/115107381745) completed successfully at this claim SHA, attempt 1,
+all 12 reported steps successful. The repository step ran
+`2026-10-13T03:01:22Z`–`2026-10-13T03:19:55Z`.
+Actual raw capture time `2026-10-13T03:22:00.711Z` identifies capture, not the
+separate committed/source/frozen-byte audit time. Exact chronology, raw hashes,
+commands and outcomes are retained below; no future result is substituted.
+
+This pre-acceptance receipt changes only this artifact and the evidence ledger.
+It preserves claim source `source-v2:sha256:7f5042b01b55ad87e4b2b34419599fe10dc12f63ff85995629d7bc910b12b531`, 3,098 entries, complete claim
+manifest `b92c249789a68a9e6cec23bcc198a9fa2d6930dc07b0bc0a5dc3af3ef5aa6bae`, and the complete tested manifest and
+six-governance derived diff above verbatim. Its own independent review,
+frozen-file pinned local gates and exact-SHA CI remain required and pending.
+I12 remains in progress; standing implementation acceptance and the separate
+authorized closeout have not been applied. No effective implementation done,
+fresh human inspection, formal marker/retained-claim sign-off, tier, consumer,
+parent, profile, I13 start, rewrite, deployment or production completion follows.
+The unavailable oracle/T2/T3, unearned browser T4 and 23 unchanged npm advisories
+remain as disclosed above. This receipt does not predeclare its own SHA/hash/CI
+and requires no self-referential extra receipt chain.
+
+```json
+{
+  "actual_claim_commit": {
+    "recorded_at": "2026-10-13T02:57:39.328Z",
+    "head": "14e9267e931debd38eb921357a39dda6b11cccd9",
+    "parent": "1cdfbbf6f39cbe494a367285fb2f2c5240523a0b",
+    "branch": "work/cw1-v2-02-i12-vrf-presence",
+    "paths": 8,
+    "source_digest": "source-v2:sha256:7f5042b01b55ad87e4b2b34419599fe10dc12f63ff85995629d7bc910b12b531",
+    "files": 3098,
+    "manifest_sha256": "b92c249789a68a9e6cec23bcc198a9fa2d6930dc07b0bc0a5dc3af3ef5aa6bae",
+    "mapping_sha256": "48cb35b9facdb761b9874b997cd5d54bc1136c9cb1fd675df800041ae3430bdf",
+    "committed_bytes_verified": true
+  },
+  "actual_claim_freeze": {
+    "frozen_at": "2026-10-13T02:41:07.442Z",
+    "config": {
+      "label": "evidence-claim-v2",
+      "phase": "claim",
+      "predecessor_record": "candidate-commit.json",
+      "remote_record": "candidate-push-receipt.json"
+    },
+    "config_sha256": "dab1c9f7dcba49498cdee0f7b97ce781e70b9c3375a3d262f38a633c5083a484",
+    "mapping_sha256": "48cb35b9facdb761b9874b997cd5d54bc1136c9cb1fd675df800041ae3430bdf",
+    "mapping": {
+      "schema_version": 1,
+      "phase": "claim",
+      "parent": "1cdfbbf6f39cbe494a367285fb2f2c5240523a0b",
+      "branch": "work/cw1-v2-02-i12-vrf-presence",
+      "tested_revision": "1cdfbbf6f39cbe494a367285fb2f2c5240523a0b",
+      "tested_digest": "source-v2:sha256:fe70ecdbe799c99c93c3c8f9702905996c624205d7a72fa9559a6f8bef1d6c11",
+      "tested_manifest_sha256": "ebd789e2a9883286f543f640cdb748e776dd70c3282298d0435a0c7befb9c323",
+      "source_digest": "source-v2:sha256:7f5042b01b55ad87e4b2b34419599fe10dc12f63ff85995629d7bc910b12b531",
+      "files": 3098,
+      "manifest_sha256": "b92c249789a68a9e6cec23bcc198a9fa2d6930dc07b0bc0a5dc3af3ef5aa6bae",
+      "derived_diff_sha256": "870fc4036cd5cbda5cc0ed31f16ebafb3985d47418b1924a53aa0beaa3f811b8",
+      "predecessor_record_sha256": "7ca1b8de8a6c6a12d226fc98f83315f0074e82ef24553d46bb0e250482d6584b",
+      "candidate_ci_receipt_sha256": "c2cc8a899ca00377ba3834f907f94a1f251f792aa19fcba536ac446227e0f352",
+      "paths": [
+        {
+          "path": "AGENTS.md",
+          "before": {
+            "mode": "100644",
+            "bytes": 22743,
+            "sha256": "1b26d74bcd6d3d9a3f6c7ab24306ca87275363ec6d118ea9d413ebe13381666f"
+          },
+          "after": {
+            "mode": "100644",
+            "bytes": 23149,
+            "sha256": "321209b02791e3ce659803c446ee69538ef245c8139e0c54dcf38e6efa80db54"
+          }
+        },
+        {
+          "path": "docs/ROADMAP.md",
+          "before": {
+            "mode": "100644",
+            "bytes": 107332,
+            "sha256": "9c7e568ecbc35fe9c7ded942208f5658ad69f825fb776dc6f9d98b723f0fd45e"
+          },
+          "after": {
+            "mode": "100644",
+            "bytes": 107927,
+            "sha256": "3b25eafa08cf6321ca9f38e66ebd2fa93111a2412d5a5169e8aeaf3746c7d970"
+          }
+        },
+        {
+          "path": "docs/STATUS.md",
+          "before": {
+            "mode": "100644",
+            "bytes": 40609,
+            "sha256": "455b6709f292d47233bf104eaf2200ad99b8ee0ccdf002b1e9fbd98788edcb8e"
+          },
+          "after": {
+            "mode": "100644",
+            "bytes": 41057,
+            "sha256": "3d5eb2b9dcc7c3af6cd5be7fd05fcaadbf0b9c292d84c0becdf8ce310c9ca92d"
+          }
+        },
+        {
+          "path": "docs/TESTING.md",
+          "before": {
+            "mode": "100644",
+            "bytes": 32428,
+            "sha256": "16c095bd4e3c2c5e21f6d5f7c10bf6ad76eea1f1d3230b8dff5cd0cbe007190c"
+          },
+          "after": {
+            "mode": "100644",
+            "bytes": 33090,
+            "sha256": "6c26684c462cdc0f8ff40206528439ce28bcd431e2505a714c18c21598c44371"
+          }
+        },
+        {
+          "path": "docs/evidence/2026-10-12-core-workflow-v2-vrf-scalar-presence-i12-v0.md",
+          "before": null,
+          "after": {
+            "mode": "100644",
+            "bytes": 869381,
+            "sha256": "ffd5fc1e9a6474e4840068143056141f6bea827d6fa41e9b47c8d825fb060c2e"
+          }
+        },
+        {
+          "path": "docs/evidence/README.md",
+          "before": {
+            "mode": "100644",
+            "bytes": 30235,
+            "sha256": "bc37dce349a6bacb9d424cdef7979cdab0aa862f3d291de84f8e4e86e72a1c54"
+          },
+          "after": {
+            "mode": "100644",
+            "bytes": 32894,
+            "sha256": "e3b4f1c96c30834e2ad11c0eaaede7218d3fe6817d711a272c49db5d4a8c3a8c"
+          }
+        },
+        {
+          "path": "docs/increments/CW1-V2-02-I12.md",
+          "before": {
+            "mode": "100644",
+            "bytes": 33221,
+            "sha256": "8ead4d2ced82ee17db229c24d62f74e4ca7819c3a5948d783c01fd52c9e083a4"
+          },
+          "after": {
+            "mode": "100644",
+            "bytes": 38430,
+            "sha256": "8a395f8bd362ca43db4e67398ef34ba6dfc45202929c9839acfd104092430c35"
+          }
+        },
+        {
+          "path": "docs/increments/README.md",
+          "before": {
+            "mode": "100644",
+            "bytes": 19614,
+            "sha256": "d01b9a341b9930851e6884faa72c566eb096528ce4dd2e397cf2ab56e6ff7b8d"
+          },
+          "after": {
+            "mode": "100644",
+            "bytes": 19978,
+            "sha256": "07212e6e00bc9cd54488500b9c1ed33590d6c10810a3f6c36a11af309c81331c"
+          }
+        }
+      ]
+    }
+  },
+  "actual_frozen_file_local_gates": [
+    {
+      "label": "evidence-claim-v2-assembly-repository",
+      "cwd": "/home/jihad/Projects/netbox_go",
+      "command": [
+        "make",
+        "check"
+      ],
+      "started": "2026-10-13T02:41:29.179Z",
+      "ended": "2026-10-13T02:47:54.956Z",
+      "exit": 0,
+      "error": null,
+      "signal": null,
+      "log_sha256": "9bd37afe6c14f24c8fc3e7e02ec0f2ec3edcdf7401842dce81ec5da161e64a64",
+      "before_digest": "source-v2:sha256:7f5042b01b55ad87e4b2b34419599fe10dc12f63ff85995629d7bc910b12b531",
+      "after_digest": "source-v2:sha256:7f5042b01b55ad87e4b2b34419599fe10dc12f63ff85995629d7bc910b12b531",
+      "files": 3098,
+      "unchanged": true,
+      "boundary_error": null,
+      "mapping_sha256": "48cb35b9facdb761b9874b997cd5d54bc1136c9cb1fd675df800041ae3430bdf"
+    },
+    {
+      "label": "evidence-claim-v2-final-repository",
+      "cwd": "/home/jihad/Projects/netbox_go",
+      "command": [
+        "make",
+        "check"
+      ],
+      "started": "2026-10-13T02:48:34.742Z",
+      "ended": "2026-10-13T02:55:00.772Z",
+      "exit": 0,
+      "error": null,
+      "signal": null,
+      "log_sha256": "da0565e546721d2dcb342536e5780be3a2c2de3df0d7d36246a87a40698417de",
+      "before_digest": "source-v2:sha256:7f5042b01b55ad87e4b2b34419599fe10dc12f63ff85995629d7bc910b12b531",
+      "after_digest": "source-v2:sha256:7f5042b01b55ad87e4b2b34419599fe10dc12f63ff85995629d7bc910b12b531",
+      "files": 3098,
+      "unchanged": true,
+      "boundary_error": null,
+      "mapping_sha256": "48cb35b9facdb761b9874b997cd5d54bc1136c9cb1fd675df800041ae3430bdf"
+    }
+  ],
+  "actual_normal_exact_sha_claim_push": {
+    "started": "2026-10-13T03:00:12.259Z",
+    "ended": "2026-10-13T03:00:15.786Z",
+    "head": "14e9267e931debd38eb921357a39dda6b11cccd9",
+    "branch": "work/cw1-v2-02-i12-vrf-presence",
+    "push_url": "git@github.com:jihadismail8/netbox-go.git",
+    "command": [
+      "git",
+      "--no-replace-objects",
+      "-c",
+      "advice.graftFileDeprecated=false",
+      "push",
+      "git@github.com:jihadismail8/netbox-go.git",
+      "14e9267e931debd38eb921357a39dda6b11cccd9:refs/heads/work/cw1-v2-02-i12-vrf-presence"
+    ],
+    "exit": 0,
+    "error": null,
+    "signal": null,
+    "log_sha256": "1c1308496fcb0c3e9509f55664a8ae17b428ef41b736a34e856e7d6ab38cace7",
+    "remote_before": "1cdfbbf6f39cbe494a367285fb2f2c5240523a0b\trefs/heads/work/cw1-v2-02-i12-vrf-presence",
+    "remote_after": "14e9267e931debd38eb921357a39dda6b11cccd9\trefs/heads/work/cw1-v2-02-i12-vrf-presence",
+    "before_digest": "source-v2:sha256:7f5042b01b55ad87e4b2b34419599fe10dc12f63ff85995629d7bc910b12b531",
+    "after_digest": "source-v2:sha256:7f5042b01b55ad87e4b2b34419599fe10dc12f63ff85995629d7bc910b12b531",
+    "files": 3098,
+    "unchanged": true,
+    "boundary_error": null
+  },
+  "actual_terminal_exact_sha_claim_ci": {
+    "recorded_at": "2026-10-13T03:22:00.711Z",
+    "run_id": 38339600527,
+    "job_id": 115107381745,
+    "run_attempt": 1,
+    "head_sha": "14e9267e931debd38eb921357a39dda6b11cccd9",
+    "status": "completed",
+    "conclusion": "success",
+    "run_created_at": "2026-10-13T03:00:17Z",
+    "run_started_at": "2026-10-13T03:00:17Z",
+    "run_updated_at": "2026-10-13T03:19:59Z",
+    "job_started_at": "2026-10-13T03:00:20Z",
+    "job_completed_at": "2026-10-13T03:19:58Z",
+    "all_steps_successful": true,
+    "steps": 12,
+    "run_url": "https://github.com/jihadismail8/netbox-go/actions/runs/38339600527",
+    "job_url": "https://github.com/jihadismail8/netbox-go/actions/runs/38339600527/job/115107381745",
+    "raw_run_sha256": "b93746b6b9d084229266f891e03ce433afe0dd8f4ecd35fd358cf0d500b958d3",
+    "raw_job_sha256": "90398c6ee09ca02f1af43ba394e568f251c8c349ec725a98c668987395f30598",
+    "digest": "source-v2:sha256:7f5042b01b55ad87e4b2b34419599fe10dc12f63ff85995629d7bc910b12b531",
+    "files": 3098,
+    "manifest_sha256": "b92c249789a68a9e6cec23bcc198a9fa2d6930dc07b0bc0a5dc3af3ef5aa6bae"
   }
 }
 ```
