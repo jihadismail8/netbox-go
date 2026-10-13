@@ -53,7 +53,7 @@ implementation exists.
 | `CW1-V2-02-I10`| `done`        | Codex             | [Device scalar write presence](CW1-V2-02-I10.md)           |
 | `CW1-V2-02-I11`| `done`        | Codex             | [Standing-authorized Interface scalar presence](CW1-V2-02-I11.md) |
 | `CW1-V2-02-I12`| `done`        | Codex             | [Standing-authorized bounded VRF scalar presence](CW1-V2-02-I12.md); exact closeout/final receipt and integrity green |
-| `CW1-V2-02-I13`| `packet`      | Codex             | [Prefix scalar write presence](CW1-V2-02-I13.md); independent reviews/standing packet permission recorded, local and exact CI pending |
+| `CW1-V2-02-I13`| `in-progress` | Codex             | [Prefix scalar write presence](CW1-V2-02-I13.md); tested candidate/replay/exact CI green, conditional claim/receipt gates pending |
 | `CW1-V3-01`    | `done`        | Codex GPT-5.6 Sol | [Dependency-aware readiness](CW1-V3-01.md)                 |
 | `CW1-V3-02`    | `done`        | Codex             | [Bootstrap and schema contract](CW1-V3-02.md)              |
 
@@ -283,15 +283,24 @@ list/query parsing remain untouched. No uniqueness/downstream policy,
 deletion/list/query, tier, consumer, parent/profile, or rewrite completion
 follows.
 
-`CW1-V2-02-I13` is the authored Prefix scalar-presence `packet`, owned by
-`ipam-core-workflow` / Codex, for `prefix`, `vrf`, `status`, `is_pool`,
-`mark_utilized`, `description`, and `comments`. Its eight fixed regressions and
-API/PostgreSQL/Vue work are planned, not implementation evidence. Independent
-technical/companion reviews passed; existing standing routine packet permission
-was applied as recorded in the packet, not implementation acceptance. Pinned
-local and exact packet CI remain required before behavior editing. After effective
-I13, review a bounded Prefix network-value packet under existing `CW1-V2-05`;
-do not invent I14 or close the common-mutation parent, any tier or profile.
+`CW1-V2-02-I13` remains `in-progress`, owned by `ipam-core-workflow` / Codex,
+only for Prefix `prefix`, `vrf`, `status`, `is_pool`, `mark_utilized`,
+`description`, and `comments`. Reviewed packet
+`44a1f2018e7cda1c85273b714b96667f02577555` passed its pinned local and exact
+CI gates before compiling semantic red proof. Tested candidate
+`1dc5a472032abda9c9b41a855ca7df8f8d4e2bb7` passed all 14 local and 14
+unchanged committed replay gates for the eight fixed tests and bounded
+API/PostgreSQL/Vue work, plus exact candidate run `38377586847` / job
+`115229749443`, all 12 steps, and independent captured/source/Git integrity.
+The [bounded artifact preparation](../evidence/2026-10-13-core-workflow-v2-prefix-scalar-presence-i13-v0.md)
+is conditional: own reviews, two frozen local gates, exact claim CI and later
+excluded receipt gates remain before standing acceptance and separate
+closeout/final-receipt gates. No effective evidence/`done`, new human inspection
+or formal sign-off is claimed. Failed earlier attempts remain historical; the
+disposable database is absent, oracle unavailable, 23 advisories unchanged and
+T2/T3/T4 unearned. After effective I13, review a bounded Prefix network-value
+packet under existing `CW1-V2-05`; do not invent I14 or close the
+common-mutation parent, any tier, consumer or profile.
 
 `CW1-V3-01` has exact tested candidate
 `58241d7f87b642e6b7eca279592ad3759a0f5a06` at source digest

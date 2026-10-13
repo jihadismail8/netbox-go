@@ -376,6 +376,70 @@ No formal marker, fresh human inspection, designated retained-claim sign-off,
 tier/consumer/parent/profile promotion or I13 start is claimed. The unavailable
 pinned oracle leaves T2/T3 unearned; Vue checks earn no T4. Existing npm
 advisories remain 23 (7 moderate, 14 high, 2 critical).
+
+The planned
+[bounded Prefix scalar write-presence artifact](2026-10-13-core-workflow-v2-prefix-scalar-presence-i13-v0.md)
+is being prepared only for `CW1-V2-02-I13`'s seven declared writable fields.
+The preceding I12 final-receipt pending statements describe its historical
+assembly boundary; the [verified I13 entry](../increments/CW1-V2-02-I13.md#verified-i12-exit-not-a-new-human-acceptance)
+retains the actual green final leaf and separate integrity audit, without
+reapplying its `2026-10-13T04:27:07Z` standing acceptance or inventing inspection.
+Reviewed packet `44a1f2018e7cda1c85273b714b96667f02577555` passed pinned
+local and exact packet CI before compiling semantic red proof. Exact tested
+candidate `1dc5a472032abda9c9b41a855ca7df8f8d4e2bb7`, single parent that
+packet, has source
+`source-v2:sha256:9266635d9d19148844271972e45514a224dd4b5e4d4a843ebba536ffaa68bfab`,
+3,103 entries, complete tested manifest 754,272 bytes / SHA-256
+`99a09218b8450b58fc7fa936719a42cca7a930f76b93f1544ab89310f3832978`,
+and complete 21-path mapping SHA-256
+`396ae79f3b32eb8d2dc6d3b450b67a983115988abcbad6253e994438067bd89b`.
+All 14 local and 14 unchanged committed replay gates passed, including the
+eight fixed tests, contracts/Vue, affected/race, real-PostgreSQL durability/
+six late rollbacks, complete L4, backend/frontend and repository checks.
+Committed repository replay ran `2026-10-13T09:26:42.305Z`–`09:33:09.312Z`,
+exit 0, unchanged source, raw log SHA-256
+`edac96f71711c30eb0ab366448e973ef3d4916f76555a69355afe83e0ca6cf23`.
+The compiling red manifest and both original raw patches, historical v1
+compile/v2 lint failures, two original v3 dependency-install/typecheck failures
+and fresh successful after-install commands remain distinct actual records,
+never relabelled as green. Actual tools include eight successful version outputs
+and two failed ENOENT probes. Disposable `netbox_i13_20261013` cleanup ran
+`2026-10-13T09:26:14.617Z`–`09:26:15.668Z`, `1|1` to `0|0`, zero active
+connections, ephemeral credential removed.
+
+Normal exact-SHA push ran `2026-10-13T09:36:52.678Z`–`09:36:56.000Z`,
+with boundary verification `09:36:59.518Z`. Exact candidate run
+[38377586847](https://github.com/jihadismail8/netbox-go/actions/runs/38377586847)
+and job
+[115229749443](https://github.com/jihadismail8/netbox-go/actions/runs/38377586847/job/115229749443)
+completed success at that SHA, attempt 1, all 12 reported steps successful.
+Run start–terminal update was `2026-10-13T09:36:57Z`–`09:56:37Z`; job
+start–completion `09:37:00Z`–`09:56:36Z`; repository step
+`09:37:53Z`–`09:56:33Z`. Actual raw capture was
+`2026-10-13T09:58:17.032Z`, raw run SHA-256
+`866ded328458e7e5796a34203240e8a38d330e71af24f1c7c299d1d99ec7fc86`
+and job SHA-256
+`be486d347f7fc9157e94fe0c5754cec45a10cd0b8706f4a131e5fbda58c840d3`.
+Root audit passed at `2026-10-13T10:00:42.271Z`; independent complete captured
+CI/source/Git/mapping/message/push/replay integrity passed separately at
+`2026-10-13T10:02:31Z`, not at the borrowed capture time.
+
+This initial conditional claim is `in-progress`, not effective `evidence` or
+`done`. Its assembly changes only six authorized source-governance paths plus
+the planned new source-v2-excluded artifact and this ledger. The artifact must
+retain the complete tested/red manifests, both raw red patches, complete actual
+histories/receipts and derived six-governance source diff. Its own independent
+reviews, two frozen-file pinned local gates and exact claim CI, then the later
+two-path excluded receipt's gates, remain pending. Only after those known gates
+and integrity may the executor honestly apply existing standing implementation
+acceptance; no I13 application has occurred. Separate eight-path closeout and
+final two-path receipt gates remain before bounded `done` or successor work.
+No own future claim digest/SHA/CI, marker, fresh human inspection, formal
+retained-claim/row/consumer/tier/profile sign-off, parent/profile or production
+promotion is declared. The oracle image is unavailable; T2/T3/T4 stay unearned
+and the 23 existing npm advisories remain. Network/containment/uniqueness and
+every other excluded boundary stay open.
+
 The
 [bounded dependency-aware readiness result](2026-08-27-core-workflow-v3-dependency-readiness-v0.md)
 passed its exact-name, affected, race, complete L4 PostgreSQL-regression,
@@ -505,10 +569,10 @@ deployment, migration, rewrite, or production boundary.
 
 | Evidence                 | Required command or boundary                                  | Current state                                                    |
 | ------------------------ | ------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Repository quality       | Revised `make check` including non-mutating backend coverage  | Prior bounded results retained; I11 standing-authorized implementation done; I12 preceding closeout green, current final receipt gates pending |
+| Repository quality       | Revised `make check` including non-mutating backend coverage  | Prior bounded results retained; I11/I12 bounded done at verified final leaves; I13 tested candidate/replay/exact CI green, own conditional claim/receipt gates pending |
 | Strict REST differential | `make compatibility-test`                                     | Harness present; current result pending                          |
 | gRPC semantic parity     | `go test ./test/parity -count=1` plus corresponding T2 report | Tests present; current result pending                            |
-| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | Prior bounded suites and I11/I12 committed durability/complete-L4 passed; I12 final receipt gates pending; V3-03 through V3-05 open |
+| Real PostgreSQL          | DSN-enabled bootstrap/schema/concurrency/identity suites      | Prior bounded suites and I11/I12/I13 committed durability/complete-L4 passed; I13 own conditional claim/receipt gates pending; V3-03 through V3-05 open |
 | Standalone deployment    | `make deployment-smoke`                                       | CORS-scoped exact-commit result retained; V3-04 remains open     |
 | Browser workflow         | `make browser-e2e`                                            | Harness present; current result pending                          |
 

@@ -302,15 +302,32 @@ The oracle image is unavailable; T2/T3/T4 and designated human sign-offs stay
 unearned. The 23 existing npm advisories remain. Uniqueness, downstream policy,
 deletion/list/query, every tier/consumer, the parent and profile remain open.
 
-[`CW1-V2-02-I13`](increments/CW1-V2-02-I13.md) is the authored packet-only
-Prefix scalar-presence lane, owned by `ipam-core-workflow` / Codex, for
-`prefix`, `vrf`, `status`, `is_pool`, `mark_utilized`, `description`, and
-`comments`. Independent packet/companion review, standing routine packet
-authorization, pinned local and exact packet CI remain required before behavior
-editing. The eight fixed regressions and operation-contract/shared API,
-PostgreSQL and Vue work are planned; no I13 implementation evidence or
-acceptance is claimed. Network, containment, uniqueness, tiers/consumers,
-parent/profile, rewrite and production boundaries remain open.
+[`CW1-V2-02-I13`](increments/CW1-V2-02-I13.md) remains `in-progress`, owned
+by `ipam-core-workflow` / Codex, only for Prefix `prefix`, `vrf`, `status`,
+`is_pool`, `mark_utilized`, `description`, and `comments` scalar presence.
+Reviewed packet `44a1f2018e7cda1c85273b714b96667f02577555` passed pinned
+local and exact packet CI before compiling semantic red proof and fixes.
+Exact tested candidate `1dc5a472032abda9c9b41a855ca7df8f8d4e2bb7` has source
+`source-v2:sha256:9266635d9d19148844271972e45514a224dd4b5e4d4a843ebba536ffaa68bfab`,
+3,103 entries, complete manifest SHA-256
+`99a09218b8450b58fc7fa936719a42cca7a930f76b93f1544ab89310f3832978`.
+All 14 local and 14 unchanged committed replay gates passed for its eight
+fixed regressions, operation contracts, shared representable API intent, real
+PostgreSQL durability/six late rollbacks and Vue dirty-field/error checks.
+Exact candidate run `38377586847` / job `115229749443`, attempt 1, passed
+all 12 reported steps. Actual raw capture was `2026-10-13T09:58:17.032Z`;
+root audit passed at `10:00:42.271Z` and independent full integrity at
+`10:02:31Z`, separate from capture. The
+[bounded artifact preparation](evidence/2026-10-13-core-workflow-v2-prefix-scalar-presence-i13-v0.md)
+records a conditional initial claim only: own reviews, two frozen local gates,
+exact claim CI and later excluded receipt gates remain before standing
+acceptance and separate closeout/final receipt gates. No effective evidence or
+`done`, fresh human inspection or formal sign-off is claimed. Historical v1
+compilation, v2 lint and two v3 dependency-install/typecheck failures remain
+failures; fresh same-source after-install typechecks passed. The disposable
+role/database is absent, the oracle unavailable and 23 npm advisories remain.
+T2/T3/T4, network, containment, uniqueness, every consumer, parent/profile,
+rewrite and production boundaries remain open.
 
 `CW1-V3-01` has exact tested candidate
 `58241d7f87b642e6b7eca279592ad3759a0f5a06` at source digest
@@ -589,7 +606,7 @@ replacement completes ADR 0004's governing gate and CP-13.
 | ------------------------ | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
 | V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                                 | Refresh for the active source and every later relevant merged digest                                                             | Continuous; entry source retained          |
 | V1 identity/RBAC         | Persisted identity, retained CORS, accepted I1/I2/I3, and retained I4 evidence                          | Obtain I4 owner review; complete password-policy/throttle/proxy/streaming plus RBAC/admin/secret work                            | I4 evidence; parent open                   |
-| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, bounded I1-I12 done | Review/gate I13 Prefix packet only; remaining invariant, side-effect, concurrency and tier cases | I1-I12 bounded done; I13 packet-only, own gates pending; parent open |
+| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, bounded I1-I12 done; I13 tested candidate green | Gate I13 conditional evidence claim/receipt, then bounded acceptance/closeout; remaining invariant, side-effect, concurrency and tier cases | I1-I12 bounded done; I13 in-progress, own claim/receipt gates pending; parent open |
 | V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, Compose harness, and owner-accepted bounded V3-01/V3-02 evidence with green closeout receipts | Complete V3-03 through V3-05 | V3-01/V3-02 done; V3 parent open |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                             | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report                       | T1; implementation/evidence pending        |
 | V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                         | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes                  | T1; implementation/evidence pending        |

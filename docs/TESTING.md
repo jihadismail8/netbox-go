@@ -329,24 +329,58 @@ same-core parity earns no corresponding T3, and Vue checks earn no T4. The
 23 existing npm advisories (7 moderate, 14 high, 2 critical) remain unchanged.
 No tier, consumer, parent/profile, or browser outcome is earned.
 
-The [`CW1-V2-02-I13` packet](increments/CW1-V2-02-I13.md) plans exactly eight
+The [`CW1-V2-02-I13` increment](increments/CW1-V2-02-I13.md) implements exactly eight
 Prefix regressions: `TestPrefixScalarNormalizationContract`,
 `TestPrefixScalarCommandPresenceMatrix`,
 `TestReplacePrefixPreservesOmittedOptionalState`,
 `TestPrefixScalarValidationLeavesStateUnchanged`,
 `TestPrefixRESTScalarPresenceMatrix`, `TestPrefixGRPCScalarPresenceMatrix`,
 `TestPostgresPrefixScalarPresenceDurability`, and
-`TestPrefixScalarPresenceRESTGRPCParity`. Compiling red-first tests will cover
+`TestPrefixScalarPresenceRESTGRPCParity`. The implemented matrix covers
 seven-field intent, optional PUT preservation, exact Prefix-owned status and
 numeric-VRF diagnostics, mixed-validation non-effects, real PostgreSQL
 durability/six delegate-then-error rollbacks and representable same-core parity.
 Operation-metadata/OpenAPI and actual DynamicForm dirty-field/server-error
-checks are planned alongside them. These are requirements, not implemented
-tests or retained passes. Independent technical/companion reviews passed and
-existing standing routine packet permission was applied as recorded in the
-packet. Pinned local and exact packet CI remain pending before behavior editing.
-Existing network/query code and tests must remain unchanged; no
-canonicalization, containment, `/0`, uniqueness, tier or parent closure follows.
+checks accompany them. Reviewed packet
+`44a1f2018e7cda1c85273b714b96667f02577555` passed its pinned local and exact
+CI gates before behavior editing. Five core/gRPC regressions compiled and
+failed semantically on unchanged production; contract red preserved 404 existing
+passes and Vue red preserved 84. Subsequent v1 parity compilation failure was
+corrected by three response `VrfId` references; v2 staticcheck QF1003 by two
+equivalent tagged switches in the new REST test. Those are correction history,
+not the genuine compiling red proof or final-source passes.
+
+Exact tested candidate `1dc5a472032abda9c9b41a855ca7df8f8d4e2bb7`, source
+`source-v2:sha256:9266635d9d19148844271972e45514a224dd4b5e4d4a843ebba536ffaa68bfab`
+with 3,103 entries, passed all 14 local and 14 unchanged committed replay gates.
+The eight fixed names each exist exactly once. The replay includes 539
+capability/OpenAPI and 96 traceability tests, 219 Vue tests in 29 files, both
+typechecks, generated checks and 187 Markdown files with valid links. Backend
+coverage was 38,637/291,842 (13.2390%), above the unchanged 37,876/291,613
+(12.9884%) floor, with 55 measured packages and one reviewed exclusion.
+Real PostgreSQL executed 64 named subcases, including six actual delegated
+transaction-local row/change observations followed by sentinel errors and outer
+rollback, plus raw-row/reload/identity/timestamp and exact seven-field snapshots.
+The focused PostgreSQL matrix and complete L4 passed; the owned role/database
+was removed and verified `0|0`, with its ephemeral credential removed.
+
+Two original v3 standalone typechecks failed while parallel `npm ci` removed
+dependencies (exits 127 and 2); immutable logs remain failures. Fresh
+`implementation-v3-vue-typecheck-after-install` and
+`implementation-v3-vue-test-typecheck-after-install` passed after installation
+on unchanged final source. Eight actual tool outputs and two failed ENOENT
+plugin-path probes are retained separately, without pin or policy changes.
+Exact candidate run `38377586847` / job `115229749443`, attempt 1, passed
+all 12 reported steps; capture was `2026-10-13T09:58:17.032Z`, root audit
+`10:00:42.271Z` and independent full integrity `10:02:31Z`.
+The [bounded artifact preparation](evidence/2026-10-13-core-workflow-v2-prefix-scalar-presence-i13-v0.md)
+remains an `in-progress` conditional claim: own reviews, two frozen local gates,
+exact claim CI, excluded receipt and standing/closeout/final-receipt gates are
+pending, not passed. The unavailable oracle earns no T2 or corresponding T3;
+same-core parity and Vue units/types earn no T4. The 23 existing npm advisories
+(7 moderate, 14 high, 2 critical) remain. Existing network/query code and tests
+are unchanged; no canonicalization, containment, `/0`, uniqueness, tier,
+consumer, parent/profile, fresh human inspection or formal sign-off follows.
 
 `CW1-V3-01` has exact tested candidate
 `58241d7f87b642e6b7eca279592ad3759a0f5a06` at source digest
@@ -519,7 +553,7 @@ and exact change-state outcomes remain to be added and retained.
 | ------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage                       | `make check` retained green on each exact relevant source digest                                                          | Entry source-v2 retained; active-source refresh required |
 | V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests                      | Pass I4's exact claim CI, retain its receipt, obtain owner review, then complete the remaining identity matrix            | I4 evidence claim conditional; parent open               |
-| V2 profile behavior      | Shared 13-resource service, broad tests, bounded I1-I12 done | Review/gate I13 Prefix packet only; trace remaining invariant, rollback and external-tier boundaries | I1-I12 bounded done; I13 packet-only, own gates pending; parent open |
+| V2 profile behavior      | Shared 13-resource service, broad tests, bounded I1-I12 done; I13 tested candidate green | Gate I13 conditional claim/receipt, then bounded acceptance/closeout; trace remaining invariant, rollback and external-tier boundaries | I1-I12 bounded done; I13 in-progress, own claim/receipt gates pending; parent open |
 | V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness, and owner-accepted bounded V3-01/V3-02 evidence with green closeout receipts | Complete V3-03 through V3-05 and retain deployment loss-recovery artifacts | V3-01/V3-02 done; V3 parent open |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites                            | Complete T2 scenario report, then equivalent T3 report                                                                    | T1; implementation gap                                   |
 | V5 Vue workflow          | Typed adapters and real-browser harness                                                    | Both workflows and every required negative/state case retained green                                                      | T1; implementation gap                                   |

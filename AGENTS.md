@@ -300,13 +300,27 @@ the [verified final leaf](docs/increments/CW1-V2-02-I12.md#verified-final-leaf-a
 records the completed closeout while preserving the original standing
 application. T2/T3/T4, designated
 human sign-offs, every consumer, the parent, and profile completion stay open.
-`CW1-V2-02-I13` is the next packet-only lane for Prefix `prefix`, `vrf`,
-`status`, `is_pool`, `mark_utilized`, `description`, and `comments` common
-scalar presence. Codex owns the [authored packet](docs/increments/CW1-V2-02-I13.md);
-independent packet/companion review, standing routine packet authorization,
-pinned local and exact packet CI gates remain required before behavior editing.
-Its eight fixed regressions are planned, not implemented or passed. It closes
-no network, uniqueness, containment, tier, consumer, parent, or profile boundary.
+`CW1-V2-02-I13` remains `in-progress` for Prefix `prefix`, `vrf`, `status`,
+`is_pool`, `mark_utilized`, `description`, and `comments` common scalar presence.
+The [bounded packet](docs/increments/CW1-V2-02-I13.md) passed its independent,
+pinned local and exact packet CI gates before compiling semantic red proof and
+the 21-path implementation. Exact tested candidate
+`1dc5a472032abda9c9b41a855ca7df8f8d4e2bb7` has source
+`source-v2:sha256:9266635d9d19148844271972e45514a224dd4b5e4d4a843ebba536ffaa68bfab`,
+3,103 entries. Its eight fixed tests, operation contracts, shared representable
+REST/gRPC intent, real-PostgreSQL durability/six late rollbacks and Vue checks
+passed all 14 local and 14 unchanged committed replay gates. Exact candidate
+run `38377586847` / job `115229749443`, attempt 1, passed all 12 steps;
+captured/source/Git integrity passed independently. Preparation of the
+[bounded artifact](docs/evidence/2026-10-13-core-workflow-v2-prefix-scalar-presence-i13-v0.md)
+is a conditional claim only: its own independent reviews, two frozen local
+gates, exact claim CI and later excluded receipt gates remain pending before
+standing implementation acceptance, separate closeout and final receipt gates.
+No effective `evidence` or `done`, fresh human inspection or formal sign-off is
+claimed. Failed compilation/lint/typecheck attempts remain historical failures;
+the disposable role/database is absent, the oracle is unavailable, 23 npm
+advisories remain, and T2/T3/T4 stay unearned. Network, uniqueness, containment,
+every consumer, the parent and profile remain open.
 Do not begin or merge another
 Capability Profile while V0 is
 red or before `CW1-V6-03`. Once those gates are
