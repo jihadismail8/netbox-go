@@ -121,7 +121,7 @@ production release through PROD-1 and PROD-2.
 | 0    | Stable language and decisions       | CONTEXT plus ADR 0001–0005              | `done`                                                                   |
 | 1    | Repository/shared-core baseline     | `CW1-G00`                               | `continuous`                                                             |
 | 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01/I1/I2/I3 `done`; I4 `evidence`; parent open                        |
-| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01 and bounded I1–I11 done; I12 candidate replay/CI green, claim/receipt gates pending; parent/T2/T3 open |
+| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01 and bounded I1–I11 done; I12 evidence/pre-acceptance receipt green, standing closeout conditional; parent/T2/T3 open |
 | 4    | First Core Workflow Profile         | `CW1-V1-*` through `CW1-V6-*`           | T1; active program                                                       |
 | 5    | In-scope feature expansion          | `CP-P01`–`CP-P19`, then `MC-01`–`MC-10` | `blocked`                                                                |
 | 6    | Extension Service contracts         | `EXT-01`                                | `blocked` on a named inventory                                           |
@@ -367,8 +367,9 @@ no artifact-specific human review or owner-immutability,
 template, uniqueness, deletion, list/query, tier, parent, profile, or consumer
 completion.
 
-[`CW1-V2-02-I12`](increments/CW1-V2-02-I12.md) is the in-progress VRF
-scalar lane for `name`, `rd`, `enforce_unique`, `description`, and `comments`.
+[`CW1-V2-02-I12`](increments/CW1-V2-02-I12.md) is the in-progress
+standing-authorized bounded VRF scalar closeout for `name`, `rd`,
+`enforce_unique`, `description`, and `comments`.
 It owns only common write presence, VRF-local normalization/validation,
 operation-specific contracts, representable shared REST/gRPC semantics,
 PostgreSQL durability/rollback tests, and Vue dirty-field/error presentation.
@@ -380,9 +381,14 @@ assembly gate, unchanged committed focused/race, real PostgreSQL/complete L4
 and repository replay, and exact candidate CI. Its
 [bounded artifact](evidence/2026-10-12-core-workflow-v2-vrf-scalar-presence-i12-v0.md)
 binds the tested source, full manifest and governance-only claim diff. The
-eight-path evidence claim and later excluded receipt still require their own
-independent, pinned local and exact-SHA gates, then separate standing acceptance
-and closeout. I12 remains `in-progress`, not effective evidence or `done`;
+eight-path evidence claim `14e9267e931debd38eb921357a39dda6b11cccd9` and
+two-path pre-acceptance receipt `ed8af4b653ef9f78110f7c4f2b80d590d57c99b2`
+passed their independent integrity, pinned local and exact-SHA gates. The
+executor applied existing standing acceptance at `2026-10-13T04:27:07Z`, not
+fresh human inspection. I12 remains `in-progress`: its implementation closeout
+is conditional on the current eight-path closeout and final two-path excluded
+receipt passing their required integrity, pinned local and exact-SHA CI gates.
+No effective `done` follows yet;
 uniqueness, downstream
 policy, deletion/list/query, all tiers/consumers, this parent, and the profile
 remain open. Prefix I13 is only the next recommended scalar child.
@@ -409,7 +415,7 @@ remain open. Prefix I13 is only the next recommended scalar child.
 | `CW1-V2-02-I9`      | `done`        | Accepted Rack scalar write presence                 | Done I8 and current `CW1-G00`          |
 | `CW1-V2-02-I10`     | `done`        | Accepted Device scalar presence                    | Done I9 and current `CW1-G00`          |
 | `CW1-V2-02-I11`     | `done`        | Standing-authorized Interface scalar presence       | Exact closeout and final receipt gates green |
-| `CW1-V2-02-I12`     | `in-progress` | Gate bounded VRF evidence claim and excluded receipt | Exact tested candidate and current `CW1-G00` |
+| `CW1-V2-02-I12`     | `in-progress` | Gate conditional VRF closeout and final receipt     | Accepted bounded result and current `CW1-G00` |
 | `CW1-V2-03`–`V2-08` | `blocked`     | Close later typed business behavior                 | V2-02 and named lane dependencies      |
 | `CW1-V3-01`         | `done`        | Accepted bounded dependency-aware readiness         | `CW1-G00`                              |
 | `CW1-V3-02`         | `done`        | Accepted bounded bootstrap/schema contract          | Current `CW1-G00` and done `CW1-V2-01` |
@@ -428,8 +434,11 @@ standing-authorized implementation closeout and final excluded receipt gates
 are green. I12's independent packet review, pinned local gate, and exact
 packet CI passed before behavior editing. Its corrected bounded implementation
 passed the local ladder, candidate assembly, unchanged committed replay and
-exact candidate CI. Its bounded evidence claim/receipt and separate acceptance/
-closeout gates remain pending. I12 is not effectively done. The parent and
+exact candidate CI. Its bounded evidence claim and pre-acceptance receipt also
+passed their integrity, pinned local and exact-SHA CI gates. Existing standing
+acceptance was applied by the executor at `2026-10-13T04:27:07Z`. I12's current
+eight-path implementation closeout and final two-path excluded receipt still
+require their own gates; I12 is not effectively done. The parent and
 every later child remain open. Standing owner
 authorization replaces no required artifact-specific human inspection or
 separate row/consumer/tier/aggregate/profile sign-off.
@@ -774,8 +783,11 @@ Bounded children:
   [bounded artifact](evidence/2026-10-12-core-workflow-v2-vrf-scalar-presence-i12-v0.md)
   and [evidence preparation](increments/CW1-V2-02-I12.md#bounded-evidence-claim-preparation)
   bind the prior packet, red proof and completed candidate results. This
-  evidence claim/receipt and separate standing acceptance/closeout remain
-  ungated; no effective evidence or implementation `done` is claimed.
+  evidence claim and pre-acceptance receipt subsequently passed their required
+  gates. The executor applied existing standing acceptance at
+  `2026-10-13T04:27:07Z`, not fresh human inspection. The current eight-path
+  closeout and final two-path receipt remain conditional on their own gates;
+  I12 stays `in-progress`, with no effective implementation `done` yet.
   Uniqueness, downstream policy, deletion/list/query, every tier/consumer,
   this parent, and the profile remain open.
 

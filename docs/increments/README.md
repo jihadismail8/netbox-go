@@ -52,7 +52,7 @@ implementation exists.
 | `CW1-V2-02-I9` | `done`        | Codex GPT-5.6 Sol | [Rack scalar write presence](CW1-V2-02-I9.md)              |
 | `CW1-V2-02-I10`| `done`        | Codex             | [Device scalar write presence](CW1-V2-02-I10.md)           |
 | `CW1-V2-02-I11`| `done`        | Codex             | [Standing-authorized Interface scalar presence](CW1-V2-02-I11.md) |
-| `CW1-V2-02-I12`| `in-progress` | Codex             | [VRF scalar write presence](CW1-V2-02-I12.md); exact candidate replay/CI green, evidence claim/receipt gates pending |
+| `CW1-V2-02-I12`| `in-progress` | Codex             | [VRF scalar write presence](CW1-V2-02-I12.md); standing-authorized bounded implementation accepted, closeout/final receipt conditional |
 | `CW1-V3-01`    | `done`        | Codex GPT-5.6 Sol | [Dependency-aware readiness](CW1-V3-01.md)                 |
 | `CW1-V3-02`    | `done`        | Codex             | [Bootstrap and schema contract](CW1-V3-02.md)              |
 
@@ -249,8 +249,9 @@ passed. No artifact-specific
 human review or owner-immutability, tier, parent, profile, or consumer
 completion is claimed.
 
-`CW1-V2-02-I12` is the in-progress VRF lane for its five declared
-writable fields. Reviewed packet `009ab93e86114d36b85550d75e5c18d0cd09b8c9`
+`CW1-V2-02-I12` is the in-progress standing-authorized bounded VRF closeout
+for its five declared writable fields. Reviewed packet
+`009ab93e86114d36b85550d75e5c18d0cd09b8c9`
 passed pinned local and exact packet CI gates before behavior editing.
 Compiling semantic red proof preceded fixes. The corrected 21-path local
 implementation covers only VRF-owned scalar validation,
@@ -264,9 +265,14 @@ replay, and exact candidate CI. The
 [bounded artifact](../evidence/2026-10-12-core-workflow-v2-vrf-scalar-presence-i12-v0.md)
 and [evidence preparation](CW1-V2-02-I12.md#bounded-evidence-claim-preparation)
 record those actual boundaries and verified disposable-database cleanup.
-The current evidence claim and later excluded receipt still need their own
-independent/local/exact-SHA gates. Standing acceptance/closeout are not applied;
-I12 remains `in-progress`, not effective evidence or `done`.
+Evidence claim `14e9267e931debd38eb921357a39dda6b11cccd9` and pre-acceptance
+receipt `ed8af4b653ef9f78110f7c4f2b80d590d57c99b2` passed their independent
+integrity, pinned local and exact-SHA CI gates. The executor applied the owner's
+existing standing instruction at `2026-10-13T04:27:07Z`, not a new human decision
+or artifact inspection. I12 remains `in-progress`: the current eight-path
+implementation closeout and final two-path excluded receipt are conditional
+on their own required integrity, pinned local and exact-SHA CI gates. No
+effective implementation `done` follows yet.
 Shared Prefix/accepted IPAddress helpers and RD
 list/query parsing remain untouched. No uniqueness/downstream policy,
 deletion/list/query, tier, consumer, parent/profile, or rewrite completion

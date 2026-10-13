@@ -266,7 +266,8 @@ source digest `source-v2:sha256:57687459b6e0286bc43cf791395dfe3b933649c7422e270f
 with 3,093 entries. Frozen receipt bytes and complete manifest were verified.
 No owner-immutability, tier, consumer, parent, profile, rewrite, or production
 completion follows. T2/T3/T4 and designated human sign-offs remain unearned.
-`CW1-V2-02-I12` is in progress for VRF `name`, `rd`,
+`CW1-V2-02-I12` is an in-progress standing-authorized bounded implementation
+closeout for VRF `name`, `rd`,
 `enforce_unique`, `description`, and `comments` common scalar presence,
 VRF-owned normalization/validation, operation contracts, PostgreSQL rollback,
 and Vue dirty-field/error presentation tests. Independently reviewed packet
@@ -278,13 +279,20 @@ with 3,098 entries. Its assembly gate, unchanged committed focused/race,
 real-PostgreSQL/complete-L4 and repository replay, and exact candidate CI passed.
 The owned disposable role/database was removed and verified absent. The
 [bounded I12 artifact](docs/evidence/2026-10-12-core-workflow-v2-vrf-scalar-presence-i12-v0.md)
-records these results; the eight-path evidence claim and later excluded
-receipt still require their own independent, pinned local and exact-SHA gates.
-Standing implementation acceptance and closeout have not been applied; I12
-stays `in-progress`, not effective evidence or `done`.
+records these results. Eight-path evidence claim
+`14e9267e931debd38eb921357a39dda6b11cccd9` and two-path pre-acceptance receipt
+`ed8af4b653ef9f78110f7c4f2b80d590d57c99b2` passed their independent integrity,
+frozen-file pinned local and exact-SHA CI gates. The executor applied the owner's
+existing standing instruction to that known bounded result at
+`2026-10-13T04:27:07Z`, not a fresh human decision or artifact inspection.
+I12 stays `in-progress`: implementation closeout is conditional until its own
+eight-path closeout and final two-path excluded receipt pass independent
+integrity, pinned local and exact-SHA CI gates. No effective `done` follows yet.
 Shared Prefix/accepted IPAddress helpers and RD list/query parsing remain
 unchanged. The [I12 evidence preparation](docs/increments/CW1-V2-02-I12.md#bounded-evidence-claim-preparation)
-records the historical packet/prototype and completed candidate boundaries. T2/T3/T4, designated
+records the historical packet/prototype and completed candidate boundaries;
+the [conditional closeout](docs/increments/CW1-V2-02-I12.md#standing-authorized-bounded-implementation-closeout)
+records the accepted preceding receipt and standing application. T2/T3/T4, designated
 human sign-offs, every consumer, the parent, and profile completion stay open.
 Do not begin or merge another
 Capability Profile while V0 is
