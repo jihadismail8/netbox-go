@@ -650,3 +650,9 @@ assignment/object. These checks prove structural integrity and prevent claim
 rebinding. They cannot prove a command ran or its output/environment was
 truthful, so durable runner provenance and designated human evidence acceptance
 remain mandatory.
+
+## I13 excluded pre-acceptance receipt preparation
+
+The preceding I13 initial-claim pending statements describe its historical assembly boundary. Its actual known green eight-file claim, complete frozen mapping, both pinned local gates, normal publication, terminal exact-SHA CI and distinct post-capture integrity reviews are retained in the [bounded Prefix scalar artifact](2026-10-13-core-workflow-v2-prefix-scalar-presence-i13-v0.md#actual-initial-claim-boundary-and-excluded-pre-acceptance-receipt).
+
+This two-file excluded receipt preserves the complete original artifact and native source at source-v2:sha256:74f1cb1101a64ed15f4b8ea5f544c015d8bee4b78a6dcd8acb0e0fab667bf08c, 3,103 entries. Its own independent integrity review, two frozen pinned local gates and exact-SHA CI remain pending. I13 stays in progress; standing implementation acceptance, separate closeout and effective done have not been applied. No fresh human inspection, formal sign-off, tier/consumer/parent/profile or production promotion follows. It predicts no own future receipt SHA/hash/CI or acceptance time.
