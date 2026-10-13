@@ -656,3 +656,47 @@ remain mandatory.
 The preceding I13 initial-claim pending statements describe its historical assembly boundary. Its actual known green eight-file claim, complete frozen mapping, both pinned local gates, normal publication, terminal exact-SHA CI and distinct post-capture integrity reviews are retained in the [bounded Prefix scalar artifact](2026-10-13-core-workflow-v2-prefix-scalar-presence-i13-v0.md#actual-initial-claim-boundary-and-excluded-pre-acceptance-receipt).
 
 This two-file excluded receipt preserves the complete original artifact and native source at source-v2:sha256:74f1cb1101a64ed15f4b8ea5f544c015d8bee4b78a6dcd8acb0e0fab667bf08c, 3,103 entries. Its own independent integrity review, two frozen pinned local gates and exact-SHA CI remain pending. I13 stays in progress; standing implementation acceptance, separate closeout and effective done have not been applied. No fresh human inspection, formal sign-off, tier/consumer/parent/profile or production promotion follows. It predicts no own future receipt SHA/hash/CI or acceptance time.
+
+## I13 standing-authorized bounded closeout preparation
+
+The earlier I13 table cells report historical assembly boundaries; this appendix
+supersedes their status without altering the retained table bytes.
+
+The preceding I13 initial-claim and pre-acceptance pending statements describe
+their historical assembly boundaries. Actual initial claim
+`d161e251b0f838c57ed0a057a4493fbb02a7c40b` and excluded pre-acceptance
+receipt `77197e854725bba6e625e5fcfb05468aa43caf27` passed independent
+integrity, two frozen pinned local and exact-SHA CI gates. The accepted receipt
+preserves source
+`source-v2:sha256:74f1cb1101a64ed15f4b8ea5f544c015d8bee4b78a6dcd8acb0e0fab667bf08c`,
+3,103 entries/full manifest SHA-256
+`b50630c0c1ec6ea4d7de9e6e9f7a27d2c36fcc56f8934f5d53de685e57a2cdca`;
+the historical tested candidate remains `1dc5a472032abda9c9b41a855ca7df8f8d4e2bb7`
+at tested digest
+`source-v2:sha256:9266635d9d19148844271972e45514a224dd4b5e4d4a843ebba536ffaa68bfab`.
+The [bounded Prefix artifact](2026-10-13-core-workflow-v2-prefix-scalar-presence-i13-v0.md)
+preserves the complete prior manifests, raw patches, canonical proofs and
+operational failures; their historical results are not replaced.
+
+Receipt run `38398462515` / job `115299600865`, attempt 1, passed all 12
+reported steps. Actual raw capture was `2026-10-13T12:57:20.760Z`, distinct
+from root review `2026-10-13T13:00:08Z` and nonauthor independent review
+`2026-10-13T13:01:22.591Z`. The canonical integrity record SHA-256 is
+`226ecf41739afd88871fdae6b5928d8e61d34bab36473d4db4751eee3db71e2a`.
+At `2026-10-13T13:02:43Z`, after both actual reviews, the executor applied
+existing standing authorization, immutable record SHA-256
+`e39451540dd367f3b65544ba4990723f37f119b58bbda4234a2bb7ec53b25eed`.
+This accepts only Prefix's seven-field scalar create/PUT/PATCH presence,
+operation contracts, shared representable API semantics, PostgreSQL
+durability/rollback and Vue dirty-field/error tests; it is not new human
+inspection, formal retained-claim authentication or a designated sign-off.
+
+Only bounded implementation `done` is conditional. It is not effective until
+the separately reviewed eight-path closeout and final two-path excluded receipt
+each pass their own independent integrity, two frozen pinned local and exact-SHA
+CI gates. Those future boundaries remain pending; no own closeout hash/SHA,
+source digest, CI or acceptance is predicted. No successor, full CRUD,
+network/containment/uniqueness, tier/consumer/parent/profile, rewrite, deployment
+or production boundary closes. The oracle remains unavailable, T2/T3/T4 and
+formal human sign-offs unearned, disposable database/credential absent and
+23 existing npm advisories unchanged.

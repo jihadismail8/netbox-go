@@ -53,7 +53,7 @@ implementation exists.
 | `CW1-V2-02-I10`| `done`        | Codex             | [Device scalar write presence](CW1-V2-02-I10.md)           |
 | `CW1-V2-02-I11`| `done`        | Codex             | [Standing-authorized Interface scalar presence](CW1-V2-02-I11.md) |
 | `CW1-V2-02-I12`| `done`        | Codex             | [Standing-authorized bounded VRF scalar presence](CW1-V2-02-I12.md); exact closeout/final receipt and integrity green |
-| `CW1-V2-02-I13`| `in-progress` | Codex             | [Prefix scalar write presence](CW1-V2-02-I13.md); tested candidate/replay/exact CI green, conditional claim/receipt gates pending |
+| `CW1-V2-02-I13`| `in-progress` | Codex             | [Standing-authorized bounded Prefix scalar presence](CW1-V2-02-I13.md); known claim/receipt green, closeout/final receipt gates pending |
 | `CW1-V3-01`    | `done`        | Codex GPT-5.6 Sol | [Dependency-aware readiness](CW1-V3-01.md)                 |
 | `CW1-V3-02`    | `done`        | Codex             | [Bootstrap and schema contract](CW1-V3-02.md)              |
 
@@ -292,11 +292,19 @@ CI gates before compiling semantic red proof. Tested candidate
 unchanged committed replay gates for the eight fixed tests and bounded
 API/PostgreSQL/Vue work, plus exact candidate run `38377586847` / job
 `115229749443`, all 12 steps, and independent captured/source/Git integrity.
-The [bounded artifact preparation](../evidence/2026-10-13-core-workflow-v2-prefix-scalar-presence-i13-v0.md)
-is conditional: own reviews, two frozen local gates, exact claim CI and later
-excluded receipt gates remain before standing acceptance and separate
-closeout/final-receipt gates. No effective evidence/`done`, new human inspection
-or formal sign-off is claimed. Failed earlier attempts remain historical; the
+The [bounded artifact](../evidence/2026-10-13-core-workflow-v2-prefix-scalar-presence-i13-v0.md)
+retains initial claim `d161e251b0f838c57ed0a057a4493fbb02a7c40b` and excluded
+pre-acceptance receipt `77197e854725bba6e625e5fcfb05468aa43caf27`, both green
+through independent integrity, two frozen pinned local and exact-SHA CI gates.
+The receipt preserves source
+`source-v2:sha256:74f1cb1101a64ed15f4b8ea5f544c015d8bee4b78a6dcd8acb0e0fab667bf08c`,
+3,103 entries. Run `38398462515` / job `115299600865` passed all 12 steps;
+capture `2026-10-13T12:57:20.760Z`, root review `13:00:08Z` and independent
+review `13:01:22.591Z` preceded the executor's actual standing application at
+`2026-10-13T13:02:43Z`. This is not fresh human inspection or formal sign-off.
+Bounded implementation `done` is conditional, not effective: separate eight-path
+closeout and final two-path receipt integrity/local/exact-CI gates remain.
+Failed earlier attempts remain historical; the
 disposable database is absent, oracle unavailable, 23 advisories unchanged and
 T2/T3/T4 unearned. After effective I13, review a bounded Prefix network-value
 packet under existing `CW1-V2-05`; do not invent I14 or close the

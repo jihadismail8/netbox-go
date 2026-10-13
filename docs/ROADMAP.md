@@ -121,7 +121,7 @@ production release through PROD-1 and PROD-2.
 | 0    | Stable language and decisions       | CONTEXT plus ADR 0001–0005              | `done`                                                                   |
 | 1    | Repository/shared-core baseline     | `CW1-G00`                               | `continuous`                                                             |
 | 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01/I1/I2/I3 `done`; I4 `evidence`; parent open                        |
-| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01 and bounded I1–I12 done; I13 tested candidate green, conditional claim/receipt gates pending; parent/T2/T3 open |
+| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01 and bounded I1–I12 done; I13 known claim/receipt green, executor standing applied `2026-10-13T13:02:43Z`; in-progress with closeout/final receipt integrity, two pinned local and exact-SHA CI gates pending, done not effective; parent/T2/T3/profile open |
 | 4    | First Core Workflow Profile         | `CW1-V1-*` through `CW1-V6-*`           | T1; active program                                                       |
 | 5    | In-scope feature expansion          | `CP-P01`–`CP-P19`, then `MC-01`–`MC-10` | `blocked`                                                                |
 | 6    | Extension Service contracts         | `EXT-01`                                | `blocked` on a named inventory                                           |
@@ -403,14 +403,22 @@ Exact tested candidate `1dc5a472032abda9c9b41a855ca7df8f8d4e2bb7`, source
 `source-v2:sha256:9266635d9d19148844271972e45514a224dd4b5e4d4a843ebba536ffaa68bfab`
 with 3,103 entries, passed all 14 local and 14 unchanged committed replay gates
 and exact candidate run `38377586847` / job `115229749443`, all 12 steps.
-Independent captured/source/Git integrity passed before this
-[bounded artifact preparation](evidence/2026-10-13-core-workflow-v2-prefix-scalar-presence-i13-v0.md).
+Independent captured/source/Git integrity passed before the
+[bounded artifact](evidence/2026-10-13-core-workflow-v2-prefix-scalar-presence-i13-v0.md).
 Only the seven-field operation-contract/shared API/PostgreSQL/Vue lane and its
-eight fixed tests were exercised. The conditional claim's own reviews, two
-frozen local gates, exact claim CI and later excluded receipt gates remain,
-followed by honestly recorded standing acceptance and separate closeout/final
-receipt gates. No effective evidence, implementation `done` or fresh human
-inspection is claimed. Network, containment, uniqueness, all tiers/consumers
+eight fixed tests were exercised. Initial claim
+`d161e251b0f838c57ed0a057a4493fbb02a7c40b` and excluded pre-acceptance
+receipt `77197e854725bba6e625e5fcfb05468aa43caf27` passed independent
+integrity, two frozen pinned local gates and exact-SHA CI. The receipt preserves
+source `source-v2:sha256:74f1cb1101a64ed15f4b8ea5f544c015d8bee4b78a6dcd8acb0e0fab667bf08c`,
+3,103 entries. Run `38398462515` / job `115299600865` passed all 12 steps;
+capture `2026-10-13T12:57:20.760Z`, root review `13:00:08Z` and independent
+review `13:01:22.591Z` are distinct actual events. The executor applied existing
+standing acceptance at `2026-10-13T13:02:43Z`, not fresh human inspection.
+Bounded implementation `done` is conditional, not effective, until separate
+eight-path closeout and final two-path receipt pass their own independent
+integrity, two frozen pinned local and exact-SHA CI gates. No formal sign-off is
+claimed. Network, containment, uniqueness, all tiers/consumers
 and this parent remain open. After effective I13, review a bounded Prefix
 network-value packet under existing `CW1-V2-05`; do not invent I14 or infer
 parent completion.
@@ -438,7 +446,7 @@ parent completion.
 | `CW1-V2-02-I10`     | `done`        | Accepted Device scalar presence                    | Done I9 and current `CW1-G00`          |
 | `CW1-V2-02-I11`     | `done`        | Standing-authorized Interface scalar presence       | Exact closeout and final receipt gates green |
 | `CW1-V2-02-I12`     | `done`        | Standing-authorized bounded VRF scalar presence     | Exact closeout/final receipt and integrity green |
-| `CW1-V2-02-I13`     | `in-progress` | Retain/gate bounded Prefix candidate evidence claim | Effective bounded I12 and current `CW1-G00` |
+| `CW1-V2-02-I13`     | `in-progress` | Gate standing-authorized Prefix closeout/final receipt | Green known claim/receipt and current `CW1-G00` |
 | `CW1-V2-03`–`V2-08` | `blocked`     | Close later typed business behavior                 | V2-02 and named lane dependencies      |
 | `CW1-V3-01`         | `done`        | Accepted bounded dependency-aware readiness         | `CW1-G00`                              |
 | `CW1-V3-02`         | `done`        | Accepted bounded bootstrap/schema contract          | Current `CW1-G00` and done `CW1-V2-01` |
@@ -464,9 +472,12 @@ eight-path implementation closeout and final two-path excluded receipt passed
 their own gates and independent integrity review, making only bounded I12
 implementation `done` effective. I13's packet, compiling red proof, all 14 local
 and 14 unchanged committed candidate gates, exact candidate CI and independent
-captured integrity passed. Its conditional evidence claim and excluded receipt
-still require their own reviews, frozen local and exact CI gates; no I13
-implementation acceptance or effective `done` is applied. The
+captured integrity passed. Its initial evidence claim and excluded receipt
+passed independent integrity, two frozen pinned local and exact-SHA CI gates.
+The executor applied existing standing acceptance to known receipt `77197e854725bba6e625e5fcfb05468aa43caf27`
+at `2026-10-13T13:02:43Z`. Only bounded implementation `done` is conditional;
+it is not effective until separate eight-path closeout and final two-path
+receipt gates and integrity pass. No fresh human inspection is inferred. The
 parent and every later behavior goal remain open. Standing owner
 authorization replaces no required artifact-specific human inspection or
 separate row/consumer/tier/aggregate/profile sign-off.
@@ -827,10 +838,13 @@ Bounded children:
   writable fields. Shared scalar intent, operation contracts, PostgreSQL
   durability/six late rollbacks, Vue dirty-field checks and eight fixed tests
   passed all 14 local and 14 unchanged committed replay gates, exact candidate
-  CI and independent integrity. Its initial conditional claim remains
-  `in-progress`: own reviews/two frozen local/exact claim CI and excluded receipt
-  gates precede standing acceptance and separate closeout/final-receipt gates.
-  No effective evidence/`done`, human inspection, network/containment, uniqueness,
+  CI and independent integrity. Its initial claim and excluded receipt
+  `77197e854725bba6e625e5fcfb05468aa43caf27` subsequently passed independent
+  integrity, two frozen pinned local and exact-SHA CI gates. Existing standing acceptance
+  was applied at `2026-10-13T13:02:43Z`, not fresh human inspection.
+  I13 remains `in-progress`: bounded implementation `done` is conditional on
+  separate eight-path closeout and final two-path receipt integrity/local/CI
+  gates, not yet effective. No formal authentication, network/containment, uniqueness,
   tier, consumer, parent or profile closure is claimed.
 
 - [ ] Represent all 13 resources × list/get/create/PUT/PATCH/delete.

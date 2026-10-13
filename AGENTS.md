@@ -311,13 +311,22 @@ the 21-path implementation. Exact tested candidate
 REST/gRPC intent, real-PostgreSQL durability/six late rollbacks and Vue checks
 passed all 14 local and 14 unchanged committed replay gates. Exact candidate
 run `38377586847` / job `115229749443`, attempt 1, passed all 12 steps;
-captured/source/Git integrity passed independently. Preparation of the
+captured/source/Git integrity passed independently. The
 [bounded artifact](docs/evidence/2026-10-13-core-workflow-v2-prefix-scalar-presence-i13-v0.md)
-is a conditional claim only: its own independent reviews, two frozen local
-gates, exact claim CI and later excluded receipt gates remain pending before
-standing implementation acceptance, separate closeout and final receipt gates.
-No effective `evidence` or `done`, fresh human inspection or formal sign-off is
-claimed. Failed compilation/lint/typecheck attempts remain historical failures;
+retains the initial claim `d161e251b0f838c57ed0a057a4493fbb02a7c40b` and
+excluded pre-acceptance receipt `77197e854725bba6e625e5fcfb05468aa43caf27`,
+which passed independent integrity, two frozen pinned local gates and exact-SHA
+CI. The receipt preserves source
+`source-v2:sha256:74f1cb1101a64ed15f4b8ea5f544c015d8bee4b78a6dcd8acb0e0fab667bf08c`,
+3,103 entries. Receipt run `38398462515` / job `115299600865`, attempt 1,
+passed all 12 steps; actual capture was `2026-10-13T12:57:20.760Z`, with
+separate root review `13:00:08Z` and independent review `13:01:22.591Z`.
+The executor applied existing standing acceptance at `2026-10-13T13:02:43Z`,
+not fresh human inspection. Bounded implementation `done` remains conditional,
+not effective: the separate eight-path closeout and final two-path receipt
+still require independent integrity, two frozen pinned local gates and exact-SHA
+CI at each boundary. No formal authentication or sign-off is claimed.
+Failed compilation/lint/typecheck attempts remain historical failures;
 the disposable role/database is absent, the oracle is unavailable, 23 npm
 advisories remain, and T2/T3/T4 stay unearned. Network, uniqueness, containment,
 every consumer, the parent and profile remain open.

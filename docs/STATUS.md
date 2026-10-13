@@ -318,11 +318,23 @@ Exact candidate run `38377586847` / job `115229749443`, attempt 1, passed
 all 12 reported steps. Actual raw capture was `2026-10-13T09:58:17.032Z`;
 root audit passed at `10:00:42.271Z` and independent full integrity at
 `10:02:31Z`, separate from capture. The
-[bounded artifact preparation](evidence/2026-10-13-core-workflow-v2-prefix-scalar-presence-i13-v0.md)
-records a conditional initial claim only: own reviews, two frozen local gates,
-exact claim CI and later excluded receipt gates remain before standing
-acceptance and separate closeout/final receipt gates. No effective evidence or
-`done`, fresh human inspection or formal sign-off is claimed. Historical v1
+[bounded artifact](evidence/2026-10-13-core-workflow-v2-prefix-scalar-presence-i13-v0.md)
+retains initial claim `d161e251b0f838c57ed0a057a4493fbb02a7c40b` and excluded
+pre-acceptance receipt `77197e854725bba6e625e5fcfb05468aa43caf27`. Both passed
+independent integrity, two frozen pinned local gates and exact-SHA CI. That
+receipt preserves source
+`source-v2:sha256:74f1cb1101a64ed15f4b8ea5f544c015d8bee4b78a6dcd8acb0e0fab667bf08c`,
+3,103 entries, complete manifest SHA-256
+`b50630c0c1ec6ea4d7de9e6e9f7a27d2c36fcc56f8934f5d53de685e57a2cdca`.
+Receipt run `38398462515` / job `115299600865`, attempt 1, passed all 12
+steps; actual capture was `2026-10-13T12:57:20.760Z`, separate root review
+`13:00:08Z` and independent review `13:01:22.591Z`. The executor applied
+existing standing acceptance at `2026-10-13T13:02:43Z`, not fresh human
+inspection or a designated sign-off. Bounded implementation `done` is
+conditional, not effective, until the separate eight-path closeout and final
+two-path excluded receipt pass their own independent integrity, two frozen
+pinned local and exact-SHA CI gates. No formal authentication is claimed.
+Historical v1
 compilation, v2 lint and two v3 dependency-install/typecheck failures remain
 failures; fresh same-source after-install typechecks passed. The disposable
 role/database is absent, the oracle unavailable and 23 npm advisories remain.
@@ -606,7 +618,7 @@ replacement completes ADR 0004's governing gate and CP-13.
 | ------------------------ | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
 | V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                                 | Refresh for the active source and every later relevant merged digest                                                             | Continuous; entry source retained          |
 | V1 identity/RBAC         | Persisted identity, retained CORS, accepted I1/I2/I3, and retained I4 evidence                          | Obtain I4 owner review; complete password-policy/throttle/proxy/streaming plus RBAC/admin/secret work                            | I4 evidence; parent open                   |
-| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, bounded I1-I12 done; I13 tested candidate green | Gate I13 conditional evidence claim/receipt, then bounded acceptance/closeout; remaining invariant, side-effect, concurrency and tier cases | I1-I12 bounded done; I13 in-progress, own claim/receipt gates pending; parent open |
+| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, bounded I1-I12 done; I13 tested candidate green | Gate I13 eight-path closeout/final two-path receipt through independent integrity, two pinned local and exact-SHA CI gates; remaining invariant, side-effect, concurrency and tier cases | I1-I12 bounded done; I13 known claim/receipt green, executor standing applied `2026-10-13T13:02:43Z`; in-progress, bounded done conditional/not effective; parent/profile open |
 | V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, Compose harness, and owner-accepted bounded V3-01/V3-02 evidence with green closeout receipts | Complete V3-03 through V3-05 | V3-01/V3-02 done; V3 parent open |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                             | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report                       | T1; implementation/evidence pending        |
 | V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                         | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes                  | T1; implementation/evidence pending        |
