@@ -71902,3 +71902,797 @@ consumer, parent, profile or successor boundary is promoted.
   "effective_done": false
 }
 ```
+
+## Actual standing-closeout boundary and final excluded receipt preparation
+
+The preceding closeout pending statements describe its historical assembly boundary. Its actual known eight-file commit, both frozen pinned local gates, normal exact-SHA publication, terminal repository CI and distinct root/independent post-capture integrity reviews are now retained below. The existing executor standing application remains the same bounded recorded application, not a new acceptance, human inspection or designated sign-off. Capture and review clocks remain distinct.
+
+This final receipt appends only the artifact and evidence ledger. All earlier published artifact bytes, canonical proofs, complete tested/current source manifests, original and closeout six-governance diffs, accepted-parent comparison, raw red patches, historical failures and standing application remain literal and unchanged. The original operational failures are not duplicated or relabelled as successful gates.
+
+The final receipt itself still requires independent integrity review, two frozen pinned local gates and exact-SHA CI. Bounded I13 implementation done remains conditional and is not yet effective. This preparation starts no successor increment or profile. No fresh human decision, formal retained-claim authentication, compatibility tier, traceability consumer, parent, profile, full CRUD, rewrite, deployment or production completion follows. No own future final-receipt SHA, digest, CI result or acceptance time is predicted.
+
+```json
+{
+  "actual_standing_closeout_config": {
+    "label": "standing-closeout",
+    "phase": "closeout",
+    "predecessor_record": "preacceptance-receipt-commit.json",
+    "remote_record": "preacceptance-receipt-push-receipt.json"
+  },
+  "actual_standing_closeout_freeze": {
+    "frozen_at": "2026-10-13T13:50:30.323Z",
+    "config": {
+      "label": "standing-closeout",
+      "phase": "closeout",
+      "predecessor_record": "preacceptance-receipt-commit.json",
+      "remote_record": "preacceptance-receipt-push-receipt.json"
+    },
+    "config_sha256": "a943debb1b0802d87aacbaf9f99ec5aaf74a7176aeb732c84c57cc7aaeb9751e",
+    "helper_sha256": "91962e5c96e00f74180af346117c5fe7423d343f8bd4086c8e35f232e0042b45",
+    "mapping_sha256": "5e1c124078a19fec4a6c8974095741415140b0dcfe83b787b3f4b75b0e16ae30",
+    "mapping": {
+      "schema_version": 1,
+      "phase": "closeout",
+      "parent": "77197e854725bba6e625e5fcfb05468aa43caf27",
+      "branch": "work/cw1-v2-02-i13-prefix-presence",
+      "tested_revision": "1dc5a472032abda9c9b41a855ca7df8f8d4e2bb7",
+      "tested_digest": "source-v2:sha256:9266635d9d19148844271972e45514a224dd4b5e4d4a843ebba536ffaa68bfab",
+      "tested_manifest_sha256": "99a09218b8450b58fc7fa936719a42cca7a930f76b93f1544ab89310f3832978",
+      "source_digest": "source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260",
+      "files": 3103,
+      "manifest_sha256": "d5415b01eb9068a813c1f12922551753afc9d239fac9d597820ac1d480d2d2d2",
+      "derived_diff_sha256": "dbd9047bb7dcb3ed5ee8f3e29497e55837dec631beef25641910e768caec14ea",
+      "predecessor_record_sha256": "56b84a4a4d0e97589ffcfcc0ed0cac9adbd2296aaa0a2e31bf0a6e2ebcc027d4",
+      "entry_proof_sha256": "b631118d9cbc5220f95937ff18bdc618586824d439681e8ab6d31e32e0fe34f7",
+      "paths": [
+        {
+          "path": "AGENTS.md",
+          "before": {
+            "mode": "100644",
+            "bytes": 25728,
+            "sha256": "3abba8e31e79c11d8c4cc6b3f4c411375b1a47bd63f3428823e310b8003b374b"
+          },
+          "after": {
+            "mode": "100644",
+            "bytes": 26342,
+            "sha256": "3673a11ac1a7cb4c416cd1fc23bb49b9ecdb7e8094c144b4f1fe0b7458297e05"
+          }
+        },
+        {
+          "path": "docs/ROADMAP.md",
+          "before": {
+            "mode": "100644",
+            "bytes": 111873,
+            "sha256": "3be6aec684814251ffe889bef44060212c32484f5f30452098fa669dd8d0ab8b"
+          },
+          "after": {
+            "mode": "100644",
+            "bytes": 113101,
+            "sha256": "534c5df0fd70a4d936d2575f4a7292518fdf414bc15cfc40b6dbce87b1c963af"
+          }
+        },
+        {
+          "path": "docs/STATUS.md",
+          "before": {
+            "mode": "100644",
+            "bytes": 43891,
+            "sha256": "9ce7a7a9c98e11d02dcf0da671de3c86740cbaa5daee859b5b8717f06183adfc"
+          },
+          "after": {
+            "mode": "100644",
+            "bytes": 44766,
+            "sha256": "8388fdb3328dc969af9485bd55ad22b9448a5d246cc2ff5eeeac2fdaafb3050f"
+          }
+        },
+        {
+          "path": "docs/TESTING.md",
+          "before": {
+            "mode": "100644",
+            "bytes": 37459,
+            "sha256": "9b656249e2b1e751c9a6d3ce2fa2cbf3aca4e77d592d488676d9e4b587c77042"
+          },
+          "after": {
+            "mode": "100644",
+            "bytes": 38496,
+            "sha256": "f3c2d1f1ca2b13d63d49cf30cde3994b9648c15526c7eed42a98cf7c2f0d3239"
+          }
+        },
+        {
+          "path": "docs/evidence/2026-10-13-core-workflow-v2-prefix-scalar-presence-i13-v0.md",
+          "before": {
+            "mode": "100644",
+            "bytes": 1955822,
+            "sha256": "aee14cee5e86bca98958a743d23307856230289d22349cd394ff27bdfe69b96f"
+          },
+          "after": {
+            "mode": "100644",
+            "bytes": 2846845,
+            "sha256": "d00d07e4f055fd1fc9a42e66189b3c021c44669eab06c3e57fab2ebc7852f9f9"
+          }
+        },
+        {
+          "path": "docs/evidence/README.md",
+          "before": {
+            "mode": "100644",
+            "bytes": 43642,
+            "sha256": "61cef197277acdde6b91fe35b08f5a0518abca79cde608c1247992182c1380ac"
+          },
+          "after": {
+            "mode": "100644",
+            "bytes": 46338,
+            "sha256": "c6d04faadf1a4a982c65e06c77749aee6dfdeaf69e44711a3fd403726475e57a"
+          }
+        },
+        {
+          "path": "docs/increments/CW1-V2-02-I13.md",
+          "before": {
+            "mode": "100644",
+            "bytes": 43756,
+            "sha256": "a9824b2f29d83f90c78167822d1d1013ba2f69b2326370a025b65a22ed93f100"
+          },
+          "after": {
+            "mode": "100644",
+            "bytes": 47231,
+            "sha256": "f66a347119e0a142986855b6d1ad4e0adf5ceb6ef488a57cdc59fae17c42efc5"
+          }
+        },
+        {
+          "path": "docs/increments/README.md",
+          "before": {
+            "mode": "100644",
+            "bytes": 22180,
+            "sha256": "2b0787447de19fbd5e0886c7652ba2a930991602cd075959751fb0f66bfb0f71"
+          },
+          "after": {
+            "mode": "100644",
+            "bytes": 22727,
+            "sha256": "d918c91d2422d98e75db3de1f839d6ed5cb463d8c1fd86dbdb283ee68732138c"
+          }
+        }
+      ]
+    },
+    "entry_proof": {
+      "schema_version": 1,
+      "predecessor_head": "77197e854725bba6e625e5fcfb05468aa43caf27",
+      "predecessor_parent": "d161e251b0f838c57ed0a057a4493fbb02a7c40b",
+      "predecessor_label": "preacceptance-receipt",
+      "source_digest": "source-v2:sha256:74f1cb1101a64ed15f4b8ea5f544c015d8bee4b78a6dcd8acb0e0fab667bf08c",
+      "files": 3103,
+      "manifest_sha256": "b50630c0c1ec6ea4d7de9e6e9f7a27d2c36fcc56f8934f5d53de685e57a2cdca",
+      "record_sha256": {
+        "preacceptance-receipt-config.json": "dd8533d2b057c642b2a91a9fd30ca019bd0fbc12c9b5cb2928f496a9e4aacbe7",
+        "preacceptance-receipt-freeze.json": "162bd39359f73fbf73e9b88823cd4cc8978d0d87b170ea0539ee30186c2aee96",
+        "preacceptance-receipt-mapping.json": "889cc5e705ef75e82b33d4a734270e373027fc643cb575ea560af0da0bccbb9e",
+        "preacceptance-receipt-commit.json": "56b84a4a4d0e97589ffcfcc0ed0cac9adbd2296aaa0a2e31bf0a6e2ebcc027d4",
+        "preacceptance-receipt-frozen-source-manifest.json": "b50630c0c1ec6ea4d7de9e6e9f7a27d2c36fcc56f8934f5d53de685e57a2cdca",
+        "preacceptance-receipt-frozen-source-diff.json": "fc4e1df31f8cb439da94037ec569f61473a2b1601c303e55006c8eae448cd4ea",
+        "preacceptance-receipt-push-receipt.json": "d1b5ee722048e57d2b93bf4c330fa918c2cc392dbc186889dd4db0f15d14d794",
+        "preacceptance-receipt-assembly-repository-receipt.json": "ea2f9d0bcb2f7f1528f7575477d8d00899647ab2c5f734ffd9981ab8b9691893",
+        "preacceptance-receipt-final-repository-receipt.json": "41422f34fbb327525f07f11a039373a226ec3a4c29fb14dd2b5a272f3055218a",
+        "preacceptance-receipt-ci-run.json": "78ac5623d54aa088e73601728a71005654ee184c0f5fcc04bce4a9f1c15d9075",
+        "preacceptance-receipt-ci-job.json": "3d3cd8c0514a40bf92334c8f9cb99efef4a8088eda2fa433ed3e88bbdce9a015",
+        "preacceptance-receipt-ci-receipt.json": "38be93b800c5efdd86435d7d9a1c2decf70737df505ac4d1d6f7c037541160e8",
+        "preacceptance-receipt-integrity-review.json": "226ecf41739afd88871fdae6b5928d8e61d34bab36473d4db4751eee3db71e2a"
+      },
+      "operational_failure_sha256": "b6036ef0e2103496849ce33851b2dbcbe12cec51428036fff3f0821819b23e76",
+      "gate_log_sha256": [
+        "c526099f0286f8116758c1283e81b006884984a7d5a5d24ec5061f901863355d",
+        "ceddce29b4f1ab3d0fbcb45d8f92135f6668253c127859f264f4e74d1f9870f3"
+      ],
+      "publication_raw_sha256": {
+        "log": "cc59c33aec672965084c6121b24ba78c82d1da6dbbffb7ac4514b3a7f54211d3",
+        "repository": "76f34c505870a065abefb681c3f3f85d0637f97d280d4d7f0ddc5174ccd8ab57",
+        "ref_before": "c05c76741a680e005f728338e7b196f21452023c1c36ef37f4c8cb8d3f507c18",
+        "ref_after": "2539cc5955db7d918b936e6d6d752854e21534eabb91c1f7795df036354fefb7"
+      },
+      "reachable_message_sha256": "8337bad426d6a1c39d16aa9143c0d45e6175c2ef6344463777f85df886ad2d54",
+      "actual_terminal_ci": {
+        "recorded_at": "2026-10-13T12:57:20.760Z",
+        "run_id": 38398462515,
+        "job_id": 115299600865,
+        "run_attempt": 1,
+        "head_sha": "77197e854725bba6e625e5fcfb05468aa43caf27",
+        "status": "completed",
+        "conclusion": "success",
+        "run_created_at": "2026-10-13T12:35:51Z",
+        "run_started_at": "2026-10-13T12:35:51Z",
+        "run_updated_at": "2026-10-13T12:55:31Z",
+        "job_started_at": "2026-10-13T12:35:54Z",
+        "job_completed_at": "2026-10-13T12:55:30Z",
+        "all_steps_successful": true,
+        "steps": 12,
+        "run_url": "https://github.com/jihadismail8/netbox-go/actions/runs/38398462515",
+        "job_url": "https://github.com/jihadismail8/netbox-go/actions/runs/38398462515/job/115299600865",
+        "raw_run_sha256": "78ac5623d54aa088e73601728a71005654ee184c0f5fcc04bce4a9f1c15d9075",
+        "raw_job_sha256": "3d3cd8c0514a40bf92334c8f9cb99efef4a8088eda2fa433ed3e88bbdce9a015",
+        "digest": "source-v2:sha256:74f1cb1101a64ed15f4b8ea5f544c015d8bee4b78a6dcd8acb0e0fab667bf08c",
+        "files": 3103,
+        "manifest_sha256": "b50630c0c1ec6ea4d7de9e6e9f7a27d2c36fcc56f8934f5d53de685e57a2cdca"
+      },
+      "actual_post_capture_review": {
+        "scope": "CW1-V2-02-I13 exact preacceptance-receipt post-capture integrity",
+        "head": "77197e854725bba6e625e5fcfb05468aa43caf27",
+        "parent": "d161e251b0f838c57ed0a057a4493fbb02a7c40b",
+        "branch": "work/cw1-v2-02-i13-prefix-presence",
+        "source_digest": "source-v2:sha256:74f1cb1101a64ed15f4b8ea5f544c015d8bee4b78a6dcd8acb0e0fab667bf08c",
+        "files": 3103,
+        "manifest_sha256": "b50630c0c1ec6ea4d7de9e6e9f7a27d2c36fcc56f8934f5d53de685e57a2cdca",
+        "mapping_sha256": "889cc5e705ef75e82b33d4a734270e373027fc643cb575ea560af0da0bccbb9e",
+        "capture_recorded_at": "2026-10-13T12:57:20.760Z",
+        "capture_receipt_sha256": "38be93b800c5efdd86435d7d9a1c2decf70737df505ac4d1d6f7c037541160e8",
+        "root_reviewer": "/root",
+        "root_verdict": "PASS",
+        "root_reviewed_at": "2026-10-13T13:00:08Z",
+        "root_raw_reviewed_at": "2026-10-13T12:59:13.056Z",
+        "independent_reviewer": "/root/i11_receipt_integrity_review",
+        "independent_verdict": "PASS",
+        "independent_reviewed_at": "2026-10-13T13:01:22.591Z",
+        "independent_of_phase_authors": true,
+        "verdict": "PASS",
+        "run_id": 38398462515,
+        "job_id": 115299600865,
+        "run_attempt": 1,
+        "all_steps_successful": true,
+        "steps": 12,
+        "raw_run_sha256": "78ac5623d54aa088e73601728a71005654ee184c0f5fcc04bce4a9f1c15d9075",
+        "raw_job_sha256": "3d3cd8c0514a40bf92334c8f9cb99efef4a8088eda2fa433ed3e88bbdce9a015",
+        "reachable_message_sha256": "8337bad426d6a1c39d16aa9143c0d45e6175c2ef6344463777f85df886ad2d54",
+        "actual_frozen_local_gate_pairs": 2,
+        "complete_source_tree_message_mapping_and_publication_authenticated": true,
+        "fresh_human_inspection": false,
+        "implementation_acceptance_applied": false,
+        "done_applied": false,
+        "tier_consumer_parent_profile_closure": false
+      },
+      "standing_application_sha256": "e39451540dd367f3b65544ba4990723f37f119b58bbda4234a2bb7ec53b25eed",
+      "standing_application": {
+        "schema_version": 1,
+        "increment": "CW1-V2-02-I13",
+        "actor": "executor",
+        "applied_at": "2026-10-13T13:02:43Z",
+        "accepted_receipt": "77197e854725bba6e625e5fcfb05468aa43caf27",
+        "tested_revision": "1dc5a472032abda9c9b41a855ca7df8f8d4e2bb7",
+        "tested_digest": "source-v2:sha256:9266635d9d19148844271972e45514a224dd4b5e4d4a843ebba536ffaa68bfab",
+        "receipt_digest": "source-v2:sha256:74f1cb1101a64ed15f4b8ea5f544c015d8bee4b78a6dcd8acb0e0fab667bf08c",
+        "receipt_files": 3103,
+        "receipt_manifest_sha256": "b50630c0c1ec6ea4d7de9e6e9f7a27d2c36fcc56f8934f5d53de685e57a2cdca",
+        "authority": "Owner's existing standing instruction permits routine reversible in-profile execution and bounded implementation evidence acceptance without another routine approval prompt.",
+        "basis": "Known bounded Prefix implementation candidate, its retained reviewed claim, and exact two-file receipt 77197e854725bba6e625e5fcfb05468aa43caf27 have actual green pinned gates, exact-SHA CI, and distinct root plus independent post-capture integrity reviews. This executor application uses existing standing authorization, not fresh human inspection or a designated sign-off.",
+        "scope": "Prefix seven-field (prefix, vrf, status, is_pool, mark_utilized, description, comments) common scalar create/PUT/PATCH presence, operation contracts, shared REST/gRPC semantics, PostgreSQL durability/rollback, and Vue dirty-field/error presentation tests.",
+        "closeout_condition": "Implementation done becomes effective only after separately reviewed eight-path closeout and final two-path excluded receipt pass required integrity, pinned local and exact-SHA CI gates.",
+        "not_claimed": [
+          "fresh human inspection",
+          "formal retained-claim authentication",
+          "designated human sign-offs",
+          "T2/T3/T4",
+          "consumer/aggregate/parent/profile completion",
+          "full CRUD/uniqueness/deletion/list/query/downstream policy",
+          "rewrite/deployment/production readiness",
+          "later increment"
+        ],
+        "receipt_ci": {
+          "run_id": 38398462515,
+          "job_id": 115299600865,
+          "attempt": 1,
+          "raw_run_sha256": "78ac5623d54aa088e73601728a71005654ee184c0f5fcc04bce4a9f1c15d9075",
+          "raw_job_sha256": "3d3cd8c0514a40bf92334c8f9cb99efef4a8088eda2fa433ed3e88bbdce9a015"
+        }
+      }
+    }
+  },
+  "actual_standing_closeout_mapping": {
+    "schema_version": 1,
+    "phase": "closeout",
+    "parent": "77197e854725bba6e625e5fcfb05468aa43caf27",
+    "branch": "work/cw1-v2-02-i13-prefix-presence",
+    "tested_revision": "1dc5a472032abda9c9b41a855ca7df8f8d4e2bb7",
+    "tested_digest": "source-v2:sha256:9266635d9d19148844271972e45514a224dd4b5e4d4a843ebba536ffaa68bfab",
+    "tested_manifest_sha256": "99a09218b8450b58fc7fa936719a42cca7a930f76b93f1544ab89310f3832978",
+    "source_digest": "source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260",
+    "files": 3103,
+    "manifest_sha256": "d5415b01eb9068a813c1f12922551753afc9d239fac9d597820ac1d480d2d2d2",
+    "derived_diff_sha256": "dbd9047bb7dcb3ed5ee8f3e29497e55837dec631beef25641910e768caec14ea",
+    "predecessor_record_sha256": "56b84a4a4d0e97589ffcfcc0ed0cac9adbd2296aaa0a2e31bf0a6e2ebcc027d4",
+    "entry_proof_sha256": "b631118d9cbc5220f95937ff18bdc618586824d439681e8ab6d31e32e0fe34f7",
+    "paths": [
+      {
+        "path": "AGENTS.md",
+        "before": {
+          "mode": "100644",
+          "bytes": 25728,
+          "sha256": "3abba8e31e79c11d8c4cc6b3f4c411375b1a47bd63f3428823e310b8003b374b"
+        },
+        "after": {
+          "mode": "100644",
+          "bytes": 26342,
+          "sha256": "3673a11ac1a7cb4c416cd1fc23bb49b9ecdb7e8094c144b4f1fe0b7458297e05"
+        }
+      },
+      {
+        "path": "docs/ROADMAP.md",
+        "before": {
+          "mode": "100644",
+          "bytes": 111873,
+          "sha256": "3be6aec684814251ffe889bef44060212c32484f5f30452098fa669dd8d0ab8b"
+        },
+        "after": {
+          "mode": "100644",
+          "bytes": 113101,
+          "sha256": "534c5df0fd70a4d936d2575f4a7292518fdf414bc15cfc40b6dbce87b1c963af"
+        }
+      },
+      {
+        "path": "docs/STATUS.md",
+        "before": {
+          "mode": "100644",
+          "bytes": 43891,
+          "sha256": "9ce7a7a9c98e11d02dcf0da671de3c86740cbaa5daee859b5b8717f06183adfc"
+        },
+        "after": {
+          "mode": "100644",
+          "bytes": 44766,
+          "sha256": "8388fdb3328dc969af9485bd55ad22b9448a5d246cc2ff5eeeac2fdaafb3050f"
+        }
+      },
+      {
+        "path": "docs/TESTING.md",
+        "before": {
+          "mode": "100644",
+          "bytes": 37459,
+          "sha256": "9b656249e2b1e751c9a6d3ce2fa2cbf3aca4e77d592d488676d9e4b587c77042"
+        },
+        "after": {
+          "mode": "100644",
+          "bytes": 38496,
+          "sha256": "f3c2d1f1ca2b13d63d49cf30cde3994b9648c15526c7eed42a98cf7c2f0d3239"
+        }
+      },
+      {
+        "path": "docs/evidence/2026-10-13-core-workflow-v2-prefix-scalar-presence-i13-v0.md",
+        "before": {
+          "mode": "100644",
+          "bytes": 1955822,
+          "sha256": "aee14cee5e86bca98958a743d23307856230289d22349cd394ff27bdfe69b96f"
+        },
+        "after": {
+          "mode": "100644",
+          "bytes": 2846845,
+          "sha256": "d00d07e4f055fd1fc9a42e66189b3c021c44669eab06c3e57fab2ebc7852f9f9"
+        }
+      },
+      {
+        "path": "docs/evidence/README.md",
+        "before": {
+          "mode": "100644",
+          "bytes": 43642,
+          "sha256": "61cef197277acdde6b91fe35b08f5a0518abca79cde608c1247992182c1380ac"
+        },
+        "after": {
+          "mode": "100644",
+          "bytes": 46338,
+          "sha256": "c6d04faadf1a4a982c65e06c77749aee6dfdeaf69e44711a3fd403726475e57a"
+        }
+      },
+      {
+        "path": "docs/increments/CW1-V2-02-I13.md",
+        "before": {
+          "mode": "100644",
+          "bytes": 43756,
+          "sha256": "a9824b2f29d83f90c78167822d1d1013ba2f69b2326370a025b65a22ed93f100"
+        },
+        "after": {
+          "mode": "100644",
+          "bytes": 47231,
+          "sha256": "f66a347119e0a142986855b6d1ad4e0adf5ceb6ef488a57cdc59fae17c42efc5"
+        }
+      },
+      {
+        "path": "docs/increments/README.md",
+        "before": {
+          "mode": "100644",
+          "bytes": 22180,
+          "sha256": "2b0787447de19fbd5e0886c7652ba2a930991602cd075959751fb0f66bfb0f71"
+        },
+        "after": {
+          "mode": "100644",
+          "bytes": 22727,
+          "sha256": "d918c91d2422d98e75db3de1f839d6ed5cb463d8c1fd86dbdb283ee68732138c"
+        }
+      }
+    ]
+  },
+  "actual_standing_closeout_commit": {
+    "recorded_at": "2026-10-13T14:14:22.899Z",
+    "head": "85e1f3ee863bb16f320c58f3c2e88b991647a227",
+    "parent": "77197e854725bba6e625e5fcfb05468aa43caf27",
+    "branch": "work/cw1-v2-02-i13-prefix-presence",
+    "paths": 8,
+    "source_digest": "source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260",
+    "files": 3103,
+    "manifest_sha256": "d5415b01eb9068a813c1f12922551753afc9d239fac9d597820ac1d480d2d2d2",
+    "mapping_sha256": "5e1c124078a19fec4a6c8974095741415140b0dcfe83b787b3f4b75b0e16ae30",
+    "entry_proof_sha256": "b631118d9cbc5220f95937ff18bdc618586824d439681e8ab6d31e32e0fe34f7",
+    "actual_git_commit_time": "2026-10-13T14:14:22.000Z",
+    "committed_bytes_verified": true
+  },
+  "actual_frozen_file_local_gates": [
+    {
+      "label": "standing-closeout-assembly-repository",
+      "cwd": "/home/jihad/Projects/netbox_go",
+      "command": [
+        "make",
+        "check"
+      ],
+      "started": "2026-10-13T13:57:17.488Z",
+      "ended": "2026-10-13T14:02:43.147Z",
+      "exit": 0,
+      "error": null,
+      "signal": null,
+      "log_sha256": "46886e8e076ab331296fc82fbf0b6746f59b8cfabeda9ff1bde2705c08966597",
+      "before_digest": "source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260",
+      "after_digest": "source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260",
+      "files": 3103,
+      "unchanged": true,
+      "boundary_error": null,
+      "mapping_sha256": "5e1c124078a19fec4a6c8974095741415140b0dcfe83b787b3f4b75b0e16ae30",
+      "entry_proof_sha256": "b631118d9cbc5220f95937ff18bdc618586824d439681e8ab6d31e32e0fe34f7",
+      "helper_sha256": "91962e5c96e00f74180af346117c5fe7423d343f8bd4086c8e35f232e0042b45"
+    },
+    {
+      "label": "standing-closeout-final-repository",
+      "cwd": "/home/jihad/Projects/netbox_go",
+      "command": [
+        "make",
+        "check"
+      ],
+      "started": "2026-10-13T14:03:14.065Z",
+      "ended": "2026-10-13T14:08:36.176Z",
+      "exit": 0,
+      "error": null,
+      "signal": null,
+      "log_sha256": "a291d2fb0d13bd3cd78dc7d447249d7ba09cab3b387d8ad5eba1eb10009db9bb",
+      "before_digest": "source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260",
+      "after_digest": "source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260",
+      "files": 3103,
+      "unchanged": true,
+      "boundary_error": null,
+      "mapping_sha256": "5e1c124078a19fec4a6c8974095741415140b0dcfe83b787b3f4b75b0e16ae30",
+      "entry_proof_sha256": "b631118d9cbc5220f95937ff18bdc618586824d439681e8ab6d31e32e0fe34f7",
+      "helper_sha256": "91962e5c96e00f74180af346117c5fe7423d343f8bd4086c8e35f232e0042b45"
+    }
+  ],
+  "actual_predecessor_entry_proof": {
+    "schema_version": 1,
+    "predecessor_head": "77197e854725bba6e625e5fcfb05468aa43caf27",
+    "predecessor_parent": "d161e251b0f838c57ed0a057a4493fbb02a7c40b",
+    "predecessor_label": "preacceptance-receipt",
+    "source_digest": "source-v2:sha256:74f1cb1101a64ed15f4b8ea5f544c015d8bee4b78a6dcd8acb0e0fab667bf08c",
+    "files": 3103,
+    "manifest_sha256": "b50630c0c1ec6ea4d7de9e6e9f7a27d2c36fcc56f8934f5d53de685e57a2cdca",
+    "record_sha256": {
+      "preacceptance-receipt-config.json": "dd8533d2b057c642b2a91a9fd30ca019bd0fbc12c9b5cb2928f496a9e4aacbe7",
+      "preacceptance-receipt-freeze.json": "162bd39359f73fbf73e9b88823cd4cc8978d0d87b170ea0539ee30186c2aee96",
+      "preacceptance-receipt-mapping.json": "889cc5e705ef75e82b33d4a734270e373027fc643cb575ea560af0da0bccbb9e",
+      "preacceptance-receipt-commit.json": "56b84a4a4d0e97589ffcfcc0ed0cac9adbd2296aaa0a2e31bf0a6e2ebcc027d4",
+      "preacceptance-receipt-frozen-source-manifest.json": "b50630c0c1ec6ea4d7de9e6e9f7a27d2c36fcc56f8934f5d53de685e57a2cdca",
+      "preacceptance-receipt-frozen-source-diff.json": "fc4e1df31f8cb439da94037ec569f61473a2b1601c303e55006c8eae448cd4ea",
+      "preacceptance-receipt-push-receipt.json": "d1b5ee722048e57d2b93bf4c330fa918c2cc392dbc186889dd4db0f15d14d794",
+      "preacceptance-receipt-assembly-repository-receipt.json": "ea2f9d0bcb2f7f1528f7575477d8d00899647ab2c5f734ffd9981ab8b9691893",
+      "preacceptance-receipt-final-repository-receipt.json": "41422f34fbb327525f07f11a039373a226ec3a4c29fb14dd2b5a272f3055218a",
+      "preacceptance-receipt-ci-run.json": "78ac5623d54aa088e73601728a71005654ee184c0f5fcc04bce4a9f1c15d9075",
+      "preacceptance-receipt-ci-job.json": "3d3cd8c0514a40bf92334c8f9cb99efef4a8088eda2fa433ed3e88bbdce9a015",
+      "preacceptance-receipt-ci-receipt.json": "38be93b800c5efdd86435d7d9a1c2decf70737df505ac4d1d6f7c037541160e8",
+      "preacceptance-receipt-integrity-review.json": "226ecf41739afd88871fdae6b5928d8e61d34bab36473d4db4751eee3db71e2a"
+    },
+    "operational_failure_sha256": "b6036ef0e2103496849ce33851b2dbcbe12cec51428036fff3f0821819b23e76",
+    "gate_log_sha256": [
+      "c526099f0286f8116758c1283e81b006884984a7d5a5d24ec5061f901863355d",
+      "ceddce29b4f1ab3d0fbcb45d8f92135f6668253c127859f264f4e74d1f9870f3"
+    ],
+    "publication_raw_sha256": {
+      "log": "cc59c33aec672965084c6121b24ba78c82d1da6dbbffb7ac4514b3a7f54211d3",
+      "repository": "76f34c505870a065abefb681c3f3f85d0637f97d280d4d7f0ddc5174ccd8ab57",
+      "ref_before": "c05c76741a680e005f728338e7b196f21452023c1c36ef37f4c8cb8d3f507c18",
+      "ref_after": "2539cc5955db7d918b936e6d6d752854e21534eabb91c1f7795df036354fefb7"
+    },
+    "reachable_message_sha256": "8337bad426d6a1c39d16aa9143c0d45e6175c2ef6344463777f85df886ad2d54",
+    "actual_terminal_ci": {
+      "recorded_at": "2026-10-13T12:57:20.760Z",
+      "run_id": 38398462515,
+      "job_id": 115299600865,
+      "run_attempt": 1,
+      "head_sha": "77197e854725bba6e625e5fcfb05468aa43caf27",
+      "status": "completed",
+      "conclusion": "success",
+      "run_created_at": "2026-10-13T12:35:51Z",
+      "run_started_at": "2026-10-13T12:35:51Z",
+      "run_updated_at": "2026-10-13T12:55:31Z",
+      "job_started_at": "2026-10-13T12:35:54Z",
+      "job_completed_at": "2026-10-13T12:55:30Z",
+      "all_steps_successful": true,
+      "steps": 12,
+      "run_url": "https://github.com/jihadismail8/netbox-go/actions/runs/38398462515",
+      "job_url": "https://github.com/jihadismail8/netbox-go/actions/runs/38398462515/job/115299600865",
+      "raw_run_sha256": "78ac5623d54aa088e73601728a71005654ee184c0f5fcc04bce4a9f1c15d9075",
+      "raw_job_sha256": "3d3cd8c0514a40bf92334c8f9cb99efef4a8088eda2fa433ed3e88bbdce9a015",
+      "digest": "source-v2:sha256:74f1cb1101a64ed15f4b8ea5f544c015d8bee4b78a6dcd8acb0e0fab667bf08c",
+      "files": 3103,
+      "manifest_sha256": "b50630c0c1ec6ea4d7de9e6e9f7a27d2c36fcc56f8934f5d53de685e57a2cdca"
+    },
+    "actual_post_capture_review": {
+      "scope": "CW1-V2-02-I13 exact preacceptance-receipt post-capture integrity",
+      "head": "77197e854725bba6e625e5fcfb05468aa43caf27",
+      "parent": "d161e251b0f838c57ed0a057a4493fbb02a7c40b",
+      "branch": "work/cw1-v2-02-i13-prefix-presence",
+      "source_digest": "source-v2:sha256:74f1cb1101a64ed15f4b8ea5f544c015d8bee4b78a6dcd8acb0e0fab667bf08c",
+      "files": 3103,
+      "manifest_sha256": "b50630c0c1ec6ea4d7de9e6e9f7a27d2c36fcc56f8934f5d53de685e57a2cdca",
+      "mapping_sha256": "889cc5e705ef75e82b33d4a734270e373027fc643cb575ea560af0da0bccbb9e",
+      "capture_recorded_at": "2026-10-13T12:57:20.760Z",
+      "capture_receipt_sha256": "38be93b800c5efdd86435d7d9a1c2decf70737df505ac4d1d6f7c037541160e8",
+      "root_reviewer": "/root",
+      "root_verdict": "PASS",
+      "root_reviewed_at": "2026-10-13T13:00:08Z",
+      "root_raw_reviewed_at": "2026-10-13T12:59:13.056Z",
+      "independent_reviewer": "/root/i11_receipt_integrity_review",
+      "independent_verdict": "PASS",
+      "independent_reviewed_at": "2026-10-13T13:01:22.591Z",
+      "independent_of_phase_authors": true,
+      "verdict": "PASS",
+      "run_id": 38398462515,
+      "job_id": 115299600865,
+      "run_attempt": 1,
+      "all_steps_successful": true,
+      "steps": 12,
+      "raw_run_sha256": "78ac5623d54aa088e73601728a71005654ee184c0f5fcc04bce4a9f1c15d9075",
+      "raw_job_sha256": "3d3cd8c0514a40bf92334c8f9cb99efef4a8088eda2fa433ed3e88bbdce9a015",
+      "reachable_message_sha256": "8337bad426d6a1c39d16aa9143c0d45e6175c2ef6344463777f85df886ad2d54",
+      "actual_frozen_local_gate_pairs": 2,
+      "complete_source_tree_message_mapping_and_publication_authenticated": true,
+      "fresh_human_inspection": false,
+      "implementation_acceptance_applied": false,
+      "done_applied": false,
+      "tier_consumer_parent_profile_closure": false
+    },
+    "standing_application_sha256": "e39451540dd367f3b65544ba4990723f37f119b58bbda4234a2bb7ec53b25eed",
+    "standing_application": {
+      "schema_version": 1,
+      "increment": "CW1-V2-02-I13",
+      "actor": "executor",
+      "applied_at": "2026-10-13T13:02:43Z",
+      "accepted_receipt": "77197e854725bba6e625e5fcfb05468aa43caf27",
+      "tested_revision": "1dc5a472032abda9c9b41a855ca7df8f8d4e2bb7",
+      "tested_digest": "source-v2:sha256:9266635d9d19148844271972e45514a224dd4b5e4d4a843ebba536ffaa68bfab",
+      "receipt_digest": "source-v2:sha256:74f1cb1101a64ed15f4b8ea5f544c015d8bee4b78a6dcd8acb0e0fab667bf08c",
+      "receipt_files": 3103,
+      "receipt_manifest_sha256": "b50630c0c1ec6ea4d7de9e6e9f7a27d2c36fcc56f8934f5d53de685e57a2cdca",
+      "authority": "Owner's existing standing instruction permits routine reversible in-profile execution and bounded implementation evidence acceptance without another routine approval prompt.",
+      "basis": "Known bounded Prefix implementation candidate, its retained reviewed claim, and exact two-file receipt 77197e854725bba6e625e5fcfb05468aa43caf27 have actual green pinned gates, exact-SHA CI, and distinct root plus independent post-capture integrity reviews. This executor application uses existing standing authorization, not fresh human inspection or a designated sign-off.",
+      "scope": "Prefix seven-field (prefix, vrf, status, is_pool, mark_utilized, description, comments) common scalar create/PUT/PATCH presence, operation contracts, shared REST/gRPC semantics, PostgreSQL durability/rollback, and Vue dirty-field/error presentation tests.",
+      "closeout_condition": "Implementation done becomes effective only after separately reviewed eight-path closeout and final two-path excluded receipt pass required integrity, pinned local and exact-SHA CI gates.",
+      "not_claimed": [
+        "fresh human inspection",
+        "formal retained-claim authentication",
+        "designated human sign-offs",
+        "T2/T3/T4",
+        "consumer/aggregate/parent/profile completion",
+        "full CRUD/uniqueness/deletion/list/query/downstream policy",
+        "rewrite/deployment/production readiness",
+        "later increment"
+      ],
+      "receipt_ci": {
+        "run_id": 38398462515,
+        "job_id": 115299600865,
+        "attempt": 1,
+        "raw_run_sha256": "78ac5623d54aa088e73601728a71005654ee184c0f5fcc04bce4a9f1c15d9075",
+        "raw_job_sha256": "3d3cd8c0514a40bf92334c8f9cb99efef4a8088eda2fa433ed3e88bbdce9a015"
+      }
+    }
+  },
+  "reachable_message": {
+    "bytes": 14432,
+    "sha256": "a8114f556d4d3bacead175f94d8210c2ca0945830a3403dbf3aff0bf1226e897",
+    "content": "docs: retain bounded CW1-V2-02-I13 standing-closeout\n\nNo fresh human inspection, formal authentication, effective done, tier, consumer, parent, profile, later increment or production claim is inferred. Existing executor standing application, if retained, remains conditional on closeout/final-leaf gates. Exact own CI and independent integrity remain required.\n\nComplete frozen boundary mapping:\n{\n  \"schema_version\": 1,\n  \"phase\": \"closeout\",\n  \"parent\": \"77197e854725bba6e625e5fcfb05468aa43caf27\",\n  \"branch\": \"work/cw1-v2-02-i13-prefix-presence\",\n  \"tested_revision\": \"1dc5a472032abda9c9b41a855ca7df8f8d4e2bb7\",\n  \"tested_digest\": \"source-v2:sha256:9266635d9d19148844271972e45514a224dd4b5e4d4a843ebba536ffaa68bfab\",\n  \"tested_manifest_sha256\": \"99a09218b8450b58fc7fa936719a42cca7a930f76b93f1544ab89310f3832978\",\n  \"source_digest\": \"source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260\",\n  \"files\": 3103,\n  \"manifest_sha256\": \"d5415b01eb9068a813c1f12922551753afc9d239fac9d597820ac1d480d2d2d2\",\n  \"derived_diff_sha256\": \"dbd9047bb7dcb3ed5ee8f3e29497e55837dec631beef25641910e768caec14ea\",\n  \"predecessor_record_sha256\": \"56b84a4a4d0e97589ffcfcc0ed0cac9adbd2296aaa0a2e31bf0a6e2ebcc027d4\",\n  \"entry_proof_sha256\": \"b631118d9cbc5220f95937ff18bdc618586824d439681e8ab6d31e32e0fe34f7\",\n  \"paths\": [\n    {\n      \"path\": \"AGENTS.md\",\n      \"before\": {\n        \"mode\": \"100644\",\n        \"bytes\": 25728,\n        \"sha256\": \"3abba8e31e79c11d8c4cc6b3f4c411375b1a47bd63f3428823e310b8003b374b\"\n      },\n      \"after\": {\n        \"mode\": \"100644\",\n        \"bytes\": 26342,\n        \"sha256\": \"3673a11ac1a7cb4c416cd1fc23bb49b9ecdb7e8094c144b4f1fe0b7458297e05\"\n      }\n    },\n    {\n      \"path\": \"docs/ROADMAP.md\",\n      \"before\": {\n        \"mode\": \"100644\",\n        \"bytes\": 111873,\n        \"sha256\": \"3be6aec684814251ffe889bef44060212c32484f5f30452098fa669dd8d0ab8b\"\n      },\n      \"after\": {\n        \"mode\": \"100644\",\n        \"bytes\": 113101,\n        \"sha256\": \"534c5df0fd70a4d936d2575f4a7292518fdf414bc15cfc40b6dbce87b1c963af\"\n      }\n    },\n    {\n      \"path\": \"docs/STATUS.md\",\n      \"before\": {\n        \"mode\": \"100644\",\n        \"bytes\": 43891,\n        \"sha256\": \"9ce7a7a9c98e11d02dcf0da671de3c86740cbaa5daee859b5b8717f06183adfc\"\n      },\n      \"after\": {\n        \"mode\": \"100644\",\n        \"bytes\": 44766,\n        \"sha256\": \"8388fdb3328dc969af9485bd55ad22b9448a5d246cc2ff5eeeac2fdaafb3050f\"\n      }\n    },\n    {\n      \"path\": \"docs/TESTING.md\",\n      \"before\": {\n        \"mode\": \"100644\",\n        \"bytes\": 37459,\n        \"sha256\": \"9b656249e2b1e751c9a6d3ce2fa2cbf3aca4e77d592d488676d9e4b587c77042\"\n      },\n      \"after\": {\n        \"mode\": \"100644\",\n        \"bytes\": 38496,\n        \"sha256\": \"f3c2d1f1ca2b13d63d49cf30cde3994b9648c15526c7eed42a98cf7c2f0d3239\"\n      }\n    },\n    {\n      \"path\": \"docs/evidence/2026-10-13-core-workflow-v2-prefix-scalar-presence-i13-v0.md\",\n      \"before\": {\n        \"mode\": \"100644\",\n        \"bytes\": 1955822,\n        \"sha256\": \"aee14cee5e86bca98958a743d23307856230289d22349cd394ff27bdfe69b96f\"\n      },\n      \"after\": {\n        \"mode\": \"100644\",\n        \"bytes\": 2846845,\n        \"sha256\": \"d00d07e4f055fd1fc9a42e66189b3c021c44669eab06c3e57fab2ebc7852f9f9\"\n      }\n    },\n    {\n      \"path\": \"docs/evidence/README.md\",\n      \"before\": {\n        \"mode\": \"100644\",\n        \"bytes\": 43642,\n        \"sha256\": \"61cef197277acdde6b91fe35b08f5a0518abca79cde608c1247992182c1380ac\"\n      },\n      \"after\": {\n        \"mode\": \"100644\",\n        \"bytes\": 46338,\n        \"sha256\": \"c6d04faadf1a4a982c65e06c77749aee6dfdeaf69e44711a3fd403726475e57a\"\n      }\n    },\n    {\n      \"path\": \"docs/increments/CW1-V2-02-I13.md\",\n      \"before\": {\n        \"mode\": \"100644\",\n        \"bytes\": 43756,\n        \"sha256\": \"a9824b2f29d83f90c78167822d1d1013ba2f69b2326370a025b65a22ed93f100\"\n      },\n      \"after\": {\n        \"mode\": \"100644\",\n        \"bytes\": 47231,\n        \"sha256\": \"f66a347119e0a142986855b6d1ad4e0adf5ceb6ef488a57cdc59fae17c42efc5\"\n      }\n    },\n    {\n      \"path\": \"docs/increments/README.md\",\n      \"before\": {\n        \"mode\": \"100644\",\n        \"bytes\": 22180,\n        \"sha256\": \"2b0787447de19fbd5e0886c7652ba2a930991602cd075959751fb0f66bfb0f71\"\n      },\n      \"after\": {\n        \"mode\": \"100644\",\n        \"bytes\": 22727,\n        \"sha256\": \"d918c91d2422d98e75db3de1f839d6ed5cb463d8c1fd86dbdb283ee68732138c\"\n      }\n    }\n  ]\n}\n\nActual sequential pinned make-check gate objects:\n[\n  {\n    \"label\": \"standing-closeout-assembly-repository\",\n    \"cwd\": \"/home/jihad/Projects/netbox_go\",\n    \"command\": [\n      \"make\",\n      \"check\"\n    ],\n    \"started\": \"2026-10-13T13:57:17.488Z\",\n    \"ended\": \"2026-10-13T14:02:43.147Z\",\n    \"exit\": 0,\n    \"error\": null,\n    \"signal\": null,\n    \"log_sha256\": \"46886e8e076ab331296fc82fbf0b6746f59b8cfabeda9ff1bde2705c08966597\",\n    \"before_digest\": \"source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260\",\n    \"after_digest\": \"source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260\",\n    \"files\": 3103,\n    \"unchanged\": true,\n    \"boundary_error\": null,\n    \"mapping_sha256\": \"5e1c124078a19fec4a6c8974095741415140b0dcfe83b787b3f4b75b0e16ae30\",\n    \"entry_proof_sha256\": \"b631118d9cbc5220f95937ff18bdc618586824d439681e8ab6d31e32e0fe34f7\",\n    \"helper_sha256\": \"91962e5c96e00f74180af346117c5fe7423d343f8bd4086c8e35f232e0042b45\"\n  },\n  {\n    \"label\": \"standing-closeout-final-repository\",\n    \"cwd\": \"/home/jihad/Projects/netbox_go\",\n    \"command\": [\n      \"make\",\n      \"check\"\n    ],\n    \"started\": \"2026-10-13T14:03:14.065Z\",\n    \"ended\": \"2026-10-13T14:08:36.176Z\",\n    \"exit\": 0,\n    \"error\": null,\n    \"signal\": null,\n    \"log_sha256\": \"a291d2fb0d13bd3cd78dc7d447249d7ba09cab3b387d8ad5eba1eb10009db9bb\",\n    \"before_digest\": \"source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260\",\n    \"after_digest\": \"source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260\",\n    \"files\": 3103,\n    \"unchanged\": true,\n    \"boundary_error\": null,\n    \"mapping_sha256\": \"5e1c124078a19fec4a6c8974095741415140b0dcfe83b787b3f4b75b0e16ae30\",\n    \"entry_proof_sha256\": \"b631118d9cbc5220f95937ff18bdc618586824d439681e8ab6d31e32e0fe34f7\",\n    \"helper_sha256\": \"91962e5c96e00f74180af346117c5fe7423d343f8bd4086c8e35f232e0042b45\"\n  }\n]\n\nComplete authenticated predecessor entry commitments:\n{\n  \"schema_version\": 1,\n  \"predecessor_head\": \"77197e854725bba6e625e5fcfb05468aa43caf27\",\n  \"predecessor_parent\": \"d161e251b0f838c57ed0a057a4493fbb02a7c40b\",\n  \"predecessor_label\": \"preacceptance-receipt\",\n  \"source_digest\": \"source-v2:sha256:74f1cb1101a64ed15f4b8ea5f544c015d8bee4b78a6dcd8acb0e0fab667bf08c\",\n  \"files\": 3103,\n  \"manifest_sha256\": \"b50630c0c1ec6ea4d7de9e6e9f7a27d2c36fcc56f8934f5d53de685e57a2cdca\",\n  \"record_sha256\": {\n    \"preacceptance-receipt-config.json\": \"dd8533d2b057c642b2a91a9fd30ca019bd0fbc12c9b5cb2928f496a9e4aacbe7\",\n    \"preacceptance-receipt-freeze.json\": \"162bd39359f73fbf73e9b88823cd4cc8978d0d87b170ea0539ee30186c2aee96\",\n    \"preacceptance-receipt-mapping.json\": \"889cc5e705ef75e82b33d4a734270e373027fc643cb575ea560af0da0bccbb9e\",\n    \"preacceptance-receipt-commit.json\": \"56b84a4a4d0e97589ffcfcc0ed0cac9adbd2296aaa0a2e31bf0a6e2ebcc027d4\",\n    \"preacceptance-receipt-frozen-source-manifest.json\": \"b50630c0c1ec6ea4d7de9e6e9f7a27d2c36fcc56f8934f5d53de685e57a2cdca\",\n    \"preacceptance-receipt-frozen-source-diff.json\": \"fc4e1df31f8cb439da94037ec569f61473a2b1601c303e55006c8eae448cd4ea\",\n    \"preacceptance-receipt-push-receipt.json\": \"d1b5ee722048e57d2b93bf4c330fa918c2cc392dbc186889dd4db0f15d14d794\",\n    \"preacceptance-receipt-assembly-repository-receipt.json\": \"ea2f9d0bcb2f7f1528f7575477d8d00899647ab2c5f734ffd9981ab8b9691893\",\n    \"preacceptance-receipt-final-repository-receipt.json\": \"41422f34fbb327525f07f11a039373a226ec3a4c29fb14dd2b5a272f3055218a\",\n    \"preacceptance-receipt-ci-run.json\": \"78ac5623d54aa088e73601728a71005654ee184c0f5fcc04bce4a9f1c15d9075\",\n    \"preacceptance-receipt-ci-job.json\": \"3d3cd8c0514a40bf92334c8f9cb99efef4a8088eda2fa433ed3e88bbdce9a015\",\n    \"preacceptance-receipt-ci-receipt.json\": \"38be93b800c5efdd86435d7d9a1c2decf70737df505ac4d1d6f7c037541160e8\",\n    \"preacceptance-receipt-integrity-review.json\": \"226ecf41739afd88871fdae6b5928d8e61d34bab36473d4db4751eee3db71e2a\"\n  },\n  \"operational_failure_sha256\": \"b6036ef0e2103496849ce33851b2dbcbe12cec51428036fff3f0821819b23e76\",\n  \"gate_log_sha256\": [\n    \"c526099f0286f8116758c1283e81b006884984a7d5a5d24ec5061f901863355d\",\n    \"ceddce29b4f1ab3d0fbcb45d8f92135f6668253c127859f264f4e74d1f9870f3\"\n  ],\n  \"publication_raw_sha256\": {\n    \"log\": \"cc59c33aec672965084c6121b24ba78c82d1da6dbbffb7ac4514b3a7f54211d3\",\n    \"repository\": \"76f34c505870a065abefb681c3f3f85d0637f97d280d4d7f0ddc5174ccd8ab57\",\n    \"ref_before\": \"c05c76741a680e005f728338e7b196f21452023c1c36ef37f4c8cb8d3f507c18\",\n    \"ref_after\": \"2539cc5955db7d918b936e6d6d752854e21534eabb91c1f7795df036354fefb7\"\n  },\n  \"reachable_message_sha256\": \"8337bad426d6a1c39d16aa9143c0d45e6175c2ef6344463777f85df886ad2d54\",\n  \"actual_terminal_ci\": {\n    \"recorded_at\": \"2026-10-13T12:57:20.760Z\",\n    \"run_id\": 38398462515,\n    \"job_id\": 115299600865,\n    \"run_attempt\": 1,\n    \"head_sha\": \"77197e854725bba6e625e5fcfb05468aa43caf27\",\n    \"status\": \"completed\",\n    \"conclusion\": \"success\",\n    \"run_created_at\": \"2026-10-13T12:35:51Z\",\n    \"run_started_at\": \"2026-10-13T12:35:51Z\",\n    \"run_updated_at\": \"2026-10-13T12:55:31Z\",\n    \"job_started_at\": \"2026-10-13T12:35:54Z\",\n    \"job_completed_at\": \"2026-10-13T12:55:30Z\",\n    \"all_steps_successful\": true,\n    \"steps\": 12,\n    \"run_url\": \"https://github.com/jihadismail8/netbox-go/actions/runs/38398462515\",\n    \"job_url\": \"https://github.com/jihadismail8/netbox-go/actions/runs/38398462515/job/115299600865\",\n    \"raw_run_sha256\": \"78ac5623d54aa088e73601728a71005654ee184c0f5fcc04bce4a9f1c15d9075\",\n    \"raw_job_sha256\": \"3d3cd8c0514a40bf92334c8f9cb99efef4a8088eda2fa433ed3e88bbdce9a015\",\n    \"digest\": \"source-v2:sha256:74f1cb1101a64ed15f4b8ea5f544c015d8bee4b78a6dcd8acb0e0fab667bf08c\",\n    \"files\": 3103,\n    \"manifest_sha256\": \"b50630c0c1ec6ea4d7de9e6e9f7a27d2c36fcc56f8934f5d53de685e57a2cdca\"\n  },\n  \"actual_post_capture_review\": {\n    \"scope\": \"CW1-V2-02-I13 exact preacceptance-receipt post-capture integrity\",\n    \"head\": \"77197e854725bba6e625e5fcfb05468aa43caf27\",\n    \"parent\": \"d161e251b0f838c57ed0a057a4493fbb02a7c40b\",\n    \"branch\": \"work/cw1-v2-02-i13-prefix-presence\",\n    \"source_digest\": \"source-v2:sha256:74f1cb1101a64ed15f4b8ea5f544c015d8bee4b78a6dcd8acb0e0fab667bf08c\",\n    \"files\": 3103,\n    \"manifest_sha256\": \"b50630c0c1ec6ea4d7de9e6e9f7a27d2c36fcc56f8934f5d53de685e57a2cdca\",\n    \"mapping_sha256\": \"889cc5e705ef75e82b33d4a734270e373027fc643cb575ea560af0da0bccbb9e\",\n    \"capture_recorded_at\": \"2026-10-13T12:57:20.760Z\",\n    \"capture_receipt_sha256\": \"38be93b800c5efdd86435d7d9a1c2decf70737df505ac4d1d6f7c037541160e8\",\n    \"root_reviewer\": \"/root\",\n    \"root_verdict\": \"PASS\",\n    \"root_reviewed_at\": \"2026-10-13T13:00:08Z\",\n    \"root_raw_reviewed_at\": \"2026-10-13T12:59:13.056Z\",\n    \"independent_reviewer\": \"/root/i11_receipt_integrity_review\",\n    \"independent_verdict\": \"PASS\",\n    \"independent_reviewed_at\": \"2026-10-13T13:01:22.591Z\",\n    \"independent_of_phase_authors\": true,\n    \"verdict\": \"PASS\",\n    \"run_id\": 38398462515,\n    \"job_id\": 115299600865,\n    \"run_attempt\": 1,\n    \"all_steps_successful\": true,\n    \"steps\": 12,\n    \"raw_run_sha256\": \"78ac5623d54aa088e73601728a71005654ee184c0f5fcc04bce4a9f1c15d9075\",\n    \"raw_job_sha256\": \"3d3cd8c0514a40bf92334c8f9cb99efef4a8088eda2fa433ed3e88bbdce9a015\",\n    \"reachable_message_sha256\": \"8337bad426d6a1c39d16aa9143c0d45e6175c2ef6344463777f85df886ad2d54\",\n    \"actual_frozen_local_gate_pairs\": 2,\n    \"complete_source_tree_message_mapping_and_publication_authenticated\": true,\n    \"fresh_human_inspection\": false,\n    \"implementation_acceptance_applied\": false,\n    \"done_applied\": false,\n    \"tier_consumer_parent_profile_closure\": false\n  },\n  \"standing_application_sha256\": \"e39451540dd367f3b65544ba4990723f37f119b58bbda4234a2bb7ec53b25eed\",\n  \"standing_application\": {\n    \"schema_version\": 1,\n    \"increment\": \"CW1-V2-02-I13\",\n    \"actor\": \"executor\",\n    \"applied_at\": \"2026-10-13T13:02:43Z\",\n    \"accepted_receipt\": \"77197e854725bba6e625e5fcfb05468aa43caf27\",\n    \"tested_revision\": \"1dc5a472032abda9c9b41a855ca7df8f8d4e2bb7\",\n    \"tested_digest\": \"source-v2:sha256:9266635d9d19148844271972e45514a224dd4b5e4d4a843ebba536ffaa68bfab\",\n    \"receipt_digest\": \"source-v2:sha256:74f1cb1101a64ed15f4b8ea5f544c015d8bee4b78a6dcd8acb0e0fab667bf08c\",\n    \"receipt_files\": 3103,\n    \"receipt_manifest_sha256\": \"b50630c0c1ec6ea4d7de9e6e9f7a27d2c36fcc56f8934f5d53de685e57a2cdca\",\n    \"authority\": \"Owner's existing standing instruction permits routine reversible in-profile execution and bounded implementation evidence acceptance without another routine approval prompt.\",\n    \"basis\": \"Known bounded Prefix implementation candidate, its retained reviewed claim, and exact two-file receipt 77197e854725bba6e625e5fcfb05468aa43caf27 have actual green pinned gates, exact-SHA CI, and distinct root plus independent post-capture integrity reviews. This executor application uses existing standing authorization, not fresh human inspection or a designated sign-off.\",\n    \"scope\": \"Prefix seven-field (prefix, vrf, status, is_pool, mark_utilized, description, comments) common scalar create/PUT/PATCH presence, operation contracts, shared REST/gRPC semantics, PostgreSQL durability/rollback, and Vue dirty-field/error presentation tests.\",\n    \"closeout_condition\": \"Implementation done becomes effective only after separately reviewed eight-path closeout and final two-path excluded receipt pass required integrity, pinned local and exact-SHA CI gates.\",\n    \"not_claimed\": [\n      \"fresh human inspection\",\n      \"formal retained-claim authentication\",\n      \"designated human sign-offs\",\n      \"T2/T3/T4\",\n      \"consumer/aggregate/parent/profile completion\",\n      \"full CRUD/uniqueness/deletion/list/query/downstream policy\",\n      \"rewrite/deployment/production readiness\",\n      \"later increment\"\n    ],\n    \"receipt_ci\": {\n      \"run_id\": 38398462515,\n      \"job_id\": 115299600865,\n      \"attempt\": 1,\n      \"raw_run_sha256\": \"78ac5623d54aa088e73601728a71005654ee184c0f5fcc04bce4a9f1c15d9075\",\n      \"raw_job_sha256\": \"3d3cd8c0514a40bf92334c8f9cb99efef4a8088eda2fa433ed3e88bbdce9a015\"\n    }\n  }\n}\n"
+  },
+  "actual_normal_closeout_push": {
+    "started": "2026-10-13T14:16:19.786Z",
+    "ended": "2026-10-13T14:16:26.659Z",
+    "boundary_checked_at": "2026-10-13T14:16:31.467Z",
+    "head": "85e1f3ee863bb16f320c58f3c2e88b991647a227",
+    "parent": "77197e854725bba6e625e5fcfb05468aa43caf27",
+    "branch": "work/cw1-v2-02-i13-prefix-presence",
+    "push_url": "git@github.com:jihadismail8/netbox-go.git",
+    "command": [
+      "git",
+      "--no-replace-objects",
+      "-c",
+      "advice.graftFileDeprecated=false",
+      "push",
+      "--porcelain",
+      "--no-follow-tags",
+      "--recurse-submodules=no",
+      "git@github.com:jihadismail8/netbox-go.git",
+      "85e1f3ee863bb16f320c58f3c2e88b991647a227:refs/heads/work/cw1-v2-02-i13-prefix-presence"
+    ],
+    "exit": 0,
+    "error": null,
+    "signal": null,
+    "log_sha256": "337e487858c2394228c38f0031b65cbc5d09533c1c2522b2f9ce5c550c4b3393",
+    "remote_before": "77197e854725bba6e625e5fcfb05468aa43caf27\trefs/heads/work/cw1-v2-02-i13-prefix-presence",
+    "remote_after": "85e1f3ee863bb16f320c58f3c2e88b991647a227\trefs/heads/work/cw1-v2-02-i13-prefix-presence",
+    "authority_started": "2026-10-13T14:16:14.289Z",
+    "authority_ended": "2026-10-13T14:16:19.064Z",
+    "repository_sha256": "d9c19d7915a612bdbc82dee698c5b33ff60165193ce2c335af6736f4274f4884",
+    "ref_before_sha256": "2539cc5955db7d918b936e6d6d752854e21534eabb91c1f7795df036354fefb7",
+    "ref_after_sha256": "9bf46ce52c3e2ca88adcd6fb4544aeb5b4f8d5a3c227c3c5865e61a37b6f6802",
+    "mapping_sha256": "5e1c124078a19fec4a6c8974095741415140b0dcfe83b787b3f4b75b0e16ae30",
+    "entry_proof_sha256": "b631118d9cbc5220f95937ff18bdc618586824d439681e8ab6d31e32e0fe34f7",
+    "reachable_message_sha256": "a8114f556d4d3bacead175f94d8210c2ca0945830a3403dbf3aff0bf1226e897",
+    "before_digest": "source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260",
+    "after_digest": "source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260",
+    "files": 3103,
+    "unchanged": true,
+    "boundary_error": null
+  },
+  "original_publication_bytes": {
+    "repository": {
+      "bytes": 6159,
+      "sha256": "d9c19d7915a612bdbc82dee698c5b33ff60165193ce2c335af6736f4274f4884",
+      "content": "{\"id\":1282221112,\"node_id\":\"R_kgDOTG0kOA\",\"name\":\"netbox-go\",\"full_name\":\"jihadismail8/netbox-go\",\"private\":false,\"owner\":{\"login\":\"jihadismail8\",\"id\":22521250,\"node_id\":\"MDQ6VXNlcjIyNTIxMjUw\",\"avatar_url\":\"https://avatars.githubusercontent.com/u/22521250?v=4\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/jihadismail8\",\"html_url\":\"https://github.com/jihadismail8\",\"followers_url\":\"https://api.github.com/users/jihadismail8/followers\",\"following_url\":\"https://api.github.com/users/jihadismail8/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/jihadismail8/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/jihadismail8/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/jihadismail8/subscriptions\",\"organizations_url\":\"https://api.github.com/users/jihadismail8/orgs\",\"repos_url\":\"https://api.github.com/users/jihadismail8/repos\",\"events_url\":\"https://api.github.com/users/jihadismail8/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/jihadismail8/received_events\",\"type\":\"User\",\"user_view_type\":\"public\",\"site_admin\":false},\"html_url\":\"https://github.com/jihadismail8/netbox-go\",\"description\":\"Full rewrite of netbox in golang & Vue.js\",\"fork\":false,\"url\":\"https://api.github.com/repos/jihadismail8/netbox-go\",\"forks_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/forks\",\"keys_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/keys{/key_id}\",\"collaborators_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/collaborators{/collaborator}\",\"teams_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/teams\",\"hooks_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/hooks\",\"issue_events_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/issues/events{/number}\",\"events_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/events\",\"assignees_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/assignees{/user}\",\"branches_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/branches{/branch}\",\"tags_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/tags\",\"blobs_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/git/blobs{/sha}\",\"git_tags_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/git/tags{/sha}\",\"git_refs_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/git/refs{/sha}\",\"trees_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/git/trees{/sha}\",\"statuses_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/statuses/{sha}\",\"languages_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/languages\",\"stargazers_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/stargazers\",\"contributors_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/contributors\",\"subscribers_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/subscribers\",\"subscription_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/subscription\",\"commits_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/commits{/sha}\",\"git_commits_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/git/commits{/sha}\",\"comments_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/comments{/number}\",\"issue_comment_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/issues/comments{/number}\",\"contents_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/contents/{+path}\",\"compare_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/compare/{base}...{head}\",\"merges_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/merges\",\"archive_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/{archive_format}{/ref}\",\"downloads_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/downloads\",\"issues_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/issues{/number}\",\"pulls_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/pulls{/number}\",\"milestones_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/milestones{/number}\",\"notifications_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/notifications{?since,all,participating}\",\"labels_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/labels{/name}\",\"releases_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/releases{/id}\",\"deployments_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/deployments\",\"created_at\":\"2026-06-27T13:36:09Z\",\"updated_at\":\"2026-08-23T09:42:38Z\",\"pushed_at\":\"2026-10-13T12:35:49Z\",\"git_url\":\"git://github.com/jihadismail8/netbox-go.git\",\"ssh_url\":\"git@github.com:jihadismail8/netbox-go.git\",\"clone_url\":\"https://github.com/jihadismail8/netbox-go.git\",\"svn_url\":\"https://github.com/jihadismail8/netbox-go\",\"homepage\":null,\"size\":6990,\"stargazers_count\":0,\"watchers_count\":0,\"language\":\"Go\",\"has_issues\":true,\"has_projects\":true,\"has_downloads\":false,\"has_wiki\":true,\"has_pages\":false,\"has_discussions\":false,\"forks_count\":0,\"mirror_url\":null,\"archived\":false,\"disabled\":false,\"open_issues_count\":0,\"license\":{\"key\":\"apache-2.0\",\"name\":\"Apache License 2.0\",\"spdx_id\":\"Apache-2.0\",\"url\":\"https://api.github.com/licenses/apache-2.0\",\"node_id\":\"MDc6TGljZW5zZTI=\"},\"allow_forking\":true,\"is_template\":false,\"web_commit_signoff_required\":false,\"has_pull_requests\":true,\"pull_request_creation_policy\":\"all\",\"topics\":[],\"visibility\":\"public\",\"forks\":0,\"open_issues\":0,\"watchers\":0,\"default_branch\":\"main\",\"permissions\":{\"admin\":true,\"maintain\":true,\"push\":true,\"triage\":true,\"pull\":true},\"temp_clone_token\":\"\",\"allow_squash_merge\":true,\"allow_merge_commit\":true,\"allow_rebase_merge\":true,\"allow_auto_merge\":false,\"delete_branch_on_merge\":false,\"allow_update_branch\":false,\"use_squash_pr_title_as_default\":false,\"squash_merge_commit_message\":\"COMMIT_MESSAGES\",\"squash_merge_commit_title\":\"COMMIT_OR_PR_TITLE\",\"merge_commit_message\":\"PR_TITLE\",\"merge_commit_title\":\"MERGE_MESSAGE\",\"security_and_analysis\":{\"secret_scanning\":{\"status\":\"enabled\"},\"secret_scanning_push_protection\":{\"status\":\"enabled\"},\"dependabot_security_updates\":{\"status\":\"disabled\"},\"secret_scanning_non_provider_patterns\":{\"status\":\"disabled\"},\"secret_scanning_validity_checks\":{\"status\":\"disabled\"}},\"network_count\":0,\"subscribers_count\":0}"
+    },
+    "ref_before": {
+      "bytes": 445,
+      "sha256": "2539cc5955db7d918b936e6d6d752854e21534eabb91c1f7795df036354fefb7",
+      "content": "{\"ref\":\"refs/heads/work/cw1-v2-02-i13-prefix-presence\",\"node_id\":\"REF_kwDOTG0kONoALXJlZnMvaGVhZHMvd29yay9jdzEtdjItMDItaTEzLXByZWZpeC1wcmVzZW5jZQ\",\"url\":\"https://api.github.com/repos/jihadismail8/netbox-go/git/refs/heads/work/cw1-v2-02-i13-prefix-presence\",\"object\":{\"sha\":\"77197e854725bba6e625e5fcfb05468aa43caf27\",\"type\":\"commit\",\"url\":\"https://api.github.com/repos/jihadismail8/netbox-go/git/commits/77197e854725bba6e625e5fcfb05468aa43caf27\"}}"
+    },
+    "ref_after": {
+      "bytes": 445,
+      "sha256": "9bf46ce52c3e2ca88adcd6fb4544aeb5b4f8d5a3c227c3c5865e61a37b6f6802",
+      "content": "{\"ref\":\"refs/heads/work/cw1-v2-02-i13-prefix-presence\",\"node_id\":\"REF_kwDOTG0kONoALXJlZnMvaGVhZHMvd29yay9jdzEtdjItMDItaTEzLXByZWZpeC1wcmVzZW5jZQ\",\"url\":\"https://api.github.com/repos/jihadismail8/netbox-go/git/refs/heads/work/cw1-v2-02-i13-prefix-presence\",\"object\":{\"sha\":\"85e1f3ee863bb16f320c58f3c2e88b991647a227\",\"type\":\"commit\",\"url\":\"https://api.github.com/repos/jihadismail8/netbox-go/git/commits/85e1f3ee863bb16f320c58f3c2e88b991647a227\"}}"
+    },
+    "raw_push": {
+      "bytes": 152,
+      "sha256": "337e487858c2394228c38f0031b65cbc5d09533c1c2522b2f9ce5c550c4b3393",
+      "content": "To github.com:jihadismail8/netbox-go.git\n \t85e1f3ee863bb16f320c58f3c2e88b991647a227:refs/heads/work/cw1-v2-02-i13-prefix-presence\t77197e8..85e1f3e\nDone\n"
+    }
+  },
+  "actual_terminal_closeout_ci": {
+    "recorded_at": "2026-10-13T14:34:12.740Z",
+    "run_id": 38411941932,
+    "job_id": 115346242181,
+    "run_attempt": 1,
+    "head_sha": "85e1f3ee863bb16f320c58f3c2e88b991647a227",
+    "status": "completed",
+    "conclusion": "success",
+    "run_created_at": "2026-10-13T14:16:29Z",
+    "run_started_at": "2026-10-13T14:16:29Z",
+    "run_updated_at": "2026-10-13T14:33:05Z",
+    "job_started_at": "2026-10-13T14:16:32Z",
+    "job_completed_at": "2026-10-13T14:33:04Z",
+    "all_steps_successful": true,
+    "steps": 12,
+    "run_url": "https://github.com/jihadismail8/netbox-go/actions/runs/38411941932",
+    "job_url": "https://github.com/jihadismail8/netbox-go/actions/runs/38411941932/job/115346242181",
+    "raw_run_sha256": "f379c87b3d27ff26a06af00c4934ce4050fb2bd20a587ac90c3aae35e6d28fb0",
+    "raw_job_sha256": "061710a38c02458d255c6620a880f6949bc71dcbc53489e32ad2533b57c25bf5",
+    "digest": "source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260",
+    "files": 3103,
+    "manifest_sha256": "d5415b01eb9068a813c1f12922551753afc9d239fac9d597820ac1d480d2d2d2"
+  },
+  "original_raw_run": {
+    "bytes": 28028,
+    "sha256": "f379c87b3d27ff26a06af00c4934ce4050fb2bd20a587ac90c3aae35e6d28fb0",
+    "content": "{\"id\":38411941932,\"name\":\"repository-gate\",\"node_id\":\"WFR_kwLOTG0kOM8AAAAI8Ye4LA\",\"head_branch\":\"work/cw1-v2-02-i13-prefix-presence\",\"head_sha\":\"85e1f3ee863bb16f320c58f3c2e88b991647a227\",\"path\":\".github/workflows/ci.yml\",\"display_title\":\"docs: retain bounded CW1-V2-02-I13 standing-closeout\",\"run_number\":116,\"event\":\"push\",\"status\":\"completed\",\"conclusion\":\"success\",\"workflow_id\":325407334,\"check_suite_id\":104077349159,\"check_suite_node_id\":\"CS_kwDOTG0kOM8AAAAYO35RJw\",\"url\":\"https://api.github.com/repos/jihadismail8/netbox-go/actions/runs/38411941932\",\"html_url\":\"https://github.com/jihadismail8/netbox-go/actions/runs/38411941932\",\"pull_requests\":[],\"created_at\":\"2026-10-13T14:16:29Z\",\"updated_at\":\"2026-10-13T14:33:05Z\",\"actor\":{\"login\":\"jihadismail8\",\"id\":22521250,\"node_id\":\"MDQ6VXNlcjIyNTIxMjUw\",\"avatar_url\":\"https://avatars.githubusercontent.com/u/22521250?v=4\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/jihadismail8\",\"html_url\":\"https://github.com/jihadismail8\",\"followers_url\":\"https://api.github.com/users/jihadismail8/followers\",\"following_url\":\"https://api.github.com/users/jihadismail8/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/jihadismail8/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/jihadismail8/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/jihadismail8/subscriptions\",\"organizations_url\":\"https://api.github.com/users/jihadismail8/orgs\",\"repos_url\":\"https://api.github.com/users/jihadismail8/repos\",\"events_url\":\"https://api.github.com/users/jihadismail8/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/jihadismail8/received_events\",\"type\":\"User\",\"user_view_type\":\"public\",\"site_admin\":false},\"run_attempt\":1,\"referenced_workflows\":[],\"run_started_at\":\"2026-10-13T14:16:29Z\",\"triggering_actor\":{\"login\":\"jihadismail8\",\"id\":22521250,\"node_id\":\"MDQ6VXNlcjIyNTIxMjUw\",\"avatar_url\":\"https://avatars.githubusercontent.com/u/22521250?v=4\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/jihadismail8\",\"html_url\":\"https://github.com/jihadismail8\",\"followers_url\":\"https://api.github.com/users/jihadismail8/followers\",\"following_url\":\"https://api.github.com/users/jihadismail8/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/jihadismail8/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/jihadismail8/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/jihadismail8/subscriptions\",\"organizations_url\":\"https://api.github.com/users/jihadismail8/orgs\",\"repos_url\":\"https://api.github.com/users/jihadismail8/repos\",\"events_url\":\"https://api.github.com/users/jihadismail8/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/jihadismail8/received_events\",\"type\":\"User\",\"user_view_type\":\"public\",\"site_admin\":false},\"jobs_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/actions/runs/38411941932/jobs\",\"logs_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/actions/runs/38411941932/logs\",\"check_suite_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/check-suites/104077349159\",\"artifacts_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/actions/runs/38411941932/artifacts\",\"cancel_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/actions/runs/38411941932/cancel\",\"rerun_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/actions/runs/38411941932/rerun\",\"previous_attempt_url\":null,\"workflow_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/actions/workflows/325407334\",\"head_commit\":{\"id\":\"85e1f3ee863bb16f320c58f3c2e88b991647a227\",\"tree_id\":\"8d203ef3f396e5d08093449f044bbab82649d2fa\",\"message\":\"docs: retain bounded CW1-V2-02-I13 standing-closeout\\n\\nNo fresh human inspection, formal authentication, effective done, tier, consumer, parent, profile, later increment or production claim is inferred. Existing executor standing application, if retained, remains conditional on closeout/final-leaf gates. Exact own CI and independent integrity remain required.\\n\\nComplete frozen boundary mapping:\\n{\\n  \\\"schema_version\\\": 1,\\n  \\\"phase\\\": \\\"closeout\\\",\\n  \\\"parent\\\": \\\"77197e854725bba6e625e5fcfb05468aa43caf27\\\",\\n  \\\"branch\\\": \\\"work/cw1-v2-02-i13-prefix-presence\\\",\\n  \\\"tested_revision\\\": \\\"1dc5a472032abda9c9b41a855ca7df8f8d4e2bb7\\\",\\n  \\\"tested_digest\\\": \\\"source-v2:sha256:9266635d9d19148844271972e45514a224dd4b5e4d4a843ebba536ffaa68bfab\\\",\\n  \\\"tested_manifest_sha256\\\": \\\"99a09218b8450b58fc7fa936719a42cca7a930f76b93f1544ab89310f3832978\\\",\\n  \\\"source_digest\\\": \\\"source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260\\\",\\n  \\\"files\\\": 3103,\\n  \\\"manifest_sha256\\\": \\\"d5415b01eb9068a813c1f12922551753afc9d239fac9d597820ac1d480d2d2d2\\\",\\n  \\\"derived_diff_sha256\\\": \\\"dbd9047bb7dcb3ed5ee8f3e29497e55837dec631beef25641910e768caec14ea\\\",\\n  \\\"predecessor_record_sha256\\\": \\\"56b84a4a4d0e97589ffcfcc0ed0cac9adbd2296aaa0a2e31bf0a6e2ebcc027d4\\\",\\n  \\\"entry_proof_sha256\\\": \\\"b631118d9cbc5220f95937ff18bdc618586824d439681e8ab6d31e32e0fe34f7\\\",\\n  \\\"paths\\\": [\\n    {\\n      \\\"path\\\": \\\"AGENTS.md\\\",\\n      \\\"before\\\": {\\n        \\\"mode\\\": \\\"100644\\\",\\n        \\\"bytes\\\": 25728,\\n        \\\"sha256\\\": \\\"3abba8e31e79c11d8c4cc6b3f4c411375b1a47bd63f3428823e310b8003b374b\\\"\\n      },\\n      \\\"after\\\": {\\n        \\\"mode\\\": \\\"100644\\\",\\n        \\\"bytes\\\": 26342,\\n        \\\"sha256\\\": \\\"3673a11ac1a7cb4c416cd1fc23bb49b9ecdb7e8094c144b4f1fe0b7458297e05\\\"\\n      }\\n    },\\n    {\\n      \\\"path\\\": \\\"docs/ROADMAP.md\\\",\\n      \\\"before\\\": {\\n        \\\"mode\\\": \\\"100644\\\",\\n        \\\"bytes\\\": 111873,\\n        \\\"sha256\\\": \\\"3be6aec684814251ffe889bef44060212c32484f5f30452098fa669dd8d0ab8b\\\"\\n      },\\n      \\\"after\\\": {\\n        \\\"mode\\\": \\\"100644\\\",\\n        \\\"bytes\\\": 113101,\\n        \\\"sha256\\\": \\\"534c5df0fd70a4d936d2575f4a7292518fdf414bc15cfc40b6dbce87b1c963af\\\"\\n      }\\n    },\\n    {\\n      \\\"path\\\": \\\"docs/STATUS.md\\\",\\n      \\\"before\\\": {\\n        \\\"mode\\\": \\\"100644\\\",\\n        \\\"bytes\\\": 43891,\\n        \\\"sha256\\\": \\\"9ce7a7a9c98e11d02dcf0da671de3c86740cbaa5daee859b5b8717f06183adfc\\\"\\n      },\\n      \\\"after\\\": {\\n        \\\"mode\\\": \\\"100644\\\",\\n        \\\"bytes\\\": 44766,\\n        \\\"sha256\\\": \\\"8388fdb3328dc969af9485bd55ad22b9448a5d246cc2ff5eeeac2fdaafb3050f\\\"\\n      }\\n    },\\n    {\\n      \\\"path\\\": \\\"docs/TESTING.md\\\",\\n      \\\"before\\\": {\\n        \\\"mode\\\": \\\"100644\\\",\\n        \\\"bytes\\\": 37459,\\n        \\\"sha256\\\": \\\"9b656249e2b1e751c9a6d3ce2fa2cbf3aca4e77d592d488676d9e4b587c77042\\\"\\n      },\\n      \\\"after\\\": {\\n        \\\"mode\\\": \\\"100644\\\",\\n        \\\"bytes\\\": 38496,\\n        \\\"sha256\\\": \\\"f3c2d1f1ca2b13d63d49cf30cde3994b9648c15526c7eed42a98cf7c2f0d3239\\\"\\n      }\\n    },\\n    {\\n      \\\"path\\\": \\\"docs/evidence/2026-10-13-core-workflow-v2-prefix-scalar-presence-i13-v0.md\\\",\\n      \\\"before\\\": {\\n        \\\"mode\\\": \\\"100644\\\",\\n        \\\"bytes\\\": 1955822,\\n        \\\"sha256\\\": \\\"aee14cee5e86bca98958a743d23307856230289d22349cd394ff27bdfe69b96f\\\"\\n      },\\n      \\\"after\\\": {\\n        \\\"mode\\\": \\\"100644\\\",\\n        \\\"bytes\\\": 2846845,\\n        \\\"sha256\\\": \\\"d00d07e4f055fd1fc9a42e66189b3c021c44669eab06c3e57fab2ebc7852f9f9\\\"\\n      }\\n    },\\n    {\\n      \\\"path\\\": \\\"docs/evidence/README.md\\\",\\n      \\\"before\\\": {\\n        \\\"mode\\\": \\\"100644\\\",\\n        \\\"bytes\\\": 43642,\\n        \\\"sha256\\\": \\\"61cef197277acdde6b91fe35b08f5a0518abca79cde608c1247992182c1380ac\\\"\\n      },\\n      \\\"after\\\": {\\n        \\\"mode\\\": \\\"100644\\\",\\n        \\\"bytes\\\": 46338,\\n        \\\"sha256\\\": \\\"c6d04faadf1a4a982c65e06c77749aee6dfdeaf69e44711a3fd403726475e57a\\\"\\n      }\\n    },\\n    {\\n      \\\"path\\\": \\\"docs/increments/CW1-V2-02-I13.md\\\",\\n      \\\"before\\\": {\\n        \\\"mode\\\": \\\"100644\\\",\\n        \\\"bytes\\\": 43756,\\n        \\\"sha256\\\": \\\"a9824b2f29d83f90c78167822d1d1013ba2f69b2326370a025b65a22ed93f100\\\"\\n      },\\n      \\\"after\\\": {\\n        \\\"mode\\\": \\\"100644\\\",\\n        \\\"bytes\\\": 47231,\\n        \\\"sha256\\\": \\\"f66a347119e0a142986855b6d1ad4e0adf5ceb6ef488a57cdc59fae17c42efc5\\\"\\n      }\\n    },\\n    {\\n      \\\"path\\\": \\\"docs/increments/README.md\\\",\\n      \\\"before\\\": {\\n        \\\"mode\\\": \\\"100644\\\",\\n        \\\"bytes\\\": 22180,\\n        \\\"sha256\\\": \\\"2b0787447de19fbd5e0886c7652ba2a930991602cd075959751fb0f66bfb0f71\\\"\\n      },\\n      \\\"after\\\": {\\n        \\\"mode\\\": \\\"100644\\\",\\n        \\\"bytes\\\": 22727,\\n        \\\"sha256\\\": \\\"d918c91d2422d98e75db3de1f839d6ed5cb463d8c1fd86dbdb283ee68732138c\\\"\\n      }\\n    }\\n  ]\\n}\\n\\nActual sequential pinned make-check gate objects:\\n[\\n  {\\n    \\\"label\\\": \\\"standing-closeout-assembly-repository\\\",\\n    \\\"cwd\\\": \\\"/home/jihad/Projects/netbox_go\\\",\\n    \\\"command\\\": [\\n      \\\"make\\\",\\n      \\\"check\\\"\\n    ],\\n    \\\"started\\\": \\\"2026-10-13T13:57:17.488Z\\\",\\n    \\\"ended\\\": \\\"2026-10-13T14:02:43.147Z\\\",\\n    \\\"exit\\\": 0,\\n    \\\"error\\\": null,\\n    \\\"signal\\\": null,\\n    \\\"log_sha256\\\": \\\"46886e8e076ab331296fc82fbf0b6746f59b8cfabeda9ff1bde2705c08966597\\\",\\n    \\\"before_digest\\\": \\\"source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260\\\",\\n    \\\"after_digest\\\": \\\"source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260\\\",\\n    \\\"files\\\": 3103,\\n    \\\"unchanged\\\": true,\\n    \\\"boundary_error\\\": null,\\n    \\\"mapping_sha256\\\": \\\"5e1c124078a19fec4a6c8974095741415140b0dcfe83b787b3f4b75b0e16ae30\\\",\\n    \\\"entry_proof_sha256\\\": \\\"b631118d9cbc5220f95937ff18bdc618586824d439681e8ab6d31e32e0fe34f7\\\",\\n    \\\"helper_sha256\\\": \\\"91962e5c96e00f74180af346117c5fe7423d343f8bd4086c8e35f232e0042b45\\\"\\n  },\\n  {\\n    \\\"label\\\": \\\"standing-closeout-final-repository\\\",\\n    \\\"cwd\\\": \\\"/home/jihad/Projects/netbox_go\\\",\\n    \\\"command\\\": [\\n      \\\"make\\\",\\n      \\\"check\\\"\\n    ],\\n    \\\"started\\\": \\\"2026-10-13T14:03:14.065Z\\\",\\n    \\\"ended\\\": \\\"2026-10-13T14:08:36.176Z\\\",\\n    \\\"exit\\\": 0,\\n    \\\"error\\\": null,\\n    \\\"signal\\\": null,\\n    \\\"log_sha256\\\": \\\"a291d2fb0d13bd3cd78dc7d447249d7ba09cab3b387d8ad5eba1eb10009db9bb\\\",\\n    \\\"before_digest\\\": \\\"source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260\\\",\\n    \\\"after_digest\\\": \\\"source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260\\\",\\n    \\\"files\\\": 3103,\\n    \\\"unchanged\\\": true,\\n    \\\"boundary_error\\\": null,\\n    \\\"mapping_sha256\\\": \\\"5e1c124078a19fec4a6c8974095741415140b0dcfe83b787b3f4b75b0e16ae30\\\",\\n    \\\"entry_proof_sha256\\\": \\\"b631118d9cbc5220f95937ff18bdc618586824d439681e8ab6d31e32e0fe34f7\\\",\\n    \\\"helper_sha256\\\": \\\"91962e5c96e00f74180af346117c5fe7423d343f8bd4086c8e35f232e0042b45\\\"\\n  }\\n]\\n\\nComplete authenticated predecessor entry commitments:\\n{\\n  \\\"schema_version\\\": 1,\\n  \\\"predecessor_head\\\": \\\"77197e854725bba6e625e5fcfb05468aa43caf27\\\",\\n  \\\"predecessor_parent\\\": \\\"d161e251b0f838c57ed0a057a4493fbb02a7c40b\\\",\\n  \\\"predecessor_label\\\": \\\"preacceptance-receipt\\\",\\n  \\\"source_digest\\\": \\\"source-v2:sha256:74f1cb1101a64ed15f4b8ea5f544c015d8bee4b78a6dcd8acb0e0fab667bf08c\\\",\\n  \\\"files\\\": 3103,\\n  \\\"manifest_sha256\\\": \\\"b50630c0c1ec6ea4d7de9e6e9f7a27d2c36fcc56f8934f5d53de685e57a2cdca\\\",\\n  \\\"record_sha256\\\": {\\n    \\\"preacceptance-receipt-config.json\\\": \\\"dd8533d2b057c642b2a91a9fd30ca019bd0fbc12c9b5cb2928f496a9e4aacbe7\\\",\\n    \\\"preacceptance-receipt-freeze.json\\\": \\\"162bd39359f73fbf73e9b88823cd4cc8978d0d87b170ea0539ee30186c2aee96\\\",\\n    \\\"preacceptance-receipt-mapping.json\\\": \\\"889cc5e705ef75e82b33d4a734270e373027fc643cb575ea560af0da0bccbb9e\\\",\\n    \\\"preacceptance-receipt-commit.json\\\": \\\"56b84a4a4d0e97589ffcfcc0ed0cac9adbd2296aaa0a2e31bf0a6e2ebcc027d4\\\",\\n    \\\"preacceptance-receipt-frozen-source-manifest.json\\\": \\\"b50630c0c1ec6ea4d7de9e6e9f7a27d2c36fcc56f8934f5d53de685e57a2cdca\\\",\\n    \\\"preacceptance-receipt-frozen-source-diff.json\\\": \\\"fc4e1df31f8cb439da94037ec569f61473a2b1601c303e55006c8eae448cd4ea\\\",\\n    \\\"preacceptance-receipt-push-receipt.json\\\": \\\"d1b5ee722048e57d2b93bf4c330fa918c2cc392dbc186889dd4db0f15d14d794\\\",\\n    \\\"preacceptance-receipt-assembly-repository-receipt.json\\\": \\\"ea2f9d0bcb2f7f1528f7575477d8d00899647ab2c5f734ffd9981ab8b9691893\\\",\\n    \\\"preacceptance-receipt-final-repository-receipt.json\\\": \\\"41422f34fbb327525f07f11a039373a226ec3a4c29fb14dd2b5a272f3055218a\\\",\\n    \\\"preacceptance-receipt-ci-run.json\\\": \\\"78ac5623d54aa088e73601728a71005654ee184c0f5fcc04bce4a9f1c15d9075\\\",\\n    \\\"preacceptance-receipt-ci-job.json\\\": \\\"3d3cd8c0514a40bf92334c8f9cb99efef4a8088eda2fa433ed3e88bbdce9a015\\\",\\n    \\\"preacceptance-receipt-ci-receipt.json\\\": \\\"38be93b800c5efdd86435d7d9a1c2decf70737df505ac4d1d6f7c037541160e8\\\",\\n    \\\"preacceptance-receipt-integrity-review.json\\\": \\\"226ecf41739afd88871fdae6b5928d8e61d34bab36473d4db4751eee3db71e2a\\\"\\n  },\\n  \\\"operational_failure_sha256\\\": \\\"b6036ef0e2103496849ce33851b2dbcbe12cec51428036fff3f0821819b23e76\\\",\\n  \\\"gate_log_sha256\\\": [\\n    \\\"c526099f0286f8116758c1283e81b006884984a7d5a5d24ec5061f901863355d\\\",\\n    \\\"ceddce29b4f1ab3d0fbcb45d8f92135f6668253c127859f264f4e74d1f9870f3\\\"\\n  ],\\n  \\\"publication_raw_sha256\\\": {\\n    \\\"log\\\": \\\"cc59c33aec672965084c6121b24ba78c82d1da6dbbffb7ac4514b3a7f54211d3\\\",\\n    \\\"repository\\\": \\\"76f34c505870a065abefb681c3f3f85d0637f97d280d4d7f0ddc5174ccd8ab57\\\",\\n    \\\"ref_before\\\": \\\"c05c76741a680e005f728338e7b196f21452023c1c36ef37f4c8cb8d3f507c18\\\",\\n    \\\"ref_after\\\": \\\"2539cc5955db7d918b936e6d6d752854e21534eabb91c1f7795df036354fefb7\\\"\\n  },\\n  \\\"reachable_message_sha256\\\": \\\"8337bad426d6a1c39d16aa9143c0d45e6175c2ef6344463777f85df886ad2d54\\\",\\n  \\\"actual_terminal_ci\\\": {\\n    \\\"recorded_at\\\": \\\"2026-10-13T12:57:20.760Z\\\",\\n    \\\"run_id\\\": 38398462515,\\n    \\\"job_id\\\": 115299600865,\\n    \\\"run_attempt\\\": 1,\\n    \\\"head_sha\\\": \\\"77197e854725bba6e625e5fcfb05468aa43caf27\\\",\\n    \\\"status\\\": \\\"completed\\\",\\n    \\\"conclusion\\\": \\\"success\\\",\\n    \\\"run_created_at\\\": \\\"2026-10-13T12:35:51Z\\\",\\n    \\\"run_started_at\\\": \\\"2026-10-13T12:35:51Z\\\",\\n    \\\"run_updated_at\\\": \\\"2026-10-13T12:55:31Z\\\",\\n    \\\"job_started_at\\\": \\\"2026-10-13T12:35:54Z\\\",\\n    \\\"job_completed_at\\\": \\\"2026-10-13T12:55:30Z\\\",\\n    \\\"all_steps_successful\\\": true,\\n    \\\"steps\\\": 12,\\n    \\\"run_url\\\": \\\"https://github.com/jihadismail8/netbox-go/actions/runs/38398462515\\\",\\n    \\\"job_url\\\": \\\"https://github.com/jihadismail8/netbox-go/actions/runs/38398462515/job/115299600865\\\",\\n    \\\"raw_run_sha256\\\": \\\"78ac5623d54aa088e73601728a71005654ee184c0f5fcc04bce4a9f1c15d9075\\\",\\n    \\\"raw_job_sha256\\\": \\\"3d3cd8c0514a40bf92334c8f9cb99efef4a8088eda2fa433ed3e88bbdce9a015\\\",\\n    \\\"digest\\\": \\\"source-v2:sha256:74f1cb1101a64ed15f4b8ea5f544c015d8bee4b78a6dcd8acb0e0fab667bf08c\\\",\\n    \\\"files\\\": 3103,\\n    \\\"manifest_sha256\\\": \\\"b50630c0c1ec6ea4d7de9e6e9f7a27d2c36fcc56f8934f5d53de685e57a2cdca\\\"\\n  },\\n  \\\"actual_post_capture_review\\\": {\\n    \\\"scope\\\": \\\"CW1-V2-02-I13 exact preacceptance-receipt post-capture integrity\\\",\\n    \\\"head\\\": \\\"77197e854725bba6e625e5fcfb05468aa43caf27\\\",\\n    \\\"parent\\\": \\\"d161e251b0f838c57ed0a057a4493fbb02a7c40b\\\",\\n    \\\"branch\\\": \\\"work/cw1-v2-02-i13-prefix-presence\\\",\\n    \\\"source_digest\\\": \\\"source-v2:sha256:74f1cb1101a64ed15f4b8ea5f544c015d8bee4b78a6dcd8acb0e0fab667bf08c\\\",\\n    \\\"files\\\": 3103,\\n    \\\"manifest_sha256\\\": \\\"b50630c0c1ec6ea4d7de9e6e9f7a27d2c36fcc56f8934f5d53de685e57a2cdca\\\",\\n    \\\"mapping_sha256\\\": \\\"889cc5e705ef75e82b33d4a734270e373027fc643cb575ea560af0da0bccbb9e\\\",\\n    \\\"capture_recorded_at\\\": \\\"2026-10-13T12:57:20.760Z\\\",\\n    \\\"capture_receipt_sha256\\\": \\\"38be93b800c5efdd86435d7d9a1c2decf70737df505ac4d1d6f7c037541160e8\\\",\\n    \\\"root_reviewer\\\": \\\"/root\\\",\\n    \\\"root_verdict\\\": \\\"PASS\\\",\\n    \\\"root_reviewed_at\\\": \\\"2026-10-13T13:00:08Z\\\",\\n    \\\"root_raw_reviewed_at\\\": \\\"2026-10-13T12:59:13.056Z\\\",\\n    \\\"independent_reviewer\\\": \\\"/root/i11_receipt_integrity_review\\\",\\n    \\\"independent_verdict\\\": \\\"PASS\\\",\\n    \\\"independent_reviewed_at\\\": \\\"2026-10-13T13:01:22.591Z\\\",\\n    \\\"independent_of_phase_authors\\\": true,\\n    \\\"verdict\\\": \\\"PASS\\\",\\n    \\\"run_id\\\": 38398462515,\\n    \\\"job_id\\\": 115299600865,\\n    \\\"run_attempt\\\": 1,\\n    \\\"all_steps_successful\\\": true,\\n    \\\"steps\\\": 12,\\n    \\\"raw_run_sha256\\\": \\\"78ac5623d54aa088e73601728a71005654ee184c0f5fcc04bce4a9f1c15d9075\\\",\\n    \\\"raw_job_sha256\\\": \\\"3d3cd8c0514a40bf92334c8f9cb99efef4a8088eda2fa433ed3e88bbdce9a015\\\",\\n    \\\"reachable_message_sha256\\\": \\\"8337bad426d6a1c39d16aa9143c0d45e6175c2ef6344463777f85df886ad2d54\\\",\\n    \\\"actual_frozen_local_gate_pairs\\\": 2,\\n    \\\"complete_source_tree_message_mapping_and_publication_authenticated\\\": true,\\n    \\\"fresh_human_inspection\\\": false,\\n    \\\"implementation_acceptance_applied\\\": false,\\n    \\\"done_applied\\\": false,\\n    \\\"tier_consumer_parent_profile_closure\\\": false\\n  },\\n  \\\"standing_application_sha256\\\": \\\"e39451540dd367f3b65544ba4990723f37f119b58bbda4234a2bb7ec53b25eed\\\",\\n  \\\"standing_application\\\": {\\n    \\\"schema_version\\\": 1,\\n    \\\"increment\\\": \\\"CW1-V2-02-I13\\\",\\n    \\\"actor\\\": \\\"executor\\\",\\n    \\\"applied_at\\\": \\\"2026-10-13T13:02:43Z\\\",\\n    \\\"accepted_receipt\\\": \\\"77197e854725bba6e625e5fcfb05468aa43caf27\\\",\\n    \\\"tested_revision\\\": \\\"1dc5a472032abda9c9b41a855ca7df8f8d4e2bb7\\\",\\n    \\\"tested_digest\\\": \\\"source-v2:sha256:9266635d9d19148844271972e45514a224dd4b5e4d4a843ebba536ffaa68bfab\\\",\\n    \\\"receipt_digest\\\": \\\"source-v2:sha256:74f1cb1101a64ed15f4b8ea5f544c015d8bee4b78a6dcd8acb0e0fab667bf08c\\\",\\n    \\\"receipt_files\\\": 3103,\\n    \\\"receipt_manifest_sha256\\\": \\\"b50630c0c1ec6ea4d7de9e6e9f7a27d2c36fcc56f8934f5d53de685e57a2cdca\\\",\\n    \\\"authority\\\": \\\"Owner's existing standing instruction permits routine reversible in-profile execution and bounded implementation evidence acceptance without another routine approval prompt.\\\",\\n    \\\"basis\\\": \\\"Known bounded Prefix implementation candidate, its retained reviewed claim, and exact two-file receipt 77197e854725bba6e625e5fcfb05468aa43caf27 have actual green pinned gates, exact-SHA CI, and distinct root plus independent post-capture integrity reviews. This executor application uses existing standing authorization, not fresh human inspection or a designated sign-off.\\\",\\n    \\\"scope\\\": \\\"Prefix seven-field (prefix, vrf, status, is_pool, mark_utilized, description, comments) common scalar create/PUT/PATCH presence, operation contracts, shared REST/gRPC semantics, PostgreSQL durability/rollback, and Vue dirty-field/error presentation tests.\\\",\\n    \\\"closeout_condition\\\": \\\"Implementation done becomes effective only after separately reviewed eight-path closeout and final two-path excluded receipt pass required integrity, pinned local and exact-SHA CI gates.\\\",\\n    \\\"not_claimed\\\": [\\n      \\\"fresh human inspection\\\",\\n      \\\"formal retained-claim authentication\\\",\\n      \\\"designated human sign-offs\\\",\\n      \\\"T2/T3/T4\\\",\\n      \\\"consumer/aggregate/parent/profile completion\\\",\\n      \\\"full CRUD/uniqueness/deletion/list/query/downstream policy\\\",\\n      \\\"rewrite/deployment/production readiness\\\",\\n      \\\"later increment\\\"\\n    ],\\n    \\\"receipt_ci\\\": {\\n      \\\"run_id\\\": 38398462515,\\n      \\\"job_id\\\": 115299600865,\\n      \\\"attempt\\\": 1,\\n      \\\"raw_run_sha256\\\": \\\"78ac5623d54aa088e73601728a71005654ee184c0f5fcc04bce4a9f1c15d9075\\\",\\n      \\\"raw_job_sha256\\\": \\\"3d3cd8c0514a40bf92334c8f9cb99efef4a8088eda2fa433ed3e88bbdce9a015\\\"\\n    }\\n  }\\n}\",\"timestamp\":\"2026-10-13T14:14:22Z\",\"author\":{\"name\":\"jihad_ismail\",\"email\":\"jihad.ismail.8@gmail.com\"},\"committer\":{\"name\":\"jihad_ismail\",\"email\":\"jihad.ismail.8@gmail.com\"}},\"repository\":{\"id\":1282221112,\"node_id\":\"R_kgDOTG0kOA\",\"name\":\"netbox-go\",\"full_name\":\"jihadismail8/netbox-go\",\"private\":false,\"owner\":{\"login\":\"jihadismail8\",\"id\":22521250,\"node_id\":\"MDQ6VXNlcjIyNTIxMjUw\",\"avatar_url\":\"https://avatars.githubusercontent.com/u/22521250?v=4\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/jihadismail8\",\"html_url\":\"https://github.com/jihadismail8\",\"followers_url\":\"https://api.github.com/users/jihadismail8/followers\",\"following_url\":\"https://api.github.com/users/jihadismail8/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/jihadismail8/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/jihadismail8/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/jihadismail8/subscriptions\",\"organizations_url\":\"https://api.github.com/users/jihadismail8/orgs\",\"repos_url\":\"https://api.github.com/users/jihadismail8/repos\",\"events_url\":\"https://api.github.com/users/jihadismail8/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/jihadismail8/received_events\",\"type\":\"User\",\"user_view_type\":\"public\",\"site_admin\":false},\"html_url\":\"https://github.com/jihadismail8/netbox-go\",\"description\":\"Full rewrite of netbox in golang & Vue.js\",\"fork\":false,\"url\":\"https://api.github.com/repos/jihadismail8/netbox-go\",\"forks_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/forks\",\"keys_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/keys{/key_id}\",\"collaborators_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/collaborators{/collaborator}\",\"teams_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/teams\",\"hooks_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/hooks\",\"issue_events_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/issues/events{/number}\",\"events_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/events\",\"assignees_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/assignees{/user}\",\"branches_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/branches{/branch}\",\"tags_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/tags\",\"blobs_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/git/blobs{/sha}\",\"git_tags_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/git/tags{/sha}\",\"git_refs_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/git/refs{/sha}\",\"trees_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/git/trees{/sha}\",\"statuses_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/statuses/{sha}\",\"languages_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/languages\",\"stargazers_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/stargazers\",\"contributors_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/contributors\",\"subscribers_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/subscribers\",\"subscription_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/subscription\",\"commits_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/commits{/sha}\",\"git_commits_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/git/commits{/sha}\",\"comments_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/comments{/number}\",\"issue_comment_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/issues/comments{/number}\",\"contents_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/contents/{+path}\",\"compare_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/compare/{base}...{head}\",\"merges_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/merges\",\"archive_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/{archive_format}{/ref}\",\"downloads_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/downloads\",\"issues_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/issues{/number}\",\"pulls_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/pulls{/number}\",\"milestones_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/milestones{/number}\",\"notifications_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/notifications{?since,all,participating}\",\"labels_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/labels{/name}\",\"releases_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/releases{/id}\",\"deployments_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/deployments\"},\"head_repository\":{\"id\":1282221112,\"node_id\":\"R_kgDOTG0kOA\",\"name\":\"netbox-go\",\"full_name\":\"jihadismail8/netbox-go\",\"private\":false,\"owner\":{\"login\":\"jihadismail8\",\"id\":22521250,\"node_id\":\"MDQ6VXNlcjIyNTIxMjUw\",\"avatar_url\":\"https://avatars.githubusercontent.com/u/22521250?v=4\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/jihadismail8\",\"html_url\":\"https://github.com/jihadismail8\",\"followers_url\":\"https://api.github.com/users/jihadismail8/followers\",\"following_url\":\"https://api.github.com/users/jihadismail8/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/jihadismail8/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/jihadismail8/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/jihadismail8/subscriptions\",\"organizations_url\":\"https://api.github.com/users/jihadismail8/orgs\",\"repos_url\":\"https://api.github.com/users/jihadismail8/repos\",\"events_url\":\"https://api.github.com/users/jihadismail8/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/jihadismail8/received_events\",\"type\":\"User\",\"user_view_type\":\"public\",\"site_admin\":false},\"html_url\":\"https://github.com/jihadismail8/netbox-go\",\"description\":\"Full rewrite of netbox in golang & Vue.js\",\"fork\":false,\"url\":\"https://api.github.com/repos/jihadismail8/netbox-go\",\"forks_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/forks\",\"keys_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/keys{/key_id}\",\"collaborators_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/collaborators{/collaborator}\",\"teams_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/teams\",\"hooks_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/hooks\",\"issue_events_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/issues/events{/number}\",\"events_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/events\",\"assignees_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/assignees{/user}\",\"branches_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/branches{/branch}\",\"tags_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/tags\",\"blobs_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/git/blobs{/sha}\",\"git_tags_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/git/tags{/sha}\",\"git_refs_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/git/refs{/sha}\",\"trees_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/git/trees{/sha}\",\"statuses_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/statuses/{sha}\",\"languages_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/languages\",\"stargazers_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/stargazers\",\"contributors_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/contributors\",\"subscribers_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/subscribers\",\"subscription_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/subscription\",\"commits_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/commits{/sha}\",\"git_commits_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/git/commits{/sha}\",\"comments_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/comments{/number}\",\"issue_comment_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/issues/comments{/number}\",\"contents_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/contents/{+path}\",\"compare_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/compare/{base}...{head}\",\"merges_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/merges\",\"archive_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/{archive_format}{/ref}\",\"downloads_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/downloads\",\"issues_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/issues{/number}\",\"pulls_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/pulls{/number}\",\"milestones_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/milestones{/number}\",\"notifications_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/notifications{?since,all,participating}\",\"labels_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/labels{/name}\",\"releases_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/releases{/id}\",\"deployments_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/deployments\"}}"
+  },
+  "original_raw_job": {
+    "bytes": 2813,
+    "sha256": "061710a38c02458d255c6620a880f6949bc71dcbc53489e32ad2533b57c25bf5",
+    "content": "{\"id\":115346242181,\"run_id\":38411941932,\"workflow_name\":\"repository-gate\",\"head_branch\":\"work/cw1-v2-02-i13-prefix-presence\",\"run_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/actions/runs/38411941932\",\"run_attempt\":1,\"node_id\":\"CR_kwDOTG0kOM8AAAAa2yv6hQ\",\"head_sha\":\"85e1f3ee863bb16f320c58f3c2e88b991647a227\",\"url\":\"https://api.github.com/repos/jihadismail8/netbox-go/actions/jobs/115346242181\",\"html_url\":\"https://github.com/jihadismail8/netbox-go/actions/runs/38411941932/job/115346242181\",\"status\":\"completed\",\"conclusion\":\"success\",\"created_at\":\"2026-10-13T14:16:30Z\",\"started_at\":\"2026-10-13T14:16:32Z\",\"completed_at\":\"2026-10-13T14:33:04Z\",\"name\":\"check\",\"steps\":[{\"name\":\"Set up job\",\"status\":\"completed\",\"conclusion\":\"success\",\"number\":1,\"started_at\":\"2026-10-13T14:16:33Z\",\"completed_at\":\"2026-10-13T14:16:36Z\"},{\"name\":\"Check out source\",\"status\":\"completed\",\"conclusion\":\"success\",\"number\":2,\"started_at\":\"2026-10-13T14:16:36Z\",\"completed_at\":\"2026-10-13T14:16:44Z\"},{\"name\":\"Set up Go\",\"status\":\"completed\",\"conclusion\":\"success\",\"number\":3,\"started_at\":\"2026-10-13T14:16:44Z\",\"completed_at\":\"2026-10-13T14:17:11Z\"},{\"name\":\"Set up Node.js\",\"status\":\"completed\",\"conclusion\":\"success\",\"number\":4,\"started_at\":\"2026-10-13T14:17:11Z\",\"completed_at\":\"2026-10-13T14:17:23Z\"},{\"name\":\"Pin npm\",\"status\":\"completed\",\"conclusion\":\"success\",\"number\":5,\"started_at\":\"2026-10-13T14:17:23Z\",\"completed_at\":\"2026-10-13T14:17:25Z\"},{\"name\":\"Install protobuf compiler\",\"status\":\"completed\",\"conclusion\":\"success\",\"number\":6,\"started_at\":\"2026-10-13T14:17:25Z\",\"completed_at\":\"2026-10-13T14:17:40Z\"},{\"name\":\"Install pinned Go tooling\",\"status\":\"completed\",\"conclusion\":\"success\",\"number\":7,\"started_at\":\"2026-10-13T14:17:40Z\",\"completed_at\":\"2026-10-13T14:17:47Z\"},{\"name\":\"Run repository gate\",\"status\":\"completed\",\"conclusion\":\"success\",\"number\":8,\"started_at\":\"2026-10-13T14:17:47Z\",\"completed_at\":\"2026-10-13T14:32:58Z\"},{\"name\":\"Post Set up Node.js\",\"status\":\"completed\",\"conclusion\":\"success\",\"number\":14,\"started_at\":\"2026-10-13T14:32:58Z\",\"completed_at\":\"2026-10-13T14:32:58Z\"},{\"name\":\"Post Set up Go\",\"status\":\"completed\",\"conclusion\":\"success\",\"number\":15,\"started_at\":\"2026-10-13T14:32:58Z\",\"completed_at\":\"2026-10-13T14:32:58Z\"},{\"name\":\"Post Check out source\",\"status\":\"completed\",\"conclusion\":\"success\",\"number\":16,\"started_at\":\"2026-10-13T14:32:58Z\",\"completed_at\":\"2026-10-13T14:32:58Z\"},{\"name\":\"Complete job\",\"status\":\"completed\",\"conclusion\":\"success\",\"number\":17,\"started_at\":\"2026-10-13T14:32:58Z\",\"completed_at\":\"2026-10-13T14:32:58Z\"}],\"check_run_url\":\"https://api.github.com/repos/jihadismail8/netbox-go/check-runs/115346242181\",\"labels\":[\"ubuntu-24.04\"],\"runner_id\":1000000122,\"runner_name\":\"GitHub Actions 1000000122\",\"runner_group_id\":0,\"runner_group_name\":\"GitHub Actions\"}"
+  },
+  "actual_distinct_closeout_integrity": {
+    "scope": "CW1-V2-02-I13 exact standing-closeout post-capture integrity",
+    "head": "85e1f3ee863bb16f320c58f3c2e88b991647a227",
+    "parent": "77197e854725bba6e625e5fcfb05468aa43caf27",
+    "branch": "work/cw1-v2-02-i13-prefix-presence",
+    "source_digest": "source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260",
+    "files": 3103,
+    "manifest_sha256": "d5415b01eb9068a813c1f12922551753afc9d239fac9d597820ac1d480d2d2d2",
+    "mapping_sha256": "5e1c124078a19fec4a6c8974095741415140b0dcfe83b787b3f4b75b0e16ae30",
+    "capture_recorded_at": "2026-10-13T14:34:12.740Z",
+    "capture_receipt_sha256": "eaf42cbbf99046954df28f2a525c87c3de77915ceae971830a8c3c605dca4cf6",
+    "root_reviewer": "/root",
+    "root_verdict": "PASS",
+    "root_reviewed_at": "2026-10-13T14:37:13Z",
+    "root_raw_reviewed_at": "2026-10-13T14:36:58.590Z",
+    "independent_reviewer": "/root/i11_receipt_integrity_review",
+    "independent_verdict": "PASS",
+    "independent_reviewed_at": "2026-10-13T14:36:24.095Z",
+    "independent_of_phase_authors": true,
+    "verdict": "PASS",
+    "run_id": 38411941932,
+    "job_id": 115346242181,
+    "run_attempt": 1,
+    "all_steps_successful": true,
+    "steps": 12,
+    "raw_run_sha256": "f379c87b3d27ff26a06af00c4934ce4050fb2bd20a587ac90c3aae35e6d28fb0",
+    "raw_job_sha256": "061710a38c02458d255c6620a880f6949bc71dcbc53489e32ad2533b57c25bf5",
+    "reachable_message_sha256": "a8114f556d4d3bacead175f94d8210c2ca0945830a3403dbf3aff0bf1226e897",
+    "actual_frozen_local_gate_pairs": 2,
+    "complete_source_tree_message_mapping_and_publication_authenticated": true,
+    "fresh_human_inspection": false,
+    "implementation_acceptance_applied": true,
+    "done_applied": false,
+    "tier_consumer_parent_profile_closure": false
+  },
+  "unchanged_existing_standing_application": {
+    "schema_version": 1,
+    "increment": "CW1-V2-02-I13",
+    "actor": "executor",
+    "applied_at": "2026-10-13T13:02:43Z",
+    "accepted_receipt": "77197e854725bba6e625e5fcfb05468aa43caf27",
+    "tested_revision": "1dc5a472032abda9c9b41a855ca7df8f8d4e2bb7",
+    "tested_digest": "source-v2:sha256:9266635d9d19148844271972e45514a224dd4b5e4d4a843ebba536ffaa68bfab",
+    "receipt_digest": "source-v2:sha256:74f1cb1101a64ed15f4b8ea5f544c015d8bee4b78a6dcd8acb0e0fab667bf08c",
+    "receipt_files": 3103,
+    "receipt_manifest_sha256": "b50630c0c1ec6ea4d7de9e6e9f7a27d2c36fcc56f8934f5d53de685e57a2cdca",
+    "authority": "Owner's existing standing instruction permits routine reversible in-profile execution and bounded implementation evidence acceptance without another routine approval prompt.",
+    "basis": "Known bounded Prefix implementation candidate, its retained reviewed claim, and exact two-file receipt 77197e854725bba6e625e5fcfb05468aa43caf27 have actual green pinned gates, exact-SHA CI, and distinct root plus independent post-capture integrity reviews. This executor application uses existing standing authorization, not fresh human inspection or a designated sign-off.",
+    "scope": "Prefix seven-field (prefix, vrf, status, is_pool, mark_utilized, description, comments) common scalar create/PUT/PATCH presence, operation contracts, shared REST/gRPC semantics, PostgreSQL durability/rollback, and Vue dirty-field/error presentation tests.",
+    "closeout_condition": "Implementation done becomes effective only after separately reviewed eight-path closeout and final two-path excluded receipt pass required integrity, pinned local and exact-SHA CI gates.",
+    "not_claimed": [
+      "fresh human inspection",
+      "formal retained-claim authentication",
+      "designated human sign-offs",
+      "T2/T3/T4",
+      "consumer/aggregate/parent/profile completion",
+      "full CRUD/uniqueness/deletion/list/query/downstream policy",
+      "rewrite/deployment/production readiness",
+      "later increment"
+    ],
+    "receipt_ci": {
+      "run_id": 38398462515,
+      "job_id": 115299600865,
+      "attempt": 1,
+      "raw_run_sha256": "78ac5623d54aa088e73601728a71005654ee184c0f5fcc04bce4a9f1c15d9075",
+      "raw_job_sha256": "3d3cd8c0514a40bf92334c8f9cb99efef4a8088eda2fa433ed3e88bbdce9a015"
+    }
+  },
+  "actual_separate_final_emitter_release": {
+    "schema_version": 1,
+    "scope": "CW1-V2-02-I13 final excluded receipt append preparation",
+    "root_reviewer": "/root",
+    "root_verdict": "PASS",
+    "root_reviewed_at": "2026-10-13T14:39:14.237Z",
+    "independent_reviewer": "/root/i11_precloseout_receipt_plan",
+    "independent_verdict": "PASS",
+    "independent_reviewed_at": "2026-10-13T14:41:44Z",
+    "independent_of_phase_authors": true,
+    "writers_stopped": true,
+    "helper_sha256": "5ce7baaade7a2414b6afb27abbb16c6f07ebea172e4b7ffc666bfc218410fe09",
+    "prose_sha256": "913de09d62e3befc1953203f9480ca9033d71e78fcd7fd7d123c4a8debb43bd0",
+    "closeout_head": "85e1f3ee863bb16f320c58f3c2e88b991647a227",
+    "source_digest": "source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260",
+    "files": 3103,
+    "manifest_sha256": "d5415b01eb9068a813c1f12922551753afc9d239fac9d597820ac1d480d2d2d2",
+    "mapping_sha256": "5e1c124078a19fec4a6c8974095741415140b0dcfe83b787b3f4b75b0e16ae30",
+    "closeout_freeze_sha256": "5efa71389bfba684d6c6cda360d8d4acb52c4e25dbb86fe84824a7732c3403ce",
+    "closeout_ci_receipt_sha256": "eaf42cbbf99046954df28f2a525c87c3de77915ceae971830a8c3c605dca4cf6",
+    "closeout_integrity_review_sha256": "b7e184bb35230fe5561828dd1c55f98ce9b1d47ce8bb5abb8b2cc0287d17302c",
+    "standing_application_sha256": "e39451540dd367f3b65544ba4990723f37f119b58bbda4234a2bb7ec53b25eed",
+    "two_path_bytes": [
+      {
+        "path": "docs/evidence/2026-10-13-core-workflow-v2-prefix-scalar-presence-i13-v0.md",
+        "mode": "100644",
+        "bytes": 2846845,
+        "sha256": "d00d07e4f055fd1fc9a42e66189b3c021c44669eab06c3e57fab2ebc7852f9f9"
+      },
+      {
+        "path": "docs/evidence/README.md",
+        "mode": "100644",
+        "bytes": 46338,
+        "sha256": "c6d04faadf1a4a982c65e06c77749aee6dfdeaf69e44711a3fd403726475e57a"
+      }
+    ]
+  }
+}
+```

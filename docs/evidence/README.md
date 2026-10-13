@@ -700,3 +700,9 @@ network/containment/uniqueness, tier/consumer/parent/profile, rewrite, deploymen
 or production boundary closes. The oracle remains unavailable, T2/T3/T4 and
 formal human sign-offs unearned, disposable database/credential absent and
 23 existing npm advisories unchanged.
+
+## I13 final excluded receipt preparation
+
+The preceding I13 closeout pending statements describe its historical assembly boundary. Its actual known green eight-file standing closeout, complete mapped committed bytes, both local gates, normal publication, terminal exact-SHA CI and distinct integrity reviews are retained in the [bounded Prefix scalar artifact](2026-10-13-core-workflow-v2-prefix-scalar-presence-i13-v0.md#actual-standing-closeout-boundary-and-final-excluded-receipt-preparation).
+
+This final two-file source-v2-excluded receipt preserves the entire preceding artifact and native source. Its own independent review, two frozen pinned local gates and exact-SHA CI remain pending. Bounded I13 implementation done is not yet effective; the existing executor standing application is unchanged and is not reapplied. No successor/profile work, fresh human inspection, formal sign-off, tier/consumer/parent/profile or production promotion is claimed. No own future receipt SHA/hash/CI is predicted.
