@@ -280,6 +280,160 @@ func TestPostgresPrefixScalarPresenceDurability(t *testing.T) {
 	}
 }
 
+func TestPostgresPrefixNetworkCanonicalDurabilityAndRollback(t *testing.T) {
+	cases := []struct {
+		name, input, canonical, description string
+		family                              uint32
+		bits                                int
+	}{
+		{"canonical IPv4", "198.51.100.0/24", "198.51.100.0/24", "", 4, 24},
+		{"bare IPv4 host", "203.0.113.17", "203.0.113.17/32", "", 4, 32},
+		{"canonical IPv6", "2001:db8:10::/64", "2001:db8:10::/64", "", 6, 64},
+		{"expanded IPv6 host", "2001:0DB8:0020:0000:0000:0000:0000:0017", "2001:db8:20::17/128", "", 6, 128},
+		{"expanded IPv6 network", "2001:0DB8:0030:0000:0000:0000:0000:0000/64", "2001:db8:30::/64", "", 6, 64},
+		{"IPv4 host bits", "203.0.113.17/24", "", "203.0.113.17/24 is not a valid prefix. Did you mean 203.0.113.0/24?", 0, 0},
+		{"IPv6 host bits", "2001:db8:40::17/64", "", "2001:db8:40::17/64 is not a valid prefix. Did you mean 2001:db8:40::/64?", 0, 0},
+		{"IPv4 slash zero", "0.0.0.0/0", "", "Cannot create prefix with /0 mask.", 0, 0},
+		{"IPv6 slash zero", "::/0", "", "Cannot create prefix with /0 mask.", 0, 0},
+	}
+	seedAt := time.Date(2026, time.October, 13, 18, 0, 0, 0, time.UTC)
+	at := seedAt.Add(time.Minute)
+	for _, test := range cases {
+		for _, operation := range []string{"create", "replace", "update"} {
+			t.Run("matrix/"+test.name+"/"+operation, func(t *testing.T) {
+				db, principal, vrfs := newPrefixScalarPostgres(t)
+				repository, recorder := NewPrefixRepository(db), postgreschangelog.NewRecorder(db)
+				id, before, expected := preparePostgresPrefixNetworkMutation(t, db, principal, repository, recorder, vrfs[0].ID, operation, seedAt)
+				fields := applicationipam.CreatePrefixCommand{Prefix: applicationipam.FieldValue(test.input)}
+				if operation == "create" {
+					fields = prefixNetworkPostgresFields(test.input, vrfs[0].ID)
+				}
+				service := newPostgresPrefixPresenceService(t, db, at, repository, recorder)
+				result, err := mutatePostgresPrefixPresence(t.Context(), service, principal, operation, id, fields)
+				if test.description != "" {
+					require.Nil(t, result)
+					require.True(t, shared.HasReason(err, shared.ErrorReasonValidation), err)
+					require.Equal(t, []shared.FieldViolation{{Field: "prefix", Reason: "invalid", Description: test.description}}, shared.ViolationsOf(err))
+					require.Equal(t, before, loadPostgresPrefixPresenceState(t, db))
+					return
+				}
+				require.NoError(t, err)
+				require.NotNil(t, result)
+				require.True(t, result.ID().IsValid())
+				if operation == "create" {
+					expected.ID, expected.Created = result.ID().Int64(), at
+				} else {
+					require.Equal(t, id, result.ID())
+				}
+				expected.Prefix, expected.LastUpdated = test.canonical, at
+				requirePostgresPrefixPresenceMutation(t, db, before, expected, operation == "create", principal.ID)
+				require.Equal(t, test.canonical, result.Network().String())
+				require.Equal(t, test.canonical, result.Display())
+				require.Equal(t, test.canonical, result.State().Prefix)
+				require.Equal(t, test.canonical, result.Snapshot().Prefix)
+				require.Equal(t, test.family, result.Family())
+				require.Equal(t, test.bits, result.Network().Bits())
+				requirePostgresPrefixPresenceReload(t, repository, result)
+			})
+		}
+	}
+	for _, failure := range []string{"repository", "recorder"} {
+		for _, operation := range []string{"create", "replace", "update"} {
+			t.Run("late error/"+failure+"/"+operation, func(t *testing.T) {
+				db, principal, vrfs := newPrefixScalarPostgres(t)
+				repository, recorder := NewPrefixRepository(db), postgreschangelog.NewRecorder(db)
+				id, before, expected := preparePostgresPrefixNetworkMutation(t, db, principal, repository, recorder, vrfs[0].ID, operation, seedAt)
+				sentinel := errors.New("forced network proof error after actual Prefix delegate")
+				observed := 0
+				observe := func(ctx context.Context, item *domainipam.Prefix) {
+					observed++
+					tx, bound := postgrestransaction.FromContext(ctx)
+					require.True(t, bound)
+					inside := loadPostgresPrefixPresenceState(t, tx)
+					if operation == "create" {
+						expected.ID, expected.Created = item.ID().Int64(), at
+					} else {
+						require.Equal(t, id, item.ID())
+					}
+					expected.Prefix, expected.LastUpdated = "2001:db8:50::/64", at
+					actual := postgresPrefixPresenceRow(t, inside, expected.ID)
+					require.True(t, actual.Created.Equal(expected.Created))
+					require.True(t, actual.LastUpdated.Equal(expected.LastUpdated))
+					actual.Created, actual.LastUpdated = expected.Created, expected.LastUpdated
+					require.Equal(t, expected, actual)
+					require.Equal(t, before.vrfs, inside.vrfs)
+					count := len(before.prefixes)
+					if operation == "create" {
+						count++
+					}
+					require.Len(t, inside.prefixes, count)
+					for _, prior := range before.prefixes {
+						if prior.ID != expected.ID {
+							require.Equal(t, prior, postgresPrefixPresenceRow(t, inside, prior.ID))
+						}
+					}
+					require.Equal(t, "2001:db8:50::/64", item.Network().String())
+					require.Equal(t, "2001:db8:50::/64", item.State().Prefix)
+					require.Equal(t, "2001:db8:50::/64", item.Snapshot().Prefix)
+					require.Equal(t, uint32(6), item.Family())
+					require.Equal(t, 64, item.Network().Bits())
+					if failure == "recorder" {
+						requirePostgresPrefixPresenceChange(t, inside, before, expected, operation == "create", principal.ID)
+					} else {
+						require.Equal(t, before.changes, inside.changes)
+					}
+				}
+				var activeRepository applicationipam.PrefixRepository = repository
+				var activeRecorder applicationchangelog.Recorder = recorder
+				if failure == "repository" {
+					activeRepository = &prefixPresenceFailingRepository{PrefixRepository: repository, observe: observe, err: sentinel}
+				} else {
+					activeRecorder = &prefixPresenceFailingRecorder{delegate: recorder, repository: repository, observe: observe, err: sentinel}
+				}
+				fields := applicationipam.CreatePrefixCommand{Prefix: applicationipam.FieldValue("2001:0DB8:0050:0000:0000:0000:0000:0000/64")}
+				if operation == "create" {
+					fields = prefixNetworkPostgresFields("2001:0DB8:0050:0000:0000:0000:0000:0000/64", vrfs[0].ID)
+				}
+				service := newPostgresPrefixPresenceService(t, db, at, activeRepository, activeRecorder)
+				result, err := mutatePostgresPrefixPresence(t.Context(), service, principal, operation, id, fields)
+				require.ErrorIs(t, err, sentinel)
+				require.Nil(t, result)
+				require.Equal(t, 1, observed)
+				require.Equal(t, before, loadPostgresPrefixPresenceState(t, db), "delegated rows, relations, times and canonical change snapshots must roll back")
+			})
+		}
+	}
+}
+
+func prefixNetworkPostgresFields(network string, vrfID int64) applicationipam.CreatePrefixCommand {
+	return applicationipam.CreatePrefixCommand{
+		Prefix: applicationipam.FieldValue(network), VRF: applicationipam.FieldValue(vrfID),
+		Status: applicationipam.FieldValue("reserved"), IsPool: applicationipam.FieldValue(true), MarkUtilized: applicationipam.FieldValue(true),
+		Description: applicationipam.FieldValue("network proof description"), Comments: applicationipam.FieldValue("network proof comments"),
+	}
+}
+
+func preparePostgresPrefixNetworkMutation(t *testing.T, db *gorm.DB, principal identity.Principal, repository *PrefixRepository, recorder *postgreschangelog.Recorder, vrfID int64, operation string, seedAt time.Time) (shared.ID, postgresPrefixPresenceState, ipamrow.PrefixRow) {
+	t.Helper()
+	before := loadPostgresPrefixPresenceState(t, db)
+	require.Empty(t, before.prefixes)
+	require.Empty(t, before.changes)
+	expected := ipamrow.PrefixRow{
+		Prefix: "192.0.2.0/24", VRFID: int64Pointer(vrfID), Status: "reserved", IsPool: true, MarkUtilized: true,
+		Description: "network proof description", Comments: "network proof comments",
+	}
+	if operation == "create" {
+		return 0, before, expected
+	}
+	service := newPostgresPrefixPresenceService(t, db, seedAt, repository, recorder)
+	seed, err := service.CreatePrefix(t.Context(), principal, prefixNetworkPostgresFields("192.0.2.0/24", vrfID))
+	require.NoError(t, err)
+	require.NotNil(t, seed)
+	expected.ID, expected.Created, expected.LastUpdated = seed.ID().Int64(), seedAt, seedAt
+	before = requirePostgresPrefixPresenceMutation(t, db, before, expected, true, principal.ID)
+	return seed.ID(), before, expected
+}
+
 func mutatePostgresPrefixPresence(ctx context.Context, service *applicationipam.PrefixService, principal identity.Principal, operation string, id shared.ID, fields applicationipam.CreatePrefixCommand) (*domainipam.Prefix, error) {
 	switch operation {
 	case "create":

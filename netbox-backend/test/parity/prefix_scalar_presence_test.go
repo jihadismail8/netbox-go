@@ -306,6 +306,153 @@ func TestPrefixScalarPresenceRESTGRPCParity(t *testing.T) {
 	// This in-process boundary earns neither a pinned external differential nor a compatibility tier.
 }
 
+func TestPrefixNetworkRESTGRPCParity(t *testing.T) {
+	cases := []struct {
+		name, input, canonical, description string
+	}{
+		{"canonical IPv4", "198.51.100.0/24", "198.51.100.0/24", ""},
+		{"bare IPv4 host", "203.0.113.17", "203.0.113.17/32", ""},
+		{"canonical IPv6", "2001:db8:10::/64", "2001:db8:10::/64", ""},
+		{"expanded IPv6 host", "2001:0DB8:0020:0000:0000:0000:0000:0017", "2001:db8:20::17/128", ""},
+		{"expanded IPv6 network", "2001:0DB8:0030:0000:0000:0000:0000:0000/64", "2001:db8:30::/64", ""},
+		{"IPv4 host bits", "203.0.113.17/24", "", "203.0.113.17/24 is not a valid prefix. Did you mean 203.0.113.0/24?"},
+		{"IPv6 host bits", "2001:db8:40::17/64", "", "2001:db8:40::17/64 is not a valid prefix. Did you mean 2001:db8:40::/64?"},
+		{"IPv4 slash zero", "0.0.0.0/0", "", "Cannot create prefix with /0 mask."},
+		{"IPv6 slash zero", "::/0", "", "Cannot create prefix with /0 mask."},
+	}
+	for _, test := range cases {
+		for _, method := range []string{http.MethodPost, http.MethodPut, http.MethodPatch} {
+			for _, transport := range []string{"REST", "gRPC"} {
+				t.Run(test.name+"/"+method+"/"+transport, func(t *testing.T) {
+					environment := newPrefixPresenceParityEnvironment(t)
+					before := loadPrefixPresenceParityState(t, environment)
+					require.Empty(t, before.prefixes)
+					require.Empty(t, before.changes)
+					expected := ipamrow.PrefixRow{
+						Prefix: "192.0.2.0/24", VRFID: pointer(environment.vrfs[0].ID), Status: "reserved", IsPool: true, MarkUtilized: true,
+						Description: "network proof description", Comments: "network proof comments",
+					}
+					var id int64
+					if method != http.MethodPost {
+						expected.Created, expected.LastUpdated = environment.clock.Now().Add(time.Minute), environment.clock.Now().Add(time.Minute)
+						environment.rest.reset()
+						environment.grpc.reset()
+						id = createPrefixPresenceParity(t, environment, transport, prefixNetworkParityInput("192.0.2.0/24", environment.vrfs[0].ID))
+						expected.ID = id
+						before = requirePrefixPresenceParityMutation(t, environment, before, id, true)
+						requirePrefixNetworkParityRow(t, prefixPresenceParityRow(t, before, id), expected)
+					}
+					input := &ipamv1.PrefixInput{Prefix: pointer(test.input)}
+					if method == http.MethodPost {
+						input = prefixNetworkParityInput(test.input, environment.vrfs[0].ID)
+					}
+					environment.rest.reset()
+					environment.grpc.reset()
+					if test.description != "" {
+						violations := []shared.FieldViolation{{Field: "prefix", Reason: "invalid", Description: test.description}}
+						if transport == "REST" {
+							response := requestJSON(t, environment.router, method, prefixPresenceParityMutationPath(method, id), prefixPresenceParityBody(input), http.StatusBadRequest)
+							require.Equal(t, 1, environment.rest.calls())
+							require.Zero(t, environment.grpc.calls())
+							require.Equal(t, violations, environment.rest.violations())
+							requirePrefixPresenceRESTViolations(t, response, violations)
+						} else {
+							var err error
+							switch method {
+							case http.MethodPost:
+								var response *ipamv1.CreatePrefixResponse
+								response, err = environment.rpc.CreatePrefix(environment.ctx, &ipamv1.CreatePrefixRequest{Prefix: input})
+								require.Nil(t, response)
+							case http.MethodPut:
+								var response *ipamv1.ReplacePrefixResponse
+								response, err = environment.rpc.ReplacePrefix(environment.ctx, &ipamv1.ReplacePrefixRequest{Id: id, Prefix: input})
+								require.Nil(t, response)
+							case http.MethodPatch:
+								var response *ipamv1.UpdatePrefixResponse
+								response, err = environment.rpc.UpdatePrefix(environment.ctx, &ipamv1.UpdatePrefixRequest{Id: id, Prefix: input})
+								require.Nil(t, response)
+							}
+							requirePrefixPresenceRPCInvalid(t, err)
+							require.Equal(t, 1, environment.grpc.calls())
+							require.Zero(t, environment.rest.calls())
+							require.Equal(t, violations, environment.grpc.violations())
+						}
+						require.Equal(t, before, loadPrefixPresenceParityState(t, environment), "each rejected transport mutation preserves complete rows, timestamps, relations and change snapshots")
+						return
+					}
+					at := environment.clock.Now().Add(time.Minute)
+					environment.clock.advance()
+					var rest map[string]any
+					var rpc *ipamv1.Prefix
+					if transport == "REST" {
+						wantStatus := http.StatusOK
+						if method == http.MethodPost {
+							wantStatus = http.StatusCreated
+						}
+						rest = requestJSON(t, environment.router, method, prefixPresenceParityMutationPath(method, id), prefixPresenceParityBody(input), wantStatus)
+						if method == http.MethodPost {
+							id = jsonID(t, rest["id"])
+						}
+					} else {
+						switch method {
+						case http.MethodPost:
+							response, err := environment.rpc.CreatePrefix(environment.ctx, &ipamv1.CreatePrefixRequest{Prefix: input})
+							require.NoError(t, err)
+							require.NotNil(t, response)
+							rpc = response.Prefix
+						case http.MethodPut:
+							response, err := environment.rpc.ReplacePrefix(environment.ctx, &ipamv1.ReplacePrefixRequest{Id: id, Prefix: input})
+							require.NoError(t, err)
+							require.NotNil(t, response)
+							rpc = response.Prefix
+						case http.MethodPatch:
+							response, err := environment.rpc.UpdatePrefix(environment.ctx, &ipamv1.UpdatePrefixRequest{Id: id, Prefix: input})
+							require.NoError(t, err)
+							require.NotNil(t, response)
+							rpc = response.Prefix
+						}
+						require.NotNil(t, rpc)
+						if method == http.MethodPost {
+							id = rpc.Id
+						}
+					}
+					if method == http.MethodPost {
+						expected.ID, expected.Created = id, at
+					}
+					expected.Prefix, expected.LastUpdated = test.canonical, at
+					after := requirePrefixPresenceParityMutation(t, environment, before, id, method == http.MethodPost)
+					requirePrefixNetworkParityRow(t, prefixPresenceParityRow(t, after, id), expected)
+					if transport == "REST" {
+						require.Equal(t, 1, environment.rest.calls())
+						require.Empty(t, environment.rest.violations())
+						require.Zero(t, environment.grpc.calls())
+					} else {
+						require.Equal(t, 1, environment.grpc.calls())
+						require.Empty(t, environment.grpc.violations())
+						require.Zero(t, environment.rest.calls())
+					}
+					requirePrefixPresenceParityResponse(t, environment, id, rest, rpc)
+				})
+			}
+		}
+	}
+}
+
+func prefixNetworkParityInput(network string, vrfID int64) *ipamv1.PrefixInput {
+	return &ipamv1.PrefixInput{
+		Prefix: pointer(network), Vrf: wrapperspb.Int64(vrfID), Status: pointer("reserved"), IsPool: pointer(true), MarkUtilized: pointer(true),
+		Description: pointer("network proof description"), Comments: pointer("network proof comments"),
+	}
+}
+
+func requirePrefixNetworkParityRow(t *testing.T, actual, expected ipamrow.PrefixRow) {
+	t.Helper()
+	require.True(t, actual.Created.Equal(expected.Created))
+	require.True(t, actual.LastUpdated.Equal(expected.LastUpdated))
+	actual.Created, actual.LastUpdated = expected.Created, expected.LastUpdated
+	require.Equal(t, expected, actual)
+}
+
 func createPrefixPresenceParity(t *testing.T, environment *prefixPresenceParityEnvironment, transport string, input *ipamv1.PrefixInput) int64 {
 	t.Helper()
 	environment.clock.advance()

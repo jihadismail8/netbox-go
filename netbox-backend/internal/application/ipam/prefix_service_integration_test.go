@@ -372,6 +372,122 @@ func TestPrefixScalarValidationLeavesStateUnchanged(t *testing.T) {
 	}
 }
 
+func TestPrefixNetworkMutationStateAndEffects(t *testing.T) {
+	cases := []struct {
+		name, input, canonical, description string
+		family                              uint32
+		bits                                int
+	}{
+		{name: "IPv4 network", input: "198.51.100.0/24", canonical: "198.51.100.0/24", family: 4, bits: 24},
+		{name: "IPv4 bare host", input: "203.0.113.17", canonical: "203.0.113.17/32", family: 4, bits: 32},
+		{name: "IPv6 network", input: "2001:db8:10::/64", canonical: "2001:db8:10::/64", family: 6, bits: 64},
+		{name: "expanded IPv6 bare host", input: "2001:0DB8:0020:0000:0000:0000:0000:0017", canonical: "2001:db8:20::17/128", family: 6, bits: 128},
+		{name: "expanded IPv6 network", input: "2001:0DB8:0030:0000:0000:0000:0000:0000/64", canonical: "2001:db8:30::/64", family: 6, bits: 64},
+		{name: "IPv4 host bits", input: "203.0.113.17/24", description: "203.0.113.17/24 is not a valid prefix. Did you mean 203.0.113.0/24?"},
+		{name: "IPv6 host bits", input: "2001:db8:40::17/64", description: "2001:db8:40::17/64 is not a valid prefix. Did you mean 2001:db8:40::/64?"},
+		{name: "IPv4 slash zero", input: "0.0.0.0/0", description: "Cannot create prefix with /0 mask."},
+		{name: "IPv6 slash zero", input: "::/0", description: "Cannot create prefix with /0 mask."},
+	}
+	for _, operation := range []string{"POST", "PUT", "PATCH"} {
+		for _, test := range cases {
+			t.Run(operation+"/"+test.name, func(t *testing.T) {
+				db, service, observer, recorder, clock, seed := newPrefixScalarObservedService(t, &authz.AllowAll{})
+				before := prefixScalarDatabaseState(t, db)
+				result, err := invokePrefixScalarMutation(t, service, operation, seed.ID(), createPrefixCommand(test.input, nil))
+				if test.description != "" {
+					require.Error(t, err)
+					assert.Nil(t, result)
+					assert.Equal(t, []shared.FieldViolation{{Field: "prefix", Reason: "invalid", Description: test.description}}, shared.ViolationsOf(err))
+					assert.Zero(t, clock.calls)
+					assert.Zero(t, observer.writes)
+					assert.Zero(t, recorder.calls)
+					assert.Equal(t, before, prefixScalarDatabaseState(t, db))
+					if operation != "POST" {
+						require.NotNil(t, observer.loaded)
+						assert.Equal(t, observer.before, observer.loaded.State())
+					}
+					return
+				}
+				require.NoError(t, err)
+				require.NotNil(t, result)
+				assert.Equal(t, 1, clock.calls)
+				assert.Equal(t, 1, observer.writes)
+				assert.Equal(t, 1, recorder.calls)
+				assert.True(t, result.ID().IsValid())
+				want := domainipam.PrefixSnapshot{Prefix: test.canonical, VRF: domainipam.NullVRFReference(), Status: "active"}
+				created, action := clock.now, changelog.ActionCreate
+				if operation != "POST" {
+					want.VRF, want.Status = seed.VRF(), "reserved"
+					want.IsPool, want.MarkUtilized = true, true
+					want.Description, want.Comments = "original description", "original comments"
+					created, action = seed.Created(), changelog.ActionUpdate
+					assert.Equal(t, seed.ID(), result.ID())
+				} else {
+					assert.NotEqual(t, seed.ID(), result.ID())
+				}
+				assert.Equal(t, test.family, result.Family())
+				assert.Equal(t, test.bits, result.Network().Bits())
+				assert.Equal(t, test.canonical, result.Display())
+				assert.Equal(t, want, result.Snapshot())
+				assert.Equal(t, domainipam.PrefixState{
+					ID: result.ID(), Prefix: test.canonical, VRF: want.VRF, Status: want.Status,
+					IsPool: want.IsPool, MarkUtilized: want.MarkUtilized,
+					Description: want.Description, Comments: want.Comments,
+					Created: created, LastUpdated: clock.now, Children: 0, Depth: 0,
+				}, result.State())
+				reloaded, err := observer.Get(t.Context(), result.ID())
+				require.NoError(t, err)
+				assert.Equal(t, result.State(), reloaded.State())
+				after := prefixScalarDatabaseState(t, db)
+				assert.Equal(t, before.vrfs, after.vrfs)
+				require.Len(t, after.changes, len(before.changes)+1)
+				assert.Equal(t, before.changes, after.changes[:len(before.changes)])
+				rowIndex := 0
+				if operation == "POST" {
+					require.Len(t, after.prefixes, len(before.prefixes)+1)
+					assert.Equal(t, before.prefixes, after.prefixes[:len(before.prefixes)])
+					rowIndex = len(before.prefixes)
+				} else {
+					require.Len(t, after.prefixes, len(before.prefixes))
+				}
+				row := after.prefixes[rowIndex]
+				assert.Equal(t, result.ID().Int64(), row.ID)
+				assert.Equal(t, test.canonical, row.Prefix)
+				assert.Equal(t, want.Status, row.Status)
+				assert.Equal(t, want.IsPool, row.IsPool)
+				assert.Equal(t, want.MarkUtilized, row.MarkUtilized)
+				assert.Equal(t, want.Description, row.Description)
+				assert.Equal(t, want.Comments, row.Comments)
+				assert.Equal(t, created.Time, row.Created)
+				assert.Equal(t, clock.now.Time, row.LastUpdated)
+				if operation == "POST" {
+					assert.Nil(t, row.VRFID)
+				} else {
+					require.NotNil(t, row.VRFID)
+					reference, present := seed.VRF().Get()
+					require.True(t, present)
+					assert.Equal(t, reference.ID().Int64(), *row.VRFID)
+				}
+				change := after.changes[len(before.changes)]
+				assert.Equal(t, int64(17), change.ActorID)
+				assert.Equal(t, domainipam.PrefixObjectType, change.Kind)
+				assert.Equal(t, result.ID().Int64(), change.ObjectID)
+				assert.Equal(t, string(action), change.Action)
+				assert.Equal(t, clock.now.Time, change.OccurredAt)
+				if operation == "POST" {
+					assert.Empty(t, change.BeforeData)
+				} else {
+					assert.JSONEq(t, prefixScalarSnapshotJSON(t, domainipam.PrefixSnapshot{
+						Prefix: "192.0.2.0/24", VRF: seed.VRF(), Status: "reserved", IsPool: true, MarkUtilized: true,
+						Description: "original description", Comments: "original comments",
+					}), string(change.BeforeData))
+				}
+				assert.JSONEq(t, prefixScalarSnapshotJSON(t, want), string(change.AfterData))
+			})
+		}
+	}
+}
+
 func invokePrefixScalarMutation(
 	t *testing.T, service *applicationipam.PrefixService, operation string, id shared.ID,
 	command applicationipam.CreatePrefixCommand,

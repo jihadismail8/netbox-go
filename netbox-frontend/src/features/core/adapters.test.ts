@@ -1803,3 +1803,110 @@ describe('Prefix scalar presence adapters', () => {
     })
   })
 })
+
+describe('Prefix network value adapters', () => {
+  const rows = [
+    { literal: '198.51.100.0/24', canonical: '198.51.100.0/24', family: 4 },
+    { literal: '203.0.113.17', canonical: '203.0.113.17/32', family: 4 },
+    { literal: '2001:db8:10::/64', canonical: '2001:db8:10::/64', family: 6 },
+    {
+      literal: '2001:0DB8:0020:0000:0000:0000:0000:0017',
+      canonical: '2001:db8:20::17/128',
+      family: 6,
+    },
+    {
+      literal: '2001:0DB8:0030:0000:0000:0000:0000:0000/64',
+      canonical: '2001:db8:30::/64',
+      family: 6,
+    },
+    { literal: '203.0.113.17/24', family: 4 },
+    { literal: '2001:db8:40::17/64', family: 6 },
+    { literal: '0.0.0.0/0', family: 4 },
+    { literal: '::/0', family: 6 },
+  ] as const
+
+  function prefixNetworkDTO(prefix = '192.0.2.0/24', family: 4 | 6 = 4): PrefixDTO {
+    return {
+      id: 20,
+      url: '/api/ipam/prefixes/20/',
+      display: prefix,
+      created: '2026-10-13T17:43:00Z',
+      last_updated: '2026-10-13T17:43:00Z',
+      prefix,
+      vrf,
+      status: { value: 'reserved', label: 'Reserved' },
+      is_pool: true,
+      mark_utilized: true,
+      description: ' Existing description ',
+      comments: '**Operator note**',
+      family: { value: family, label: family === 4 ? 'IPv4' : 'IPv6' },
+      children: 0,
+      _depth: 0,
+    }
+  }
+
+  it.each(rows)('forwards $literal literally and preserves its dirty baseline', (row) => {
+    const adapter = getCoreResourceAdapter('prefix')
+    const dto = prefixNetworkDTO()
+    const baseline = adapter.formFromDTO(dto)
+    const changed = {
+      ...(withFormField(baseline, 'prefix', row.literal) as PrefixForm),
+      id: dto.id,
+      url: dto.url,
+      display: 'Response-only display',
+      created: dto.created,
+      last_updated: dto.last_updated,
+      family: dto.family,
+      children: dto.children,
+      _depth: dto._depth,
+      tenant: 99,
+      [Symbol('response-only')]: 'Must not leak',
+    }
+
+    expect(adapter.mutationFromForm(baseline, true)).toEqual({})
+    expect(adapter.mutationFromForm(changed, false)).toEqual({
+      prefix: row.literal,
+      vrf: vrf.id,
+      status: 'reserved',
+      is_pool: true,
+      mark_utilized: true,
+      description: dto.description,
+      comments: dto.comments,
+    })
+    const patch = adapter.mutationFromForm(changed, true)
+    expect(patch).toEqual({ prefix: row.literal })
+    expect(Object.getOwnPropertySymbols(patch)).toEqual([])
+    expect(Object.getOwnPropertySymbols(adapter.mutationFromForm(changed, false))).toEqual([])
+    expect(JSON.parse(JSON.stringify(changed))).toEqual(
+      expect.objectContaining({
+        prefix: row.literal,
+        vrf,
+        status: 'reserved',
+        is_pool: true,
+        mark_utilized: true,
+        description: dto.description,
+        comments: dto.comments,
+      }),
+    )
+    expect(
+      adapter.mutationFromForm(withFormField(changed, 'prefix', dto.prefix) as PrefixForm, true),
+    ).toEqual({})
+    expect(baseline.prefix).toBe('192.0.2.0/24')
+
+    if ('canonical' in row) {
+      // Canonical text is an explicit server fixture, never a client-parsed expectation.
+      const fetched = adapter.formFromDTO(prefixNetworkDTO(row.canonical, row.family))
+      expect(fetched.prefix).toBe(row.canonical)
+      expect(adapter.mutationFromForm(fetched, true)).toEqual({})
+      expect(
+        adapter.mutationFromForm(withFormField(fetched, 'prefix', row.literal) as PrefixForm, true),
+      ).toEqual(row.literal === row.canonical ? {} : { prefix: row.literal })
+      expect(
+        adapter.mutationFromForm(
+          withFormField(fetched, 'prefix', row.canonical) as PrefixForm,
+          true,
+        ),
+      ).toEqual({})
+    }
+  })
+})

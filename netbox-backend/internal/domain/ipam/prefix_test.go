@@ -198,6 +198,88 @@ func TestPrefixScalarNormalizationContract(t *testing.T) {
 	assert.Equal(t, before, loaded.State(), "pure value preview must not change the existing empty-write policy")
 }
 
+func TestPrefixNetworkNormalizationContract(t *testing.T) {
+	t.Parallel()
+
+	cases := []struct {
+		name, input, canonical, description string
+		family                              uint32
+		bits                                int
+	}{
+		{name: "IPv4 network", input: "198.51.100.0/24", canonical: "198.51.100.0/24", family: 4, bits: 24},
+		{name: "IPv4 bare host", input: "203.0.113.17", canonical: "203.0.113.17/32", family: 4, bits: 32},
+		{name: "IPv6 network", input: "2001:db8:10::/64", canonical: "2001:db8:10::/64", family: 6, bits: 64},
+		{name: "expanded IPv6 bare host", input: "2001:0DB8:0020:0000:0000:0000:0000:0017", canonical: "2001:db8:20::17/128", family: 6, bits: 128},
+		{name: "expanded IPv6 network", input: "2001:0DB8:0030:0000:0000:0000:0000:0000/64", canonical: "2001:db8:30::/64", family: 6, bits: 64},
+		{name: "IPv4 host bits", input: "203.0.113.17/24", description: "203.0.113.17/24 is not a valid prefix. Did you mean 203.0.113.0/24?"},
+		{name: "IPv6 host bits", input: "2001:db8:40::17/64", description: "2001:db8:40::17/64 is not a valid prefix. Did you mean 2001:db8:40::/64?"},
+		{name: "IPv4 slash zero", input: "0.0.0.0/0", description: "Cannot create prefix with /0 mask."},
+		{name: "IPv6 slash zero", input: "::/0", description: "Cannot create prefix with /0 mask."},
+	}
+	for _, operation := range []string{"New", "Replace", "ApplyPatch"} {
+		for _, test := range cases {
+			t.Run(operation+"/"+test.name, func(t *testing.T) {
+				vrf := domainipam.NonNullVRFReference(prefixVRFReference(t, 9, "Network VRF", "65000:9", true))
+				values := validPrefixValues(test.input)
+				values.VRF, values.Status = vrf, "reserved"
+				values.IsPool, values.MarkUtilized = true, true
+				values.Description, values.Comments = "original description", "original comments"
+				var prefix *domainipam.Prefix
+				var before domainipam.PrefixState
+				var err error
+				now := prefixDomainTime
+				if operation == "New" {
+					prefix, err = domainipam.NewPrefix(values, now)
+				} else {
+					seedValues := values
+					seedValues.Prefix = "192.0.2.0/24"
+					prefix, err = domainipam.NewPrefix(seedValues, prefixDomainTime)
+					require.NoError(t, err)
+					require.NoError(t, prefix.AssignID(3))
+					before = prefix.State()
+					now = shared.NewTimestamp(prefixDomainTime.Add(time.Hour))
+					if operation == "Replace" {
+						err = prefix.Replace(values, now)
+					} else {
+						err = prefix.ApplyPatch(domainipam.PrefixPatch{Prefix: stringPointer(test.input)}, now)
+					}
+				}
+				if test.description != "" {
+					require.Error(t, err)
+					assert.Equal(t, []shared.FieldViolation{{Field: "prefix", Reason: "invalid", Description: test.description}}, shared.ViolationsOf(err))
+					if operation == "New" {
+						assert.Nil(t, prefix)
+					} else {
+						assert.Equal(t, before, prefix.State(), "rejected network must preserve complete aggregate state")
+					}
+					return
+				}
+				require.NoError(t, err)
+				require.NotNil(t, prefix)
+				wantID := shared.ID(0)
+				if operation != "New" {
+					wantID = 3
+				}
+				assert.True(t, prefix.Network().Valid())
+				assert.Equal(t, test.canonical, prefix.Network().String())
+				assert.Equal(t, test.family, prefix.Network().Family())
+				assert.Equal(t, test.family, prefix.Family())
+				assert.Equal(t, test.bits, prefix.Network().Bits())
+				assert.Equal(t, test.canonical, prefix.Display())
+				assert.Equal(t, domainipam.PrefixState{
+					ID: wantID, Prefix: test.canonical, VRF: vrf, Status: "reserved",
+					IsPool: true, MarkUtilized: true, Description: "original description", Comments: "original comments",
+					Created: prefixDomainTime, LastUpdated: now, Children: 0, Depth: 0,
+				}, prefix.State())
+				assert.Equal(t, domainipam.PrefixSnapshot{
+					Prefix: test.canonical, VRF: vrf, Status: "reserved", IsPool: true, MarkUtilized: true,
+					Description: "original description", Comments: "original comments",
+				}, prefix.Snapshot())
+			})
+		}
+	}
+}
+
 func validPrefixValues(value string) domainipam.PrefixValues {
 	return domainipam.PrefixValues{
 		Prefix: value, VRF: domainipam.NullVRFReference(), Status: domainipam.PrefixStatusActive.String(),

@@ -1,10 +1,15 @@
-import { mount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
+import { createPinia } from 'pinia'
 import { nextTick } from 'vue'
-import { describe, expect, expectTypeOf, it } from 'vitest'
+import { createMemoryHistory, createRouter } from 'vue-router'
+import { describe, expect, expectTypeOf, it, vi } from 'vitest'
 import DynamicField from '@/components/form/DynamicField.vue'
 import DynamicForm from '@/components/form/DynamicForm.vue'
+import TextField from '@/components/form/TextField.vue'
+import CoreResourceEditView from '@/pages/core/CoreResourceEditView.vue'
+import { useNotificationStore } from '@/stores/notifications'
 import { getErrorRecord } from '@/api/errors'
-import type { ApiFailure } from '@/api/http'
+import { http, type ApiFailure } from '@/api/http'
 import { getCoreResourceAdapter } from '@/features/core/adapters'
 import { INTERFACE_TYPE_CHOICES } from '@/features/dcim/interface-types'
 import type {
@@ -1802,4 +1807,246 @@ describe('IPAddress core profile form contract', () => {
       role: null,
     })
   })
+})
+
+describe('Prefix network value form flow', () => {
+  const config = CORE_PROFILE_MODELS.find((model) => model.model === 'prefix')!
+  const adapter = getCoreResourceAdapter('prefix')
+  const rows = [
+    { literal: '198.51.100.0/24', canonical: '198.51.100.0/24', family: 4 },
+    { literal: '203.0.113.17', canonical: '203.0.113.17/32', family: 4 },
+    { literal: '2001:db8:10::/64', canonical: '2001:db8:10::/64', family: 6 },
+    {
+      literal: '2001:0DB8:0020:0000:0000:0000:0000:0017',
+      canonical: '2001:db8:20::17/128',
+      family: 6,
+    },
+    {
+      literal: '2001:0DB8:0030:0000:0000:0000:0000:0000/64',
+      canonical: '2001:db8:30::/64',
+      family: 6,
+    },
+    {
+      literal: '203.0.113.17/24',
+      error: '203.0.113.17/24 is not a valid prefix. Did you mean 203.0.113.0/24?',
+    },
+    {
+      literal: '2001:db8:40::17/64',
+      error: '2001:db8:40::17/64 is not a valid prefix. Did you mean 2001:db8:40::/64?',
+    },
+    { literal: '0.0.0.0/0', error: 'Cannot create prefix with /0 mask.' },
+    { literal: '::/0', error: 'Cannot create prefix with /0 mask.' },
+  ] as const
+
+  function prefixNetworkDTO(prefix = '192.0.2.0/24', family: 4 | 6 = 4): PrefixDTO {
+    return {
+      id: 20,
+      url: '/api/ipam/prefixes/20/',
+      display: prefix,
+      created: '2026-10-13T17:43:00Z',
+      last_updated: '2026-10-13T17:43:00Z',
+      prefix,
+      vrf: null,
+      status: { value: 'reserved', label: 'Reserved' },
+      is_pool: true,
+      mark_utilized: true,
+      description: ' Existing description ',
+      comments: '**Operator note**',
+      family: { value: family, label: family === 4 ? 'IPv4' : 'IPv6' },
+      children: 0,
+      _depth: 0,
+    }
+  }
+
+  async function mountPrefixNetworkPage(editing: boolean) {
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        { path: '/ipam/prefixes/add/', component: { template: '<div />' } },
+        { path: '/ipam/prefixes/:id/edit/', component: { template: '<div />' } },
+        { path: '/ipam/prefixes/', component: { template: '<div />' } },
+      ],
+    })
+    await router.push(editing ? '/ipam/prefixes/20/edit/' : '/ipam/prefixes/add/')
+    await router.isReady()
+    const pinia = createPinia()
+    const notifications = useNotificationStore(pinia)
+    const success = vi.spyOn(notifications, 'success').mockImplementation(() => undefined)
+    const error = vi.spyOn(notifications, 'error').mockImplementation(() => undefined)
+    const wrapper = mount(CoreResourceEditView, {
+      props: { config },
+      global: { plugins: [pinia, router] },
+    })
+    return { wrapper, router, success, error }
+  }
+
+  function prefixNetworkFields(page: Awaited<ReturnType<typeof mountPrefixNetworkPage>>) {
+    return new Map(
+      page.wrapper
+        .findAllComponents(DynamicField)
+        .map((field) => [field.props('field').key, field]),
+    )
+  }
+
+  for (const editing of [false, true]) {
+    describe(editing ? 'PATCH/edit' : 'POST/create', () => {
+      it.each(rows)('forwards $literal through the actual page and form', async (row) => {
+        const pages: Awaited<ReturnType<typeof mountPrefixNetworkPage>>[] = []
+        const seed = prefixNetworkDTO()
+        const canonicalDTO = 'canonical' in row ? prefixNetworkDTO(row.canonical, row.family) : seed
+        let fetches = 0
+        const request = vi.spyOn(http, 'request').mockImplementation(async (options) => {
+          // Earlier form fixtures can still issue relation lookups; isolate Prefix transport.
+          if (options.url !== '/ipam/prefixes/' && options.url !== '/ipam/prefixes/20/') {
+            expect(options.method).toBe('GET')
+            return { data: { count: 0, next: null, previous: null, results: [] } }
+          }
+          if (options.method === 'GET')
+            return { data: editing && fetches++ === 0 ? seed : canonicalDTO }
+          expect(options.method).toBe(editing ? 'PATCH' : 'POST')
+          if ('error' in row) {
+            throw {
+              kind: 'api-failure',
+              status: 400,
+              detail: 'The request failed with status 400.',
+              fields: { prefix: [row.error] },
+              retryable: false,
+            } satisfies ApiFailure
+          }
+          return { data: canonicalDTO }
+        })
+        const prefixRequests = () =>
+          request.mock.calls.filter(
+            ([options]) =>
+              options.url === '/ipam/prefixes/' || options.url === '/ipam/prefixes/20/',
+          )
+
+        try {
+          const page = await mountPrefixNetworkPage(editing)
+          pages.push(page)
+          await flushPromises()
+          if (editing) {
+            expect(prefixRequests()).toHaveLength(1)
+            expect(prefixRequests().at(-1)).toEqual([
+              {
+                method: 'GET',
+                url: '/ipam/prefixes/20/',
+              },
+            ])
+            expect(
+              adapter.mutationFromForm(
+                page.wrapper.getComponent(DynamicForm).props('modelValue') as PrefixForm,
+                true,
+              ),
+            ).toEqual({})
+          } else {
+            expect(prefixRequests()).toEqual([])
+            const fields = prefixNetworkFields(page)
+            await fields.get('status')!.get('select').setValue('reserved')
+            await fields.get('is_pool')!.get('input').setValue(true)
+            await fields.get('mark_utilized')!.get('input').setValue(true)
+            await fields.get('description')!.get('input').setValue(seed.description)
+            await fields.get('comments')!.get('textarea').setValue(seed.comments)
+          }
+
+          const fields = prefixNetworkFields(page)
+          const optionalState = Object.fromEntries(
+            [...fields]
+              .filter(([key]) => key !== 'prefix')
+              .map(([key, field]) => [key, field.props('modelValue')]),
+          )
+          expect(optionalState).toEqual({
+            vrf: editing ? null : undefined,
+            status: 'reserved',
+            is_pool: true,
+            mark_utilized: true,
+            description: seed.description,
+            comments: seed.comments,
+          })
+          const input = fields.get('prefix')!.getComponent(TextField).get('input')
+          await input.setValue(row.literal)
+          expect((input.element as HTMLInputElement).value).toBe(row.literal)
+          await page.wrapper.get('form').trigger('submit')
+          await flushPromises()
+
+          expect(prefixRequests()).toHaveLength(editing ? 2 : 1)
+          const payload = editing
+            ? { prefix: row.literal }
+            : {
+                prefix: row.literal,
+                status: 'reserved',
+                is_pool: true,
+                mark_utilized: true,
+                description: seed.description,
+                comments: seed.comments,
+              }
+          expect(prefixRequests().at(-1)).toEqual([
+            {
+              method: editing ? 'PATCH' : 'POST',
+              url: editing ? '/ipam/prefixes/20/' : '/ipam/prefixes/',
+              data: payload,
+            },
+          ])
+          expect(Object.getOwnPropertySymbols(prefixRequests().at(-1)![0].data)).toEqual([])
+          expect((input.element as HTMLInputElement).value).toBe(row.literal)
+          expect(
+            Object.fromEntries(
+              [...prefixNetworkFields(page)]
+                .filter(([key]) => key !== 'prefix')
+                .map(([key, field]) => [key, field.props('modelValue')]),
+            ),
+          ).toEqual(optionalState)
+
+          if ('error' in row) {
+            for (const [key, field] of prefixNetworkFields(page)) {
+              expect(field.props('error'), key).toBe(key === 'prefix' ? row.error : undefined)
+            }
+            expect(fields.get('prefix')!.text()).toContain(row.error)
+            expect(page.wrapper.find('[role="alert"]').exists()).toBe(false)
+            expect(page.success).not.toHaveBeenCalled()
+            expect(page.error).toHaveBeenCalledOnce()
+            expect(page.router.currentRoute.value.path).toBe(
+              editing ? '/ipam/prefixes/20/edit/' : '/ipam/prefixes/add/',
+            )
+          } else {
+            expect(page.success).toHaveBeenCalledOnce()
+            expect(page.error).not.toHaveBeenCalled()
+            expect(page.router.currentRoute.value.path).toBe('/ipam/prefixes/')
+            // Saving ignores its response DTO; only a new edit fetch hydrates canonical text.
+            page.wrapper.unmount()
+            pages.pop()
+            const fetchedPage = await mountPrefixNetworkPage(true)
+            pages.push(fetchedPage)
+            await flushPromises()
+            expect(prefixRequests()).toHaveLength(editing ? 3 : 2)
+            expect(prefixRequests().at(-1)).toEqual([{ method: 'GET', url: '/ipam/prefixes/20/' }])
+            const fetchedFields = prefixNetworkFields(fetchedPage)
+            const fetchedInput = fetchedFields.get('prefix')!.getComponent(TextField).get('input')
+            expect((fetchedInput.element as HTMLInputElement).value).toBe(row.canonical)
+            expect(
+              Object.fromEntries(
+                [...fetchedFields]
+                  .filter(([key]) => key !== 'prefix')
+                  .map(([key, field]) => [key, field.props('modelValue')]),
+              ),
+            ).toEqual({ ...optionalState, vrf: null })
+            const fetchedForm = () =>
+              fetchedPage.wrapper.getComponent(DynamicForm).props('modelValue') as PrefixForm
+            expect(adapter.mutationFromForm(fetchedForm(), true)).toEqual({})
+            await fetchedInput.setValue(row.literal)
+            expect(adapter.mutationFromForm(fetchedForm(), true)).toEqual(
+              row.literal === row.canonical ? {} : { prefix: row.literal },
+            )
+            await fetchedInput.setValue(row.canonical)
+            expect(adapter.mutationFromForm(fetchedForm(), true)).toEqual({})
+            expect(fetchedPage.success).not.toHaveBeenCalled()
+            expect(fetchedPage.error).not.toHaveBeenCalled()
+          }
+        } finally {
+          for (const page of pages) page.wrapper.unmount()
+          vi.restoreAllMocks()
+        }
+      })
+    })
+  }
 })
