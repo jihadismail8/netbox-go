@@ -121,7 +121,7 @@ production release through PROD-1 and PROD-2.
 | 0    | Stable language and decisions       | CONTEXT plus ADR 0001–0005              | `done`                                                                   |
 | 1    | Repository/shared-core baseline     | `CW1-G00`                               | `continuous`                                                             |
 | 2    | Unified identity and authorization  | `CW1-V1-01` through `CW1-V1-04`         | V1-01/I1/I2/I3 `done`; I4 `evidence`; parent open                        |
-| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01 and bounded I1–I11 done; I12 evidence/pre-acceptance receipt green, standing closeout conditional; parent/T2/T3 open |
+| 3    | Traceable differential/parity proof | `CW1-V2-*`, `CW1-V4-*`                  | V2-01 and bounded I1–I12 done; I13 reviewed packet-only, local/exact CI pending; parent/T2/T3 open |
 | 4    | First Core Workflow Profile         | `CW1-V1-*` through `CW1-V6-*`           | T1; active program                                                       |
 | 5    | In-scope feature expansion          | `CP-P01`–`CP-P19`, then `MC-01`–`MC-10` | `blocked`                                                                |
 | 6    | Extension Service contracts         | `EXT-01`                                | `blocked` on a named inventory                                           |
@@ -367,8 +367,8 @@ no artifact-specific human review or owner-immutability,
 template, uniqueness, deletion, list/query, tier, parent, profile, or consumer
 completion.
 
-[`CW1-V2-02-I12`](increments/CW1-V2-02-I12.md) is the in-progress
-standing-authorized bounded VRF scalar closeout for `name`, `rd`,
+[`CW1-V2-02-I12`](increments/CW1-V2-02-I12.md) is effectively
+standing-authorized bounded implementation `done` for VRF `name`, `rd`,
 `enforce_unique`, `description`, and `comments`.
 It owns only common write presence, VRF-local normalization/validation,
 operation-specific contracts, representable shared REST/gRPC semantics,
@@ -385,13 +385,26 @@ eight-path evidence claim `14e9267e931debd38eb921357a39dda6b11cccd9` and
 two-path pre-acceptance receipt `ed8af4b653ef9f78110f7c4f2b80d590d57c99b2`
 passed their independent integrity, pinned local and exact-SHA gates. The
 executor applied existing standing acceptance at `2026-10-13T04:27:07Z`, not
-fresh human inspection. I12 remains `in-progress`: its implementation closeout
-is conditional on the current eight-path closeout and final two-path excluded
-receipt passing their required integrity, pinned local and exact-SHA CI gates.
-No effective `done` follows yet;
-uniqueness, downstream
+fresh human inspection. Eight-path closeout
+`bf3c4755c3e32beccf5053ca59b66c53b389d865` and final excluded receipt
+`4d8ea929b2c56e02b7e5ff021fb88d14090b77d0` passed their required independent
+integrity, frozen-file pinned local and exact-SHA CI gates. Final run
+`38354974081` / job `115155618986` passed all 12 reported steps; actual raw
+capture `2026-10-13T06:27:51.125Z` and separate independent audit
+`2026-10-13T06:30:30Z` authenticate the known final leaf. Uniqueness, downstream
 policy, deletion/list/query, all tiers/consumers, this parent, and the profile
-remain open. Prefix I13 is only the next recommended scalar child.
+remain open.
+
+[`CW1-V2-02-I13`](increments/CW1-V2-02-I13.md) is the authored packet-only
+Prefix lane for `prefix`, `vrf`, `status`, `is_pool`, `mark_utilized`,
+`description`, and `comments`. Independent technical/companion reviews passed;
+the executor applied standing routine packet permission as recorded in the
+packet. Pinned local and exact packet CI gates remain required before behavior
+editing. Its eight fixed regressions and
+operation-contract/API/PostgreSQL/Vue work are planned, not implementation
+evidence. Network, containment, uniqueness, all tiers/consumers and this parent
+remain open. After effective I13, review a bounded Prefix network-value packet
+under existing `CW1-V2-05`; do not invent I14 or infer parent completion.
 
 ## Current execution board
 
@@ -415,7 +428,8 @@ remain open. Prefix I13 is only the next recommended scalar child.
 | `CW1-V2-02-I9`      | `done`        | Accepted Rack scalar write presence                 | Done I8 and current `CW1-G00`          |
 | `CW1-V2-02-I10`     | `done`        | Accepted Device scalar presence                    | Done I9 and current `CW1-G00`          |
 | `CW1-V2-02-I11`     | `done`        | Standing-authorized Interface scalar presence       | Exact closeout and final receipt gates green |
-| `CW1-V2-02-I12`     | `in-progress` | Gate conditional VRF closeout and final receipt     | Accepted bounded result and current `CW1-G00` |
+| `CW1-V2-02-I12`     | `done`        | Standing-authorized bounded VRF scalar presence     | Exact closeout/final receipt and integrity green |
+| `CW1-V2-02-I13`     | `in-progress` | Gate reviewed Prefix scalar-presence packet only   | Effective bounded I12 and current `CW1-G00` |
 | `CW1-V2-03`–`V2-08` | `blocked`     | Close later typed business behavior                 | V2-02 and named lane dependencies      |
 | `CW1-V3-01`         | `done`        | Accepted bounded dependency-aware readiness         | `CW1-G00`                              |
 | `CW1-V3-02`         | `done`        | Accepted bounded bootstrap/schema contract          | Current `CW1-G00` and done `CW1-V2-01` |
@@ -436,10 +450,12 @@ packet CI passed before behavior editing. Its corrected bounded implementation
 passed the local ladder, candidate assembly, unchanged committed replay and
 exact candidate CI. Its bounded evidence claim and pre-acceptance receipt also
 passed their integrity, pinned local and exact-SHA CI gates. Existing standing
-acceptance was applied by the executor at `2026-10-13T04:27:07Z`. I12's current
-eight-path implementation closeout and final two-path excluded receipt still
-require their own gates; I12 is not effectively done. The parent and
-every later child remain open. Standing owner
+acceptance was applied by the executor at `2026-10-13T04:27:07Z`. I12's
+eight-path implementation closeout and final two-path excluded receipt passed
+their own gates and independent integrity review, making only bounded I12
+implementation `done` effective. I13 is reviewed packet-only, with existing
+standing routine packet permission recorded and local/exact packet CI pending. The
+parent and every later behavior goal remain open. Standing owner
 authorization replaces no required artifact-specific human inspection or
 separate row/consumer/tier/aggregate/profile sign-off.
 
@@ -785,11 +801,22 @@ Bounded children:
   bind the prior packet, red proof and completed candidate results. This
   evidence claim and pre-acceptance receipt subsequently passed their required
   gates. The executor applied existing standing acceptance at
-  `2026-10-13T04:27:07Z`, not fresh human inspection. The current eight-path
-  closeout and final two-path receipt remain conditional on their own gates;
-  I12 stays `in-progress`, with no effective implementation `done` yet.
+  `2026-10-13T04:27:07Z`, not fresh human inspection. Eight-path closeout
+  `bf3c4755c3e32beccf5053ca59b66c53b389d865` and final two-path receipt
+  `4d8ea929b2c56e02b7e5ff021fb88d14090b77d0` subsequently passed their own
+  pinned local/exact CI and independent integrity gates; bounded implementation
+  `done` is effective. The [verified final leaf](increments/CW1-V2-02-I12.md#verified-final-leaf-and-bounded-implementation-done)
+  retains those completed facts separately from the historical tested source.
   Uniqueness, downstream policy, deletion/list/query, every tier/consumer,
   this parent, and the profile remain open.
+
+- [`CW1-V2-02-I13`](increments/CW1-V2-02-I13.md) is packet-only for Prefix's
+  seven declared writable fields. Codex owns the planned shared scalar intent,
+  operation contracts, PostgreSQL durability/late rollback and Vue dirty-field
+  regressions. Independent packet/companion review, standing routine packet
+  authorization, pinned local and exact packet CI must pass before behavior
+  editing. No I13 test pass, implementation acceptance, network/containment,
+  uniqueness, tier, consumer, parent or profile closure is claimed.
 
 - [ ] Represent all 13 resources × list/get/create/PUT/PATCH/delete.
 - [ ] Cover defaults, read-only fields, and nullability.

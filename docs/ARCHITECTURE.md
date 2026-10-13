@@ -285,13 +285,17 @@ Bounded Interface scalar presence
 standing-authorized implementation `done` after its independently reviewed
 closeout and final receipt passed exact-SHA CI. No fresh human inspection,
 owner-immutability, tier, parent, profile, or consumer closure follows.
-[`CW1-V2-02-I12`](increments/CW1-V2-02-I12.md) defines only the next VRF
-five-field scalar presence packet. Its shared typed application, operation
-contracts, PostgreSQL durability/rollback, and Vue intent/error presentation
-work requires independent review, pinned local `make check`, and exact packet
-CI before behavior editing. It changes no architecture, shared helper policy,
-RD list/query parsing, profile, or compatibility tier, and supplies no
-implementation evidence.
+[`CW1-V2-02-I12`](increments/CW1-V2-02-I12.md#verified-final-leaf-and-bounded-implementation-done)
+is effectively standing-authorized bounded implementation `done` for its five
+VRF scalar fields after exact closeout and final-receipt gates and independent
+integrity review. It changes no architecture, shared helper policy, RD
+list/query parsing, profile, or compatibility tier.
+[`CW1-V2-02-I13`](increments/CW1-V2-02-I13.md) is the packet-only Prefix
+seven-field scalar-presence lane. Planned shared typed semantics, operation
+contracts, PostgreSQL rollback and Vue intent/error tests require independent
+packet/companion review, standing routine packet authorization, pinned local
+`make check` and exact packet CI before behavior editing. No I13 implementation
+evidence, network-rule completion, architecture or aggregate closure follows.
 
 ## Migration direction
 

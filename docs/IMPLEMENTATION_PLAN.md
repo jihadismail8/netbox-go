@@ -47,13 +47,16 @@ Bounded Interface scalar presence
 standing-authorized implementation `done` after its exact closeout and final
 receipt gates passed. It closes no owner-immutability, template transaction,
 tier, parent, profile, or consumer boundary. The Phase 7 exits remain required.
-[`CW1-V2-02-I12`](increments/CW1-V2-02-I12.md) is the packet-only VRF common
-scalar-presence lane for its five already-declared writable fields. Independent
-review, pinned local `make check`, and exact packet CI precede behavior editing.
-Its normalization, operation contracts, durable rollback, representable API
-parity, and Vue intent/error presentation tests supply no implementation
-evidence yet. Phase 8 uniqueness, downstream policy, deletion, and complete
-workflow exits remain required.
+[`CW1-V2-02-I12`](increments/CW1-V2-02-I12.md#verified-final-leaf-and-bounded-implementation-done)
+is effectively standing-authorized bounded implementation `done` for its five
+VRF scalar fields after exact closeout/final-receipt gates and independent
+integrity review. [`CW1-V2-02-I13`](increments/CW1-V2-02-I13.md) is the
+packet-only Prefix common scalar-presence lane for its seven already-declared
+writable fields. Independent packet/companion review, standing routine packet
+authorization, pinned local `make check` and exact packet CI precede behavior
+editing; its eight fixed regressions and vertical API/PostgreSQL/Vue work are
+planned, not implementation evidence. Phase 8 network, uniqueness, downstream
+policy, deletion and complete workflow exits remain required.
 
 ## Intended outcome
 

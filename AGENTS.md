@@ -266,8 +266,8 @@ source digest `source-v2:sha256:57687459b6e0286bc43cf791395dfe3b933649c7422e270f
 with 3,093 entries. Frozen receipt bytes and complete manifest were verified.
 No owner-immutability, tier, consumer, parent, profile, rewrite, or production
 completion follows. T2/T3/T4 and designated human sign-offs remain unearned.
-`CW1-V2-02-I12` is an in-progress standing-authorized bounded implementation
-closeout for VRF `name`, `rd`,
+`CW1-V2-02-I12` is effectively standing-authorized bounded implementation
+`done` only for VRF `name`, `rd`,
 `enforce_unique`, `description`, and `comments` common scalar presence,
 VRF-owned normalization/validation, operation contracts, PostgreSQL rollback,
 and Vue dirty-field/error presentation tests. Independently reviewed packet
@@ -285,15 +285,28 @@ records these results. Eight-path evidence claim
 frozen-file pinned local and exact-SHA CI gates. The executor applied the owner's
 existing standing instruction to that known bounded result at
 `2026-10-13T04:27:07Z`, not a fresh human decision or artifact inspection.
-I12 stays `in-progress`: implementation closeout is conditional until its own
-eight-path closeout and final two-path excluded receipt pass independent
-integrity, pinned local and exact-SHA CI gates. No effective `done` follows yet.
+Eight-path closeout `bf3c4755c3e32beccf5053ca59b66c53b389d865` and final
+two-path excluded receipt `4d8ea929b2c56e02b7e5ff021fb88d14090b77d0` passed
+independent integrity, frozen-file pinned local and exact-SHA CI gates. Final
+run `38354974081` / job `115155618986`, attempt 1, passed all 12 reported steps;
+actual raw capture was `2026-10-13T06:27:51.125Z`, with separate independent
+integrity audit at `2026-10-13T06:30:30Z`. The final leaf preserves source
+`source-v2:sha256:d8beb4bc21f52a991ab4e5b3eaa3deaa1bc5051686347a1991fe566116d89ea1`
+with 3,098 entries, distinct from the tested candidate above.
 Shared Prefix/accepted IPAddress helpers and RD list/query parsing remain
 unchanged. The [I12 evidence preparation](docs/increments/CW1-V2-02-I12.md#bounded-evidence-claim-preparation)
 records the historical packet/prototype and completed candidate boundaries;
-the [conditional closeout](docs/increments/CW1-V2-02-I12.md#standing-authorized-bounded-implementation-closeout)
-records the accepted preceding receipt and standing application. T2/T3/T4, designated
+the [verified final leaf](docs/increments/CW1-V2-02-I12.md#verified-final-leaf-and-bounded-implementation-done)
+records the completed closeout while preserving the original standing
+application. T2/T3/T4, designated
 human sign-offs, every consumer, the parent, and profile completion stay open.
+`CW1-V2-02-I13` is the next packet-only lane for Prefix `prefix`, `vrf`,
+`status`, `is_pool`, `mark_utilized`, `description`, and `comments` common
+scalar presence. Codex owns the [authored packet](docs/increments/CW1-V2-02-I13.md);
+independent packet/companion review, standing routine packet authorization,
+pinned local and exact packet CI gates remain required before behavior editing.
+Its eight fixed regressions are planned, not implemented or passed. It closes
+no network, uniqueness, containment, tier, consumer, parent, or profile boundary.
 Do not begin or merge another
 Capability Profile while V0 is
 red or before `CW1-V6-03`. Once those gates are

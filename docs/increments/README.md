@@ -52,7 +52,8 @@ implementation exists.
 | `CW1-V2-02-I9` | `done`        | Codex GPT-5.6 Sol | [Rack scalar write presence](CW1-V2-02-I9.md)              |
 | `CW1-V2-02-I10`| `done`        | Codex             | [Device scalar write presence](CW1-V2-02-I10.md)           |
 | `CW1-V2-02-I11`| `done`        | Codex             | [Standing-authorized Interface scalar presence](CW1-V2-02-I11.md) |
-| `CW1-V2-02-I12`| `in-progress` | Codex             | [VRF scalar write presence](CW1-V2-02-I12.md); standing-authorized bounded implementation accepted, closeout/final receipt conditional |
+| `CW1-V2-02-I12`| `done`        | Codex             | [Standing-authorized bounded VRF scalar presence](CW1-V2-02-I12.md); exact closeout/final receipt and integrity green |
+| `CW1-V2-02-I13`| `packet`      | Codex             | [Prefix scalar write presence](CW1-V2-02-I13.md); independent reviews/standing packet permission recorded, local and exact CI pending |
 | `CW1-V3-01`    | `done`        | Codex GPT-5.6 Sol | [Dependency-aware readiness](CW1-V3-01.md)                 |
 | `CW1-V3-02`    | `done`        | Codex             | [Bootstrap and schema contract](CW1-V3-02.md)              |
 
@@ -249,8 +250,8 @@ passed. No artifact-specific
 human review or owner-immutability, tier, parent, profile, or consumer
 completion is claimed.
 
-`CW1-V2-02-I12` is the in-progress standing-authorized bounded VRF closeout
-for its five declared writable fields. Reviewed packet
+`CW1-V2-02-I12` is effectively standing-authorized bounded implementation
+`done` only for its five declared VRF writable fields. Reviewed packet
 `009ab93e86114d36b85550d75e5c18d0cd09b8c9`
 passed pinned local and exact packet CI gates before behavior editing.
 Compiling semantic red proof preceded fixes. The corrected 21-path local
@@ -269,14 +270,28 @@ Evidence claim `14e9267e931debd38eb921357a39dda6b11cccd9` and pre-acceptance
 receipt `ed8af4b653ef9f78110f7c4f2b80d590d57c99b2` passed their independent
 integrity, pinned local and exact-SHA CI gates. The executor applied the owner's
 existing standing instruction at `2026-10-13T04:27:07Z`, not a new human decision
-or artifact inspection. I12 remains `in-progress`: the current eight-path
-implementation closeout and final two-path excluded receipt are conditional
-on their own required integrity, pinned local and exact-SHA CI gates. No
-effective implementation `done` follows yet.
+or artifact inspection. Eight-path closeout
+`bf3c4755c3e32beccf5053ca59b66c53b389d865` and final two-path excluded receipt
+`4d8ea929b2c56e02b7e5ff021fb88d14090b77d0` passed their required independent
+integrity, frozen-file pinned local and exact-SHA CI gates. Final run
+`38354974081` / job `115155618986` passed all 12 reported steps, captured at
+`2026-10-13T06:27:51.125Z` and independently audited at the separate time
+`2026-10-13T06:30:30Z`. The [verified final leaf](CW1-V2-02-I12.md#verified-final-leaf-and-bounded-implementation-done)
+consumes that boundary without a new acceptance or human inspection.
 Shared Prefix/accepted IPAddress helpers and RD
 list/query parsing remain untouched. No uniqueness/downstream policy,
 deletion/list/query, tier, consumer, parent/profile, or rewrite completion
-follows. Prefix I13 remains only a recommended future scalar packet.
+follows.
+
+`CW1-V2-02-I13` is the authored Prefix scalar-presence `packet`, owned by
+`ipam-core-workflow` / Codex, for `prefix`, `vrf`, `status`, `is_pool`,
+`mark_utilized`, `description`, and `comments`. Its eight fixed regressions and
+API/PostgreSQL/Vue work are planned, not implementation evidence. Independent
+technical/companion reviews passed; existing standing routine packet permission
+was applied as recorded in the packet, not implementation acceptance. Pinned
+local and exact packet CI remain required before behavior editing. After effective
+I13, review a bounded Prefix network-value packet under existing `CW1-V2-05`;
+do not invent I14 or close the common-mutation parent, any tier or profile.
 
 `CW1-V3-01` has exact tested candidate
 `58241d7f87b642e6b7eca279592ad3759a0f5a06` at source digest

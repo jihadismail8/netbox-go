@@ -314,15 +314,39 @@ The preceding eight-path claim `14e9267e931debd38eb921357a39dda6b11cccd9`
 and pre-acceptance receipt `ed8af4b653ef9f78110f7c4f2b80d590d57c99b2` passed
 their independent integrity, pinned local and exact-SHA CI gates. The executor
 applied existing standing acceptance at `2026-10-13T04:27:07Z`, not fresh human
-inspection. I12 stays `in-progress`: the current eight-path closeout and final
-two-path excluded receipt still require their own integrity, frozen-file pinned
-local and exact-SHA CI gates before implementation `done` becomes effective.
+inspection. Eight-path closeout `bf3c4755c3e32beccf5053ca59b66c53b389d865`
+and final two-path excluded receipt `4d8ea929b2c56e02b7e5ff021fb88d14090b77d0`
+passed their independent integrity, frozen-file pinned local and exact-SHA CI
+gates. Final run `38354974081` / job `115155618986`, attempt 1, passed all 12
+reported steps; actual raw capture was `2026-10-13T06:27:51.125Z`, followed by
+the separate independent integrity audit at `2026-10-13T06:30:30Z`. Only bounded
+I12 implementation `done` is effective; its original standing application is
+not reapplied or relabelled as human inspection.
 Actual I12 toolchain inventory and strict
 gate results are retained, not borrowed from I11. The read-only
 oracle preflight found the NetBox image unavailable; no differential ran,
 same-core parity earns no corresponding T3, and Vue checks earn no T4. The
 23 existing npm advisories (7 moderate, 14 high, 2 critical) remain unchanged.
 No tier, consumer, parent/profile, or browser outcome is earned.
+
+The [`CW1-V2-02-I13` packet](increments/CW1-V2-02-I13.md) plans exactly eight
+Prefix regressions: `TestPrefixScalarNormalizationContract`,
+`TestPrefixScalarCommandPresenceMatrix`,
+`TestReplacePrefixPreservesOmittedOptionalState`,
+`TestPrefixScalarValidationLeavesStateUnchanged`,
+`TestPrefixRESTScalarPresenceMatrix`, `TestPrefixGRPCScalarPresenceMatrix`,
+`TestPostgresPrefixScalarPresenceDurability`, and
+`TestPrefixScalarPresenceRESTGRPCParity`. Compiling red-first tests will cover
+seven-field intent, optional PUT preservation, exact Prefix-owned status and
+numeric-VRF diagnostics, mixed-validation non-effects, real PostgreSQL
+durability/six delegate-then-error rollbacks and representable same-core parity.
+Operation-metadata/OpenAPI and actual DynamicForm dirty-field/server-error
+checks are planned alongside them. These are requirements, not implemented
+tests or retained passes. Independent technical/companion reviews passed and
+existing standing routine packet permission was applied as recorded in the
+packet. Pinned local and exact packet CI remain pending before behavior editing.
+Existing network/query code and tests must remain unchanged; no
+canonicalization, containment, `/0`, uniqueness, tier or parent closure follows.
 
 `CW1-V3-01` has exact tested candidate
 `58241d7f87b642e6b7eca279592ad3759a0f5a06` at source digest
@@ -495,7 +519,7 @@ and exact change-state outcomes remain to be added and retained.
 | ------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | V0 repository baseline   | Complete deterministic gate, including non-mutating backend coverage                       | `make check` retained green on each exact relevant source digest                                                          | Entry source-v2 retained; active-source refresh required |
 | V1 identity/RBAC         | Persisted users/groups/grants, sessions/tokens, CLI and focused tests                      | Pass I4's exact claim CI, retain its receipt, obtain owner review, then complete the remaining identity matrix            | I4 evidence claim conditional; parent open               |
-| V2 profile behavior      | Shared 13-resource service, broad tests, bounded I1-I11 done; I12 candidate/evidence/pre-acceptance receipt green | Gate conditional I12 closeout and final receipt; trace remaining invariant, rollback and external-tier boundaries | I1-I11 bounded done; I12 in progress, closeout conditional; parent open |
+| V2 profile behavior      | Shared 13-resource service, broad tests, bounded I1-I12 done | Review/gate I13 Prefix packet only; trace remaining invariant, rollback and external-tier boundaries | I1-I12 bounded done; I13 packet-only, own gates pending; parent open |
 | V3 PostgreSQL/deployment | Typed tables, bootstrap/concurrency tests, Compose harness, and owner-accepted bounded V3-01/V3-02 evidence with green closeout receipts | Complete V3-03 through V3-05 and retain deployment loss-recovery artifacts | V3-01/V3-02 done; V3 parent open |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad resource/parity suites                            | Complete T2 scenario report, then equivalent T3 report                                                                    | T1; implementation gap                                   |
 | V5 Vue workflow          | Typed adapters and real-browser harness                                                    | Both workflows and every required negative/state case retained green                                                      | T1; implementation gap                                   |
