@@ -338,18 +338,25 @@ Failed compilation/lint/typecheck attempts remain historical failures;
 the disposable role/database is absent, the oracle is unavailable, 23 npm
 advisories remain, and T2/T3/T4 stay unearned. Network, uniqueness, containment,
 every consumer, the parent and profile remain open.
-[`CW1-V2-05-I1`](docs/increments/CW1-V2-05-I1.md) is the next bounded packet,
+[`CW1-V2-05-I1`](docs/increments/CW1-V2-05-I1.md) is in progress,
 owned by `ipam-core-workflow` / Codex with the two Vue test boundaries owned by
-`frontend-core-workflow`. It is in packet authoring/review only, not accepted or
-implemented. Its planned proof-only scope is nine Prefix network literals
-across existing backend create/PUT/PATCH and actual frontend POST/PATCH paths,
-using exactly six existing test files, four fixed Go groups and two Vue
-describe groups. There is no frontend PUT flow, replace export or client CIDR
-parser to add. The [planned entry/packet artifact](docs/evidence/2026-10-13-core-workflow-v2-prefix-network-values-i1-v0.md)
-will retain the known I13 entry, not I1 implementation or test results. Exact
-packet review, pinned local gate, own packet CI and recorded bounded packet
-permission remain before test edits. Whole `CW1-V2-05`, other parents,
-consumers, tiers and profile completion remain open.
+`frontend-core-workflow`. Its test-only candidate is
+`7aa7ea1121dbfe7ce1118f047d987a8855acf6d0`, source
+`source-v2:sha256:49c9af47a4a5d998377b8b68eccb5e2919cf2b1892a374d2da59235e1777593f`,
+3,104 entries. Eighteen local and eighteen unchanged committed gates passed,
+followed by own candidate CI `38458940942` / `115508760894`, attempt 1,
+all 12 steps successful, and distinct post-capture integrity reviews.
+Only six existing tests changed: nine Prefix network literals across backend
+create/PUT/PATCH and actual frontend POST/PATCH, with 27 domain, 27 application,
+33 real-PostgreSQL, 54 parity and 27 focused Vue cases. Production code,
+metadata and profile are unchanged; no behavioral red is manufactured.
+The [own artifact](docs/evidence/2026-10-13-core-workflow-v2-prefix-network-values-i1-v0.md)
+is preparing its conditional implementation appendix. Its initial claim and
+separate receipt still require their own reviews, two frozen pinned local gates,
+publication and exact CI before standing implementation acceptance can be applied.
+Separate closeout/final-receipt gates remain before effective bounded done.
+No fresh human inspection, formal sign-off or T2/T3/T4 is earned; containment,
+uniqueness, every consumer, parent/profile and production boundary remain open.
 Do not begin or merge another
 Capability Profile while V0 is
 red or before `CW1-V6-03`. Once those gates are

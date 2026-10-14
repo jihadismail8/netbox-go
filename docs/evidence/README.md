@@ -751,3 +751,53 @@ scope proposes four Go groups for backend POST/PUT/PATCH and two Vue describes
 for actual POST/PATCH literal forwarding, fetched DTO hydration and server
 errors; no frontend PUT/export/parser or production changes are authorized.
 Whole `CW1-V2-05`, other parents, consumers, tiers and profile remain open.
+
+## I1 network-value conditional implementation evidence preparation
+
+The preceding I1 packet-only statements retain their historical authoring
+boundary; this appendix supersedes their current status without changing those
+bytes. Reviewed packet `967fb2d338d6f97e00d8c0b091c79f7f73cf093c` passed
+its own local/CI gates and separate bounded packet permission at
+`2026-10-13T17:43:02Z`. The unchanged production baseline was green; this is
+test-only missing proof coverage, not manufactured behavioral red.
+
+Actual tested candidate `7aa7ea1121dbfe7ce1118f047d987a8855acf6d0`, sole
+parent the packet, changes exactly six existing tests at tested source
+`source-v2:sha256:49c9af47a4a5d998377b8b68eccb5e2919cf2b1892a374d2da59235e1777593f`,
+3,104 entries/full manifest SHA-256
+`11d3f0e5d68b7cbb4e7f76313e25a7261db7abaecf45db7b86130d9482c82f17`.
+Eighteen local and eighteen unchanged clean committed gates passed, 36 total:
+27 domain, 27 application, 33 PostgreSQL (including six late rollbacks), 54
+transport parity and 27 focused Vue cases. The backend exercises create/PUT/PATCH;
+real frontend forms exercise POST/PATCH only. No production/profile/metadata or
+client parser/PUT export changes follow.
+
+Own candidate run
+[38458940942](https://github.com/jihadismail8/netbox-go/actions/runs/38458940942)
+and job
+[115508760894](https://github.com/jihadismail8/netbox-go/actions/runs/38458940942/job/115508760894),
+attempt 1, passed all 12 steps. Actual raw capture was
+`2026-10-13T20:22:10.482Z`; root review `20:29:16.280Z` and independent
+review `20:26:32.920Z`, separately recorded, passed complete retained/source/Git
+integrity. Canonical review SHA-256 is
+`16b052f4813250e21dbd5dc536f7c04a3a126664e694cb193182897142e48b45`.
+The complete reachable Git message is retained separately from GitHub's
+truncated `head_commit.message`; raw API text is not a complete-message proof.
+Failed SSH publication1, read-only reconciliation and recoverable four-file
+archive remain distinct from successful publication2. Watcher/observation errors
+are not workflow failures or reruns. Prior lint/development failures remain
+history, not current green gates. Owned database/role cleanup completed `1|1`
+to `0|0` with zero active connections and private credential removed; the pinned
+oracle remains unavailable and 23 existing advisories unchanged.
+
+The [own network-value artifact](2026-10-13-core-workflow-v2-prefix-network-values-i1-v0.md)
+is preparing its conditional implementation appendix, preserving the complete
+entry prefix. Initial eight-file claim integrity, two frozen sequential local
+gates, normal publication and own exact CI remain pending, then the separate
+two-file excluded receipt's corresponding gates. No implementation evidence
+acceptance has been applied; packet permission is separate. Standing application
+and independently gated closeout/final receipt remain before effective bounded
+done. No own future claim SHA/hash/source or acceptance time is predicted.
+No fresh human inspection, formal marker/sign-off, T2/T3/T4, consumer,
+containment/uniqueness, parent/profile, rewrite, deployment, production readiness
+or later increment is promoted.

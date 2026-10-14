@@ -54,7 +54,7 @@ implementation exists.
 | `CW1-V2-02-I11`| `done`        | Codex             | [Standing-authorized Interface scalar presence](CW1-V2-02-I11.md) |
 | `CW1-V2-02-I12`| `done`        | Codex             | [Standing-authorized bounded VRF scalar presence](CW1-V2-02-I12.md); exact closeout/final receipt and integrity green |
 | `CW1-V2-02-I13`| `done`        | Codex             | [Standing-authorized bounded Prefix scalar presence](CW1-V2-02-I13.md); exact closeout/final receipt and integrity green |
-| `CW1-V2-05-I1` | `packet`      | Codex             | [Prefix network-value proof](CW1-V2-05-I1.md); authoring/review only, not accepted or implemented |
+| `CW1-V2-05-I1` | `in-progress` | Codex             | [Prefix network-value proof](CW1-V2-05-I1.md); candidate CI/integrity green, initial claim/receipt/acceptance/closeout gates pending |
 | `CW1-V3-01`    | `done`        | Codex GPT-5.6 Sol | [Dependency-aware readiness](CW1-V3-01.md)                 |
 | `CW1-V3-02`    | `done`        | Codex             | [Bootstrap and schema contract](CW1-V3-02.md)              |
 
@@ -317,15 +317,22 @@ T2/T3/T4 unearned. The common-mutation parent, every tier/consumer and profile
 remain open.
 
 `CW1-V2-05-I1` is owned by `ipam-core-workflow` / Codex, with
-`frontend-core-workflow` for its two Vue test boundaries, in packet
-authoring/review only. Its known entry is I13 final receipt
+`frontend-core-workflow` for its two Vue test boundaries, in progress with
+conditional initial claim preparation. Its known entry is I13 final receipt
 `0ae8183c24598330a877b41a5efbd21587748613`, source
 `source-v2:sha256:72dfdfd403bb3e37a779daf5210c23abf3ea8ded8c70899340ca828376581260`,
-3,103 entries. The [planned entry/packet artifact](../evidence/2026-10-13-core-workflow-v2-prefix-network-values-i1-v0.md)
-links that preceding proof only. The draft is not accepted or implemented;
-exact packet review, pinned local gate, own packet CI and bounded packet
-permission remain before test edits. Four fixed Go groups and two Vue
-describes are planned within exactly six existing test files. Backend proof
+3,103 entries. Own packet review/local/CI and bounded packet permission
+subsequently passed before test edits. Exact tested candidate
+`7aa7ea1121dbfe7ce1118f047d987a8855acf6d0`, source
+`source-v2:sha256:49c9af47a4a5d998377b8b68eccb5e2919cf2b1892a374d2da59235e1777593f`,
+3,104 entries, changes exactly six existing tests. Eighteen local and eighteen
+clean committed gates, own candidate CI `38458940942` / `115508760894`
+and distinct captured integrity are green. Four fixed Go groups and two Vue
+describes execute 27/27/33/54/27 domain/application/PostgreSQL/parity/Vue cases.
+The [own artifact](../evidence/2026-10-13-core-workflow-v2-prefix-network-values-i1-v0.md)
+is preparing its implementation appendix. Own claim/receipt reviews, two pinned
+local gates and exact CI, separate standing acceptance and closeout/final-receipt
+gates remain; evidence and bounded done are not effective. Backend proof
 uses create/PUT/PATCH; real frontend proof uses only POST/PATCH literal
 forwarding, fetched DTO hydration and server-error presentation, with no PUT
 flow/export/client parser. This is a proof-only subset of existing `CW1-V2-05`,

@@ -352,16 +352,30 @@ rewrite and production boundaries remain open.
 
 [`CW1-V2-05-I1`](increments/CW1-V2-05-I1.md) is owned by
 `ipam-core-workflow` / Codex, with `frontend-core-workflow` for its two Vue
-test boundaries, in packet authoring/review only. The draft is not accepted;
-packet review, pinned local gate, own exact packet CI and recorded bounded
-packet permission remain before any test edit. The planned test-only proof
-selects nine Prefix network literals for canonicalization, host-bit suggestions
-and canonical `/0` rejection, through backend create/PUT/PATCH and actual
-frontend POST/PATCH forwarding, fetched DTO hydration and server errors.
-Exactly six existing test files, four Go groups and two Vue describes are
-proposed; no frontend PUT flow/export/parser or production behavior is added.
-The [planned entry/packet artifact](evidence/2026-10-13-core-workflow-v2-prefix-network-values-i1-v0.md)
-links the known I13 entry above, not I1 implementation or executed tests.
+test boundaries, in progress with conditional claim preparation. Reviewed
+packet `967fb2d338d6f97e00d8c0b091c79f7f73cf093c` passed its own local/CI
+gates; separate bounded packet permission was applied at
+`2026-10-13T17:43:02Z`. The existing code's green baseline is not behavioral red.
+Test-only candidate `7aa7ea1121dbfe7ce1118f047d987a8855acf6d0` changes
+exactly six existing test files, with tested source
+`source-v2:sha256:49c9af47a4a5d998377b8b68eccb5e2919cf2b1892a374d2da59235e1777593f`,
+3,104 entries/full manifest SHA-256
+`11d3f0e5d68b7cbb4e7f76313e25a7261db7abaecf45db7b86130d9482c82f17`.
+Eighteen local and eighteen clean committed gates passed unchanged source;
+own candidate run `38458940942` / job `115508760894`, attempt 1, passed
+all 12 steps. Actual capture was `2026-10-13T20:22:10.482Z`, distinct from
+root review `20:29:16.280Z` and independent review `20:26:32.920Z`.
+The [own artifact](evidence/2026-10-13-core-workflow-v2-prefix-network-values-i1-v0.md)
+is preparing its initial implementation appendix. Its own claim and excluded
+receipt reviews, two frozen pinned local gates, publication and exact CI remain,
+then separately recorded standing implementation acceptance and closeout/final
+receipt gates. It is not effective evidence, acceptance or bounded done.
+Only the nine-literal network-value proof is selected: 27 domain, 27 application,
+33 PostgreSQL (including six late rollbacks), 54 transport parity and 27 focused
+Vue cases. No production/metadata/profile or frontend PUT/parser change follows.
+Historical failures remain failures; owned database/credential are absent,
+the oracle unavailable and 23 existing npm advisories unchanged. T2/T3/T4 and
+fresh human/formal sign-offs remain unearned.
 Whole `CW1-V2-05`, the common CRUD parent, all consumers, tiers, profile,
 rewrite and production boundaries remain open.
 
@@ -642,7 +656,7 @@ replacement completes ADR 0004's governing gate and CP-13.
 | ------------------------ | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
 | V0 repository gate       | Retained exact-entry source-v2 result plus deterministic quality policy                                 | Refresh for the active source and every later relevant merged digest                                                             | Continuous; entry source retained          |
 | V1 identity/RBAC         | Persisted identity, retained CORS, accepted I1/I2/I3, and retained I4 evidence                          | Obtain I4 owner review; complete password-policy/throttle/proxy/streaming plus RBAC/admin/secret work                            | I4 evidence; parent open                   |
-| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, bounded I1-I13 done | Review/gate the V2-05-I1 packet before test edits; prove remaining invariant, side-effect, concurrency and tier cases | I1-I13 bounded done; V2-05-I1 packet only, implementation permission pending; parents/consumers/tiers/profile open |
+| V2 domain behavior       | Typed shared services, reviewed 293-row traceability, bounded I1-I13 done; V2-05-I1 test-only candidate CI/integrity green | Gate the conditional I1 claim/receipt, apply bounded standing acceptance and gate separate closeout/final receipt; prove all remaining invariant/tier cases | V2-05-I1 in progress, not effective evidence or done; parents/consumers/tiers/profile open |
 | V3 PostgreSQL/deployment | Typed schema, real-PostgreSQL suites, Compose harness, and owner-accepted bounded V3-01/V3-02 evidence with green closeout receipts | Complete V3-03 through V3-05 | V3-01/V3-02 done; V3 parent open |
 | V4 REST/gRPC             | Strict comparator/orchestrator and broad CRUD/parity suites                                             | Required negative/invariant/permission/presence scenarios, durable T2 report, then corresponding T3 report                       | T1; implementation/evidence pending        |
 | V5 Vue                   | Typed adapters and real-Chrome workflow harness                                                         | Session refresh, edit/filter, rollback, null/conflict/not-found, reassignment, and exact-state browser outcomes                  | T1; implementation/evidence pending        |
